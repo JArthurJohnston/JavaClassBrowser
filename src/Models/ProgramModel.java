@@ -4,7 +4,8 @@
  */
 package Models;
 
-import java.util.ArrayList;
+
+import java.util.Set;
 
 /**
  *
@@ -12,8 +13,18 @@ import java.util.ArrayList;
  */
 public class ProgramModel {
     private ProjectModel project;
-    private ArrayList classes;
-    
-    
+    private Set classes;
+     
+    /**
+     * checks the classes set to ensure it does not already
+     * contain a class with the same name as the class
+     * being added.
+     * @param newClass
+     * @return 
+     */
+    public boolean okToAddClass(ClassModel newClass){
+        return true;
+        //Todo:
+    }
     
 }

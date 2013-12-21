@@ -1,21 +1,50 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Models;
+
+import Types.ClassType;
 
 /**
  *
  * @author Arthur
  */
 public class VariableModel {
-    private String name;
+    private Object owner; //Todo: may not be needed
     private Object value;
+    private String name;
+    private ClassType type;
     
-    public VariableModel(String name, Object value){
-        this.value = value;
+    public VariableModel(Object owner, String name, ClassType type){
+        this.owner = owner;
         this.name = name;
+        this.type = type;
+    }
+    public VariableModel(Object owner, String name, ClassType type, Object value){
+        this.owner = owner;
+        this.name = name;
+        this.type = type;
+        this.value = value;
     }
     
+    /*
+     * Getters
+     */
+    public ClassType classType(){
+        return type;
+    }
+    public String name(){
+        return name;
+    }
+    public Object type(){
+        return value.getClass();
+    }
+    /*
+     * Mutators
+     */
+    public void changeName(String newName){
+        name = newName;
+    }
     
 }
+/*
+ * Notes: 
+ * Todo: method categories
+ */
