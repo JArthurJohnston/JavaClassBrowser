@@ -17,6 +17,8 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class VariableModelTest {
+     private ClassModel parent;
+     private VariableModel instance;
     
     public VariableModelTest() {
     }
@@ -31,10 +33,15 @@ public class VariableModelTest {
     
     @Before
     public void setUp() {
+        int test = 5;
+        parent = new ClassModel();
+        instance = new VariableModel(parent, "someName", ClassType.INSTANCE, test);
     }
     
     @After
     public void tearDown() {
+        parent = null;
+        instance = null;
     }
 
     /**
@@ -43,13 +50,12 @@ public class VariableModelTest {
     @Test
     public void testClassType() {
         System.out.println("classType");
-        ClassModel owner = new ClassModel();
-        VariableModel instance = null;
-        ClassType expResult = null;
+        ClassType expResult = ClassType.INSTANCE;
         ClassType result = instance.classType();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance = new VariableModel(parent, "someName", ClassType.CLASS);
+        result = instance.classType();
+        assertEquals(ClassType.CLASS, result);
     }
 
     /**
@@ -58,12 +64,9 @@ public class VariableModelTest {
     @Test
     public void testName() {
         System.out.println("name");
-        VariableModel instance = null;
-        String expResult = "";
+        String expResult = "someName";
         String result = instance.name();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -72,12 +75,8 @@ public class VariableModelTest {
     @Test
     public void testType() {
         System.out.println("type");
-        VariableModel instance = null;
-        Object expResult = null;
         Object result = instance.type();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(Integer.class, result);
     }
 
     /**
@@ -86,10 +85,37 @@ public class VariableModelTest {
     @Test
     public void testChangeName() {
         System.out.println("changeName");
-        String newName = "";
-        VariableModel instance = null;
-        instance.changeName(newName);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String newName = "someNewName";
+        instance.setName(newName);
+        assertEquals(newName, instance.name());
+    }
+    
+    @Test
+    public void testChangeValue() {
+        System.out.println("changeValue");
+        int newVal = 6;
+        instance.setValue(newVal);
+        assertEquals(newVal, instance.value());
+        String someString = "wrong value";
+        instance.setValue(someString);
+        assertEquals(instance.value(), newVal); //value should still be 6
+    }
+    
+    @Test
+    public void testConstructors(){
+        assertEquals(parent, instance.parent());
+        MethodModel someMethod = new MethodModel(parent);
+        instance = new VariableModel(someMethod, "someName", ClassType.CLASS);
+        assertEquals(someMethod, instance.parent());
+        assertEquals(null, instance.scope());
+    }
+    
+    @Test
+    public void testToSourceString(){
+        instance.setScope(ClassType.PUBLIC);
+        String result = instance.toSourceString();
+        String expResult = "public int someName = 5;\n";
+        System.out.println(result);
+        assertEquals(expResult, result);
     }
 }

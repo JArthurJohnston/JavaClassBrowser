@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Types.ClassType;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class ClassModel extends ProgramModel {
+    public ClassType scope;
     public ArrayList instanceVariables;
     public ArrayList classVariables;
     public ArrayList instanceMethods;
@@ -29,6 +31,7 @@ public class ClassModel extends ProgramModel {
         name = "Object";
         parentClass = null;
     }
+    //Todo: create a whole bunch of constructors for scope...
     
     public ClassModel(String name){
         this.name = name;
@@ -49,6 +52,7 @@ public class ClassModel extends ProgramModel {
     }
     
     /*
+     * Setters
      * when adding variables, Ill need to differentiate between primitive types
      * which are easy to deal with,
      * and other objects. 
@@ -79,6 +83,15 @@ public class ClassModel extends ProgramModel {
     }
     public void addClassMethod(MethodModel newMethod){
         classMethods.add(newMethod);
+    }
+    /**
+     * sets the scope of the class.
+     * the scope can only be private or public
+     * @param newScope 
+     */
+    public void setScope(ClassType newScope){
+        if(newScope != ClassType.CLASS && newScope != ClassType.INSTANCE)
+            this.scope = newScope;
     }
     
     public void removeClassVariable(VariableModel var){
@@ -111,10 +124,16 @@ public class ClassModel extends ProgramModel {
         return allVariables.contains(var);
     }
     /*
-     * Accessors
+     * getters
      */
     public String name(){
         return name;
+    }
+    public ClassType scope(){
+        if(scope == null)
+            return ClassType.PUBLIC;
+        else
+            return scope;
     }
 }
 

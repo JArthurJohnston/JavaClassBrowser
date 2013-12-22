@@ -61,4 +61,7 @@ public class ProgramModel {
             packages.put(newPackage.name(), newPackage);
     }
     
+    public String toSourceString(){
+        return "";
+    }
 }
