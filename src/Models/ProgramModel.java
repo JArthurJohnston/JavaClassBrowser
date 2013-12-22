@@ -13,8 +13,13 @@ import java.util.Set;
  * @author Arthur
  */
 public class ProgramModel {
+    public static int numberOfProjects = 0;
+    public static String defaultName = "New Project" + ProgramModel.numberOfProjects;
+    
+    
+    public String name;
     private ProjectModel project;
-    private HashMap <String, ClassModel> classes;
+    public HashMap <String, ClassModel> classes;
     private HashMap <String, PackageModel> packages;
      
     /**

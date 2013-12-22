@@ -9,7 +9,6 @@ import Types.ClassType;
 public class VariableModel {
     private Object owner; //Todo: may not be needed
     private Object value;
-    private String name;
     private ClassType type;
     
     public VariableModel(Object owner, String name, ClassType type){

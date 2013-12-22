@@ -10,17 +10,14 @@ import java.util.ArrayList;
  * An object for keeping track of all the classes in a single project
  * @author Arthur
  */
-public class ProjectModel {
-    private String name;
-    private ArrayList classes;
+public class ProjectModel extends ProgramModel{
     
     public ProjectModel(String newName){
         name = new String(newName);
-        classes = new ArrayList();
     }
     
     public void addClass(ClassModel newClass){
-        classes.add(newClass);
+        classes.put(newClass.name(), newClass);
     }
     public int numberOfClasses(){
         return classes.size();

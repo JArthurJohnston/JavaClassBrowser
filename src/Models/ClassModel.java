@@ -10,19 +10,39 @@ import java.util.ArrayList;
  *
  * @author Arthur
  */
-public class ClassModel {
-    private String name;
-    private ArrayList instanceVariables;
-    private ArrayList classVariables;
-    private ArrayList instanceMethods;
-    private ArrayList classMethods;
+public class ClassModel extends ProgramModel {
+    public ArrayList instanceVariables;
+    public ArrayList classVariables;
+    public ArrayList instanceMethods;
+    public ArrayList classMethods;
+    public PackageModel parentPackage;
+    public ClassModel parentClass;
+    public ArrayList imports; //Todo: ImportsModel class?
     
-    public ClassModel(String newName){
+    /**
+     * Default constructor
+     * Should not be called. 
+     * only used in one of the other ClassModel constructors
+     */
+    public ClassModel(){
+        name = "Object";
+        parentClass = null;
+    }
+    
+    public ClassModel(String name){
+        this.name = name;
+        parentClass = new ClassModel();
+        parentPackage = new PackageModel();
+    }
+    
+    public ClassModel(PackageModel parentPackage, String newName){
+        this.parentPackage = parentPackage;
         name = new String(newName);
         instanceVariables = new ArrayList();
         classVariables = new ArrayList();
         instanceMethods = new ArrayList();
         classMethods = new ArrayList();
+        imports = new ArrayList();
     }
     
     /*
@@ -30,6 +50,7 @@ public class ClassModel {
      * which are easy to deal with,
      * and other objects. 
      * Ill need logic to properly add object variables.
+     *  -check for duplicates in this class, and its parents
      * probably just need to printout the class name
      */
     public void addInstanceVariable(Object anObject){

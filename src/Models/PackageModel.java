@@ -11,9 +11,16 @@ import java.util.ArrayList;
  * for now everything will be done in the ProjectModel
  * @author Arthur
  */
-public class PackageModel {
-    private String name;
+public class PackageModel extends ProgramModel{
+    public static String defaultPackageName = "<default package>";
+    public static PackageModel defaultPackage = new PackageModel();
     
+    /**
+     * default constructor should not be called anywhere
+     */
+    public PackageModel(){
+        name = PackageModel.defaultPackageName;
+    }
     public PackageModel(String name){
         this.name = name;
     }
