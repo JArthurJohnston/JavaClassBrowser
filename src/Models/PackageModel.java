@@ -12,8 +12,15 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class PackageModel {
-    private ArrayList classes;
+    private String name;
     
+    public PackageModel(String name){
+        this.name = name;
+    }
+    
+    public String name(){
+        return name;
+    }
     
     
 }

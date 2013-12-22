@@ -62,4 +62,16 @@ public class ClassModel {
         //validate the new name, iftrue...
         name = new String(newName);
     }
+    /*
+     * Accessors
+     */
+    public String name(){
+        return name;
+    }
 }
+
+/*
+ * notes:
+ * classes hold a list of their own methods, and a seperate list of the methods
+ * of any of the classes its using; for source code auto-complete.
+ */
