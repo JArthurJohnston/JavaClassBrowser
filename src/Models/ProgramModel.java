@@ -36,8 +36,9 @@ public class ProgramModel {
         //Todo:
     }
     public void addClass(ClassModel newClass){
-        if(this.okToAddClass(newClass))
+        if(this.okToAddClass(newClass)){
             classes.put(newClass.name(), newClass);
+        }
     }
     public boolean OkToDeleteClass(ClassModel someClass){
         return classes.containsValue(someClass);

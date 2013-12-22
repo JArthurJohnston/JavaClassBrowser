@@ -6,28 +6,31 @@ import Types.ClassType;
  *
  * @author Arthur
  */
-public class VariableModel {
-    private Object owner; //Todo: may not be needed
+public class VariableModel extends ClassModel{
     private Object value;
-    private ClassType type;
+    private ClassType classType;
     
-    public VariableModel(Object owner, String name, ClassType type){
-        this.owner = owner;
+    public VariableModel(ClassModel owner, String name, ClassType type){
+        this.parentClass = owner;
         this.name = name;
-        this.type = type;
+        this.classType = type;
     }
-    public VariableModel(Object owner, String name, ClassType type, Object value){
-        this.owner = owner;
+    public VariableModel(ClassModel owner, String name, ClassType type, Object value){
+        this.parentClass = owner;
         this.name = name;
-        this.type = type;
+        this.classType = type;
         this.value = value;
     }
     
     /*
      * Getters
      */
+    /**
+     * Whether or not the variable is static, or instance
+     * @return 
+     */
     public ClassType classType(){
-        return type;
+        return classType;
     }
     public String name(){
         return name;
@@ -41,7 +44,6 @@ public class VariableModel {
     public void changeName(String newName){
         name = newName;
     }
-    
 }
 /*
  * Notes: 
