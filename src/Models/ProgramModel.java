@@ -18,9 +18,12 @@ public class ProgramModel {
     
     
     public String name;
-    private ProjectModel project;
+    private ProjectModel project; //this should be a list
     public HashMap <String, ClassModel> classes;
+        //program model will keep a hash, the projectmodels will keep lists
+            //for easy iteration
     private HashMap <String, PackageModel> packages;
+        //same, hashes here, lists in project
      
     /**
      * checks the classes set to ensure it does not already
@@ -54,6 +57,7 @@ public class ProgramModel {
     }
     
     public boolean okToAddPackage(PackageModel newPackage){
+        //these methods should probably be on ProjectModel
         return !packages.containsKey(newPackage.name());
     }
     public void addPackage(PackageModel newPackage){
@@ -62,6 +66,7 @@ public class ProgramModel {
     }
     
     public String toSourceString(){
+        //Subclass Responsibility
         return "";
     }
 }
