@@ -13,8 +13,8 @@ import java.util.Set;
  * @author Arthur
  */
 public class ProgramModel {
-    public static int numberOfProjects = 0;
-    public static String defaultName = "New Project" + ProgramModel.numberOfProjects;
+    private static int numberOfProjects;
+    public static String defaultName = "New Project" + numberOfProjects;
     
     
     public String name;

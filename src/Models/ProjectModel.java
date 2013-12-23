@@ -11,15 +11,23 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class ProjectModel extends ProgramModel{
+    public String name;
+    private WorkspaceModel workspace;
     
-    public ProjectModel(String newName){
-        name = new String(newName);
+    public ProjectModel(){
+        this.name = ProjectModel.defaultName;
+    }
+    public ProjectModel(String name, WorkspaceModel workspace){
+        this.workspace = workspace;
+        this.name = name;
     }
     
-    public void addClass(ClassModel newClass){
-        classes.put(newClass.name(), newClass);
+    //Getters
+    public String name(){
+        return name;
     }
-    public int numberOfClasses(){
-        return classes.size();
+    public WorkspaceModel workspace(){
+        return workspace;
     }
+         
 }

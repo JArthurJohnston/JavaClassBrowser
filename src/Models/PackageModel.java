@@ -13,18 +13,22 @@ import java.util.ArrayList;
  */
 public class PackageModel extends ProgramModel{
     public static String defaultPackageName = "<default package>";
-    public static PackageModel defaultPackage = new PackageModel();
     
-    /**
-     * default constructor should not be called anywhere
-     */
-    public PackageModel(){
+    private ProgramModel parent;
+    
+    
+    public PackageModel(ProgramModel parent){
         name = PackageModel.defaultPackageName;
+        this.parent = parent;
     }
-    public PackageModel(String name){
+    public PackageModel(ProgramModel parent, String name){
+        this.parent = parent;
         this.name = name;
     }
     
+    /*
+     * Getters
+     */
     public String name(){
         return name;
     }
