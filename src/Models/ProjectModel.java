@@ -11,14 +11,16 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class ProjectModel extends ProgramModel{
-    public String name;
-    private WorkspaceModel workspace;
+    public static final String defaultName = "New Project";
+    
+    public WorkspaceModel workspace; //user info, author name, path to files, etc...
+    private boolean isDefault = false;
     
     public ProjectModel(){
         this.name = ProjectModel.defaultName;
+        isDefault = true;
     }
-    public ProjectModel(String name, WorkspaceModel workspace){
-        this.workspace = workspace;
+    public ProjectModel(String name){
         this.name = name;
     }
     
@@ -29,5 +31,9 @@ public class ProjectModel extends ProgramModel{
     public WorkspaceModel workspace(){
         return workspace;
     }
-         
+    
+    //Setters
+    public void setName(String newName){
+        this.name = newName;
+    }
 }

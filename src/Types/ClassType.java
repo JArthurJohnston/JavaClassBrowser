@@ -5,7 +5,8 @@
 package Types;
 
 /**
- *
+ * TESTING is only used to flag code thats being used for testing purposes
+ *  any such code should be removed before launch
  * @author Arthur
  */
 public enum ClassType {

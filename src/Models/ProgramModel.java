@@ -5,6 +5,7 @@
 package Models;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -14,11 +15,15 @@ import java.util.Set;
  */
 public class ProgramModel {
     private static int numberOfProjects;
-    public static String defaultName = "New Project" + numberOfProjects;
+    /*
+     * notes: search the project folder for files called "new project"
+     * increment a counter when on is found, repeat.
+     */
+    private static String defaultName = "New Project" + numberOfProjects;
     
     
     public String name;
-    private ProjectModel project; //this should be a list
+    private ProjectModel project; //this should be a list(maybe)
     public HashMap <String, ClassModel> classes;
         //program model will keep a hash, the projectmodels will keep lists
             //for easy iteration
