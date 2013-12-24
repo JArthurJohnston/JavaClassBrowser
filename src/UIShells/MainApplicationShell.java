@@ -7,6 +7,8 @@ package UIShells;
 import Models.ProjectModel;
 import UIModels.MainApplicationShellModel;
 import javax.swing.DefaultListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 /**
  *
@@ -25,12 +27,30 @@ public class MainApplicationShell extends javax.swing.JFrame {
     private MainApplicationShell setModel(MainApplicationShellModel model){
         this.model = model;
         list = model.fillListModel();
+        list.addListDataListener(new ListDataListener() {
+
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+            }
+
+            @Override
+            public void intervalRemoved(ListDataEvent e) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void contentsChanged(ListDataEvent e) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        });
         projectList.setModel(list);
         return this;
     }
+    
     public static void showShellWithModel(MainApplicationShellModel model){
         new MainApplicationShell().setModel(model).setVisible(true); 
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,15 +63,32 @@ public class MainApplicationShell extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         projectList = new javax.swing.JList();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        newProjectMenuItem = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        projectList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(projectList);
+
+        jMenu1.setText("File");
+
+        newProjectMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newProjectMenuItem.setText("New Project");
+        newProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newProjectMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(newProjectMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -67,11 +104,15 @@ public class MainApplicationShell extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectMenuItemActionPerformed
+        model.openNewProjectShell();
+    }//GEN-LAST:event_newProjectMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -108,7 +149,11 @@ public class MainApplicationShell extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem newProjectMenuItem;
     private javax.swing.JList projectList;
     // End of variables declaration//GEN-END:variables
 }

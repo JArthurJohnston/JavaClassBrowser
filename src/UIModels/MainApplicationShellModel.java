@@ -28,6 +28,9 @@ public class MainApplicationShellModel extends BaseUIModel{
         return listModel;
     }
     
+    public void openNewProjectShell(){
+        applicationMain.openAddProjectShell();
+    }
     
     
 }
