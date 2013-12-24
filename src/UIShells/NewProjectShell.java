@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package UIShells;
 
 import UIModels.NewProjectShellModel;
@@ -25,7 +21,7 @@ public class NewProjectShell extends javax.swing.JFrame {
     }
     public static void showShellWithModel(NewProjectShellModel model){
         new NewProjectShell().setModel(model).setVisible(true); 
-    }//this should be a top-level method
+    }
     
 
     /**
@@ -78,7 +74,7 @@ public class NewProjectShell extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newProjectNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 188, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(createNewProjectButton)
                 .addContainerGap())
         );
@@ -93,6 +89,7 @@ public class NewProjectShell extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Invalid Project Name", 
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
+        this.dispose();
     }//GEN-LAST:event_createNewProjectButtonActionPerformed
 
     /**

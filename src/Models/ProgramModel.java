@@ -16,17 +16,22 @@ import java.util.Set;
 public class ProgramModel {
     private static int numberOfProjects;
     /*
-     * notes: search the project folder for files called "new project"
+     * #notes: search the project folder for files called "new project"
      * increment a counter when on is found, repeat.
      */
     private static String defaultName = "New Project" + numberOfProjects;
     
     
     public String name;
-    private ProjectModel project; //this should be a list(maybe)
     public HashMap <String, ClassModel> classes;
-        //program model will keep a hash, the projectmodels will keep lists
-            //for easy iteration
+    /*
+     * #Notes
+     * each class and package needs to keep track of the scope of its elements
+     * list worldMethods    methods available to the world
+     * list packageMethods  methods only available to the package
+     * list classMethods    methods only available to the class
+     * same with vars
+     */
     private HashMap <String, PackageModel> packages;
         //same, hashes here, lists in project
      
@@ -41,7 +46,7 @@ public class ProgramModel {
         if(classes.containsKey(newClass.name()))
             return false;
         return true;
-        //Todo:
+        //#Todo:
     }
     public void addClass(ClassModel newClass){
         if(this.okToAddClass(newClass)){

@@ -1,7 +1,6 @@
 
 package UIModels;
 
-import ApplicationModels.*;
 import Models.ProjectModel;
 import UIShells.NewProjectShell;
 import javax.management.BadStringOperationException;

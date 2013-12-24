@@ -36,4 +36,8 @@ public class ProjectModel extends ProgramModel{
     public void setName(String newName){
         this.name = newName;
     }
+    @Override
+    public String toString(){
+        return this.name;
+    }
 }

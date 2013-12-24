@@ -1,7 +1,6 @@
-package ApplicationModels;
+package UIModels;
 
 import Models.*;
-import UIModels.NewProjectShellModel;
 import java.util.ArrayList;
 
 /**
@@ -33,8 +32,11 @@ public class MainModel {
      * -check for saved projects onLoad
      */
     
-    public void addNewProject(){
+    public void openAddProjectShell(){
        new NewProjectShellModel(this);
+    }
+    public void openMainApplicationShell(){
+        new MainApplicationShellModel(this);
     }
     /**
      * 
@@ -65,5 +67,8 @@ public class MainModel {
         for(ProjectModel i : projects){
             System.out.println(i.name());
         }
+    }
+    public ArrayList<ProjectModel> projects(){
+        return projects;
     }
 }
