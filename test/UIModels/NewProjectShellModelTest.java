@@ -4,6 +4,7 @@
  */
 package UIModels;
 
+import MainBase.MainApplication;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

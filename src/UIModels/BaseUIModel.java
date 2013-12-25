@@ -4,6 +4,8 @@
  */
 package UIModels;
 
+import MainBase.MainApplication;
+
 /**
  * Top level Model for all UIModel classes
  * each UIModel class must extend BaseUIModel
