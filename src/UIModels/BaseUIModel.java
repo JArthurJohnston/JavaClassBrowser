@@ -10,19 +10,11 @@ package UIModels;
  * @author Arthur
  */
 public class BaseUIModel {
-    public MainModel applicationMain;
+    protected MainApplication application;
+    protected Object shell;
     
-    //the default constructor should only be used in testing, if at all.
-    public BaseUIModel(){
-        //Never used... I hate java.
-    }
     /**
      * each instance of a UIModel class MUST be constructed
-     * with the currently running MainModel
-     * @param currentMain 
+     * with the currently running MainApplication
      */
-    public BaseUIModel(MainModel currentMain){
-        this.applicationMain = currentMain;
-    }
-    
 }

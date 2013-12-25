@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class NewProjectShellModelTest {
-    private MainModel main;
+    private MainApplication main;
     private NewProjectShellModel shellModel;
     
     public NewProjectShellModelTest() {
@@ -32,7 +32,7 @@ public class NewProjectShellModelTest {
     
     @Before
     public void setUp() {
-        main = new MainModel();
+        main = new MainApplication();
         shellModel = new NewProjectShellModel(main);
     }
     

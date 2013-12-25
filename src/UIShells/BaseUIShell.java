@@ -8,6 +8,9 @@ package UIShells;
  *
  * @author Arthur
  */
-public class MyListDataListener {
+public class BaseUIShell extends javax.swing.JFrame {
     
+    public Object shell(){
+        return this;
+    }
 }

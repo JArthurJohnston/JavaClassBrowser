@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
  *
  * @author Arthur
  */
-public class NewProjectShell extends javax.swing.JFrame {
+public class NewProjectShell extends BaseUIShell {
     private NewProjectShellModel model;
     /**
      * Creates new form NewProjectShell
@@ -15,13 +15,18 @@ public class NewProjectShell extends javax.swing.JFrame {
     public NewProjectShell() {
         initComponents();
     }
+    
+    public NewProjectShell(NewProjectShellModel model){
+        initComponents();
+        this.model = model;
+        this.setVisible(true);
+    }
+    
     private NewProjectShell setModel(NewProjectShellModel model){
         this.model = model;
         return this;
     }
-    public static void showShellWithModel(NewProjectShellModel model){
-        new NewProjectShell().setModel(model).setVisible(true); 
-    }
+    
     
 
     /**
@@ -39,6 +44,7 @@ public class NewProjectShell extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Project");
+        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
 
         newProjectNameField.setText("New Project");
 

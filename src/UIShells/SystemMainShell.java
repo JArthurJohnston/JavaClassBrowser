@@ -4,53 +4,33 @@
  */
 package UIShells;
 
-import Models.ProjectModel;
-import UIModels.MainApplicationShellModel;
-import javax.swing.DefaultListModel;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
+import UIModels.SystemMainShellModel;
 
 /**
  *
  * @author Arthur
  */
-public class MainApplicationShell extends javax.swing.JFrame {
-    private MainApplicationShellModel model;
-    private DefaultListModel<ProjectModel> list;
-
+public class SystemMainShell extends javax.swing.JFrame {
+    private SystemMainShellModel model;
+    
     /**
-     * Creates new form MainApplicationShell
+     * Creates new form SystemMainShell
      */
-    public MainApplicationShell() {
+    public SystemMainShell() {
         initComponents();
     }
-    private MainApplicationShell setModel(MainApplicationShellModel model){
+    
+    public SystemMainShell(SystemMainShellModel model){
+        initComponents();
         this.model = model;
-        list = model.fillListModel();
-        list.addListDataListener(new ListDataListener() {
-
-            @Override
-            public void intervalAdded(ListDataEvent e) {
-            }
-
-            @Override
-            public void intervalRemoved(ListDataEvent e) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            @Override
-            public void contentsChanged(ListDataEvent e) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
-        projectList.setModel(list);
+        this.projectsList.setModel(model.getList());
+        this.setVisible(true);
+    }
+    
+    private SystemMainShell setModel(SystemMainShellModel model){
+        this.model = model;
         return this;
     }
-    
-    public static void showShellWithModel(MainApplicationShellModel model){
-        new MainApplicationShell().setModel(model).setVisible(true); 
-    }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,7 +42,7 @@ public class MainApplicationShell extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        projectList = new javax.swing.JList();
+        projectsList = new javax.swing.JList();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
@@ -70,7 +50,7 @@ public class MainApplicationShell extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jScrollPane1.setViewportView(projectList);
+        jScrollPane1.setViewportView(projectsList);
 
         jMenu1.setText("File");
 
@@ -131,20 +111,20 @@ public class MainApplicationShell extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainApplicationShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SystemMainShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainApplicationShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SystemMainShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainApplicationShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SystemMainShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainApplicationShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SystemMainShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainApplicationShell().setVisible(true);
+                new SystemMainShell().setVisible(true);
             }
         });
     }
@@ -154,6 +134,6 @@ public class MainApplicationShell extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuItem newProjectMenuItem;
-    private javax.swing.JList projectList;
+    private javax.swing.JList projectsList;
     // End of variables declaration//GEN-END:variables
 }

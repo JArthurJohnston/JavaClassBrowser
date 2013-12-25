@@ -4,27 +4,30 @@ import Models.*;
 import java.util.ArrayList;
 
 /**
- * MainModel is the top-level model for the whole program
+ * MainApplication is the top-level model for the whole program
  * it keeps track of all active projects and any other non-coding
  * functions of the program. Its always the first thing that runs
  * when the program is started.
  * 
  * @author Arthur
  */
-public class MainModel {
+public class MainApplication {
     private ArrayList<ProjectModel> projects;
+    private SystemMainShellModel main;
+    
     /*
      * Todo:
      * -SettingsModel
      */
-    public MainModel(){
+    public MainApplication(){
         projects = new ArrayList();
+        main = new SystemMainShellModel(this);
     }
     /**
      * This Constructor is for Testing purposes ONLY
      * @param testProjects 
      */
-    public MainModel(ArrayList testProjects){
+    public MainApplication(ArrayList testProjects){
         this.projects = testProjects;
     }
     /*
@@ -34,9 +37,6 @@ public class MainModel {
     
     public void openAddProjectShell(){
        new NewProjectShellModel(this);
-    }
-    public void openMainApplicationShell(){
-        new MainApplicationShellModel(this);
     }
     /**
      * 
@@ -63,11 +63,9 @@ public class MainModel {
      */
     public void addProject(ProjectModel newProject){
         projects.add(newProject);
-        //#Testing
-        for(ProjectModel i : projects){
-            System.out.println(i.name());
-        }
+        main.projectAdded(newProject);
     }
+    
     public ArrayList<ProjectModel> projects(){
         return projects;
     }

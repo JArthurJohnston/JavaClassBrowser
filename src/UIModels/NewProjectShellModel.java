@@ -11,17 +11,15 @@ import javax.management.BadStringOperationException;
  * @author Arthur
  */
 public class NewProjectShellModel extends BaseUIModel{
-    private NewProjectShell shell;
     
-    public NewProjectShellModel(MainModel current){
-        this.applicationMain = current;
-        NewProjectShell.showShellWithModel(this);
+    public NewProjectShellModel(MainApplication current){
+        this.application = current;
+        shell = new NewProjectShell(this);
     }
     
-    
     public void addProject(String newProjectName) throws BadStringOperationException{
-       if(applicationMain.okToAddProjectWithName(newProjectName))
-           applicationMain.addProject(new ProjectModel(newProjectName));
+       if(application.okToAddProjectWithName(newProjectName))
+           application.addProject(new ProjectModel(newProjectName));
        else
            throw new BadStringOperationException(newProjectName);
     }
