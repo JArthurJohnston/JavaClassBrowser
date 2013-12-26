@@ -77,21 +77,29 @@ public class MainApplication {
     }
     
     public void setSelectedProject(ProjectModel aProject){
-        if(projects.contains(aProject))
+        if(projects.contains(aProject)){
             selectedProject = aProject;
+            selectedPackage = null;
+            selectedClass = null;
+            selectedMethod = null;
+        }
     }
     public void setSelectedPackage(PackageModel aPackage){
-        if(selectedProject.packages().contains(aPackage))
+        if(selectedProject.packages().contains(aPackage)){
             selectedPackage = aPackage;
+            selectedClass = null;
+            selectedMethod = null;
+        }
     }
     public void setSelectedClass(ClassModel aClass){
-        if(selectedPackage.classes().contains(aClass))
+        if(selectedPackage.classes().contains(aClass)){
             selectedClass = aClass;
+            selectedMethod = null;
+        }
     }
     public void setSelectedMethod(MethodModel aMethod){
         if(selectedClass.methods().contains(aMethod))
             selectedMethod = aMethod;
     }
     
-    public 
 }
