@@ -5,39 +5,42 @@
 package Models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * An object for keeping track of all the classes in a single project
  * @author Arthur
  */
-public class ProjectModel extends ProgramModel{
-    public static final String defaultName = "New Project";
+public class ProjectModel extends BaseModel {
+    //private variables
+    private HashMap <String, ClassModel> classes;
+    private ArrayList<ClassModel> classList;
+    private HashMap <String, PackageModel> packages;
+    private ArrayList<ClassModel> packageList;
     
-    public WorkspaceModel workspace; //user info, author name, path to files, etc...
-    private boolean isDefault = false;
-    
+    //Constructors
     public ProjectModel(){
-        this.name = ProjectModel.defaultName;
+        this.name = defaultName;
         isDefault = true;
     }
     public ProjectModel(String name){
+        classes = new HashMap();
         this.name = name;
     }
     
-    //Getters
-    public String name(){
-        return name;
-    }
-    public WorkspaceModel workspace(){
-        return workspace;
+    public void addClass(ClassModel newClass){
+        if(this.okToAddClass(newClass.name()))
+            classes.put(newClass.name(), newClass);
     }
     
-    //Setters
-    public void setName(String newName){
-        this.name = newName;
+    public boolean okToAddClass(String className){
+        return !classes.containsKey(className);
     }
-    @Override
-    public String toString(){
-        return this.name;
+    
+    public ArrayList classes(){
+        return classList;
+    }
+    public ArrayList packages(){
+        return packageList;
     }
 }

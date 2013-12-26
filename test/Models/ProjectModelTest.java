@@ -4,6 +4,8 @@
  */
 package Models;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,7 +18,7 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class ProjectModelTest {
-    private ProjectModel instance;
+    ProjectModel instance;
     
     public ProjectModelTest() {
     }
@@ -31,15 +33,15 @@ public class ProjectModelTest {
     
     @Before
     public void setUp() {
+        instance = new ProjectModel("TestProject");
     }
     
     @After
     public void tearDown() {
+        instance = null;
     }
 
     @Test
-    public void testAdd() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testOkToAddClass() {
     }
 }

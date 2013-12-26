@@ -2,12 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
+package MainBase;
 
 /**
  *
  * @author Arthur
  */
-public class MethodModel extends ClassModel{
+public class Main {
+    
+    //public staic void main string args will go here
     
 }

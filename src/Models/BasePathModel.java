@@ -8,6 +8,11 @@ package Models;
  *
  * @author Arthur
  */
-public class MethodModel extends ClassModel{
+public class BasePathModel {
+    protected String path = "";
     
+    
+    public String path(){
+        return path;
+    }
 }

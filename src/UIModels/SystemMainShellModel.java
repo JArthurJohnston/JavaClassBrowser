@@ -5,7 +5,7 @@
 package UIModels;
 
 import MainBase.MainApplication;
-import Models.ProjectModel;
+import Models.*;
 import UIShells.SystemMainShell;
 import javax.swing.DefaultListModel;
 
@@ -14,24 +14,42 @@ import javax.swing.DefaultListModel;
  * @author Arthur
  */
 public class SystemMainShellModel extends BaseUIModel{
-    private DefaultListModel<ProjectModel> list;
+    private DefaultListModel<ProjectModel> projectList;
+    private DefaultListModel<PackageModel> packageList;
+    private DefaultListModel<ClassModel> classList;
+    private DefaultListModel<MethodModel> methodList;
     
     
     public SystemMainShellModel(MainApplication current){
         this.application = current;
-        list = new DefaultListModel();
+        projectList = new DefaultListModel();
         this.fillListModel();
         shell = new SystemMainShell(this);
     }
     
-    private void fillListModel(){
+    private void fillProjectsList(){
         for(ProjectModel p : application.projects()){
-            list.addElement(p);
+            projectList.addElement(p);
+        }
+    }
+    private void fillPackageList(){
+        for(PackageModel p : application.projects()){
+            projectList.addElement(p);
+        }
+    }
+    private void fillClassList(){
+        for(ProjectModel p : application.projects()){
+            projectList.addElement(p);
+        }
+    }
+    private void fillMethodList(){
+        for(ProjectModel p : application.projects()){
+            projectList.addElement(p);
         }
     }
     
     public DefaultListModel getList(){
-        return list;
+        return projectList;
     }
     
     public void openNewProjectShell(){
@@ -39,6 +57,22 @@ public class SystemMainShellModel extends BaseUIModel{
     }
     
     public void projectAdded(ProjectModel newProject){
-        list.addElement(newProject);
+        projectList.addElement(newProject);
+    }
+    public void setSelectedPackage(PackageModel aPackage){
+        application.setSelectedPackage(aPackage);
+    }
+    public void setSelectedProject(ProjectModel aProject){
+        application.setSelectedProject(aProject);
+    }
+    public void setSelectedClass(ClassModel aClass){
+        application.setSelectedClass(aClass);
+    }
+    public void setSelectedMethod(MethodModel aMethod){
+        application.setSelectedMethod(aMethod);
+    }
+    
+    public void getPackageList(){
+        
     }
 }

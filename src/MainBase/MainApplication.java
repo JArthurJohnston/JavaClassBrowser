@@ -15,6 +15,10 @@ import java.util.ArrayList;
  */
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
+    private ProjectModel selectedProject;
+    private PackageModel selectedPackage;
+    private ClassModel selectedClass;
+    private MethodModel selectedMethod;
     private SystemMainShellModel main;
     
     /*
@@ -71,4 +75,23 @@ public class MainApplication {
     public ArrayList<ProjectModel> projects(){
         return projects;
     }
+    
+    public void setSelectedProject(ProjectModel aProject){
+        if(projects.contains(aProject))
+            selectedProject = aProject;
+    }
+    public void setSelectedPackage(PackageModel aPackage){
+        if(selectedProject.packages().contains(aPackage))
+            selectedPackage = aPackage;
+    }
+    public void setSelectedClass(ClassModel aClass){
+        if(selectedPackage.classes().contains(aClass))
+            selectedClass = aClass;
+    }
+    public void setSelectedMethod(MethodModel aMethod){
+        if(selectedClass.methods().contains(aMethod))
+            selectedMethod = aMethod;
+    }
+    
+    public 
 }
