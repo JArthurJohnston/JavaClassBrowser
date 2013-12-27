@@ -29,10 +29,8 @@ public class SystemMainShellModel extends BaseUIModel{
     }
     
     private void fillListModel(ArrayList newList, DefaultListModel myList){
-        System.out.println("fill list hit. newList size: "+ newList.size());
         for(int i=0; i<newList.size(); i++){
             myList.addElement(newList.get(i));
-            System.out.println(newList.get(i).toString()+" added to "+ myList.toString());
         }
     }
     
@@ -43,11 +41,11 @@ public class SystemMainShellModel extends BaseUIModel{
     private void fillLists(){
         this.fillListModel(application.getProjects(), projectList);
         if(application.getSelectedProject() != null){
-            this.fillListModel(application.getSelectedProject().packages(), packageList);
+            this.fillListModel(application.getSelectedProject().packageList(), packageList);
         }else{
             packageList = new DefaultListModel();
         }if(application.getSelectedPackage() != null){
-            this.fillListModel(application.getSelectedPackage().classes(), classList);
+            this.fillListModel(application.getSelectedPackage().classList(), classList);
         }else{
             classList = new DefaultListModel();
         }if(application.getSelectedClass() != null){
@@ -99,13 +97,13 @@ public class SystemMainShellModel extends BaseUIModel{
     
     public void newProjectSelected(){
         packageList.clear();
-        this.fillListModel(application.getSelectedProject().packages(), packageList);
+        this.fillListModel(application.getSelectedProject().packageList(), packageList);
         classList.clear();
         methodList.clear();
     }
     public void newPackageSelected(){
         classList.clear();
-        this.fillListModel(application.getSelectedPackage().classes(), classList);
+        this.fillListModel(application.getSelectedPackage().classList(), classList);
         methodList.clear();
     }
     public void newClassSelected(){

@@ -176,11 +176,24 @@ public class SystemMainShell extends javax.swing.JFrame {
             classList.clearSelection();
             methodList.clearSelection();
             model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
+            System.out.println(packageList.getModel().getSize());
         }
     }//GEN-LAST:event_projectsListValueChanged
 
     private void packageListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packageListValueChanged
         if(!evt.getValueIsAdjusting()){
+            System.out.println("index: "+packageList.getSelectedIndex());
+            for(int i=0;i<packageList.getModel().getSize();i++){
+                System.out.println(packageList.getModel().getElementAt(i).toString());
+            }
+            /*
+             * selected value is null?!
+             * no matter what element i select
+             *  getSelectedValue returns null
+             *  getSelectedIndex returns -1
+             */
+            System.out.println(packageList.getSelectedValue());
+            projectsList.clearSelection();
             classList.clearSelection();
             methodList.clearSelection();
             model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
@@ -190,12 +203,17 @@ public class SystemMainShell extends javax.swing.JFrame {
     private void classListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_classListValueChanged
         if(!evt.getValueIsAdjusting()){
             methodList.clearSelection();
+            projectsList.clearSelection();
+            packageList.clearSelection();
             model.setSelectedClass((ClassModel)classList.getSelectedValue());
         }
     }//GEN-LAST:event_classListValueChanged
 
     private void methodListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_methodListValueChanged
         if(!evt.getValueIsAdjusting()){
+            projectsList.clearSelection();
+            packageList.clearSelection();
+            classList.clearSelection();
             model.setSelectedMethod((MethodModel)methodList.getSelectedValue());
         }
     }//GEN-LAST:event_methodListValueChanged

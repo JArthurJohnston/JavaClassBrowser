@@ -73,11 +73,18 @@ public class ProjectModel extends BaseModel {
         return newClass;
     }
     
-    public ArrayList<ClassModel> classes(){
-        return classList;
+    public HashMap classes(){
+        return classes;
     }
-    public ArrayList<PackageModel> packages(){
+    public HashMap<String, PackageModel> packages(){
+        return packages;
+    }
+    public ArrayList<PackageModel> packageList(){
         return packageList;
     }
+    public ArrayList<ClassModel> classList(){
+        return classList;
+    }
+    
 
 }

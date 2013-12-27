@@ -83,13 +83,13 @@ public class MainApplication {
     }
     public ArrayList<PackageModel> packages(){
         if (selectedProject != null)
-            return selectedProject.packages();
+            return selectedProject.packageList();
         else
             return new ArrayList();
     }
     public ArrayList<ClassModel> classes(){
         if (selectedPackage != null)
-            return selectedPackage.classes();
+            return selectedPackage.classList();
         else
             return new ArrayList();
     }
@@ -124,13 +124,14 @@ public class MainApplication {
         }
     }
     public void setSelectedPackage(PackageModel aPackage){
-        if(selectedProject.packages().contains(aPackage.name())){
+        //aPackage is null
+        if(selectedProject.packages().containsKey(aPackage.name())){
             selectedPackage = aPackage;
             this.onPackageSelected();
         }
     }
     public void setSelectedClass(ClassModel aClass){
-        if(selectedPackage.classes().contains(aClass.name())){
+        if(selectedPackage.classes().containsKey(aClass.name())){
             selectedClass = aClass;
             this.onClassSelected();
         }
