@@ -20,12 +20,33 @@ public class ProjectModel extends BaseModel {
     
     //Constructors
     public ProjectModel(){
+        this.setUpDataStructures();
         this.name = defaultName;
         isDefault = true;
     }
     public ProjectModel(String name){
-        classes = new HashMap();
+        this.setUpDataStructures();
         this.name = name;
+    }
+    
+    protected void setUpDataStructures(){
+        classes = new HashMap();
+        packages = new HashMap();
+        classList = new ArrayList();
+        packageList = new ArrayList();
+    }
+    /*
+     * #todo: throw errors when not ok to add
+     */
+    public PackageModel addPackage(PackageModel newPackage){
+        if(this.okToAddPackage(newPackage.name())){
+            packages.put(newPackage.name(), newPackage);
+            return newPackage;
+        }
+        return null;
+    }
+    private boolean okToAddPackage(String packageName){
+        return !packages.containsKey(packageName);
     }
     
     public void addClass(ClassModel newClass){

@@ -19,7 +19,7 @@ public class MainApplication {
     private PackageModel selectedPackage;
     private ClassModel selectedClass;
     private MethodModel selectedMethod;
-    private SystemMainShellModel main;
+    private SystemMainShellModel mainShellModel;
     
     /*
      * Todo:
@@ -27,7 +27,7 @@ public class MainApplication {
      */
     public MainApplication(){
         projects = new ArrayList();
-        main = new SystemMainShellModel(this);
+        mainShellModel = new SystemMainShellModel(this);
     }
     /**
      * This Constructor is for Testing purposes ONLY
@@ -69,37 +69,108 @@ public class MainApplication {
      */
     public void addProject(ProjectModel newProject){
         projects.add(newProject);
-        main.projectAdded(newProject);
+        mainShellModel.projectAdded(newProject);
     }
     
-    public ArrayList<ProjectModel> projects(){
+    public ArrayList<ProjectModel> getProjects(){
         return projects;
     }
+    public ArrayList<PackageModel> packages(){
+        if (selectedProject != null)
+            return selectedProject.packages();
+        else
+            return new ArrayList();
+    }
+    public ArrayList<ClassModel> classes(){
+        if (selectedPackage != null)
+            return selectedPackage.classes();
+        else
+            return new ArrayList();
+    }
+    public ArrayList<MethodModel> methods(){
+        if (selectedClass != null)
+            return selectedClass.methods();
+        else
+            return new ArrayList();
+    }
     
+    public ProjectModel getSelectedProject(){
+        return selectedProject;
+    }
+    public ClassModel getSelectedClass(){
+        return selectedClass;
+    }
+    public PackageModel getSelectedPackage(){
+        return selectedPackage;
+    }
+    public MethodModel getSelectedMethod(){
+        return selectedMethod;
+    }
+    
+    /**
+     * #todo: throw an error if object model is not found
+     * @param aProject 
+     */
     public void setSelectedProject(ProjectModel aProject){
         if(projects.contains(aProject)){
             selectedProject = aProject;
-            selectedPackage = null;
-            selectedClass = null;
-            selectedMethod = null;
+            this.onProjectSelected();
         }
     }
     public void setSelectedPackage(PackageModel aPackage){
-        if(selectedProject.packages().contains(aPackage)){
+        if(selectedProject.packages().contains(aPackage.name())){
             selectedPackage = aPackage;
-            selectedClass = null;
-            selectedMethod = null;
+            this.onPackageSelected();
         }
     }
     public void setSelectedClass(ClassModel aClass){
-        if(selectedPackage.classes().contains(aClass)){
+        if(selectedPackage.classes().contains(aClass.name())){
             selectedClass = aClass;
-            selectedMethod = null;
+            this.onClassSelected();
         }
     }
     public void setSelectedMethod(MethodModel aMethod){
-        if(selectedClass.methods().contains(aMethod))
+        if(selectedClass.methods().contains(aMethod)){
             selectedMethod = aMethod;
+            this.onMethodSelected();
+        }
+    }
+    
+    /**
+     * these methods reset the required variables and send 
+     * the appropriate messages to the shell model
+     * so it will update its lists
+     */
+    private void onProjectSelected(){
+            selectedPackage = null;
+            selectedClass = null;
+            selectedMethod = null;
+            mainShellModel.newProjectSelected();
+    }
+    private void onPackageSelected(){
+            selectedClass = null;
+            selectedMethod = null;
+            mainShellModel.newPackageSelected();
+    }
+    private void onClassSelected(){
+            selectedMethod = null;
+            mainShellModel.newClassSelected();
+    }
+    private void onMethodSelected(){
+        //may not be needed
+    }
+    
+    public Object getSelected(){
+        if(selectedMethod != null)
+            return selectedMethod;
+        if(selectedClass != null)
+            return selectedClass;
+        if(selectedPackage != null)
+            return selectedPackage;
+        if(selectedProject != null)
+            return selectedProject;
+        else
+            return null;
     }
     
 }

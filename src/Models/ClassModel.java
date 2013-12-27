@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 public class ClassModel extends BaseModel{
     private PackageModel parentPackage;
+    private ClassModel parentClass;
     private ArrayList<MethodModel> methods;
      
     public ClassModel(){

@@ -95,7 +95,7 @@ public class NewProjectShell extends BaseUIShell {
             JOptionPane.showMessageDialog(this, "Invalid Project Name", 
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
-        this.dispose();
+        this.dispose();//#todo: remove this
     }//GEN-LAST:event_createNewProjectButtonActionPerformed
 
     /**
