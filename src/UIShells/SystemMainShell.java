@@ -76,9 +76,19 @@ public class SystemMainShell extends javax.swing.JFrame {
 
         jLabel1.setText("Projects");
 
+        packageList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                packageListMouseClicked(evt);
+            }
+        });
         packageList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 packageListValueChanged(evt);
+            }
+        });
+        packageList.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                packageListFocusLost(evt);
             }
         });
         jScrollPane2.setViewportView(packageList);
@@ -131,18 +141,20 @@ public class SystemMainShell extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(86, 86, 86)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
-                .addContainerGap(169, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,10 +168,9 @@ public class SystemMainShell extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane3)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1)))
+                    .addComponent(jScrollPane3)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
@@ -172,51 +183,37 @@ public class SystemMainShell extends javax.swing.JFrame {
 
     private void projectsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_projectsListValueChanged
         if(!evt.getValueIsAdjusting()){
-            packageList.clearSelection();
-            classList.clearSelection();
-            methodList.clearSelection();
+            System.out.println("Project: "+projectsList.getSelectedValue().toString());
             model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
-            System.out.println(packageList.getModel().getSize());
         }
     }//GEN-LAST:event_projectsListValueChanged
 
     private void packageListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packageListValueChanged
         if(!evt.getValueIsAdjusting()){
-            System.out.println("index: "+packageList.getSelectedIndex());
-            for(int i=0;i<packageList.getModel().getSize();i++){
-                System.out.println(packageList.getModel().getElementAt(i).toString());
-            }
-            /*
-             * selected value is null?!
-             * no matter what element i select
-             *  getSelectedValue returns null
-             *  getSelectedIndex returns -1
-             */
-            System.out.println(packageList.getSelectedValue());
-            projectsList.clearSelection();
-            classList.clearSelection();
-            methodList.clearSelection();
-            model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
         }
     }//GEN-LAST:event_packageListValueChanged
 
     private void classListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_classListValueChanged
         if(!evt.getValueIsAdjusting()){
-            methodList.clearSelection();
-            projectsList.clearSelection();
-            packageList.clearSelection();
             model.setSelectedClass((ClassModel)classList.getSelectedValue());
         }
     }//GEN-LAST:event_classListValueChanged
 
     private void methodListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_methodListValueChanged
         if(!evt.getValueIsAdjusting()){
-            projectsList.clearSelection();
-            packageList.clearSelection();
-            classList.clearSelection();
             model.setSelectedMethod((MethodModel)methodList.getSelectedValue());
         }
     }//GEN-LAST:event_methodListValueChanged
+
+    private void packageListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_packageListFocusLost
+        packageList.clearSelection();
+    }//GEN-LAST:event_packageListFocusLost
+
+    private void packageListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_packageListMouseClicked
+        
+            System.out.println("Package: "+packageList.getSelectedValue());
+            model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
+    }//GEN-LAST:event_packageListMouseClicked
 
     /**
      * @param args the command line arguments

@@ -118,6 +118,8 @@ public class MainApplication {
      * @param aProject 
      */
     public void setSelectedProject(ProjectModel aProject){
+        if(aProject == selectedProject)
+            return;
         if(projects.contains(aProject)){
             selectedProject = aProject;
             this.onProjectSelected();
