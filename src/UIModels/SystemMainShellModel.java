@@ -82,12 +82,15 @@ public class SystemMainShellModel extends BaseUIModel{
     
     public void setSelectedPackage(PackageModel aPackage){
         application.setSelectedPackage(aPackage);
+        this.newPackageSelected();
     }
     public void setSelectedProject(ProjectModel aProject){
         application.setSelectedProject(aProject);
+        this.newProjectSelected();
     }
     public void setSelectedClass(ClassModel aClass){
         application.setSelectedClass(aClass);
+        this.newClassSelected();
     }
     public void setSelectedMethod(MethodModel aMethod){
         application.setSelectedMethod(aMethod);

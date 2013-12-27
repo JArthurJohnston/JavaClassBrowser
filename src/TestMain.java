@@ -1,6 +1,9 @@
 
+import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import MainBase.MainApplication;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates
@@ -13,30 +16,30 @@ import MainBase.MainApplication;
  */
 public class TestMain {
     private static MainApplication main;
-    private static ProjectModel project;
+    private static ProjectModel project1;
     private static ProjectModel project2;
+    private static PackageModel aPackage;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        project = new ProjectModel("Test Project");
-        PackageModel testPackage = project.addPackage(new PackageModel(project, "TestPackage"));
-        testPackage.addClass(new ClassModel(testPackage, "TestClass"));
-        testPackage.addClass(new ClassModel(testPackage, "TestClass2"));
-        testPackage.addClass(new ClassModel(testPackage, "TestClass3"));
-        
-        
-        PackageModel somePackage = project.addPackage(new PackageModel(project, "SomePackage"));
-        somePackage.addClass(new ClassModel(testPackage, "SomeClass"));
-        somePackage.addClass(new ClassModel(testPackage, "SomeClass2"));
-        somePackage.addClass(new ClassModel(testPackage, "SomeClass3"));
-        
         main = new MainApplication();
-        main.addProject(new ProjectModel("a project"));
-        main.addProject(new ProjectModel("another project"));
-        main.addProject(project);
+        try {
+            main.addProject("AProject");
+            project1 = main.addProject("TestProject");
+            main.addProject("NewProject");
+            project2 = main.addProject("SomeProject");
+            aPackage = project1.addPackage("NewPackage");
+            project1.addPackage("APackage");
+            project1.addPackage("SomePackage");
+            project2.addPackage("NewPackage");
+            project2.addPackage("APackage");
+            project2.addPackage("SomePackage");
+            
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
 /*

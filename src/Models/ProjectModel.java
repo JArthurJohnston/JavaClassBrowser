@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,7 +17,13 @@ public class ProjectModel extends BaseModel {
     private HashMap <String, ClassModel> classes;
     private ArrayList<ClassModel> classList;
     private HashMap <String, PackageModel> packages;
-    private ArrayList<ClassModel> packageList;
+    private ArrayList<PackageModel> packageList;
+    
+    /*
+     * #todo:
+     * might consider changing the arraylists to trees for logN traversal,
+     * insertion and removal.
+     */
     
     //Constructors
     public ProjectModel(){
@@ -38,30 +45,39 @@ public class ProjectModel extends BaseModel {
     /*
      * #todo: throw errors when not ok to add
      */
-    public PackageModel addPackage(PackageModel newPackage){
-        if(this.okToAddPackage(newPackage.name())){
-            packages.put(newPackage.name(), newPackage);
+    public PackageModel addPackage(String newPackageName)throws NameAlreadyExistsException{
+        if(this.okToAddPackage(newPackageName)){
+            PackageModel newPackage = new PackageModel(this, newPackageName);
+            packages.put(newPackageName, newPackage);
+            packageList.add(newPackage);
             return newPackage;
-        }
-        return null;
+        }else 
+            throw new NameAlreadyExistsException(this, newPackageName);
+        
     }
     private boolean okToAddPackage(String packageName){
         return !packages.containsKey(packageName);
     }
     
-    public void addClass(ClassModel newClass){
-        if(this.okToAddClass(newClass.name()))
-            classes.put(newClass.name(), newClass);
-    }
-    
+    // addClass() happens at the Package level, which will call super okToAdd...
     public boolean okToAddClass(String className){
         return !classes.containsKey(className);
     }
+    /**
+     * Should only be called by a PackageModel
+     * @param newClass 
+     */
+    protected ClassModel addClass(ClassModel newClass){
+        classes.put(newClass.name(), newClass);
+        classList.add(newClass);
+        return newClass;
+    }
     
-    public ArrayList classes(){
+    public ArrayList<ClassModel> classes(){
         return classList;
     }
-    public ArrayList packages(){
+    public ArrayList<PackageModel> packages(){
         return packageList;
     }
+
 }

@@ -1,5 +1,6 @@
 package MainBase;
 
+import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIModels.NewProjectShellModel;
 import UIModels.SystemMainShellModel;
@@ -49,7 +50,7 @@ public class MainApplication {
      * @param newProject
      * @return 
      */
-    public boolean okToAddProjectWithName(String newProjectName){
+    private boolean okToAddProjectWithName(String newProjectName){
         if(projects.isEmpty())
             return true;
         if(newProjectName == null)
@@ -67,9 +68,14 @@ public class MainApplication {
      *  before calling addProject()
      * @param newProject 
      */
-    public void addProject(ProjectModel newProject){
-        projects.add(newProject);
-        mainShellModel.projectAdded(newProject);
+    public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{
+        if(this.okToAddProjectWithName(newProjectName)){
+            ProjectModel newProject = new ProjectModel(newProjectName);
+            projects.add(newProject);
+            mainShellModel.projectAdded(newProject);
+            return newProject;
+        }else
+            throw new NameAlreadyExistsException(newProjectName, this);
     }
     
     public ArrayList<ProjectModel> getProjects(){
@@ -145,16 +151,13 @@ public class MainApplication {
             selectedPackage = null;
             selectedClass = null;
             selectedMethod = null;
-            mainShellModel.newProjectSelected();
     }
     private void onPackageSelected(){
             selectedClass = null;
             selectedMethod = null;
-            mainShellModel.newPackageSelected();
     }
     private void onClassSelected(){
             selectedMethod = null;
-            mainShellModel.newClassSelected();
     }
     private void onMethodSelected(){
         //may not be needed

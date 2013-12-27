@@ -89,12 +89,7 @@ public class NewProjectShell extends BaseUIShell {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createNewProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewProjectButtonActionPerformed
-        try{
-            model.addProject(newProjectNameField.getText());
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Invalid Project Name", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        model.addProject(newProjectNameField.getText());
         this.dispose();//#todo: remove this
     }//GEN-LAST:event_createNewProjectButtonActionPerformed
 

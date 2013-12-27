@@ -172,18 +172,24 @@ public class SystemMainShell extends javax.swing.JFrame {
 
     private void projectsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_projectsListValueChanged
         if(!evt.getValueIsAdjusting()){
+            packageList.clearSelection();
+            classList.clearSelection();
+            methodList.clearSelection();
             model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
         }
     }//GEN-LAST:event_projectsListValueChanged
 
     private void packageListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packageListValueChanged
         if(!evt.getValueIsAdjusting()){
+            classList.clearSelection();
+            methodList.clearSelection();
             model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
         }
     }//GEN-LAST:event_packageListValueChanged
 
     private void classListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_classListValueChanged
         if(!evt.getValueIsAdjusting()){
+            methodList.clearSelection();
             model.setSelectedClass((ClassModel)classList.getSelectedValue());
         }
     }//GEN-LAST:event_classListValueChanged

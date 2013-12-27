@@ -1,9 +1,12 @@
 
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.NewProjectShell;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.BadStringOperationException;
 
 /**
@@ -18,11 +21,12 @@ public class NewProjectShellModel extends BaseUIModel{
         shell = new NewProjectShell(this);
     }
     
-    public void addProject(String newProjectName) throws BadStringOperationException{
-       if(application.okToAddProjectWithName(newProjectName))
-           application.addProject(new ProjectModel(newProjectName));
-       else
-           throw new BadStringOperationException(newProjectName);
+    public void addProject(String newProjectName){
+        try {
+            application.addProject(newProjectName);
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(NewProjectShellModel.class.getName()).log(Level.WARNING, null, ex);
+        }
     }
     
 }
