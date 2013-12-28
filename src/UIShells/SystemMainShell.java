@@ -30,7 +30,7 @@ public class SystemMainShell extends javax.swing.JFrame {
         projectsList.setModel(model.getProjectList());
         packageList.setModel(model.getPackageList());
         classList.setModel(model.getClassList());
-        methodList.setModel(model.getMethodList());
+        instanceMethodList.setModel(model.getMethodList());
     }
     
     private SystemMainShell setModel(SystemMainShellModel model){
@@ -56,9 +56,19 @@ public class SystemMainShell extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         classList = new javax.swing.JList();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        methodList = new javax.swing.JList();
         jLabel4 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        instanceMethodList = new javax.swing.JList();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        StaticMethodList = new javax.swing.JList();
+        classCommentField = new javax.swing.JTabbedPane();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        methodSourceField = new javax.swing.JTextPane();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        classDefinitionField = new javax.swing.JTextArea();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jTextPane2 = new javax.swing.JTextPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
@@ -67,9 +77,9 @@ public class SystemMainShell extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         projectsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        projectsList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                projectsListValueChanged(evt);
+        projectsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                projectsListMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(projectsList);
@@ -81,37 +91,49 @@ public class SystemMainShell extends javax.swing.JFrame {
                 packageListMouseClicked(evt);
             }
         });
-        packageList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                packageListValueChanged(evt);
-            }
-        });
-        packageList.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                packageListFocusLost(evt);
-            }
-        });
         jScrollPane2.setViewportView(packageList);
 
         jLabel2.setText("Packages");
 
-        classList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                classListValueChanged(evt);
+        classList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                classListMouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(classList);
 
         jLabel3.setText("Classes");
 
-        methodList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                methodListValueChanged(evt);
+        jLabel4.setText("Methods");
+
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+
+        instanceMethodList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                instanceMethodListMouseClicked(evt);
             }
         });
-        jScrollPane4.setViewportView(methodList);
+        jScrollPane4.setViewportView(instanceMethodList);
 
-        jLabel4.setText("Methods");
+        jTabbedPane1.addTab("Instance", jScrollPane4);
+
+        jScrollPane5.setViewportView(StaticMethodList);
+
+        jTabbedPane1.addTab("Static", jScrollPane5);
+
+        jScrollPane6.setViewportView(methodSourceField);
+
+        classCommentField.addTab("Method Source", jScrollPane6);
+
+        classDefinitionField.setColumns(20);
+        classDefinitionField.setRows(5);
+        jScrollPane7.setViewportView(classDefinitionField);
+
+        classCommentField.addTab("Class Definition", jScrollPane7);
+
+        jScrollPane8.setViewportView(jTextPane2);
+
+        classCommentField.addTab("Class Comment", jScrollPane8);
 
         jMenu1.setText("File");
 
@@ -136,42 +158,53 @@ public class SystemMainShell extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(86, 86, 86)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(4, 4, 4)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 29, Short.MAX_VALUE))
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(classCommentField)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel4)))
+                .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(classCommentField, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
@@ -181,39 +214,25 @@ public class SystemMainShell extends javax.swing.JFrame {
         model.openNewProjectShell();
     }//GEN-LAST:event_newProjectMenuItemActionPerformed
 
-    private void projectsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_projectsListValueChanged
-        if(!evt.getValueIsAdjusting()){
-            System.out.println("Project: "+projectsList.getSelectedValue().toString());
-            model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
-        }
-    }//GEN-LAST:event_projectsListValueChanged
-
-    private void packageListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_packageListValueChanged
-        if(!evt.getValueIsAdjusting()){
-        }
-    }//GEN-LAST:event_packageListValueChanged
-
-    private void classListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_classListValueChanged
-        if(!evt.getValueIsAdjusting()){
-            model.setSelectedClass((ClassModel)classList.getSelectedValue());
-        }
-    }//GEN-LAST:event_classListValueChanged
-
-    private void methodListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_methodListValueChanged
-        if(!evt.getValueIsAdjusting()){
-            model.setSelectedMethod((MethodModel)methodList.getSelectedValue());
-        }
-    }//GEN-LAST:event_methodListValueChanged
-
-    private void packageListFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_packageListFocusLost
-        packageList.clearSelection();
-    }//GEN-LAST:event_packageListFocusLost
-
     private void packageListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_packageListMouseClicked
-        
-            System.out.println("Package: "+packageList.getSelectedValue());
+        if(packageList.getModel().getSize() >= 1)
             model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
     }//GEN-LAST:event_packageListMouseClicked
+
+    private void projectsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectsListMouseClicked
+        if(projectsList.getModel().getSize() >= 1)
+            model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
+    }//GEN-LAST:event_projectsListMouseClicked
+
+    private void classListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_classListMouseClicked
+        if(classList.getModel().getSize() >= 1)
+            model.setSelectedClass((ClassModel)classList.getSelectedValue());
+    }//GEN-LAST:event_classListMouseClicked
+
+    private void instanceMethodListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_instanceMethodListMouseClicked
+        if(instanceMethodList.getModel().getSize() >= 1)
+            model.setSelectedMethod((MethodModel)instanceMethodList.getSelectedValue());
+    }//GEN-LAST:event_instanceMethodListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -250,7 +269,11 @@ public class SystemMainShell extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList StaticMethodList;
+    private javax.swing.JTabbedPane classCommentField;
+    private javax.swing.JTextArea classDefinitionField;
     private javax.swing.JList classList;
+    private javax.swing.JList instanceMethodList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -262,7 +285,13 @@ public class SystemMainShell extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JList methodList;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextPane jTextPane2;
+    private javax.swing.JTextPane methodSourceField;
     private javax.swing.JMenuItem newProjectMenuItem;
     private javax.swing.JList packageList;
     private javax.swing.JList projectsList;
