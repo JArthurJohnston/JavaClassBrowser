@@ -9,8 +9,9 @@ package UIShells;
  * @author Arthur
  */
 public class BaseUIShell extends javax.swing.JFrame {
+    private BaseUIShell model;
     
-    public Object shell(){
+    public BaseUIShell shell(){
         return this;
     }
 }

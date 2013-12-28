@@ -9,6 +9,8 @@ package Models;
  * @author Arthur
  */
 public class BaseModel extends BasePathModel{
+    protected String description;
+    protected String comment;
     protected String name;
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
@@ -16,16 +18,9 @@ public class BaseModel extends BasePathModel{
     public static final ClassModel defaultParentClass = new ClassModel();
     public static final PackageModel defaultPackage = new PackageModel();
     
-    //static methods
-    
-    
     //getters
     public String name(){
         return name;
-    }
-    @Override
-    public String path(){
-        return super.path() + this.path;
     }
     public boolean hasChange(){
         return hasChange;
@@ -46,8 +41,37 @@ public class BaseModel extends BasePathModel{
     public void isDefault(Boolean isDefault){
         this.isDefault = isDefault;
     }
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+    public void setDescription(String description){
+        this.description = description;
+    }
+    public void setChanged(boolean isChange){
+        this.hasChange = isChange;
+    }
+    //getters
+    public String getDescription(){
+        return description;
+    }
+    public String getComment(){
+        return comment;
+    }
+    
+    
+    //logic
+    public boolean isMethod(){
+        return false;
+    }
     @Override
     public String toString(){
         return this.name;
+    }
+    public String toSourceString(){
+        return null;
+    }
+    @Override
+    public String path(){
+        return super.path() + this.path;
     }
 }

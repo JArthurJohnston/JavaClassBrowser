@@ -25,6 +25,7 @@ public class ClassModel extends PackageModel{
      */
     public ClassModel(){
         this.name = "Object";
+        parentClass = defaultParentClass;
         methods = new ArrayList();
         this.inheritedMethods = new ArrayList();
     }
@@ -39,7 +40,6 @@ public class ClassModel extends PackageModel{
         this.name = name;
         this.setUpDataStructures();
     }
-    
     
     @Override
     protected void setUpDataStructures(){
