@@ -14,6 +14,7 @@ public class BaseModel extends BasePathModel{
     protected final String defaultName = "DefaultName";
     protected Boolean isDefault = false;
     public static final ClassModel defaultParentClass = new ClassModel();
+    public static final PackageModel defaultPackage = new PackageModel();
     
     //static methods
     

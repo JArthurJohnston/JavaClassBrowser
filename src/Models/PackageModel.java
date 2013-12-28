@@ -18,7 +18,10 @@ public class PackageModel extends ProjectModel {
      * top-level classes only
      */
     
-    public PackageModel(){}
+    public PackageModel(){
+        this.name = "default package";
+        this.setUpDataStructures();
+    }
     
     public PackageModel(ProjectModel parent, String name){
         this.setUpDataStructures();
@@ -35,24 +38,24 @@ public class PackageModel extends ProjectModel {
     }
     
     public ClassModel addClass(String newClassName)throws NameAlreadyExistsException{
-        if(this.okToAddClass(newClassName)){
-            ClassModel newClass = new ClassModel(this, newClassName);
+        if(super.okToAddClass(newClassName)){
+            ClassModel newClass = new ClassModel(newClassName);
             this.addClass(newClass);
             return newClass;
-        }else
+        }else {
             throw new NameAlreadyExistsException(newClassName, this);
+        }
     }
     
     @Override
-    protected void addClass (ClassModel newClass){
-        if(newClass.isTopLevel())
+    protected ClassModel addClass (ClassModel newClass){
+        if(newClass.isTopLevel()) {
             this.classList.add(newClass);
+        }
+        super.addClass(newClass);
+        return newClass;
     }
     
-    @Override
-    protected boolean okToAddClass(String newClassName){
-        return super.okToAddClass(newClassName);
-    }
     
     
     public ArrayList<ClassModel> classList(){

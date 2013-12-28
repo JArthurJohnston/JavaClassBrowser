@@ -65,8 +65,9 @@ public class ProjectModel extends BaseModel {
      * Should only be called by a PackageModel
      * @param newClass 
      */
-    protected void addClass(ClassModel newClass){
+    protected ClassModel addClass(ClassModel newClass){
         classes.put(newClass.name(), newClass);
+        return newClass;
     }
     
     public HashMap classes(){

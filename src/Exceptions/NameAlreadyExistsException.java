@@ -16,6 +16,6 @@ public class NameAlreadyExistsException extends BaseException{
     }
     
     private static String constructMessage(Object sender, Object target){
-        return target.getClass().toString() + message + sender.getClass().toString();
+        return target.getClass().toString() + message + sender.toString();
     }
 }
