@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
-    private ArrayList<ClassModel> classList;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
     
@@ -39,7 +38,6 @@ public class ProjectModel extends BaseModel {
     protected void setUpDataStructures(){
         classes = new HashMap();
         packages = new HashMap();
-        classList = new ArrayList();
         packageList = new ArrayList();
     }
     /*
@@ -55,22 +53,20 @@ public class ProjectModel extends BaseModel {
             throw new NameAlreadyExistsException(this, newPackageName);
         
     }
-    private boolean okToAddPackage(String packageName){
+    protected boolean okToAddPackage(String packageName){
         return !packages.containsKey(packageName);
     }
     
-    // addClass() happens at the Package level, which will call super okToAdd...
-    public boolean okToAddClass(String className){
+    
+    protected boolean okToAddClass(String className){
         return !classes.containsKey(className);
     }
     /**
      * Should only be called by a PackageModel
      * @param newClass 
      */
-    protected ClassModel addClass(ClassModel newClass){
+    protected void addClass(ClassModel newClass){
         classes.put(newClass.name(), newClass);
-        classList.add(newClass);
-        return newClass;
     }
     
     public HashMap classes(){
@@ -81,9 +77,6 @@ public class ProjectModel extends BaseModel {
     }
     public ArrayList<PackageModel> packageList(){
         return packageList;
-    }
-    public ArrayList<ClassModel> classList(){
-        return classList;
     }
     
 

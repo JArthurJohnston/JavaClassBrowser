@@ -62,13 +62,17 @@ public class SystemMainShell extends javax.swing.JFrame {
         instanceMethodList = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         StaticMethodList = new javax.swing.JList();
-        classCommentField = new javax.swing.JTabbedPane();
+        editorSelectorTabls = new javax.swing.JTabbedPane();
         jScrollPane6 = new javax.swing.JScrollPane();
         methodSourceField = new javax.swing.JTextPane();
         jScrollPane7 = new javax.swing.JScrollPane();
         classDefinitionField = new javax.swing.JTextArea();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
+        classCommentField = new javax.swing.JTextPane();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        packageCommentField = new javax.swing.JTextArea();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        descriptionArea = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
@@ -123,17 +127,29 @@ public class SystemMainShell extends javax.swing.JFrame {
 
         jScrollPane6.setViewportView(methodSourceField);
 
-        classCommentField.addTab("Method Source", jScrollPane6);
+        editorSelectorTabls.addTab("Method Source", jScrollPane6);
 
         classDefinitionField.setColumns(20);
         classDefinitionField.setRows(5);
         jScrollPane7.setViewportView(classDefinitionField);
 
-        classCommentField.addTab("Class Definition", jScrollPane7);
+        editorSelectorTabls.addTab("Class Definition", jScrollPane7);
 
-        jScrollPane8.setViewportView(jTextPane2);
+        jScrollPane8.setViewportView(classCommentField);
 
-        classCommentField.addTab("Class Comment", jScrollPane8);
+        editorSelectorTabls.addTab("Class Comment", jScrollPane8);
+
+        packageCommentField.setColumns(20);
+        packageCommentField.setRows(5);
+        jScrollPane9.setViewportView(packageCommentField);
+
+        editorSelectorTabls.addTab("Package Comment", jScrollPane9);
+
+        descriptionArea.setColumns(20);
+        descriptionArea.setRows(5);
+        jScrollPane10.setViewportView(descriptionArea);
+
+        editorSelectorTabls.addTab("Description", jScrollPane10);
 
         jMenu1.setText("File");
 
@@ -176,11 +192,13 @@ public class SystemMainShell extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 29, Short.MAX_VALUE))
-                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(classCommentField)))
+                        .addComponent(editorSelectorTabls)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -188,14 +206,10 @@ public class SystemMainShell extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel4)))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -203,8 +217,8 @@ public class SystemMainShell extends javax.swing.JFrame {
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(classCommentField, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addComponent(editorSelectorTabls, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -270,9 +284,11 @@ public class SystemMainShell extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList StaticMethodList;
-    private javax.swing.JTabbedPane classCommentField;
+    private javax.swing.JTextPane classCommentField;
     private javax.swing.JTextArea classDefinitionField;
     private javax.swing.JList classList;
+    private javax.swing.JTextArea descriptionArea;
+    private javax.swing.JTabbedPane editorSelectorTabls;
     private javax.swing.JList instanceMethodList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -282,6 +298,7 @@ public class SystemMainShell extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -289,10 +306,11 @@ public class SystemMainShell extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTextPane methodSourceField;
     private javax.swing.JMenuItem newProjectMenuItem;
+    private javax.swing.JTextArea packageCommentField;
     private javax.swing.JList packageList;
     private javax.swing.JList projectsList;
     // End of variables declaration//GEN-END:variables

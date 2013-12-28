@@ -13,6 +13,10 @@ public class BaseModel extends BasePathModel{
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
     protected Boolean isDefault = false;
+    public static final ClassModel defaultParentClass = new ClassModel();
+    
+    //static methods
+    
     
     //getters
     public String name(){
