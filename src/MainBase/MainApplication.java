@@ -51,15 +51,19 @@ public class MainApplication {
      * @return 
      */
     private boolean okToAddProjectWithName(String newProjectName){
-        if(projects.isEmpty())
+        if(projects.isEmpty()) {
             return true;
-        if(newProjectName == null)
+        }
+        if(newProjectName == null) {
             return false;
-        if(newProjectName == "")
+        }
+        if("".equals(newProjectName)) {
             return false;
+        }
         for(ProjectModel i : projects){
-            if(i.name().equals(newProjectName))
+            if(i.name().equals(newProjectName)) {
                 return false;
+            }
         }
         return true;
     }
@@ -74,30 +78,37 @@ public class MainApplication {
             projects.add(newProject);
             mainShellModel.projectAdded(newProject);
             return newProject;
-        }else
+        }else {
             throw new NameAlreadyExistsException(newProjectName, this);
+        }
     }
     
     public ArrayList<ProjectModel> getProjects(){
         return projects;
     }
     public ArrayList<PackageModel> packages(){
-        if (selectedProject != null)
+        if (selectedProject != null) {
             return selectedProject.packageList();
-        else
+        }
+        else {
             return new ArrayList();
+        }
     }
     public ArrayList<ClassModel> classes(){
-        if (selectedPackage != null)
+        if (selectedPackage != null) {
             return selectedPackage.classList();
-        else
+        }
+        else {
             return new ArrayList();
+        }
     }
     public ArrayList<MethodModel> methods(){
-        if (selectedClass != null)
-            return selectedClass.methods();
-        else
+        if (selectedClass != null) {
+            return selectedClass.instanceMethods();
+        }
+        else {
             return new ArrayList();
+        }
     }
     
     public ProjectModel getSelectedProject(){
@@ -118,8 +129,9 @@ public class MainApplication {
      * @param aProject 
      */
     public void setSelectedProject(ProjectModel aProject){
-        if(aProject == selectedProject)
+        if(aProject == selectedProject) {
             return;
+        }
         if(projects.contains(aProject)){
             selectedProject = aProject;
             this.onProjectSelected();
@@ -139,14 +151,14 @@ public class MainApplication {
         }
     }
     public void setSelectedMethod(MethodModel aMethod){
-        if(selectedClass.methods().contains(aMethod)){
+        if(selectedClass.instanceMethods().contains(aMethod)){
             selectedMethod = aMethod;
             this.onMethodSelected();
         }
     }
     
     /**
-     * these methods reset the required variables and send 
+     * these instanceMethods reset the required variables and send 
      * the appropriate messages to the shell model
      * so it will update its lists
      */
@@ -167,16 +179,20 @@ public class MainApplication {
     }
     
     public Object getSelected(){
-        if(selectedMethod != null)
+        if(selectedMethod != null) {
             return selectedMethod;
-        if(selectedClass != null)
+        }
+        if(selectedClass != null) {
             return selectedClass;
-        if(selectedPackage != null)
+        }
+        if(selectedPackage != null) {
             return selectedPackage;
-        if(selectedProject != null)
+        }
+        if(selectedProject != null) {
             return selectedProject;
-        else
+        } else {
             return null;
+        }
     }
     
 }

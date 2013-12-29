@@ -11,7 +11,7 @@ import UIModels.SystemMainShellModel;
  * 
  * @author Arthur
  */
-public class SystemMainShell extends javax.swing.JFrame {
+public class SystemMainShell extends BaseUIShell{
     private SystemMainShellModel model;
     
     public SystemMainShell(){
@@ -193,23 +193,31 @@ public class SystemMainShell extends javax.swing.JFrame {
     }//GEN-LAST:event_newProjectMenuItemActionPerformed
 
     private void packageListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_packageListMouseClicked
-        if(packageList.getModel().getSize() >= 1)
+        if(packageList.getModel().getSize() >= 1) {
             model.setSelectedPackage((PackageModel)packageList.getSelectedValue());
+            mainSelectedModelForm.onSelectionChanged((PackageModel)packageList.getSelectedValue());
+        }
     }//GEN-LAST:event_packageListMouseClicked
 
     private void projectsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectsListMouseClicked
-        if(projectsList.getModel().getSize() >= 1)
+        if(projectsList.getModel().getSize() >= 1) {
             model.setSelectedProject((ProjectModel)projectsList.getSelectedValue());
+            mainSelectedModelForm.onSelectionChanged((ProjectModel)projectsList.getSelectedValue());
+        }
     }//GEN-LAST:event_projectsListMouseClicked
 
     private void classListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_classListMouseClicked
-        if(classList.getModel().getSize() >= 1)
+        if(classList.getModel().getSize() >= 1) {
             model.setSelectedClass((ClassModel)classList.getSelectedValue());
+            mainSelectedModelForm.onSelectionChanged((ClassModel)classList.getSelectedValue());
+        }
     }//GEN-LAST:event_classListMouseClicked
 
     private void instanceMethodListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_instanceMethodListMouseClicked
-        if(instanceMethodList.getModel().getSize() >= 1)
+        if(instanceMethodList.getModel().getSize() >= 1) {
             model.setSelectedMethod((MethodModel)instanceMethodList.getSelectedValue());
+            mainSelectedModelForm.onSelectionChanged((MethodModel)instanceMethodList.getSelectedValue());
+        }
     }//GEN-LAST:event_instanceMethodListMouseClicked
 
     /**

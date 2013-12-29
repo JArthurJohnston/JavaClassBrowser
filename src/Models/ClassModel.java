@@ -5,6 +5,7 @@
 package Models;
 
 import Exceptions.NameAlreadyExistsException;
+import Types.ClassType;
 import java.util.ArrayList;
 
 /**
@@ -68,8 +69,8 @@ public class ClassModel extends PackageModel{
     
     
     public ArrayList<MethodModel> inheritableMethods(){
-        ArrayList<MethodModel> methods = new ArrayList();
-        return methods;
+        ArrayList<MethodModel> inhMethods = new ArrayList();
+        return inhMethods;
     }
     
     protected boolean isTopLevel(){
@@ -77,8 +78,23 @@ public class ClassModel extends PackageModel{
     }
     
     //Getters
-    public ArrayList methods(){
-        return methods;
+    public ArrayList instanceMethods(){
+        ArrayList classMethods = new ArrayList();
+        for(MethodModel m : methods){
+            if(m.getType() == ClassType.INSTANCE) {
+                classMethods.add(m);
+            }
+        }
+        return classMethods;
+    }
+    public ArrayList classMethods(){
+        ArrayList classMethods = new ArrayList();
+        for(MethodModel m : methods){
+            if(m.getType() == ClassType.CLASS) {
+                classMethods.add(m);
+            }
+        }
+        return classMethods;
     }
     public ArrayList<MethodModel> getInheritedMethods(){
         return inheritedMethods;

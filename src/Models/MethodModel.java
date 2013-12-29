@@ -4,6 +4,8 @@
  */
 package Models;
 
+import Types.ClassType;
+
 /**
  * 
  * @author Arthur
@@ -11,6 +13,7 @@ package Models;
 public class MethodModel extends ClassModel{
     private String source;
     private Object signature; //#todo, figure this out...again
+    private ClassType type;
     
     public void setSource(String source){
         this.source = source;
@@ -26,5 +29,10 @@ public class MethodModel extends ClassModel{
     }
     public String toStringSource(){
         return this.getSource();
+    }
+    public ClassType getType(){
+        if(type == null)
+            return ClassType.INSTANCE;
+        return type;
     }
 }
