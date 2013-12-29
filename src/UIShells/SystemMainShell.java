@@ -62,6 +62,8 @@ public class SystemMainShell extends BaseUIShell{
         instanceMethodList = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         StaticMethodList = new javax.swing.JList();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        constructorsList = new javax.swing.JList();
         mainSelectedModelForm = new UIShells.UIForms.SelectedModelForm();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -115,6 +117,10 @@ public class SystemMainShell extends BaseUIShell{
 
         jTabbedPane1.addTab("Static", jScrollPane5);
 
+        jScrollPane6.setViewportView(constructorsList);
+
+        jTabbedPane1.addTab("Constructors", jScrollPane6);
+
         jMenu1.setText("File");
 
         newProjectMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
@@ -150,16 +156,16 @@ public class SystemMainShell extends BaseUIShell{
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(mainSelectedModelForm, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -257,6 +263,7 @@ public class SystemMainShell extends BaseUIShell{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList StaticMethodList;
     private javax.swing.JList classList;
+    private javax.swing.JList constructorsList;
     private javax.swing.JList instanceMethodList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -270,6 +277,7 @@ public class SystemMainShell extends BaseUIShell{
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private UIShells.UIForms.SelectedModelForm mainSelectedModelForm;
     private javax.swing.JMenuItem newProjectMenuItem;

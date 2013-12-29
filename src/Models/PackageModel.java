@@ -6,6 +6,7 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -20,11 +21,17 @@ public class PackageModel extends ProjectModel {
     
     public PackageModel(){
         this.name = "default package";
-        this.setUpDataStructures();
+        classes = new HashMap();
+        packages = new HashMap();
+        packageList = new ArrayList();
+        classList = new ArrayList();
     }
     
     public PackageModel(ProjectModel parent, String name){
-        this.setUpDataStructures();
+        classes = new HashMap();
+        packages = new HashMap();
+        packageList = new ArrayList();
+        classList = new ArrayList();
         this.name = name;
     }
     

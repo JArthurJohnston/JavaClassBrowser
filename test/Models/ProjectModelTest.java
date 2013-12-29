@@ -5,14 +5,16 @@
 package Models;
 
 import Exceptions.NameAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -34,7 +36,8 @@ public class ProjectModelTest {
     
     @Before
     public void setUp() {
-        instance = new ProjectModel("TestProject");
+        String testName = "TestProject";
+        instance = new ProjectModel(testName);
     }
     
     @After
@@ -42,6 +45,19 @@ public class ProjectModelTest {
         instance = null;
     }
 
+    
+    @Test
+    public void testInitialize(){
+        instance = new ProjectModel();
+        assertEquals(ProjectModel.class, instance.getClass());
+        assertEquals(instance.classes.getClass(),  HashMap.class);
+        assertEquals(instance.packages.getClass(),  HashMap.class);
+        assertEquals(instance.packageList.getClass(),  ArrayList.class);
+        assertEquals(instance.classes.size(),  0);
+        assertEquals(instance.packages.size(), 0);
+        assertEquals("DefaultName", instance.name());
+    }
+    
     @Test
     public void testAddPackage() {
         try {
@@ -59,8 +75,18 @@ public class ProjectModelTest {
             Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         assertEquals(3, instance.packages().size());
-        assertEquals("NewTestPackage", instance.packages().get(0).name());
-        assertEquals("NewTestPackage1", instance.packages().get(1).name());
-        assertEquals("NewTestPackage2", instance.packages().get(2).name());
+        assertEquals(3, instance.packageList().size());
+        assertEquals(instance.packages.size(), instance.packageList.size());
+        
+        PackageModel expected = instance.packages().get("NewTestPackage");
+        assertEquals(expected, instance.packageList().get(0));
+        
+        expected = instance.packages().get("NewTestPackage1");
+        assertEquals(expected, instance.packageList().get(1));
+        
+        expected = instance.packages().get("NewTestPackage2");
+        assertEquals(expected, instance.packageList().get(2));
+        
+        
     }
 }

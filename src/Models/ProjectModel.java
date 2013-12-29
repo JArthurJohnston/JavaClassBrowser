@@ -14,9 +14,9 @@ import java.util.HashMap;
  */
 public class ProjectModel extends BaseModel {
     //private variables
-    private HashMap <String, ClassModel> classes;
-    private HashMap <String, PackageModel> packages;
-    private ArrayList<PackageModel> packageList;
+    protected HashMap <String, ClassModel> classes;
+    protected HashMap <String, PackageModel> packages;
+    protected ArrayList<PackageModel> packageList;
     
     /*
      * #todo:
@@ -26,12 +26,18 @@ public class ProjectModel extends BaseModel {
     
     //Constructors
     public ProjectModel(){
-        this.setUpDataStructures();
+        classes = new HashMap();
+        packages = new HashMap();
+        packageList = new ArrayList();
         this.name = defaultName;
         isDefault = true;
     }
+    
     public ProjectModel(String name){
-        this.setUpDataStructures();
+        System.out.println(name);
+        classes = new HashMap();
+        packages = new HashMap();
+        packageList = new ArrayList();
         this.name = name;
     }
     
