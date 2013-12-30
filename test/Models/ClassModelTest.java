@@ -44,7 +44,6 @@ public class ClassModelTest {
     public void testSetUpDataStructures() {
         System.out.println("setUpDataStructures");
         ClassModel instance = new ClassModel();
-        instance.setUpDataStructures();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -36,8 +36,7 @@ public class ProjectModelTest {
     
     @Before
     public void setUp() {
-        String testName = "TestProject";
-        instance = new ProjectModel(testName);
+        instance = new ProjectModel("Test Project");
     }
     
     @After
@@ -48,45 +47,52 @@ public class ProjectModelTest {
     
     @Test
     public void testInitialize(){
+        assertEquals(instance.getClasses().size(),  0);
+        assertEquals(instance.getClasses().getClass(),  HashMap.class);
+        assertEquals(instance.getPackages().getClass(),  HashMap.class);
+        assertEquals(instance.getPackageList().getClass(),  ArrayList.class);
+        assertEquals("Test Project", instance.name());
+        assertEquals(1, instance.getPackages().size());
+        assertEquals(1, instance.getPackageList().size());
+        assertEquals(instance.getPackages().get("default package"), instance.getPackageList().get(0));
+        
         instance = new ProjectModel();
         assertEquals(ProjectModel.class, instance.getClass());
-        assertEquals(instance.classes.getClass(),  HashMap.class);
-        assertEquals(instance.packages.getClass(),  HashMap.class);
-        assertEquals(instance.packageList.getClass(),  ArrayList.class);
-        assertEquals(instance.classes.size(),  0);
-        assertEquals(instance.packages.size(), 0);
+        assertEquals(instance.getClasses().getClass(),  HashMap.class);
+        assertEquals(instance.getPackages().getClass(),  HashMap.class);
+        assertEquals(instance.getPackageList().getClass(),  ArrayList.class);
+        assertEquals(instance.getClasses().size(),  0);
+        assertEquals(instance.getPackages().size(), 1);
+        assertEquals(instance.getPackages().get("default package"), instance.getPackageList().get(0));
         assertEquals("DefaultName", instance.name());
     }
     
     @Test
     public void testAddPackage() {
+        PackageModel newPackage = new PackageModel("Wrong Package");
         try {
-            instance.addPackage("NewTestPackage");
-            instance.addPackage("NewTestPackage1");
-            instance.addPackage("NewTestPackage2");
+            newPackage = instance.addPackage("New Package");
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("NameAlreadyExistsException Thrown when it shouldnt have been");
+            fail(ex.getMessage());
         }
+        assertEquals("New Package", newPackage.name());
+        assertEquals(newPackage ,instance.getPackages().get(newPackage.name()));
+        
+        assertTrue(instance.getPackages().size() == 2);
+        assertTrue(instance.getPackageList().size() == 2);
+        assertEquals("default package" ,instance.getPackageList().get(0).name());
+        assertEquals(newPackage ,instance.getPackageList().get(1));
+        
         try {
-            instance.addPackage("NewTestPackage");
-            fail("NameAlreadyExistsException wasnt thrown");
+            instance.addPackage("New Package");
+            fail("NameAlreadyExistsException not thrown");
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        assertEquals(3, instance.packages().size());
-        assertEquals(3, instance.packageList().size());
-        assertEquals(instance.packages.size(), instance.packageList.size());
-        
-        PackageModel expected = instance.packages().get("NewTestPackage");
-        assertEquals(expected, instance.packageList().get(0));
-        
-        expected = instance.packages().get("NewTestPackage1");
-        assertEquals(expected, instance.packageList().get(1));
-        
-        expected = instance.packages().get("NewTestPackage2");
-        assertEquals(expected, instance.packageList().get(2));
-        
-        
+        assertTrue(instance.getPackages().size() == 2);
+        assertTrue(instance.getPackageList().size() == 2);
+        assertEquals(newPackage ,instance.getPackageList().get(1));
+        assertEquals(newPackage ,instance.getPackages().get(newPackage.name()));
     }
 }

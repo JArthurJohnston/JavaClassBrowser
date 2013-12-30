@@ -6,6 +6,7 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import Types.ClassType;
+import Types.ScopeType;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +14,8 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class ClassModel extends PackageModel{
+    //parent here means the class's package
+    protected ScopeType scope;
     private ClassModel parentClass;
     private ArrayList<ClassModel> classList;
     private ArrayList<MethodModel> methods;
@@ -26,58 +29,46 @@ public class ClassModel extends PackageModel{
      */
     public ClassModel(){
         this.name = "Object";
-        parentClass = defaultParentClass;
         methods = new ArrayList();
         this.inheritedMethods = new ArrayList();
     }
     
-    public ClassModel(String name){
-        parentClass = defaultParentClass;
-        this.name = name;
-        this.setUpDataStructures();
+    /**
+     * this constructor is for testing purposes ONLY
+     * @param nameForTesting 
+     */
+    public ClassModel(String nameForTesting){
+        this.name = nameForTesting;
     }
-    public ClassModel (String name, ClassModel parentClass){
+    
+    public ClassModel(PackageModel parent, String name){
+        this.parent = parent;
+        this.name = name;
+        this.setUpFields();
+    }
+    public ClassModel (ClassModel parentClass, String name){
+        this.parent = parentClass.getParent();
         this.parentClass = parentClass;
         this.name = name;
-        this.setUpDataStructures();
+        this.setUpFields();
     }
     
     @Override
-    protected void setUpDataStructures(){
-        this.methods = new ArrayList();
-        this.inheritedMethods = parentClass.getInheritedMethods();
-        this.classList = new ArrayList();
+    protected void setUpFields(){
+        classList = new ArrayList();
+        scope = ScopeType.PUBLIC;
     }
-    
-    @Override
-    public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
-        if(super.okToAddClass(newClassName)){
-            ClassModel newClass = new ClassModel(newClassName, this);
-            super.addClass(newClass);
-            this.addClass(newClass);
-            return newClass;
-        }else {
-            throw new NameAlreadyExistsException(newClassName, this);
-        }
-    }
-    
-    @Override
-    protected ClassModel addClass(ClassModel newClass){
-        classList.add(newClass);
-        return newClass;
-    }
-    
-    
+    /*
+     * Getters
+     */
     public ArrayList<MethodModel> inheritableMethods(){
         ArrayList<MethodModel> inhMethods = new ArrayList();
+        for(MethodModel m : methods){
+            
+        }
         return inhMethods;
     }
     
-    protected boolean isTopLevel(){
-        return parentClass == defaultParentClass;
-    }
-    
-    //Getters
     public ArrayList instanceMethods(){
         ArrayList classMethods = new ArrayList();
         for(MethodModel m : methods){
@@ -96,9 +87,4 @@ public class ClassModel extends PackageModel{
         }
         return classMethods;
     }
-    public ArrayList<MethodModel> getInheritedMethods(){
-        return inheritedMethods;
-    }
-    
-    
 }

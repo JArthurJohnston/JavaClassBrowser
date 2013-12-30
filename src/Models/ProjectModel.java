@@ -7,84 +7,126 @@ package Models;
 import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
- * An object for keeping track of all the classes in a single project
+ * ProjectModel keeps a hash of all classes and packages that have been added
+ * to the project. 
+ * For fast iteration, it keep a list of all top-level packages
+ * and a master list which is generated when the project is saved
  * @author Arthur
  */
 public class ProjectModel extends BaseModel {
     //private variables
-    protected HashMap <String, ClassModel> classes;
-    protected HashMap <String, PackageModel> packages;
+    private HashMap <String, ClassModel> classes;
+    private HashMap <String, PackageModel> packages;
+    private LinkedList<BaseModel> masterList;
     protected ArrayList<PackageModel> packageList;
     
-    /*
-     * #todo:
-     * might consider changing the arraylists to trees for logN traversal,
-     * insertion and removal.
-     */
     
-    //Constructors
+    /*
+     * Constructors
+     */
     public ProjectModel(){
-        classes = new HashMap();
-        packages = new HashMap();
-        packageList = new ArrayList();
+        this.setUpFields();
         this.name = defaultName;
         isDefault = true;
     }
     
     public ProjectModel(String name){
-        System.out.println(name);
-        classes = new HashMap();
-        packages = new HashMap();
-        packageList = new ArrayList();
+        this.setUpFields();
         this.name = name;
     }
     
-    protected void setUpDataStructures(){
+    /*
+     * Abstract Methods
+     */
+    
+    @Override
+    protected void setUpFields(){
         classes = new HashMap();
         packages = new HashMap();
         packageList = new ArrayList();
+        PackageModel defaultPackage = new PackageModel(this);
+        packages.put(defaultPackage.name(), defaultPackage);
+        packageList.add(defaultPackage);
     }
+    @Override
+    public String toSourceString() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    
     /*
-     * #todo: throw errors when not ok to add
+     * Getters
      */
-    public PackageModel addPackage(String newPackageName)throws NameAlreadyExistsException{
-        if(this.okToAddPackage(newPackageName)){
-            PackageModel newPackage = new PackageModel(this, newPackageName);
-            packages.put(newPackageName, newPackage);
-            packageList.add(newPackage);
-            return newPackage;
-        }else 
-            throw new NameAlreadyExistsException(this, newPackageName);
-        
+    public HashMap<String, ClassModel> getClasses(){
+        return classes;
     }
+    public HashMap<String, PackageModel> getPackages(){
+        return packages;
+    }
+    public ArrayList<PackageModel> getPackageList(){
+        return packageList;
+    }
+    @Override
+    public String getPath(){
+        return ""; //#todo: return this directory
+    }
+
+
+    /*
+     ************************* Logic**********************************
+     */
     protected boolean okToAddPackage(String packageName){
         return !packages.containsKey(packageName);
     }
     
+    /**
+     * Checks the packages hash for duplicates, if none
+     * it creates a new package and calls addPackage(PackageModel)
+     * to have it added to the hash and/or the list
+     * 
+     * @param String newPackageName
+     * @return PageModel newPackage
+     * @throws NameAlreadyExistsException 
+     */
+    protected PackageModel addPackage(String newPackageName) throws NameAlreadyExistsException{
+        if(this.okToAddPackage(newPackageName)){
+            PackageModel newPackage = new PackageModel(this, newPackageName);
+            this.addPackage(newPackage);
+            return newPackage;
+        }else
+            throw new NameAlreadyExistsException(this, name);
+    }
     
+    protected PackageModel addPackage(PackageModel newPackage){
+        packages.put(newPackage.name(), newPackage);
+        if(newPackage.getParent() == this) {
+            packageList.add(newPackage);
+        }
+        return newPackage;
+    }
+    
+    /**
+     * checks the hash to see if a class with the desired name
+     * already exists
+     * @param String className
+     * @return boolean
+     */
     protected boolean okToAddClass(String className){
         return !classes.containsKey(className);
     }
     /**
-     * Should only be called by a PackageModel
-     * @param newClass 
+     * Note: this method should be overridden and called ONLY in the 
+     * PackageModel or ClassModel classes. these overridden methods should 
+     * then call super.addClass(ClassModel)
+     * adds a class to the hash.
+     * @param ClassModel newClass
+     * @return ClassModel
      */
     protected ClassModel addClass(ClassModel newClass){
         classes.put(newClass.name(), newClass);
         return newClass;
     }
-    
-    public HashMap classes(){
-        return classes;
-    }
-    public HashMap<String, PackageModel> packages(){
-        return packages;
-    }
-    public ArrayList<PackageModel> packageList(){
-        return packageList;
-    }
-    
-
 }

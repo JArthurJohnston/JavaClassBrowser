@@ -10,5 +10,5 @@ package Types;
  * @author Arthur
  */
 public enum ClassType {
-    CLASS, INSTANCE, PUBLIC, PRIVATE;
+    CLASS, INSTANCE;
 }

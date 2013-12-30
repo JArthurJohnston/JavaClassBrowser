@@ -8,15 +8,15 @@ package Models;
  *
  * @author Arthur
  */
-public class BaseModel extends BasePathModel{
+abstract class BaseModel {
+    protected BaseModel parent;
     protected String description;
+    protected String path;
     protected String comment;
     protected String name;
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
     protected Boolean isDefault = false;
-    public static final ClassModel defaultParentClass = new ClassModel();
-    public static final PackageModel defaultPackage = new PackageModel();
     
     //getters
     public String name(){
@@ -57,21 +57,44 @@ public class BaseModel extends BasePathModel{
     public String getComment(){
         return comment;
     }
+    public BaseModel getParent(){
+        return parent;
+    }
     
     
     //logic
     public boolean isMethod(){
         return false;
     }
+    public String getPath(){
+        return parent.getPath() + this.path;
+    }
     @Override
     public String toString(){
         return this.name;
     }
-    public String toSourceString(){
-        return null;
-    }
-    @Override
-    public String path(){
-        return super.path() + this.path;
+    
+    //Abstract Methods
+    abstract public String toSourceString();
+    abstract protected void setUpFields();
+    
+    
+    
+    /*
+     * 
+     */
+    private class Node{
+        private Node previous;
+        private Node next;
+        private BaseModel value;
+        
+        public Node(BaseModel value){
+            this.value = value;
+        }
+        public Node (BaseModel value, Node next, Node previous){
+            this.value = value;
+            this.next = next;
+            this.previous = previous;
+        }
     }
 }
