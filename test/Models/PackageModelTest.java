@@ -37,8 +37,8 @@ public class PackageModelTest {
     
     @Before
     public void setUp() {
+        parentProject = new ProjectModel();
         try {
-            parentProject = new ProjectModel();
             instance = parentProject.addPackage("New Package");
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -55,32 +55,15 @@ public class PackageModelTest {
     @Test
     public void testProjectKnowsPackage(){
         assertEquals(parentProject, instance.getParent());
-        assertEquals("New Package", instance.name());
-        assertEquals(1, parentProject.packageList().size());
-        assertEquals(1, parentProject.packages().size());
-        assertEquals(parentProject.packages().get("New Package"), instance);
-        assertEquals(parentProject.packageList().get(0), instance);
-        this.testPackageFields();
     }
     
     @Test
     public void testInitialize(){
         instance = new PackageModel();
         assertEquals("default package", instance.name());
-        this.testPackageFields();
     }
     
     
-    private void testPackageFields(){
-        assertEquals(HashMap.class, instance.classes().getClass());
-        assertEquals(HashMap.class, instance.packages().getClass());
-        assertEquals(ArrayList.class, instance.packageList().getClass());
-        assertEquals(ArrayList.class, instance.classList().getClass());
-        assertEquals(0, instance.classList().size());
-        assertEquals(0, instance.packageList().size());
-        assertEquals(0, instance.classes().size());
-        assertEquals(0, instance.packages().size());
-    }
     
     
 
@@ -96,28 +79,15 @@ public class PackageModelTest {
             Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
-        assertEquals(instance, newClass.getParent());
-        assertEquals(1, parentProject.classes().size());
-        assertEquals(1, instance.classes().size());
-        assertEquals(1, instance.classList().size());
-        assertEquals(newClass, instance.classList().get(0));
+        assertEquals(1, instance.getClassList().size());
+        assertEquals(newClass, instance.getClassList().get(0));
+        assertEquals(1, ((ProjectModel)instance.getParent()).getClasses().size());
+        assertEquals(((ProjectModel)instance.getParent()).getClasses().get("NewClass"), newClass);
     }
     
     @Test
     public void testAddSubClass(){
-            ClassModel newSubClass = new ClassModel("Wrong Class");
-        try {
-            ClassModel parentClass = instance.addClass("ParentClass");
-            newSubClass = parentClass.addClass("NewSubClass");
-         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail(ex.getMessage());
-        }
-        assertEquals(2, parentProject.classes().size());
-        assertEquals(newSubClass, parentProject.classes().containsKey("NewSubClass"));
-        assertEquals(0, instance.classes().size());
-        assertEquals(1, instance.classList().size());
-        assertEquals(newSubClass, instance.classList().get(0));
+        fail("Test not yet written");
     }
 
 }
