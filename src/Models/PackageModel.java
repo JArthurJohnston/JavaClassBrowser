@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
 
 /**
@@ -94,6 +95,15 @@ public class PackageModel extends ProjectModel {
             ((ProjectModel)parent).addClass(newClass);
         }
         return newClass;
+    }
+    
+    public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
+        if(this.okToAddClass(newClassName)){
+            ClassModel newClass = new ClassModel(this, newClassName);
+            this.addClass(newClass);
+            return newClass;
+        }else
+            throw new NameAlreadyExistsException(this, newClassName);
     }
     
     /*

@@ -95,4 +95,28 @@ public class ProjectModelTest {
         assertEquals(newPackage ,instance.getPackageList().get(1));
         assertEquals(newPackage ,instance.getPackages().get(newPackage.name()));
     }
+    
+    @Test
+    public void testAddClass(){
+        PackageModel testPackage = new PackageModel();
+        try {
+            testPackage = instance.addPackage("Test Package");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertTrue(testPackage.name().compareTo("Test Package") == 0);
+        assertEquals(2, instance.getPackages().size());
+        assertEquals(testPackage, instance.getPackages().get("Test Package"));
+        assertEquals(testPackage, instance.getPackageList().get(1));
+        ClassModel newClass = new ClassModel("Wrong Class");
+        try {
+            newClass = testPackage.addClass("NewClass");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertEquals(1, instance.getClasses().size());
+        assertEquals(newClass, instance.getClasses().get("NewClass"));
+    }
 }
