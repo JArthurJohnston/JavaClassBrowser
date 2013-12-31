@@ -55,6 +55,7 @@ public class ClassModelTest {
         assertEquals(parentProject, parentPackage.getParent());
         assertEquals(parentPackage, instance.getParent());
         assertEquals(ClassModel.class, instance.getClass());
+        System.out.println(instance.getClassList().toString());
         assertEquals(ArrayList.class, instance.getClassList());
         assertEquals(0, instance.getClassList().size());
         assertEquals("InstanceClass", instance.name());

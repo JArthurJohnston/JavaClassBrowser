@@ -12,88 +12,86 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class PackageModel extends ProjectModel {
+    private ArrayList<PackageModel> packageList;
+    protected ProjectModel project;
+    protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
     /*
      * at this level the packageList variable is used to store
      * top-level classes only
      */
     
-    public PackageModel(){
-        this.setUpFields();
-        this.name = "default package";
-    }
     /**
-     * This constructor is for testing purposes only
-     * @param aNameForTesting 
+     * Default constructor
+     * Should not be called AT ALL!
      */
-    public PackageModel (String aNameForTesting){
-        this.name = aNameForTesting;
-    }
+    public PackageModel(){}
     
+    /**
+     * Default Project Constructor
+     * Constructor used to add a top-level package to a project.
+     * It should only be called from a ProjectModel
+     * @param ProjectModel parent 
+     */
     public PackageModel(ProjectModel parent){
-        this.parent = (ProjectModel)parent;
+        this.parent = parent;
+        this.project = parent;
         this.name = "default package";
         this.setUpFields();
     }
     
-    public PackageModel(BaseModel parent, String name){
+    /**
+     * New Package Constructor
+     * Constructor used to add a top-level package to a project.
+     * It should only be called from a ProjectModel
+     * @param parent ProjectModel
+     * @param name String
+     */
+    public PackageModel(ProjectModel parent, String name){
+        this.project = parent;
         this.parent = parent;
         this.name = name;
         this.setUpFields();
     }
     
+    /**
+     * New Sub Package Constructor
+     * Used to add a PackageModel to an existing PackageModel
+     * Should only be called from a PackageModel
+     * @param parent PackageModel
+     * @param name String
+     */
+    public PackageModel(PackageModel parent, String name){
+        this.project = parent.getProject();
+        this.parent = parent;
+        this.name = name;
+        this.setUpFields();
+    }
     
     @Override
     protected void setUpFields(){
         packageList = new ArrayList();
         classList = new ArrayList();
     }
+    
     @Override
     protected boolean okToAddPackage(String newPackageName){
-        if(parent.getClass() == ProjectModel.class) {
-            return ((ProjectModel)parent).okToAddPackage(this.name+"."+newPackageName);
-        }
-        return ((PackageModel)parent).okToAddPackage(this.name+"."+newPackageName);
-    }
-    @Override
-    public PackageModel addPackage(PackageModel newPackage){
-        
-        if (newPackage.parent == this) {
-            packageList.add(newPackage);
-        }
-        if(parent.getClass() == PackageModel.class) {
-            ((PackageModel)parent).addPackage(newPackage);
-        }
-        if(parent.getClass() == ProjectModel.class) {
-            ((ProjectModel)parent).addPackage(newPackage);
-        }
-        return newPackage;
-    }
-    @Override
-    protected boolean okToAddClass(String newClassName){
-        if(parent.getClass() == ProjectModel.class) {
-            return ((ProjectModel)parent).okToAddClass(newClassName);
-        }
-        return ((PackageModel)parent).okToAddClass(newClassName);
+        return project.okToAddPackage(this.name()+"."+newPackageName);
     }
     
-    /**
-     * I hate statically typed languages...
-     * if the new class' parent is this package it adds it to 
-     * the classList, otherwise it tells its parent to add it
-     * @param newClass
-     * @return 
-     */
+    
+    @Override
+    protected PackageModel addPackage(PackageModel newPackage){
+        project.addPackage(newPackage);
+        this.packageList.add(newPackage);
+        return newPackage;
+    }
+    
     @Override
     public ClassModel addClass(ClassModel newClass){
-        System.out.println("Parent: "+ this.toString()+" Class: "+newClass.toString());
         if(newClass.getParent() == this) {
             classList.add(newClass);
-        }
-        if(parent.getClass() == PackageModel.class) {
-            ((PackageModel)parent).addClass(newClass);
-        }
-        if(parent.getClass() == ProjectModel.class) {
+        }else{
             ((ProjectModel)parent).addClass(newClass);
         }
         return newClass;
@@ -101,12 +99,12 @@ public class PackageModel extends ProjectModel {
     
     public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClassName)){
-            System.out.println(this.name());
             ClassModel newClass = new ClassModel(this, newClassName);
             this.addClass(newClass);
             return newClass;
-        }else
+        }else {
             throw new NameAlreadyExistsException(this, newClassName);
+        }
     }
     
     /*
@@ -114,6 +112,12 @@ public class PackageModel extends ProjectModel {
      */
     public ArrayList<ClassModel> getClassList(){
         return classList;
+    }
+    public ProjectModel getProject(){
+        return project;
+    }
+    public ProjectModel getParent(){
+        return parent;
     }
     
 }

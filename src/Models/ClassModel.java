@@ -4,7 +4,6 @@
  */
 package Models;
 
-import Exceptions.NameAlreadyExistsException;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -17,47 +16,27 @@ public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
     private ClassModel parentClass;
-    private ArrayList<ClassModel> classList;
     private ArrayList<MethodModel> methods;
     private ArrayList<MethodModel> inheritedMethods;
     //at this level, the classList variable is used to hold onto subclasses
      
-    /**
-     * the default constructor is only used to define 
-     * the defaultParentClass variable. it shouldn't be used for anything
-     * else, outside of testing.
-     */
-    public ClassModel(){
-        this.name = "Object";
-        this.methods = new ArrayList();
-        this.inheritedMethods = new ArrayList();
-        this.setUpFields();
-    }
-    
-    /**
-     * this constructor is for testing purposes ONLY
-     * @param nameForTesting 
-     */
-    public ClassModel(String nameForTesting){
-        this.name = nameForTesting;
-        this.setUpFields();
-    }
     
     public ClassModel(PackageModel parent, String name){
         this.parent = parent;
         this.name = name;
-        this.setUpFields();
+        this.classList = new ArrayList();
+        this.scope = ScopeType.PUBLIC;
     }
     public ClassModel (ClassModel parentClass, String name){
         this.parent = parentClass.getParent();
         this.parentClass = parentClass;
         this.name = name;
-        this.setUpFields();
+        this.classList = new ArrayList();
+        this.scope = ScopeType.PUBLIC;
     }
     
     @Override
     protected void setUpFields(){
-        System.out.println(this.toString());
         this.classList = new ArrayList();
         this.scope = ScopeType.PUBLIC;
     }

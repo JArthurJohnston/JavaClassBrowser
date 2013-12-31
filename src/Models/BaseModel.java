@@ -9,7 +9,6 @@ package Models;
  * @author Arthur
  */
 abstract class BaseModel {
-    protected BaseModel parent;
     protected String description;
     protected String path;
     protected String comment;
@@ -57,17 +56,11 @@ abstract class BaseModel {
     public String getComment(){
         return comment;
     }
-    public BaseModel getParent(){
-        return parent;
-    }
     
     
     //logic
     public boolean isMethod(){
         return false;
-    }
-    public String getPath(){
-        return parent.getPath() + this.path;
     }
     @Override
     public String toString(){
@@ -77,6 +70,7 @@ abstract class BaseModel {
     //Abstract Methods
     abstract public String toSourceString();
     abstract protected void setUpFields();
+    abstract public String getPath();
     
     
     

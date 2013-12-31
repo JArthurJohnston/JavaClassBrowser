@@ -20,8 +20,8 @@ public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
     private HashMap <String, PackageModel> packages;
+    private ArrayList<PackageModel> packageList;
     private LinkedList<BaseModel> masterList;
-    protected ArrayList<PackageModel> packageList;
     
     
     /*
@@ -71,17 +71,27 @@ public class ProjectModel extends BaseModel {
     }
     @Override
     public String getPath(){
-        return ""; //#todo: return this directory
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 
     /*
-     ************************* Logic**********************************
+     ************************* Logic **********************************
      */
-    protected boolean okToAddPackage(String packageName){
-        return !packages.containsKey(packageName);
-    }
     
+    
+    /**
+     * checks the hash to see if a class with the desired name
+     * already exists
+     * @param String className
+     * @return boolean
+     */
+    protected boolean okToAddClass(String className){
+        return !this.classes.containsKey(className);
+    }
+    protected boolean okToAddPackage(String packageName){
+        return !this.packages.containsKey(packageName);
+    }
     /**
      * Checks the packages hash for duplicates, if none
      * it creates a new package and calls addPackage(PackageModel)
@@ -91,13 +101,14 @@ public class ProjectModel extends BaseModel {
      * @return PageModel newPackage
      * @throws NameAlreadyExistsException 
      */
-    protected PackageModel addPackage(String newPackageName) throws NameAlreadyExistsException{
+    public PackageModel addPackage(String newPackageName) throws NameAlreadyExistsException{
         if(this.okToAddPackage(newPackageName)){
             PackageModel newPackage = new PackageModel(this, newPackageName);
             this.addPackage(newPackage);
             return newPackage;
-        }else
-            throw new NameAlreadyExistsException(this, name);
+        }else {
+            throw new NameAlreadyExistsException(this, newPackageName);
+        }
     }
     
     protected PackageModel addPackage(PackageModel newPackage){
@@ -106,16 +117,6 @@ public class ProjectModel extends BaseModel {
             packageList.add(newPackage);
         }
         return newPackage;
-    }
-    
-    /**
-     * checks the hash to see if a class with the desired name
-     * already exists
-     * @param String className
-     * @return boolean
-     */
-    protected boolean okToAddClass(String className){
-        return !classes.containsKey(className);
     }
     /**
      * Note: this method should be overridden and called ONLY in the 
