@@ -1,13 +1,14 @@
+package Types;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Models;
 
 /**
  *
  * @author Arthur
  */
-public class NameAlreadyExistsExcpetion {
-    
+public enum ReturnType {
+    CHAR, DOUBLE, FLOAT, INT, LONG, STRING, OBJECT, VOID;
 }

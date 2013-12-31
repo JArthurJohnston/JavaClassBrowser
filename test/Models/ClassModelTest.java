@@ -87,4 +87,25 @@ public class ClassModelTest {
             Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
         }
     }
+    
+    @Test
+    public void testAddMethod(){
+        MethodModel newMethod = new MethodModel();
+        System.out.println("testAddMethod");
+        try {
+            newMethod = instance.addMethod("newMethod");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+            fail("Exception thrown when it shouldnt");
+        }
+        assertEquals(instance, newMethod.getParent());
+        assertEquals(1, instance.getMethods().size());
+        try {
+            instance.addMethod("newMethod");
+            fail("Exception not thrown");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+            assertEquals(NameAlreadyExistsException.class, ex.getClass());
+        }
+    }
 }

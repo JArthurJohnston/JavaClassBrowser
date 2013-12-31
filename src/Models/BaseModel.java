@@ -58,10 +58,6 @@ abstract class BaseModel {
     }
     
     
-    //logic
-    public boolean isMethod(){
-        return false;
-    }
     @Override
     public String toString(){
         return this.name;
