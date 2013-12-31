@@ -29,8 +29,9 @@ public class ClassModel extends PackageModel{
      */
     public ClassModel(){
         this.name = "Object";
-        methods = new ArrayList();
+        this.methods = new ArrayList();
         this.inheritedMethods = new ArrayList();
+        this.setUpFields();
     }
     
     /**
@@ -39,6 +40,7 @@ public class ClassModel extends PackageModel{
      */
     public ClassModel(String nameForTesting){
         this.name = nameForTesting;
+        this.setUpFields();
     }
     
     public ClassModel(PackageModel parent, String name){
@@ -55,8 +57,9 @@ public class ClassModel extends PackageModel{
     
     @Override
     protected void setUpFields(){
-        classList = new ArrayList();
-        scope = ScopeType.PUBLIC;
+        System.out.println(this.toString());
+        this.classList = new ArrayList();
+        this.scope = ScopeType.PUBLIC;
     }
     /*
      * Getters

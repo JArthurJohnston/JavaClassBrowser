@@ -54,24 +54,22 @@ public class PackageModelTest {
 
     @Test
     public void testProjectKnowsPackage(){
+        System.out.println("testProjectKnowsPackage");
         assertEquals(parentProject, instance.getParent());
     }
     
     @Test
     public void testInitialize(){
+        System.out.println("testInitialize");
         instance = new PackageModel();
         assertEquals("default package", instance.name());
     }
-    
-    
-    
-    
-
     /**
      * Test of addClass method, of class PackageModel.
      */
     @Test
     public void testAddClass_String() {
+        System.out.println("testAddClass");
         ClassModel newClass = new ClassModel("WrongClass");
         try {
             newClass =  instance.addClass("NewClass");
@@ -87,7 +85,22 @@ public class PackageModelTest {
     
     @Test
     public void testAddSubClass(){
-        fail("Test not yet written");
+        System.out.println("testAddSubClass");
+        ClassModel newClass = new ClassModel("WrongClass");
+        ClassModel aClass = new ClassModel("WrongParentClass");
+        try {
+            aClass = instance.addClass("AClass");
+            newClass = aClass.addClass("NewSubClass");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("Exception thrown when it shouldnt");
+        }
+        assertEquals(2, parentProject.getClasses().size());
+        assertEquals(newClass, parentProject.getClasses().get("NewSubClass"));
+        assertEquals(1, instance.getClassList().size());
+        assertEquals(aClass, instance.getClassList().get(0));
+        assertEquals(aClass, newClass.getParent());
+        assertEquals(newClass, aClass.getClassList().get(0));
     }
 
 }

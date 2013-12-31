@@ -4,7 +4,10 @@
  */
 package Models;
 
+import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +20,9 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class ClassModelTest {
+    private ProjectModel parentProject;
+    private PackageModel parentPackage;
+    private ClassModel instance;
     
     public ClassModelTest() {
     }
@@ -30,121 +36,47 @@ public class ClassModelTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws NameAlreadyExistsException {
+        parentProject = new ProjectModel("Parent Project");
+        parentPackage = parentProject.addPackage("Parent Package");
+        instance = parentPackage.addClass("InstanceClass");
     }
     
     @After
     public void tearDown() {
+        instance = null;
+        parentPackage = null;
+        parentProject = null;
     }
-
-    /**
-     * Test of setUpDataStructures method, of class ClassModel.
-     */
+    
     @Test
-    public void testSetUpDataStructures() {
-        System.out.println("setUpDataStructures");
-        ClassModel instance = new ClassModel();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of addClass method, of class ClassModel.
-     */
-    @Test
-    public void testAddClass_String() throws Exception {
-        System.out.println("addClass");
-        String newClassName = "";
-        ClassModel instance = new ClassModel();
-        ClassModel expResult = null;
-        ClassModel result = instance.addClass(newClassName);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testInitialize(){
+        System.out.println("testInitialize");
+        assertEquals(parentProject, parentPackage.getParent());
+        assertEquals(parentPackage, instance.getParent());
+        assertEquals(ClassModel.class, instance.getClass());
+        assertEquals(ArrayList.class, instance.getClassList());
+        assertEquals(0, instance.getClassList().size());
+        assertEquals("InstanceClass", instance.name());
+        assertEquals(1, parentPackage.getClassList().size());
     }
 
     /**
      * Test of addClass method, of class ClassModel.
      */
     @Test
-    public void testAddClass_ClassModel() {
+    public void testAddClass() {
         System.out.println("addClass");
-        ClassModel newClass = null;
-        ClassModel instance = new ClassModel();
-        ClassModel expResult = null;
-        ClassModel result = instance.addClass(newClass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of inheritableMethods method, of class ClassModel.
-     */
-    @Test
-    public void testInheritableMethods() {
-        System.out.println("inheritableMethods");
-        ClassModel instance = new ClassModel();
-        ArrayList expResult = null;
-        ArrayList result = instance.inheritableMethods();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of isTopLevel method, of class ClassModel.
-     */
-    @Test
-    public void testIsTopLevel() {
-        System.out.println("isTopLevel");
-        ClassModel instance = new ClassModel();
-        boolean expResult = false;
-        boolean result = instance.isTopLevel();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of instanceMethods method, of class ClassModel.
-     */
-    @Test
-    public void testInstanceMethods() {
-        System.out.println("instanceMethods");
-        ClassModel instance = new ClassModel();
-        ArrayList expResult = null;
-        ArrayList result = instance.instanceMethods();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of classMethods method, of class ClassModel.
-     */
-    @Test
-    public void testClassMethods() {
-        System.out.println("classMethods");
-        ClassModel instance = new ClassModel();
-        ArrayList expResult = null;
-        ArrayList result = instance.classMethods();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getInheritedMethods method, of class ClassModel.
-     */
-    @Test
-    public void testGetInheritedMethods() {
-        System.out.println("getInheritedMethods");
-        ClassModel instance = new ClassModel();
-        ArrayList expResult = null;
-        ArrayList result = instance.getInheritedMethods();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        ClassModel newSubClass = new ClassModel("WrongClass");
+        try {
+            newSubClass = instance.addClass("NewSubClass");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertEquals(instance, newSubClass.getParent());
+        assertEquals(2, parentProject.getClasses().size());
+        assertEquals(newSubClass, parentProject.getClasses().get("NewSubClass"));
+        
     }
 }

@@ -20,6 +20,7 @@ public class PackageModel extends ProjectModel {
     
     public PackageModel(){
         this.setUpFields();
+        this.name = "default package";
     }
     /**
      * This constructor is for testing purposes only
@@ -85,6 +86,7 @@ public class PackageModel extends ProjectModel {
      */
     @Override
     public ClassModel addClass(ClassModel newClass){
+        System.out.println("Parent: "+ this.toString()+" Class: "+newClass.toString());
         if(newClass.getParent() == this) {
             classList.add(newClass);
         }
@@ -99,6 +101,7 @@ public class PackageModel extends ProjectModel {
     
     public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClassName)){
+            System.out.println(this.name());
             ClassModel newClass = new ClassModel(this, newClassName);
             this.addClass(newClass);
             return newClass;
