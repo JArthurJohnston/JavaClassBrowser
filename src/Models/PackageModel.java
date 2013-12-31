@@ -79,6 +79,10 @@ public class PackageModel extends ProjectModel {
         return project.okToAddPackage(this.name()+"."+newPackageName);
     }
     
+    @Override
+    protected boolean okToAddClass(String newClassName){
+        return project.okToAddClass(newClassName);
+    }
     
     @Override
     protected PackageModel addPackage(PackageModel newPackage){
@@ -87,24 +91,20 @@ public class PackageModel extends ProjectModel {
         return newPackage;
     }
     
-    @Override
-    public ClassModel addClass(ClassModel newClass){
-        if(newClass.getParent() == this) {
-            classList.add(newClass);
-        }else{
-            ((ProjectModel)parent).addClass(newClass);
-        }
-        return newClass;
-    }
     
     public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClassName)){
             ClassModel newClass = new ClassModel(this, newClassName);
-            this.addClass(newClass);
-            return newClass;
+            return project.addClass(this.addClass(newClass));
         }else {
             throw new NameAlreadyExistsException(this, newClassName);
         }
+    }
+    
+    @Override
+    protected ClassModel addClass(ClassModel newClass){
+        this.classList.add(newClass);
+        return newClass;
     }
     
     /*

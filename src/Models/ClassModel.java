@@ -15,31 +15,20 @@ import java.util.ArrayList;
 public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
-    private ClassModel parentClass;
     private ArrayList<MethodModel> methods;
     private ArrayList<MethodModel> inheritedMethods;
     //at this level, the classList variable is used to hold onto subclasses
      
+    public ClassModel(){}
     
     public ClassModel(PackageModel parent, String name){
+        this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
         this.classList = new ArrayList();
         this.scope = ScopeType.PUBLIC;
     }
-    public ClassModel (ClassModel parentClass, String name){
-        this.parent = parentClass.getParent();
-        this.parentClass = parentClass;
-        this.name = name;
-        this.classList = new ArrayList();
-        this.scope = ScopeType.PUBLIC;
-    }
     
-    @Override
-    protected void setUpFields(){
-        this.classList = new ArrayList();
-        this.scope = ScopeType.PUBLIC;
-    }
     /*
      * Getters
      */

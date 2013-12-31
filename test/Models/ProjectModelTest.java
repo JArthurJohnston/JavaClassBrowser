@@ -69,7 +69,7 @@ public class ProjectModelTest {
     
     @Test
     public void testAddPackage() {
-        PackageModel newPackage = new PackageModel("Wrong Package");
+        PackageModel newPackage = new PackageModel();
         try {
             newPackage = instance.addPackage("New Package");
         } catch (NameAlreadyExistsException ex) {
@@ -88,7 +88,7 @@ public class ProjectModelTest {
             instance.addPackage("New Package");
             fail("NameAlreadyExistsException not thrown");
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.FINEST, null, ex);
         }
         assertTrue(instance.getPackages().size() == 2);
         assertTrue(instance.getPackageList().size() == 2);
@@ -109,7 +109,7 @@ public class ProjectModelTest {
         assertEquals(2, instance.getPackages().size());
         assertEquals(testPackage, instance.getPackages().get("Test Package"));
         assertEquals(testPackage, instance.getPackageList().get(1));
-        ClassModel newClass = new ClassModel("Wrong Class");
+        ClassModel newClass = new ClassModel();
         try {
             newClass = testPackage.addClass("NewClass");
         } catch (NameAlreadyExistsException ex) {
@@ -118,5 +118,11 @@ public class ProjectModelTest {
         }
         assertEquals(1, instance.getClasses().size());
         assertEquals(newClass, instance.getClasses().get("NewClass"));
+        try {
+            testPackage.addClass("NewClass");
+            fail("Expected exception was not thrown");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.FINEST, null, ex);
+        }
     }
 }

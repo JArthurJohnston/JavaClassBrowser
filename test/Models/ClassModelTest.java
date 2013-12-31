@@ -52,14 +52,12 @@ public class ClassModelTest {
     @Test
     public void testInitialize(){
         System.out.println("testInitialize");
-        assertEquals(parentProject, parentPackage.getParent());
+        assertEquals("InstanceClass", instance.name());
+        assertEquals(parentProject, instance.getProject());
         assertEquals(parentPackage, instance.getParent());
         assertEquals(ClassModel.class, instance.getClass());
-        System.out.println(instance.getClassList().toString());
-        assertEquals(ArrayList.class, instance.getClassList());
         assertEquals(0, instance.getClassList().size());
-        assertEquals("InstanceClass", instance.name());
-        assertEquals(1, parentPackage.getClassList().size());
+        assertEquals(ArrayList.class, instance.getClassList().getClass());
     }
 
     /**
@@ -68,7 +66,7 @@ public class ClassModelTest {
     @Test
     public void testAddClass() {
         System.out.println("addClass");
-        ClassModel newSubClass = new ClassModel("WrongClass");
+        ClassModel newSubClass = new ClassModel();
         try {
             newSubClass = instance.addClass("NewSubClass");
         } catch (NameAlreadyExistsException ex) {
@@ -76,8 +74,17 @@ public class ClassModelTest {
             fail(ex.getMessage());
         }
         assertEquals(instance, newSubClass.getParent());
+        assertEquals(parentProject, newSubClass.getProject());
         assertEquals(2, parentProject.getClasses().size());
+        assertEquals(1, instance.getClassList().size());
+        assertEquals(newSubClass, instance.getClassList().get(0));
         assertEquals(newSubClass, parentProject.getClasses().get("NewSubClass"));
-        
+        try {
+            instance.addClass("NewSubClass");
+            fail("Expected exception not thrown");
+        } catch (NameAlreadyExistsException ex) {
+            assertEquals(NameAlreadyExistsException.class, ex.getClass());
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+        }
     }
 }

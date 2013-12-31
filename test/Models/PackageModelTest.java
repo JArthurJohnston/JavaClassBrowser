@@ -35,7 +35,7 @@ public class PackageModelTest {
     
     @Before
     public void setUp() {
-        parentProject = new ProjectModel();
+        parentProject = new ProjectModel("AProject");
         try {
             instance = parentProject.addPackage("New Package");
         } catch (NameAlreadyExistsException ex) {
@@ -54,21 +54,16 @@ public class PackageModelTest {
     public void testProjectKnowsPackage(){
         System.out.println("testProjectKnowsPackage");
         assertEquals(parentProject, instance.getParent());
+        assertEquals(parentProject, instance.getProject());
     }
     
-    @Test
-    public void testInitialize(){
-        System.out.println("testInitialize");
-        instance = new PackageModel();
-        assertEquals("default package", instance.name());
-    }
     /**
      * Test of addClass method, of class PackageModel.
      */
     @Test
-    public void testAddClass_String() {
+    public void testAddClass() {
         System.out.println("testAddClass");
-        ClassModel newClass = new ClassModel("WrongClass");
+        ClassModel newClass = new ClassModel();
         try {
             newClass =  instance.addClass("NewClass");
         } catch (NameAlreadyExistsException ex) {
@@ -84,10 +79,14 @@ public class PackageModelTest {
     @Test
     public void testAddSubClass(){
         System.out.println("testAddSubClass");
-        ClassModel newClass = new ClassModel("WrongClass");
-        ClassModel aClass = new ClassModel("WrongParentClass");
+        ClassModel newClass = new ClassModel();
+        ClassModel aClass = new ClassModel();
+        assertEquals(parentProject, instance.getParent());
+        assertEquals(parentProject, instance.getProject());
         try {
             aClass = instance.addClass("AClass");
+            assertEquals(parentProject, aClass.getProject());
+            assertEquals(instance, aClass.getParent());
             newClass = aClass.addClass("NewSubClass");
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
