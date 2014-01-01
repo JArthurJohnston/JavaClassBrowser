@@ -10,16 +10,16 @@ import Models.*;
  *
  * @author Arthur
  */
-public class SelectedModelForm extends javax.swing.JPanel {
+public class SelectedModelPanel extends javax.swing.JPanel {
     private PackageModel selectedModel;
     private static final String defaultSource = "Unavailable";
     /**
-     * Creates new form SelectedModelForm
+     * Creates new form SelectedModelPanel
      */
-    public SelectedModelForm() {
+    public SelectedModelPanel() {
         initComponents();
     }
-    public SelectedModelForm(PackageModel selectedObject){
+    public SelectedModelPanel(PackageModel selectedObject){
         this.selectedModel = selectedObject;
         initComponents();
         this.setFields();
@@ -43,8 +43,6 @@ public class SelectedModelForm extends javax.swing.JPanel {
         this.selectedModel = selection;
         this.setFields();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

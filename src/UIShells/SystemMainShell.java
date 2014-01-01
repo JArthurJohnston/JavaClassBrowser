@@ -64,7 +64,7 @@ public class SystemMainShell extends BaseUIShell{
         StaticMethodList = new javax.swing.JList();
         jScrollPane6 = new javax.swing.JScrollPane();
         constructorsList = new javax.swing.JList();
-        mainSelectedModelForm = new UIShells.UIForms.SelectedModelForm();
+        mainSelectedModelForm = new UIShells.UIForms.SelectedModelPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         newProjectMenuItem = new javax.swing.JMenuItem();
@@ -279,7 +279,7 @@ public class SystemMainShell extends BaseUIShell{
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private UIShells.UIForms.SelectedModelForm mainSelectedModelForm;
+    private UIShells.UIForms.SelectedModelPanel mainSelectedModelForm;
     private javax.swing.JMenuItem newProjectMenuItem;
     private javax.swing.JList packageList;
     private javax.swing.JList projectsList;

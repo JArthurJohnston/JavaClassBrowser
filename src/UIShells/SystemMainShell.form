@@ -272,7 +272,7 @@
         </Container>
       </SubComponents>
     </Container>
-    <Component class="UIShells.UIForms.SelectedModelForm" name="mainSelectedModelForm">
+    <Component class="UIShells.UIForms.SelectedModelPanel" name="mainSelectedModelForm">
     </Component>
   </SubComponents>
 </Form>
