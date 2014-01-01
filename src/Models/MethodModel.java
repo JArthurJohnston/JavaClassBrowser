@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class MethodModel extends ClassModel{
+    private boolean isOverride;
     private String source;
     private ReturnType returnType;
     private Object signature; //#todo, figure this out...again
@@ -22,7 +23,7 @@ public class MethodModel extends ClassModel{
     
     public MethodModel(){}
     
-    public MethodModel(ClassModel parent, String name, ClassType type, ScopeType scope, ReturnType returnType){
+    public MethodModel(ClassModel parent, String name, ClassType type, ScopeType scope, ReturnType returnType, boolean isOverride){
         this.parent = parent;
         this.name = name;
         this.project = parent.getProject();
@@ -30,6 +31,7 @@ public class MethodModel extends ClassModel{
         this.returnType = returnType;
         this.scope = scope;
         this.methodList = new ArrayList();
+        this.isOverride = isOverride;
     }
     
     public MethodModel(ClassModel parent, String name){
@@ -39,7 +41,9 @@ public class MethodModel extends ClassModel{
         this.scope = ScopeType.PUBLIC;
         this.returnType = ReturnType.VOID;
         this.methodList = new ArrayList();
+        this.isOverride = false;
     }
+    
     
     /*
      * Setters

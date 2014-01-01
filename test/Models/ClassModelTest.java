@@ -104,6 +104,12 @@ public class ClassModelTest {
         }
         try {
             instance.removeClass("ClassToBeRemoved");
+        } catch (ClassDoesNotExistException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        try {
+            instance.removeClass("ClassToBeRemoved");
             fail("Exception not thrown");
         } catch (ClassDoesNotExistException ex) {
             Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);

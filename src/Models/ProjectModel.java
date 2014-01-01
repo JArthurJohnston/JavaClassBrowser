@@ -5,6 +5,7 @@
 package Models;
 
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.PackageDoesNotExistException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -92,6 +93,9 @@ public class ProjectModel extends BaseModel {
     protected boolean okToAddPackage(String packageName){
         return !this.packages.containsKey(packageName);
     }
+    protected boolean okToRemovePackage(PackageModel aPackage){
+        return this.packages.containsValue(aPackage);
+    }
     /**
      * Checks the packages hash for duplicates, if none
      * it creates a new package and calls addPackage(PackageModel)
@@ -129,5 +133,17 @@ public class ProjectModel extends BaseModel {
     protected ClassModel addClass(ClassModel newClass){
         classes.put(newClass.name(), newClass);
         return newClass;
+    }
+    
+    protected PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
+        if(this.okToRemovePackage(aPackage)){
+            this.packages.remove(aPackage.name());
+            if(aPackage.parent == this){
+                this.packageList.remove(aPackage);
+            }
+            return aPackage;
+        }else {
+            throw new PackageDoesNotExistException(this, aPackage);
+        }
     }
 }

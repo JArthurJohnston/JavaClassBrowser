@@ -6,6 +6,7 @@ package Models;
 
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.PackageDoesNotExistException;
 import java.util.ArrayList;
 
 /**
@@ -86,9 +87,15 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
+    protected boolean okToRemovePackage(PackageModel aPackage){
+        return project.okToRemovePackage(aPackage);
+    }
+    
+    @Override
     protected PackageModel addPackage(PackageModel newPackage){
         project.addPackage(newPackage);
-        this.packageList.add(newPackage);
+        if(newPackage.parent == this)
+            this.packageList.add(newPackage);
         return newPackage;
     }
     
@@ -121,6 +128,18 @@ public class PackageModel extends ProjectModel {
         }
         project.getClasses().remove(aClass.name());
         return aClass;
+    }
+    
+    @Override
+    public PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
+        if(this.okToRemovePackage(aPackage)){
+            if(aPackage.getParent() == this){
+                this.packageList.remove(aPackage);
+            }
+            return project.removePackage(aPackage);
+        }else {
+            throw new PackageDoesNotExistException(this, aPackage);
+        }
     }
     
     /*

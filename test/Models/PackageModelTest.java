@@ -4,15 +4,17 @@
  */
 package Models;
 
+import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.PackageDoesNotExistException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -99,5 +101,57 @@ public class PackageModelTest {
         assertEquals(aClass, newClass.getParent());
         assertEquals(newClass, aClass.getClassList().get(0));
     }
-
+    
+    @Test
+    public void testRemoveClass(){
+        ClassModel classToBeRemoved = new ClassModel();
+        try {
+            classToBeRemoved = instance.addClass("ClassToBeRemoved");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertTrue(instance.getClassList().contains(classToBeRemoved));
+        assertTrue(parentProject.getClasses().containsKey("ClassToBeRemoved"));
+        assertTrue(parentProject.getClasses().containsValue(classToBeRemoved));
+        try {
+            instance.removeClass("ClassToBeRemoved");
+        } catch (ClassDoesNotExistException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertFalse(parentProject.getClasses().containsValue(classToBeRemoved));
+        assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
+        assertFalse(instance.getClassList().contains(classToBeRemoved));
+    }
+    
+    @Test
+    public void testRemovePackage(){
+        System.out.println("TestRemovePackage");
+        PackageModel packageToBeRemoved = new PackageModel();
+        try {
+            packageToBeRemoved = instance.addPackage("Packge to be Removed");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertTrue(parentProject.getPackages().containsValue(packageToBeRemoved));
+        System.out.println(instance.toString());
+        System.out.println(instance.getPackageList().size());
+        assertTrue(instance.getPackageList().contains(packageToBeRemoved));
+        try {
+            instance.removePackage(packageToBeRemoved);
+        } catch (PackageDoesNotExistException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertFalse(parentProject.getPackages().containsValue(packageToBeRemoved));
+        assertFalse(instance.getPackageList().contains(packageToBeRemoved));
+        try {
+            instance.removePackage(packageToBeRemoved);
+            fail("exception not thrown");
+        } catch (PackageDoesNotExistException ex) {
+            Logger.getLogger(PackageModelTest.class.getName()).log(Level.FINE, null, ex);
+        }
+    }
 }
