@@ -4,16 +4,18 @@
  */
 package Models;
 
+import Exceptions.ClassDoesNotExistException;
+import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -89,6 +91,28 @@ public class ClassModelTest {
     }
     
     @Test
+    public void testRemoveClass(){
+        ClassModel classToBeRemoved = new ClassModel();
+        System.out.println("testRemoveClass");
+        try {
+            classToBeRemoved = instance.addClass("ClassToBeRemoved");
+            assertEquals(2, parentProject.getClasses().size());
+            assertEquals(1, instance.getClassList().size());
+            assertTrue(instance.getClassList().contains(classToBeRemoved));
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            instance.removeClass("ClassToBeRemoved");
+            fail("Exception not thrown");
+        } catch (ClassDoesNotExistException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+        }
+        assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
+        assertFalse(instance.getClassList().contains(classToBeRemoved));
+    }
+    
+    @Test
     public void testAddMethod(){
         MethodModel newMethod = new MethodModel();
         System.out.println("testAddMethod");
@@ -107,5 +131,30 @@ public class ClassModelTest {
             Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
             assertEquals(NameAlreadyExistsException.class, ex.getClass());
         }
+    }
+    
+    @Test
+    public void testRemoveMethod(){
+        System.out.println("testRemoveMethod");
+        try {
+            instance.addMethod("aMethodForTesting");
+            assertEquals(1, instance.getMethods().size());
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+        }
+        try {
+            instance.removeMethod("aMethodForTesting");
+        } catch (MethodDoesNotExistException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
+        }
+        assertEquals(0, instance.getMethods().size());
+        try {
+            instance.removeMethod("aNonExistantMethod");
+            fail("Exception not thrown");
+        } catch (MethodDoesNotExistException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
+        }
+        
     }
 }

@@ -10,6 +10,8 @@ package Exceptions;
  * @author Arthur
  */
 public class BaseException extends Exception{
+    protected static final String message = " with that name already exists in ";
+    
     public BaseException(){}
     
     public BaseException(String message){
@@ -20,5 +22,10 @@ public class BaseException extends Exception{
     }
     public BaseException(String message, Throwable cause){
         super(message, cause);
+    }
+    
+    
+    protected static String constructMessage(Object sender, Object target){
+        return target.getClass().toString() + message + sender.toString();
     }
 }

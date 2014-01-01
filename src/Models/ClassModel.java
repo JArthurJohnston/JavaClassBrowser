@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class ClassModel extends PackageModel{
     protected ScopeType scope;
     private PackageModel parentPackage;
     private ArrayList<MethodModel> methods;
+    private ArrayList<ConstructorModel> constructors;
     private ArrayList<MethodModel> inheritedMethods;
     //at this level, the classList variable is used to hold onto subclasses
      
@@ -27,8 +29,6 @@ public class ClassModel extends PackageModel{
         this.parentPackage = parent;
         this.parent = parent;
         this.name = name;
-        this.classList = new ArrayList();
-        this.methods = new ArrayList();
         this.scope = scope;
     }
     
@@ -37,9 +37,14 @@ public class ClassModel extends PackageModel{
         this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
+        this.scope = ScopeType.PUBLIC;
+    }
+    
+    @Override
+    protected void setUpFields(){
         this.classList = new ArrayList();
         this.methods = new ArrayList();
-        this.scope = ScopeType.PUBLIC;
+        this.constructors = new ArrayList();
     }
     
     private boolean okToAddMethod(String newMethodName){
@@ -64,6 +69,21 @@ public class ClassModel extends PackageModel{
         methods.add(newMethod);
         return newMethod;
     }
+    
+    public MethodModel removeMethod(String methodName) throws MethodDoesNotExistException{
+        for(MethodModel m : methods){
+            if(m.name.compareTo(methodName) == 0) {
+                return this.removeMethod(m);
+            }
+        }
+        throw new MethodDoesNotExistException(this, methodName);
+    }
+    
+    private MethodModel removeMethod(MethodModel aMethod){
+        methods.remove(aMethod);
+        return aMethod;
+    }
+    
     
     /*
      * Getters
