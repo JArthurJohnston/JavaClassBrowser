@@ -5,6 +5,8 @@
 package UIModels;
 
 import MainBase.MainApplication;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 
 /**
  * Top level Model for all UIModel classes
@@ -12,8 +14,14 @@ import MainBase.MainApplication;
  * @author Arthur
  */
 public class BaseUIModel {
-    protected MainApplication application;
-    protected Object shell;
+    public MainApplication application;
+    
+    
+    public void fillListModel(ArrayList newList, DefaultListModel myList){
+        for(int i=0; i<newList.size(); i++){
+            myList.addElement(newList.get(i));
+        }
+    }
     
     /**
      * each instance of a UIModel class MUST be constructed

@@ -23,6 +23,8 @@ public class ClassModel extends PackageModel{
     private ArrayList<MethodModel> classMethods;
     private ArrayList<ConstructorModel> constructors;
     private ArrayList<MethodModel> inheritedMethods;
+    private ArrayList<VariableModel> instanceVars;
+    private ArrayList<VariableModel> classVars;
     //at this level, the classList variable is used to hold onto subclasses
      
     public ClassModel(){}
@@ -48,6 +50,8 @@ public class ClassModel extends PackageModel{
         this.instanceMethods = new ArrayList();
         this.classMethods = new ArrayList();
         this.constructors = new ArrayList();
+        this.instanceVars = new ArrayList();
+        this.classVars = new ArrayList();
     }
     
     private boolean okToAddMethod(String newMethodName){
@@ -141,6 +145,12 @@ public class ClassModel extends PackageModel{
     }
     public ScopeType getScope(){
         return this.scope;
+    }
+    public ArrayList getInstanceVariables(){
+        return instanceVars;
+    }
+    public ArrayList getClassVariables(){
+        return classVars;
     }
     /*
      * Setters
