@@ -42,15 +42,15 @@ public class SystemMainShellModel extends BaseUIModel{
     private void fillLists(){
         this.fillListModel(application.getProjects(), projectList);
         if(application.getSelectedProject() != null){
-            this.fillListModel(application.getSelectedProject().packageList(), packageList);
+            this.fillListModel(application.getSelectedProject().getPackageList(), packageList);
         }else{
             packageList = new DefaultListModel();
         }if(application.getSelectedPackage() != null){
-            this.fillListModel(application.getSelectedPackage().classList(), classList);
+            this.fillListModel(application.getSelectedPackage().getClassList(), classList);
         }else{
             classList = new DefaultListModel();
         }if(application.getSelectedClass() != null){
-            this.fillListModel(application.getSelectedClass().instanceMethods(), instanceMethodList);
+            this.fillListModel(application.getSelectedClass().getInstanceMethods(), instanceMethodList);
         }else{
             instanceMethodList = new DefaultListModel();
         }
@@ -98,18 +98,18 @@ public class SystemMainShellModel extends BaseUIModel{
     
     public void newProjectSelected(){
         packageList.clear();
-        this.fillListModel(application.getSelectedProject().packageList(), packageList);
+        this.fillListModel(application.getSelectedProject().getPackageList(), packageList);
         classList.clear();
         instanceMethodList.clear();
     }
     public void newPackageSelected(){
         classList.clear();
-        this.fillListModel(application.getSelectedPackage().classList(), classList);
+        this.fillListModel(application.getSelectedPackage().getClassList(), classList);
         instanceMethodList.clear();
     }
     public void newClassSelected(){
         instanceMethodList.clear();
-        this.fillListModel(application.getSelectedClass().instanceMethods(), instanceMethodList);
-        this.fillListModel(application.getSelectedClass().classMethods(), classMethodList);
+        this.fillListModel(application.getSelectedClass().getInstanceMethods(), instanceMethodList);
+        this.fillListModel(application.getSelectedClass().getClassMethods(), classMethodList);
     }
 }

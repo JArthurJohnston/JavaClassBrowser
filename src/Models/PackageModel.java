@@ -33,6 +33,11 @@ public class PackageModel extends ProjectModel {
      * Default Project Constructor
      * Constructor used to add a top-level package to a project.
      * It should only be called from a ProjectModel
+     * 
+     * Note:I know overridable calls in the constructor are bad, but in this case
+     * it cuts down on repitition. always make sure its called lase in the constructor
+     * unless absolutely necessary
+     * 
      * @param ProjectModel parent 
      */
     public PackageModel(ProjectModel parent){
@@ -93,10 +98,10 @@ public class PackageModel extends ProjectModel {
     
     @Override
     protected PackageModel addPackage(PackageModel newPackage){
-        project.addPackage(newPackage);
-        if(newPackage.parent == this)
+        if(newPackage.parent == this) {
             this.packageList.add(newPackage);
-        return newPackage;
+        }
+        return project.addPackage(newPackage);
     }
     
     public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
@@ -142,11 +147,16 @@ public class PackageModel extends ProjectModel {
         }
     }
     
+    
     /*
      * Getters
      */
     public ArrayList<ClassModel> getClassList(){
         return classList;
+    }
+    @Override
+    public ArrayList<PackageModel> getPackageList(){
+        return packageList;
     }
     public ProjectModel getProject(){
         return project;

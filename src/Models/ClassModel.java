@@ -6,6 +6,8 @@ package Models;
 
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Types.ClassType;
+import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
 
@@ -16,8 +18,9 @@ import java.util.ArrayList;
 public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
-    private PackageModel parentPackage;
     private ArrayList<MethodModel> methods;
+    private ArrayList<MethodModel> instanceMethods;
+    private ArrayList<MethodModel> classMethods;
     private ArrayList<ConstructorModel> constructors;
     private ArrayList<MethodModel> inheritedMethods;
     //at this level, the classList variable is used to hold onto subclasses
@@ -26,14 +29,12 @@ public class ClassModel extends PackageModel{
     
     public ClassModel(PackageModel parent, String name, ScopeType scope){
         this.project = parent.getProject();
-        this.parentPackage = parent;
         this.parent = parent;
         this.name = name;
         this.scope = scope;
     }
     
     public ClassModel(PackageModel parent, String name){
-        this.parentPackage = parent;
         this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
@@ -44,6 +45,8 @@ public class ClassModel extends PackageModel{
     protected void setUpFields(){
         this.classList = new ArrayList();
         this.methods = new ArrayList();
+        this.instanceMethods = new ArrayList();
+        this.classMethods = new ArrayList();
         this.constructors = new ArrayList();
     }
     
@@ -56,16 +59,34 @@ public class ClassModel extends PackageModel{
         return true;
     }
     
-    public MethodModel addMethod(String newMethodName) throws NameAlreadyExistsException{
+    public MethodModel addMethod(String newMethodName, ClassType type, ScopeType scope, 
+            ReturnType returnType, boolean isOverride) throws NameAlreadyExistsException{
         if(this.okToAddMethod(newMethodName)){
-            MethodModel newMethod = new MethodModel(this, newMethodName);
+            MethodModel newMethod = new MethodModel(this, newMethodName, type, scope, returnType, isOverride);
             return this.addMethod(newMethod);
         }else {
             throw new NameAlreadyExistsException(this, newMethodName);
         }
     }
     
+    /**
+     * #test
+     * This addMethod is for testing purposes only. 
+     * use the long one in production
+     * @param newMethodName
+     * @return
+     * @throws NameAlreadyExistsException 
+     */
+    protected MethodModel addMethod(String newMethodName) throws NameAlreadyExistsException{
+        return this.addMethod(newMethodName, ClassType.INSTANCE, ScopeType.PUBLIC, ReturnType.VOID, false);
+    }
+    
     private MethodModel addMethod(MethodModel newMethod){
+        if(newMethod.getType() == ClassType.CLASS) {
+            classMethods.add(newMethod);
+        }else if(newMethod.getType() == ClassType.INSTANCE) {
+            instanceMethods.add(newMethod);
+        }
         methods.add(newMethod);
         return newMethod;
     }
@@ -81,22 +102,40 @@ public class ClassModel extends PackageModel{
     
     private MethodModel removeMethod(MethodModel aMethod){
         methods.remove(aMethod);
+        if(classMethods.contains(aMethod)) {
+            classMethods.remove(aMethod);
+        }
+        if(instanceMethods.contains(aMethod)) {
+            instanceMethods.remove(aMethod);
+        }
         return aMethod;
     }
     
-    
-    /*
-     * Getters
-     */
-    public ArrayList getInheritableMethods(){
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public boolean isClass(){
+        return true;
     }
+    
+    @Override
+    protected PackageModel getParentPackage(){
+        if(parent.isClass()) {
+            return parent.getParentPackage();
+        }
+        else {
+            return (PackageModel)parent;
+        }
+    }
+    
     public ArrayList getInstanceMethods(){
-        throw new UnsupportedOperationException("Not supported yet.");
+        return instanceMethods;
     }
     public ArrayList getClassMethods(){
-        throw new UnsupportedOperationException("Not supported yet.");
+        return classMethods;
     }
+    public ArrayList getConstructors(){
+        return constructors;
+    }
+    
     public ArrayList getMethods(){
         return methods;
     }
@@ -115,6 +154,6 @@ public class ClassModel extends PackageModel{
      */
     @Override
     public String getPath(){
-        return parentPackage.getPath() + this.path;
+        return this.getParentPackage().getPath() + this.path;
     }
 }

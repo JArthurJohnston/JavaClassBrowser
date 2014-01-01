@@ -11,7 +11,7 @@ import Models.*;
  * @author Arthur
  */
 public class SelectedModelForm extends javax.swing.JPanel {
-    private BaseModel selectedModel;
+    private PackageModel selectedModel;
     private static final String defaultSource = "Unavailable";
     /**
      * Creates new form SelectedModelForm
@@ -19,7 +19,7 @@ public class SelectedModelForm extends javax.swing.JPanel {
     public SelectedModelForm() {
         initComponents();
     }
-    public SelectedModelForm(BaseModel selectedObject){
+    public SelectedModelForm(PackageModel selectedObject){
         this.selectedModel = selectedObject;
         initComponents();
         this.setFields();
@@ -39,7 +39,7 @@ public class SelectedModelForm extends javax.swing.JPanel {
         }
     }
     
-    public void onSelectionChanged(BaseModel selection){
+    public void onSelectionChanged(PackageModel selection){
         this.selectedModel = selection;
         this.setFields();
     }

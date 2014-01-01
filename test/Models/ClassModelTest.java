@@ -60,6 +60,11 @@ public class ClassModelTest {
         assertEquals(ClassModel.class, instance.getClass());
         assertEquals(0, instance.getClassList().size());
         assertEquals(ArrayList.class, instance.getClassList().getClass());
+        assertEquals(ArrayList.class, instance.getClassMethods().getClass());
+        assertEquals(ArrayList.class, instance.getInstanceMethods().getClass());
+        assertEquals(ArrayList.class, instance.getConstructors().getClass());
+        assertEquals(0, instance.getConstructors().size());
+                
     }
 
     /**
@@ -161,6 +166,6 @@ public class ClassModelTest {
         } catch (MethodDoesNotExistException ex) {
             Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
         }
-        
     }
+    
 }

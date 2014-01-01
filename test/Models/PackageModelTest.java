@@ -7,6 +7,7 @@ package Models;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -53,11 +54,14 @@ public class PackageModelTest {
     }
 
     @Test
-    public void testProjectKnowsPackage(){
-        System.out.println("testProjectKnowsPackage");
+    public void testInitialize(){
+        System.out.println("testInitialize");
         assertEquals(parentProject, instance.getParent());
         assertEquals(parentProject, instance.getProject());
+        assertEquals(ArrayList.class, instance.getClassList().getClass());
+        assertEquals(0,instance.getClassList().size());
     }
+    
     
     /**
      * Test of addClass method, of class PackageModel.
@@ -136,8 +140,6 @@ public class PackageModelTest {
             fail(ex.getMessage());
         }
         assertTrue(parentProject.getPackages().containsValue(packageToBeRemoved));
-        System.out.println(instance.toString());
-        System.out.println(instance.getPackageList().size());
         assertTrue(instance.getPackageList().contains(packageToBeRemoved));
         try {
             instance.removePackage(packageToBeRemoved);

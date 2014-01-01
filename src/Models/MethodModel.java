@@ -44,6 +44,11 @@ public class MethodModel extends ClassModel{
         this.isOverride = false;
     }
     
+    @Override
+    public boolean isMethod(){
+        return true;
+    }
+    
     
     /*
      * Setters
@@ -61,6 +66,11 @@ public class MethodModel extends ClassModel{
     public ClassType getType(){
         return type;
     }
+    public ScopeType scope(){
+        return scope;
+    }
+    
+    
     
     /*
      * Overridden methods

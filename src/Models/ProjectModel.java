@@ -29,14 +29,14 @@ public class ProjectModel extends BaseModel {
      * Constructors
      */
     public ProjectModel(){
-        this.setUpFields();
         this.name = defaultName;
         isDefault = true;
+        this.setUpFields();
     }
     
     public ProjectModel(String name){
-        this.setUpFields();
         this.name = name;
+        this.setUpFields();
     }
     
     /*
@@ -57,6 +57,17 @@ public class ProjectModel extends BaseModel {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    
+    public boolean isClass(){
+        return false;
+    }
+    public boolean isMethod(){
+        return false;
+    }
+    
+    protected PackageModel getParentPackage(){
+        return null;
+    }
     
     /*
      * Getters
@@ -116,9 +127,9 @@ public class ProjectModel extends BaseModel {
     }
     
     protected PackageModel addPackage(PackageModel newPackage){
-        packages.put(newPackage.name(), newPackage);
+        this.packages.put(newPackage.name(), newPackage);
         if(newPackage.getParent() == this) {
-            packageList.add(newPackage);
+            this.packageList.add(newPackage);
         }
         return newPackage;
     }
