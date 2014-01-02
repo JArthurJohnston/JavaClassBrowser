@@ -45,43 +45,41 @@ public class ClassBrowserPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        instanceVariableList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         classVaraibleList = new javax.swing.JList();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        instanceVariableList = new javax.swing.JList();
         addVariableButton = new javax.swing.JButton();
         variableLabel = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        instanceMethodList = new javax.swing.JList();
         jScrollPane4 = new javax.swing.JScrollPane();
         classMethodList = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         constructorList = new javax.swing.JList();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        instanceMethodList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
         removeVariableButton = new javax.swing.JButton();
         addMetodButton = new javax.swing.JButton();
         removeMethodButton = new javax.swing.JButton();
+        showInheritedMethodsButton = new javax.swing.JButton();
+        showInheritedVariablesButton = new javax.swing.JButton();
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-
-        jScrollPane1.setViewportView(instanceVariableList);
-
-        jTabbedPane1.addTab("Instance Variables", jScrollPane1);
 
         jScrollPane2.setViewportView(classVaraibleList);
 
         jTabbedPane1.addTab("Static Variables", jScrollPane2);
+
+        jScrollPane1.setViewportView(instanceVariableList);
+
+        jTabbedPane1.addTab("Instance Variables", jScrollPane1);
 
         addVariableButton.setText("+");
 
         variableLabel.setText("Variables");
 
         jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-
-        jScrollPane3.setViewportView(instanceMethodList);
-
-        jTabbedPane2.addTab("Instance Methods", jScrollPane3);
 
         jScrollPane4.setViewportView(classMethodList);
 
@@ -91,6 +89,10 @@ public class ClassBrowserPanel extends javax.swing.JPanel {
 
         jTabbedPane2.addTab("Constructors", jScrollPane5);
 
+        jScrollPane3.setViewportView(instanceMethodList);
+
+        jTabbedPane2.addTab("Instance Methods", jScrollPane3);
+
         jLabel1.setText("Methods");
 
         removeVariableButton.setText("-");
@@ -98,39 +100,60 @@ public class ClassBrowserPanel extends javax.swing.JPanel {
         addMetodButton.setText("+");
 
         removeMethodButton.setText("-");
+        removeMethodButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeMethodButtonActionPerformed(evt);
+            }
+        });
+
+        showInheritedMethodsButton.setText("SI");
+
+        showInheritedVariablesButton.setText("SI");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(removeVariableButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(variableLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addVariableButton))
-                    .addComponent(variableLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jTabbedPane2)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(removeMethodButton)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addMetodButton))))
+                        .addComponent(showInheritedMethodsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(removeVariableButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addVariableButton))
+                            .addComponent(showInheritedVariablesButton)
+                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(removeMethodButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(addMetodButton)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(variableLabel)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(showInheritedMethodsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(showInheritedVariablesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane2)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addVariableButton)
@@ -139,6 +162,11 @@ public class ClassBrowserPanel extends javax.swing.JPanel {
                     .addComponent(removeMethodButton)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void removeMethodButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeMethodButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_removeMethodButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMetodButton;
     private javax.swing.JButton addVariableButton;
@@ -157,6 +185,8 @@ public class ClassBrowserPanel extends javax.swing.JPanel {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JButton removeMethodButton;
     private javax.swing.JButton removeVariableButton;
+    private javax.swing.JButton showInheritedMethodsButton;
+    private javax.swing.JButton showInheritedVariablesButton;
     private javax.swing.JLabel variableLabel;
     // End of variables declaration//GEN-END:variables
 }
