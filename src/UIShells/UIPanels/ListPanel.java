@@ -11,14 +11,14 @@ import javax.swing.DefaultListModel;
  *
  * @author Arthur
  */
-public class classListPanel extends BaseUIPanel {
+public class ListPanel extends BaseUIPanel {
     private PackageModel model;
     private DefaultListModel classListModel;
 
     /**
-     * Creates new form classListPanel
+     * Creates new form ListPanel
      */
-    public classListPanel() {
+    public ListPanel() {
         initComponents();
     }
     
