@@ -5,6 +5,7 @@
 package UIShells.UIPanels;
 
 import Models.PackageModel;
+import Models.ProjectModel;
 import javax.swing.DefaultListModel;
 
 /**
@@ -22,12 +23,20 @@ public class ListPanel extends BaseUIPanel {
         initComponents();
     }
     
+    public ListPanel(PackageModel model){
+        initComponents();
+        this.setUpModel(model);
+        this.setVisible(true);
+    }
+    
     public void setUpModel(PackageModel model){
         classListModel = new DefaultListModel();
         this.model = model;
         this.fillListModel(model.getClassList(), classListModel);
         classList.setModel(classListModel);
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -46,6 +55,11 @@ public class ListPanel extends BaseUIPanel {
         jScrollPane1.setViewportView(classList);
 
         addClassButton.setText("+");
+        addClassButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addClassButtonActionPerformed(evt);
+            }
+        });
 
         removeClassButton.setText("-");
 
@@ -69,6 +83,11 @@ public class ListPanel extends BaseUIPanel {
                     .addComponent(removeClassButton)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClassButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addClassButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addClassButton;
     private javax.swing.JList classList;
