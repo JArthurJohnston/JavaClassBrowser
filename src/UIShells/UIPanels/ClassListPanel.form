@@ -18,9 +18,9 @@
       <Group type="103" groupAlignment="1" attributes="0">
           <Component id="jScrollPane1" min="-2" pref="172" max="-2" attributes="0"/>
           <Group type="102" attributes="0">
-              <Component id="removeClassButton" min="-2" max="-2" attributes="0"/>
+              <Component id="removeModelButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="addClassButton" min="-2" max="-2" attributes="0"/>
+              <Component id="addModelButton" min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -30,8 +30,8 @@
               <Component id="jScrollPane1" min="-2" pref="288" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="addClassButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="removeClassButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="addModelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="removeModelButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -54,15 +54,15 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="addClassButton">
+    <Component class="javax.swing.JButton" name="addModelButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="+"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addClassButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addModelButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="removeClassButton">
+    <Component class="javax.swing.JButton" name="removeModelButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="-"/>
       </Properties>

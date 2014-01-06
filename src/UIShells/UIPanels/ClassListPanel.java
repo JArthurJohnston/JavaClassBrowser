@@ -5,35 +5,46 @@
 package UIShells.UIPanels;
 
 import Models.PackageModel;
-import Models.ProjectModel;
+import Types.InnerType;
+import UIShells.AddNewModelShell;
 import javax.swing.DefaultListModel;
 
 /**
  *
  * @author Arthur
  */
-public class ListPanel extends BaseUIPanel {
+public class ClassListPanel extends BaseUIPanel {
     private PackageModel model;
-    private DefaultListModel classListModel;
+    private DefaultListModel list;
+    private InnerType desiredClass;
 
     /**
-     * Creates new form ListPanel
+     * Creates new form ClassListPanel
      */
-    public ListPanel() {
+    public ClassListPanel() {
         initComponents();
     }
     
-    public ListPanel(PackageModel model){
+    public ClassListPanel(PackageModel model, InnerType desiredModel){
+        this.desiredClass = desiredModel;
         initComponents();
         this.setUpModel(model);
         this.setVisible(true);
     }
     
     public void setUpModel(PackageModel model){
-        classListModel = new DefaultListModel();
+        list = new DefaultListModel();
         this.model = model;
-        this.fillListModel(model.getClassList(), classListModel);
-        classList.setModel(classListModel);
+        this.fillListModel(model.getClassList(), list);
+        classList.setModel(list);
+    }
+    
+    private String getNewModelTitle(){
+        if(this.desiredClass == InnerType.PACKAGE) {
+            return "Package";
+        } else {
+            return "Class";
+        }
     }
     
     
@@ -49,19 +60,19 @@ public class ListPanel extends BaseUIPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         classList = new javax.swing.JList();
-        addClassButton = new javax.swing.JButton();
-        removeClassButton = new javax.swing.JButton();
+        addModelButton = new javax.swing.JButton();
+        removeModelButton = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(classList);
 
-        addClassButton.setText("+");
-        addClassButton.addActionListener(new java.awt.event.ActionListener() {
+        addModelButton.setText("+");
+        addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addClassButtonActionPerformed(evt);
+                addModelButtonActionPerformed(evt);
             }
         });
 
-        removeClassButton.setText("-");
+        removeModelButton.setText("-");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -69,9 +80,9 @@ public class ListPanel extends BaseUIPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(removeClassButton)
+                .addComponent(removeModelButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addClassButton))
+                .addComponent(addModelButton))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,19 +90,19 @@ public class ListPanel extends BaseUIPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addClassButton)
-                    .addComponent(removeClassButton)))
+                    .addComponent(addModelButton)
+                    .addComponent(removeModelButton)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addClassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClassButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addClassButtonActionPerformed
+    private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
+        new AddNewModelShell(this.model, this.desiredClass, list, this.getNewModelTitle());
+    }//GEN-LAST:event_addModelButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addClassButton;
+    private javax.swing.JButton addModelButton;
     private javax.swing.JList classList;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton removeClassButton;
+    private javax.swing.JButton removeModelButton;
     // End of variables declaration//GEN-END:variables
 }

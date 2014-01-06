@@ -6,11 +6,12 @@ package UIShells;
 
 import Exceptions.NameAlreadyExistsException;
 import Models.PackageModel;
+import Types.InnerType;
 import Types.ScopeType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -19,6 +20,8 @@ import javax.swing.DefaultComboBoxModel;
 public class AddNewModelShell extends javax.swing.JFrame {
     private PackageModel model;
     private DefaultComboBoxModel scopeList;
+    private InnerType desiredClass;
+    private DefaultListModel listToBeUpdated;
     /**
      * Creates new form AddNewModelShell
      */
@@ -26,9 +29,11 @@ public class AddNewModelShell extends javax.swing.JFrame {
         initComponents();
     }
     
-    public AddNewModelShell(PackageModel model, String title){
+    public AddNewModelShell(PackageModel model, InnerType desiredClass, DefaultListModel list, String title){
         initComponents();
         this.model = model;
+        this.listToBeUpdated = list;
+        this.desiredClass = desiredClass;
         this.scopeList = new DefaultComboBoxModel(ScopeType.values());
         this.setTitle("New " + title);
         this.newModelScope.setModel(scopeList);
@@ -50,7 +55,7 @@ public class AddNewModelShell extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         createNewModelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Name:");
 
@@ -106,7 +111,11 @@ public class AddNewModelShell extends javax.swing.JFrame {
 
     private void createNewModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewModelButtonActionPerformed
         try {
-            model.addClass(newModelNameField.getText());
+            if(desiredClass == InnerType.PACKAGE) {
+                listToBeUpdated.addElement(model.addPackage(newModelNameField.getText()));
+            } else {
+                listToBeUpdated.addElement(model.addClass(newModelNameField.getText()));
+            }
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(AddNewModelShell.class.getName()).log(Level.WARNING, null, ex);
         }
