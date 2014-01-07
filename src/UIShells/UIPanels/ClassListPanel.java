@@ -25,18 +25,15 @@ public class ClassListPanel extends BaseUIPanel {
         initComponents();
     }
     
-    public ClassListPanel(PackageModel model, InnerType desiredModel){
-        this.desiredClass = desiredModel;
-        initComponents();
-        this.setUpModel(model);
-        this.setVisible(true);
+    public void setListModel(DefaultListModel list){
+        modelList.setModel(list);
     }
     
     public void setUpModel(PackageModel model){
         list = new DefaultListModel();
         this.model = model;
         this.fillListModel(model.getClassList(), list);
-        classList.setModel(list);
+        modelList.setModel(list);
     }
     
     private String getNewModelTitle(){
@@ -59,11 +56,11 @@ public class ClassListPanel extends BaseUIPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        classList = new javax.swing.JList();
+        modelList = new javax.swing.JList();
         addModelButton = new javax.swing.JButton();
         removeModelButton = new javax.swing.JButton();
 
-        jScrollPane1.setViewportView(classList);
+        jScrollPane1.setViewportView(modelList);
 
         addModelButton.setText("+");
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -101,8 +98,8 @@ public class ClassListPanel extends BaseUIPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addModelButton;
-    private javax.swing.JList classList;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JList modelList;
     private javax.swing.JButton removeModelButton;
     // End of variables declaration//GEN-END:variables
 }

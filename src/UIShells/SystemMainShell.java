@@ -4,15 +4,15 @@
  */
 package UIShells;
 
-import MainBase.MainApplication;
 import Models.*;
+import UIModels.SystemMainShellModel;
 
 /**
  *
  * @author Arthur
  */
 public class SystemMainShell extends javax.swing.JFrame {
-    private MainApplication main;
+    private SystemMainShellModel model;
     private PackageModel selectedPackage;
     private ClassModel selectedClass;
     private MethodModel selectedMethod;
@@ -24,6 +24,13 @@ public class SystemMainShell extends javax.swing.JFrame {
     public SystemMainShell() {
         initComponents();
     }
+    
+    public SystemMainShell(SystemMainShellModel model){
+        initComponents();
+        this.model = model;
+        packageListPanel.setListModel(model.getPackageList());
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
