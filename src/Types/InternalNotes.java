@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package UIFormModels;
+package Types;
 
 /**
  *
  * @author Arthur
  */
-public class SelectedModelForm {
-    
+public enum InternalNotes {
+    TODO, NOTE;
 }

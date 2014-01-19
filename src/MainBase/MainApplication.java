@@ -14,4 +14,33 @@ import java.util.ArrayList;
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
     
+    public MainApplication(){
+        projects = new ArrayList();
+    }
+    
+    public ArrayList<ProjectModel> getProjects(){
+        return projects;
+    }
+    
+    public boolean okToAdd(String newProjectName){
+        for(ProjectModel p: projects){
+            if(p.name().compareTo(newProjectName) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public ProjectModel addProject(ProjectModel newProject){
+        projects.add(newProject);
+        return newProject;
+    }
+    
+    public ProjectModel addProject(String newProjectName){
+        if(this.okToAdd(newProjectName)){
+            ProjectModel newProject = new ProjectModel(newProjectName);
+            return this.addProject(newProject);
+        }
+        return null;
+    }
 }
