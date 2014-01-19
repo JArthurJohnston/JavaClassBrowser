@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package UIShells;
+package Models;
 
 import Models.ProjectModel;
+import UIShells.BaseUIModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.junit.After;

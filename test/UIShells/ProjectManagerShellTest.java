@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  *
  * @author Arthur
  */
-public class ProjectManagerShellTest {
+public class ProjectManagerShellTest extends BaseUIShellTest{
     private ProjectManagerShell window;
     private MainApplication testMain;
     
@@ -52,6 +52,7 @@ public class ProjectManagerShellTest {
          * could change during runtime...
          */
         assertTrue(window.isShowing());
+        //assertTrue(this.getComponentWithName(window, "projectList").isShowing());
         assertTrue(window.projectList().isShowing());
     }
     
