@@ -6,7 +6,9 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import MainBase.MainApplication;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -23,7 +25,8 @@ public class ProjectModel extends BaseModel {
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
     private LinkedList<BaseModel> masterList;
-    
+    protected Date dateCreated;
+    private String userName;
     
     /*
      * Constructors
@@ -34,7 +37,8 @@ public class ProjectModel extends BaseModel {
         this.setUpFields();
     }
     
-    public ProjectModel(String name){
+    public ProjectModel(MainApplication main, String name){
+        this.userName = main.getUserName();
         this.name = name;
         this.setUpFields();
     }
@@ -45,6 +49,7 @@ public class ProjectModel extends BaseModel {
     
     @Override
     protected void setUpFields(){
+        dateCreated = new Date();
         classes = new HashMap();
         packages = new HashMap();
         packageList = new ArrayList();
@@ -84,6 +89,28 @@ public class ProjectModel extends BaseModel {
     @Override
     public String getPath(){
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    public Date getDateCreated(){
+        return dateCreated;
+    }
+    
+    public String getUserName(){
+        return userName;
+    }
+    
+    /*
+     * Setters
+     */
+    public void setUserName(String newUserName){
+        this.userName = newUserName;
+    }
+    
+    public String getDescription(){
+        return "Project Name: "+this.name+"\n"+
+                "Author: "+this.getUserName()+"\n"+
+                "Date Created: "+this.getDateCreated().toString()+"\n"+
+                "Number of Packages: "+packages.size()+"\n"+
+                "Number of Classes: "+classes.size();
     }
 
 

@@ -7,6 +7,7 @@ package Models;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import MainBase.MainApplication;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import org.junit.Test;
  * @author Arthur
  */
 public class PackageModelTest {
+    private MainApplication main;
     PackageModel instance;
     ProjectModel parentProject;
     
@@ -38,7 +40,8 @@ public class PackageModelTest {
     
     @Before
     public void setUp() {
-        parentProject = new ProjectModel("AProject");
+        main = new MainApplication();
+        parentProject = new ProjectModel(main, "AProject");
         try {
             instance = parentProject.addPackage("New Package");
         } catch (NameAlreadyExistsException ex) {

@@ -4,21 +4,27 @@
  */
 package UIShells;
 
+import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIModels.ProjectManagerShellModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JTextField;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Arthur
  */
-public class ProjectManagerShellTest extends BaseUIShellTest{
+public class ProjectManagerShellTest extends BaseTest{
     private ProjectManagerShell window;
+    private ProjectManagerShellModel model;
     private MainApplication testMain;
     
     public ProjectManagerShellTest() {
@@ -35,7 +41,8 @@ public class ProjectManagerShellTest extends BaseUIShellTest{
     @Before
     public void setUp() {
         testMain = new MainApplication();
-        window = new ProjectManagerShell(testMain);
+        model = new ProjectManagerShellModel(testMain);
+        window = new ProjectManagerShell(model);
         window.setVisible(true);
     }
     
@@ -46,35 +53,56 @@ public class ProjectManagerShellTest extends BaseUIShellTest{
 
     @Test
     public void testIsVisible(){
-        /*
-         * hmmmmm, should I assert that each component is doing what it should
-         * be doing. Or should I only test components whose properties
-         * could change during runtime...
-         */
+        System.out.print("test is visible");
+        JList list = (JList)this.getVariableFromClass(window, "projectList");
+        JTextField projectInfo = (JTextField)this.getVariableFromClass(window, "projectInfo");
         assertTrue(window.isShowing());
-        //assertTrue(this.getComponentWithName(window, "projectList").isShowing());
-        assertTrue(window.projectList().isShowing());
+        assertTrue(list.isShowing());
+        assertTrue(projectInfo.isVisible());
+        System.out.println(" passed");
     }
     
     private void setUpProjects(){
-        testMain.addProject(new ProjectModel("first"));
-        testMain.addProject(new ProjectModel("second"));
-        testMain.addProject(new ProjectModel("third"));
-        testMain.addProject(new ProjectModel("fourth"));
+        testMain.addProject(new ProjectModel(testMain,"first"));
+        testMain.addProject(new ProjectModel(testMain,"second"));
+        testMain.addProject(new ProjectModel(testMain,"third"));
+        testMain.addProject(new ProjectModel(testMain,"fourth"));
+        model = new ProjectManagerShellModel(testMain);
     }
     
     @Test
     public void testInitialize(){
-        assertEquals(MainApplication.class, window.getApplication().getClass());
-        assertEquals(testMain, window.getApplication());
-        assertEquals(testMain.getProjects(), window.getProjects());
-        assertEquals(0, window.getProjects().size());
+        System.out.print("test initialize");
+        JList projectList = (JList)this.getVariableFromClass(window, "projectList");
+        ProjectManagerShellModel aModel = (ProjectManagerShellModel)this.getVariableFromClass(window, "model");
+        JButton addButton = (JButton)getVariableFromClass(window, "addProject");
+        
+        assertEquals(ProjectManagerShellModel.class, aModel.getClass());
+        assertEquals(model, aModel);
+        assertEquals(0, projectList.getModel().getSize());
+        assertTrue(projectList.isVisible());
+        assertTrue(window.isVisible());
+        assertTrue(addButton.isVisible());
+        
+        
         this.setUpProjects();
-        assertEquals(4, window.getProjects().size());
-        assertEquals(testMain.getProjects().size(), window.getProjects().size());
-        assertEquals("first", window.getProjects().get(0).name());
-        assertEquals("second", window.getProjects().get(1).name());
-        assertEquals("third", window.getProjects().get(2).name());
-        assertEquals("fourth", window.getProjects().get(3).name());
+        window = new ProjectManagerShell(model);
+        projectList = (JList)this.getVariableFromClass(window, "projectList");
+        
+        assertEquals(4, projectList.getModel().getSize());
+        
+        projectList.setSelectedIndex(0);
+        
+        assertEquals(ProjectModel.class, projectList.getSelectedValue().getClass());
+        assertEquals("first", projectList.getSelectedValue().toString());
+        
+        ProjectModel aProject = testMain.getProjects().get(0);
+        JTextField projectInfo = (JTextField)this.getVariableFromClass(window, "projectInfo");
+        
+        assertFalse(projectInfo.isEditable());
+        //System.out.println(aProject.getDescription());
+        //assertEquals(projectInfo.getText(), aProject.getDescription());
+        System.out.println(" passed");
     }
+    
 }

@@ -6,7 +6,9 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import MainBase.MainApplication;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +24,8 @@ import org.junit.Test;
  * @author Arthur
  */
 public class ProjectModelTest {
-    ProjectModel instance;
+    private MainApplication testMain;
+    private ProjectModel instance;
     
     public ProjectModelTest() {
     }
@@ -37,11 +40,14 @@ public class ProjectModelTest {
     
     @Before
     public void setUp() {
-        instance = new ProjectModel("Test Project");
+        testMain = new MainApplication();
+        testMain.setUserName("Barry Allen");
+        instance = new ProjectModel(testMain, "Test Project");
     }
     
     @After
     public void tearDown() {
+        testMain = null;
         instance = null;
     }
 
@@ -151,5 +157,33 @@ public class ProjectModelTest {
         }
         assertFalse(instance.getPackages().containsValue(packageToBeRemoved));
         assertFalse(instance.getPackageList().contains(packageToBeRemoved));
+    }
+    
+    @Test
+    public void testDescription(){
+        //remember, every project starts out with a package called 'default package'
+        System.out.print("test description");
+        String expectedDescr = "Project Name: Test Project\n"+
+                               "Author: Barry Allen\n"+
+                               "Date Created: "+new Date().toString()+"\n"+
+                               "Number of Packages: 1\n"+
+                               "Number of Classes: 0";
+        assertEquals(expectedDescr, instance.getDescription());
+    }
+    
+    @Test
+    public void testDateCreated(){
+        System.out.println("test date created");
+        //I can concieve of a time when there will be a milisecond difference between the two...
+        assertEquals(new Date().toString(), instance.getDateCreated().toString());
+    }
+    
+    @Test
+    public void testUserName(){
+        System.out.println("test user name");
+        assertEquals(testMain.getUserName(), instance.getUserName());
+        instance.setUserName("Kyle Raynor");
+        assertEquals("Kyle Raynor", instance.getUserName());
+        assertEquals("Barry Allen", testMain.getUserName());
     }
 }

@@ -5,16 +5,18 @@
 package UIShells;
 
 import MainBase.MainApplication;
-import Models.ProjectModel;
-import java.util.ArrayList;
-import javax.swing.JList;
+import UIModels.ProjectManagerShellModel;
+import javax.swing.DefaultListModel;
 
 /**
- *
+
  * @author Arthur
  */
 public class ProjectManagerShell extends BaseUIModel {
-    MainApplication main;
+    private DefaultListModel projects;
+    private static String defaultProjectDescription = 
+                "Project Name:\nAuthor: \nDate Created: \nNumber of Packages: 1\nNumber of Classes: 0";;
+    ProjectManagerShellModel model;
 
     /**
      * Creates new form ProjectManagerShell
@@ -23,17 +25,17 @@ public class ProjectManagerShell extends BaseUIModel {
         initComponents();
     }
     
-    public ProjectManagerShell(MainApplication main){
+    public ProjectManagerShell(ProjectManagerShellModel model){
+        projects = new DefaultListModel();
         initComponents();
-        this.main = main;
-    }
-    
-    public MainApplication getApplication(){
-        return this.main;
-    }
-    
-    public ArrayList<ProjectModel> getProjects(){
-        return main.getProjects();
+        this.model = model;
+        projectList.setModel(model.getListModel());
+        if(model.getSelected() != null) {
+            projectInfo.setText(model.getSelected().getDescription());
+        }
+        else {
+            projectInfo.setText(defaultProjectDescription);
+        }
     }
 
     /**
@@ -47,15 +49,16 @@ public class ProjectManagerShell extends BaseUIModel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         projectList = new javax.swing.JList();
+        projectInfo = new javax.swing.JTextField();
+        addProject = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        projectList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(projectList);
+
+        projectInfo.setEditable(false);
+
+        addProject.setText("+");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -63,7 +66,12 @@ public class ProjectManagerShell extends BaseUIModel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(projectInfo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(addProject)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -71,7 +79,11 @@ public class ProjectManagerShell extends BaseUIModel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(159, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addProject)
+                .addContainerGap())
         );
 
         pack();
@@ -112,7 +124,9 @@ public class ProjectManagerShell extends BaseUIModel {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addProject;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField projectInfo;
     private javax.swing.JList projectList;
     // End of variables declaration//GEN-END:variables
 
@@ -121,7 +135,4 @@ public class ProjectManagerShell extends BaseUIModel {
  * 
  * a shell should never return its JList in production
  */
-    public JList projectList(){
-        return projectList;
-    }
 }

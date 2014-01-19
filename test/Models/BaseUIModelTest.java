@@ -4,16 +4,16 @@
  */
 package Models;
 
-import Models.ProjectModel;
+import MainBase.MainApplication;
 import UIShells.BaseUIModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
  */
 public class BaseUIModelTest {
     private BaseUIModel baseModel;
+    private MainApplication main;
     
     public BaseUIModelTest() {
     }
@@ -36,11 +37,13 @@ public class BaseUIModelTest {
     @Before
     public void setUp() {
         baseModel = new BaseUIModel();
+        main = new MainApplication();
     }
     
     @After
     public void tearDown() {
         baseModel = null;
+        main = null;
     }
 
     @Test
@@ -49,10 +52,10 @@ public class BaseUIModelTest {
         DefaultListModel testListModel = new DefaultListModel();
         ProjectModel first, second, third, fourth;
         ArrayList testList = new ArrayList();
-        testList.add(first = new ProjectModel("test1"));
-        testList.add(second = new ProjectModel("test2"));
-        testList.add(third = new ProjectModel("test3"));
-        testList.add(fourth = new ProjectModel("test4"));
+        testList.add(first = new ProjectModel(main,"test1"));
+        testList.add(second = new ProjectModel(main, "test2"));
+        testList.add(third = new ProjectModel(main, "test3"));
+        testList.add(fourth = new ProjectModel(main, "test4"));
         baseModel.fillListModel(testList, testListModel);
         assertEquals(4, testListModel.size());
         assertTrue(testListModel.contains(first));

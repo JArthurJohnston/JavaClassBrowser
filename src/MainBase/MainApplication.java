@@ -1,5 +1,7 @@
 package MainBase;
 
+import Exceptions.DoesNotExistException;
+import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import java.util.ArrayList;
 
@@ -13,8 +15,10 @@ import java.util.ArrayList;
  */
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
+    private String userName;
     
     public MainApplication(){
+        userName = System.getProperty("user.name");
         projects = new ArrayList();
     }
     
@@ -31,16 +35,38 @@ public class MainApplication {
         return true;
     }
     
+    public boolean okToDelete(ProjectModel aProject){
+        return projects.contains(aProject);
+    }
+    
     public ProjectModel addProject(ProjectModel newProject){
         projects.add(newProject);
         return newProject;
     }
     
-    public ProjectModel addProject(String newProjectName){
+    public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{
         if(this.okToAdd(newProjectName)){
-            ProjectModel newProject = new ProjectModel(newProjectName);
+            ProjectModel newProject = new ProjectModel(this, newProjectName);
             return this.addProject(newProject);
+        }else {
+            throw new NameAlreadyExistsException(this, newProjectName);
         }
-        return null;
+    }
+    
+    public ProjectModel removeProject(ProjectModel aProject) throws DoesNotExistException{
+        if(this.okToDelete(aProject)) {
+            projects.remove(aProject);
+        }
+        else {
+            throw new DoesNotExistException(this, aProject);
+        }
+        return aProject;
+    }
+    
+    public String getUserName(){
+        return userName;
+    }
+    public void setUserName(String newUserName){
+        this.userName = newUserName;
     }
 }
