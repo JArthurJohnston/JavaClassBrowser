@@ -4,10 +4,13 @@
  */
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.ProjectManagerShell;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -73,6 +76,17 @@ public class ProjectManagerShellModelTest extends BaseTest{
         this.setUpModel();
         assertEquals(expSelected, model.getSelected());
         assertEquals(2, model.getListModel().size());
+    }
+    
+    @Test
+    public void testGetAndSetSelected(){
+        System.out.println("test get selected");
+        assertEquals(null, model.getSelected());
+        try {
+            main.addProject("new Project");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ProjectManagerShellModelTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Test

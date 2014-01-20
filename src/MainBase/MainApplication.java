@@ -3,6 +3,7 @@ package MainBase;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
+import UIModels.ProjectManagerShellModel;
 import java.util.ArrayList;
 
 /**
@@ -14,12 +15,17 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class MainApplication {
+    private ProjectManagerShellModel shellModel;
     private ArrayList<ProjectModel> projects;
+    private ArrayList openWindowModels;
     private String userName;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
         projects = new ArrayList();
+        openWindowModels = new ArrayList();
+        shellModel = new ProjectManagerShellModel(this);
+        
     }
     
     public ArrayList<ProjectModel> getProjects(){

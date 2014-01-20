@@ -6,7 +6,10 @@ package MainBase;
 
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Internal.BaseTest;
 import Models.ProjectModel;
+import UIModels.ProjectManagerShellModel;
+import UIShells.ProjectManagerShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +24,7 @@ import static org.junit.Assert.*;
  *
  * @author Arthur
  */
-public class MainApplicationTest {
+public class MainApplicationTest extends BaseTest {
     private MainApplication main;
     
     public MainApplicationTest() {
@@ -38,6 +41,7 @@ public class MainApplicationTest {
     @Before
     public void setUp() {
         main = new MainApplication();
+        main.setUserName("Barry Allen");
     }
     
     @After
@@ -45,14 +49,41 @@ public class MainApplicationTest {
         main = null;
     }
 
-    /**
-     * Test of getProjects method, of class MainApplication.
-     */
+    @Test
+    public void testConstructor(){
+        System.out.println("testConstructor");
+        ArrayList mainProjects = (ArrayList)this.getVariableFromClass(main, "projects");
+        assertEquals(ArrayList.class, mainProjects.getClass());
+        assertEquals(0, mainProjects.size());
+        String mainUserName = (String)this.getVariableFromClass(main, "userName");
+        assertEquals(String.class, mainUserName.getClass());
+        assertEquals("Barry Allen", mainUserName);
+        ArrayList mainOpenWindowModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
+        assertEquals(ArrayList.class, mainOpenWindowModels.getClass());
+        assertEquals(1, mainOpenWindowModels.size());
+        assertEquals(ProjectManagerShellModel.class,mainOpenWindowModels.get(0).getClass());
+    }
     @Test
     public void testGetProjects() {
+        ProjectModel newProject = null;
         System.out.print("Test getProjects");
         assertEquals(0, main.getProjects().size());
+        try {
+            newProject = main.addProject("new project");
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("exception thrown when it shouldnt");
+        }
+        assertEquals(1, main.getProjects().size());
+        assertEquals(newProject, main.getProjects().get(0));
         System.out.println(" passed");
+        try {
+            main.removeProject(newProject);
+        } catch (DoesNotExistException ex) {
+            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail("exception thrown when it shouldnt");
+        }
+        assertEquals(0, main.getProjects().size());
     }
     
     @Test
@@ -84,6 +115,17 @@ public class MainApplicationTest {
             Logger.getLogger(MainApplicationTest.class.getName()).log(Level.FINE, null, ex);
         }
         System.out.println(" passed");
+    }
+    
+    @Test
+    public void testAddProjectUpdatesShell(){
+        ProjectManagerShellModel shellModel = 
+                (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
+        ProjectManagerShell shell = 
+                (ProjectManagerShell)this.getVariableFromClass(shellModel, "shell");
+        //get the project list model from the shell
+        //add a project to main
+        //assert that the shells project list updates when projects are added/removed from main
     }
     
     @Test
@@ -141,9 +183,10 @@ public class MainApplicationTest {
     @Test
     public void testUserName(){
         System.out.print("test user name");
-        assertEquals(System.getProperty("user.name"), main.getUserName());
         main.setUserName("Kyle Raynor");
         assertEquals("Kyle Raynor", main.getUserName());
         System.out.println(" passed");
+        main = new MainApplication();
+        assertEquals(System.getProperty("user.name"), main.getUserName());
     }
 }

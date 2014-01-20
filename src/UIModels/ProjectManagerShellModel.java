@@ -31,10 +31,14 @@ public class ProjectManagerShellModel extends BaseUIModel{
     public ProjectModel getSelected(){
         if(selected == null){
             if(main.getProjects().size() > 0) {
-                selected = main.getProjects().get(0);
+                selected =  main.getProjects().get(0);
             }
         }
         return selected; 
+    }
+    
+    public void setSelected(ProjectModel aProject){
+        
     }
     
     public DefaultListModel getListModel(){
@@ -46,9 +50,7 @@ public class ProjectManagerShellModel extends BaseUIModel{
     }
     
     public void setUserName(String newUserName){
-        if(this.getSelected() != null){
-            selected.setUserName(newUserName);
-        }
+        this.getSelected().setUserName(newUserName);
     }
     
 }
