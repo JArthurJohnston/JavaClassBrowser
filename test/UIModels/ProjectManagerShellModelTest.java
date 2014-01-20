@@ -9,7 +9,6 @@ import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.ProjectManagerShell;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -79,8 +78,6 @@ public class ProjectManagerShellModelTest extends BaseTest{
     @Test
     public void testSetUserName(){
         model.setUserName("Kyle Raynor");
-        JList projectList = (JList)this.getVariableFromClass(model, "projectList");
-        
         assertEquals("Kyle Raynor", model.getSelected().getUserName());
     }
 }
