@@ -52,5 +52,8 @@ public class ProjectManagerShellModel extends BaseUIModel{
     public void setUserName(String newUserName){
         this.getSelected().setUserName(newUserName);
     }
+    public MainApplication getApplication(){
+        return main;
+    }
     
 }

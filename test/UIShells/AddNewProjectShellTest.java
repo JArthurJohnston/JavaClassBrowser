@@ -6,7 +6,10 @@ package UIShells;
 
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -38,6 +41,7 @@ public class AddNewProjectShellTest extends BaseTest{
     @Before
     public void setUp() {
         main = new MainApplication();
+        main.setUserName("Kyle Raynor");
         model = new ProjectManagerShellModel(main);
         shell = new AddNewProjectShell(model);
     }
@@ -67,5 +71,28 @@ public class AddNewProjectShellTest extends BaseTest{
         assertTrue(testAuthorName.isVisible());
         assertTrue(testAuthorName.isEditable());
         assertEquals(main.getUserName(),testAuthorName.getText());
+        JLabel testProjectInfo = (JLabel)this.getVariableFromClass(shell, "projectInfoField");
+        String expectedString = "Project Name: New Name\nAuthor: Kyle Raynor\n";
+        //assertEquals(expectedString, testProjectInfo.getText());
+        
     }
+    
+    @Test
+    public void testNewProjectModel(){
+        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "baseNewProject");
+        assertEquals(ProjectModel.class, baseNewProject.getClass());
+        assertEquals(main.getUserName(), baseNewProject.getUserName());
+    }
+    
+    @Test
+    public void testCreateProjectButton(){
+        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "baseNewProject");
+        JButton createButton = (JButton)this.getVariableFromClass(shell, "createProjectButton");
+        assertTrue(createButton.isVisible());
+        createButton.doClick();
+        assertTrue(main.getProjects().contains(baseNewProject));
+        assertNull(shell);
+    }
+    
+           
 }

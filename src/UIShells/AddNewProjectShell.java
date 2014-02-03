@@ -4,6 +4,7 @@
  */
 package UIShells;
 
+import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
 
 /**
@@ -12,6 +13,7 @@ import UIModels.ProjectManagerShellModel;
  */
 public class AddNewProjectShell extends javax.swing.JFrame {
     private ProjectManagerShellModel model;
+    private ProjectModel baseNewProject;
     
     /**
      * Creates new form AddNewProjectShell
@@ -23,8 +25,11 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     public AddNewProjectShell(ProjectManagerShellModel model) {
         initComponents();
         this.model = model;
+        baseNewProject = new ProjectModel(model.getApplication(), "New Project");
+        this.authorNameField.setText(model.getUserName());
         this.setVisible(true);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,6 +44,9 @@ public class AddNewProjectShell extends javax.swing.JFrame {
         projectNameField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         authorNameField = new javax.swing.JTextField();
+        projectInfoField = new javax.swing.JLabel();
+        createProjectButton = new javax.swing.JButton();
+        cancelProjectButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,6 +61,17 @@ public class AddNewProjectShell extends javax.swing.JFrame {
 
         jLabel2.setText("Project Author:");
 
+        projectInfoField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        createProjectButton.setText("Create");
+        createProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createProjectButtonActionPerformed(evt);
+            }
+        });
+
+        cancelProjectButton.setText("Cancel");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -60,6 +79,7 @@ public class AddNewProjectShell extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(projectInfoField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -67,13 +87,18 @@ public class AddNewProjectShell extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(authorNameField)))
+                        .addComponent(authorNameField))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cancelProjectButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(createProjectButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(projectNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -81,7 +106,12 @@ public class AddNewProjectShell extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(authorNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(243, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(projectInfoField, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(createProjectButton)
+                    .addComponent(cancelProjectButton)))
         );
 
         pack();
@@ -90,6 +120,10 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     private void projectNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectNameFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_projectNameFieldActionPerformed
+
+    private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
+        //stuff
+    }//GEN-LAST:event_createProjectButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,8 +161,11 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField authorNameField;
+    private javax.swing.JButton cancelProjectButton;
+    private javax.swing.JButton createProjectButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel projectInfoField;
     private javax.swing.JTextField projectNameField;
     // End of variables declaration//GEN-END:variables
 }

@@ -94,4 +94,9 @@ public class ProjectManagerShellModelTest extends BaseTest{
         model.setUserName("Kyle Raynor");
         assertEquals("Kyle Raynor", model.getSelected().getUserName());
     }
+    
+    @Test
+    public void testGetApplication(){
+        assertEquals(main, model.getApplication());
+    }
 }
