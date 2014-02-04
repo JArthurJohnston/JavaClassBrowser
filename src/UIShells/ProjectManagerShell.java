@@ -4,7 +4,6 @@
  */
 package UIShells;
 
-import MainBase.MainApplication;
 import UIModels.ProjectManagerShellModel;
 import javax.swing.DefaultListModel;
 
@@ -59,6 +58,11 @@ public class ProjectManagerShell extends BaseUIModel {
         projectInfo.setEditable(false);
 
         addProject.setText("+");
+        addProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProjectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -88,6 +92,10 @@ public class ProjectManagerShell extends BaseUIModel {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addProjectActionPerformed
 
     /**
      * @param args the command line arguments

@@ -4,10 +4,12 @@
  */
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.BaseUIModel;
 import UIShells.ProjectManagerShell;
+import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 
 /**
@@ -19,12 +21,15 @@ public class ProjectManagerShellModel extends BaseUIModel{
     private ProjectModel selected;
     private DefaultListModel projectList;
     private ProjectManagerShell shell;
+    private ArrayList openShells;
     
     public ProjectManagerShellModel(MainApplication main){
         projectList = new DefaultListModel();
         this.main = main;
         this.fillListModel(main.getProjects(), projectList);
+        openShells = new ArrayList();
         shell = new ProjectManagerShell(this);
+        openShells.add(shell);
         shell.setVisible(true);
     }
     
@@ -54,6 +59,10 @@ public class ProjectManagerShellModel extends BaseUIModel{
     }
     public MainApplication getApplication(){
         return main;
+    }
+    
+    public void addProject(String newProjectName) throws NameAlreadyExistsException{
+        main.addProject(newProjectName);
     }
     
 }

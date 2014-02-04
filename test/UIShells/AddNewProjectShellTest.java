@@ -90,9 +90,8 @@ public class AddNewProjectShellTest extends BaseTest{
         JButton createButton = (JButton)this.getVariableFromClass(shell, "createProjectButton");
         assertTrue(createButton.isVisible());
         createButton.doClick();
-        assertTrue(main.getProjects().contains(baseNewProject));
-        assertNull(shell);
+        assertEquals(1, main.getProjects().size());
+        assertEquals("New Project", main.getProjects().get(0).name());
+        assertFalse(shell.isVisible());
     }
-    
-           
 }

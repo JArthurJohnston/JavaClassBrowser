@@ -4,6 +4,7 @@
  */
 package UIShells;
 
+import Exceptions.NameAlreadyExistsException;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
 
@@ -30,7 +31,6 @@ public class AddNewProjectShell extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,7 +48,7 @@ public class AddNewProjectShell extends javax.swing.JFrame {
         createProjectButton = new javax.swing.JButton();
         cancelProjectButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText(" Project Name: ");
 
@@ -71,6 +71,11 @@ public class AddNewProjectShell extends javax.swing.JFrame {
         });
 
         cancelProjectButton.setText("Cancel");
+        cancelProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelProjectButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,8 +127,22 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     }//GEN-LAST:event_projectNameFieldActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
-        //stuff
+        boolean successfulAdd;
+        try {
+            //change this to send over the projectModel
+            model.addProject(projectNameField.getText());
+            successfulAdd = true;
+        } catch (NameAlreadyExistsException ex) {
+            //pop-up with error message
+            successfulAdd = false;
+        }
+        if(successfulAdd)
+            this.dispose();
     }//GEN-LAST:event_createProjectButtonActionPerformed
+
+    private void cancelProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelProjectButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelProjectButtonActionPerformed
 
     /**
      * @param args the command line arguments

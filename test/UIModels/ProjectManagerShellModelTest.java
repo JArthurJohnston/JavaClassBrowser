@@ -9,6 +9,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.ProjectManagerShell;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -67,6 +68,9 @@ public class ProjectManagerShellModelTest extends BaseTest{
         assertEquals(ProjectManagerShell.class, shell.getClass());
         assertTrue(shell.isVisible());
         assertEquals(main.getUserName(), model.getUserName());
+        ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
+        assertEquals(1, openShells.size());
+        assertEquals(ProjectManagerShell.class, openShells.get(0).getClass());
     }
     @Test
     public void testConstructor_mainWithpreExistingProjects(){
@@ -91,6 +95,12 @@ public class ProjectManagerShellModelTest extends BaseTest{
     
     @Test
     public void testSetUserName(){
+        try {
+            main.addProject("A Project");
+        } catch (NameAlreadyExistsException ex) {
+            fail("exception thrown when it shouldnt");
+            Logger.getLogger(ProjectManagerShellModelTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         model.setUserName("Kyle Raynor");
         assertEquals("Kyle Raynor", model.getSelected().getUserName());
     }
