@@ -8,6 +8,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -48,6 +49,8 @@ public class ProjectManagerShellTest extends BaseTest{
     
     @After
     public void tearDown() {
+        testMain = null;
+        model = null;
         window.dispose();
     }
 
@@ -75,7 +78,7 @@ public class ProjectManagerShellTest extends BaseTest{
         System.out.print("test initialize");
         JList projectList = (JList)this.getVariableFromClass(window, "projectList");
         ProjectManagerShellModel aModel = (ProjectManagerShellModel)this.getVariableFromClass(window, "model");
-        JButton addButton = (JButton)getVariableFromClass(window, "addProject");
+        JButton addButton = (JButton)getVariableFromClass(window, "addProjectButton");
         
         assertEquals(ProjectManagerShellModel.class, aModel.getClass());
         assertEquals(model, aModel);
@@ -102,7 +105,17 @@ public class ProjectManagerShellTest extends BaseTest{
         assertFalse(projectInfo.isEditable());
         //System.out.println(aProject.getDescription());
         //assertEquals(projectInfo.getText(), aProject.getDescription());
+        
+        
         System.out.println(" passed");
+    }
+    
+    @Test
+    public void testAddProjectButton(){
+        JButton addProjectButton = (JButton)this.getVariableFromClass(window, "addProjectButton");
+        ArrayList openWindows = (ArrayList)this.getVariableFromClass(model, "openShells");
+        addProjectButton.doClick();
+        assertEquals(1, openWindows.size());
     }
     
 }

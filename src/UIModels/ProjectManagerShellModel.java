@@ -7,6 +7,7 @@ package UIModels;
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIShells.AddNewProjectShell;
 import UIShells.BaseUIModel;
 import UIShells.ProjectManagerShell;
 import java.util.ArrayList;
@@ -63,6 +64,24 @@ public class ProjectManagerShellModel extends BaseUIModel{
     
     public void addProject(String newProjectName) throws NameAlreadyExistsException{
         main.addProject(newProjectName);
+    }
+    
+    public boolean okToOpen(Object shell){
+        for(Object openShell : openShells){
+            if(openShell.getClass() == shell)
+                return false;
+        }
+        return true;
+    }
+    
+    
+    
+    public void openAddProject(){
+        if(this.okToOpen(AddNewProjectShell.class)) {
+            openShells.add(new AddNewProjectShell(this));
+        }else{
+            //get the currently opened shell and bring it to front.
+        }
     }
     
 }

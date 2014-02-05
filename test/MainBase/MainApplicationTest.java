@@ -60,8 +60,8 @@ public class MainApplicationTest extends BaseTest {
         assertEquals("Barry Allen", mainUserName);
         ArrayList mainOpenWindowModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
         assertEquals(ArrayList.class, mainOpenWindowModels.getClass());
-        assertEquals(1, mainOpenWindowModels.size());
-        assertEquals(ProjectManagerShellModel.class,mainOpenWindowModels.get(0).getClass());
+        assertEquals(0, mainOpenWindowModels.size());
+        //assertEquals(ProjectManagerShellModel.class,mainOpenWindowModels.get(0).getClass());
     }
     @Test
     public void testGetProjects() {
@@ -188,5 +188,13 @@ public class MainApplicationTest extends BaseTest {
         System.out.println(" passed");
         main = new MainApplication();
         assertEquals(System.getProperty("user.name"), main.getUserName());
+    }
+    
+    @Test
+    public void testOkToOpen(){
+        ProjectManagerShellModel shellModel = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
+        assertTrue(main.okToOpen(ProjectManagerShell.class));
+        shellModel.openAddProject();
+        assertFalse(main.okToOpen(ProjectManagerShell.class));
     }
 }

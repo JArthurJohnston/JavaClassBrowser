@@ -71,6 +71,10 @@ public class ProjectManagerShellModelTest extends BaseTest{
         ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
         assertEquals(1, openShells.size());
         assertEquals(ProjectManagerShell.class, openShells.get(0).getClass());
+        ArrayList shellModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
+        //assertEquals(1, shellModels.size());
+        //assertEquals(ProjectManagerShellModel.class, shellModels.get(0).getClass());
+        //assertEquals(model, shellModels.get(0));
     }
     @Test
     public void testConstructor_mainWithpreExistingProjects(){

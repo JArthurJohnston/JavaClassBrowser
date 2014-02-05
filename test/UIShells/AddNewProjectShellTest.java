@@ -75,6 +75,7 @@ public class AddNewProjectShellTest extends BaseTest{
         String expectedString = "Project Name: New Name\nAuthor: Kyle Raynor\n";
         //assertEquals(expectedString, testProjectInfo.getText());
         
+        
     }
     
     @Test

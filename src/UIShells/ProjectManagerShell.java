@@ -49,7 +49,7 @@ public class ProjectManagerShell extends BaseUIModel {
         jScrollPane1 = new javax.swing.JScrollPane();
         projectList = new javax.swing.JList();
         projectInfo = new javax.swing.JTextField();
-        addProject = new javax.swing.JButton();
+        addProjectButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,10 +57,10 @@ public class ProjectManagerShell extends BaseUIModel {
 
         projectInfo.setEditable(false);
 
-        addProject.setText("+");
-        addProject.addActionListener(new java.awt.event.ActionListener() {
+        addProjectButton.setText("+");
+        addProjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addProjectActionPerformed(evt);
+                addProjectButtonActionPerformed(evt);
             }
         });
 
@@ -75,7 +75,7 @@ public class ProjectManagerShell extends BaseUIModel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(addProject)))
+                        .addComponent(addProjectButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -86,16 +86,16 @@ public class ProjectManagerShell extends BaseUIModel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(projectInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addProject)
+                .addComponent(addProjectButton)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addProjectActionPerformed
+    private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
+        model.openAddProject();
+    }//GEN-LAST:event_addProjectButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -132,7 +132,7 @@ public class ProjectManagerShell extends BaseUIModel {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addProject;
+    private javax.swing.JButton addProjectButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField projectInfo;
     private javax.swing.JList projectList;
