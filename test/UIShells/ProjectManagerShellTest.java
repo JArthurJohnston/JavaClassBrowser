@@ -10,6 +10,7 @@ import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
 import java.util.ArrayList;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import org.junit.After;
@@ -116,6 +117,13 @@ public class ProjectManagerShellTest extends BaseTest{
         ArrayList openWindows = (ArrayList)this.getVariableFromClass(model, "openShells");
         addProjectButton.doClick();
         assertEquals(1, openWindows.size());
+        AddNewProjectShell newShell = (AddNewProjectShell)openWindows.get(openWindows.size()-1);
+        assertEquals(AddNewProjectShell.class, newShell.getClass());
+        addProjectButton.doClick();
+        assertEquals(1, openWindows.size());
+        assertEquals(newShell, openWindows.get(openWindows.size()-1));
+        //assertTrue(newShell.isFocused());
+        //this is working, but i dont know how to test it.
     }
     
 }

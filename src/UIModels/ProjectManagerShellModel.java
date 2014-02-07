@@ -10,8 +10,10 @@ import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIModel;
 import UIShells.ProjectManagerShell;
+import java.awt.Frame;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -22,7 +24,13 @@ public class ProjectManagerShellModel extends BaseUIModel{
     private ProjectModel selected;
     private DefaultListModel projectList;
     private ProjectManagerShell shell;
-    private ArrayList openShells;
+    private ArrayList<JFrame> openShells;
+    
+    /*
+     * I either need to keep track of ALL open shells via the 
+     * open shells array, or hold onto a shell variable
+     * and throw all OTHER shells into the array...
+     */
     
     public ProjectManagerShellModel(MainApplication main){
         projectList = new DefaultListModel();
@@ -30,7 +38,6 @@ public class ProjectManagerShellModel extends BaseUIModel{
         this.fillListModel(main.getProjects(), projectList);
         openShells = new ArrayList();
         shell = new ProjectManagerShell(this);
-        openShells.add(shell);
         shell.setVisible(true);
     }
     
@@ -67,9 +74,11 @@ public class ProjectManagerShellModel extends BaseUIModel{
     }
     
     public boolean okToOpen(Object shell){
-        for(Object openShell : openShells){
-            if(openShell.getClass() == shell)
+        for(JFrame openShell : openShells){
+            if(openShell.getClass() == shell){
+                openShell.toFront();
                 return false;
+            }
         }
         return true;
     }
