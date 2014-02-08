@@ -9,6 +9,7 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
+import UIShells.AddNewProjectShell;
 import UIShells.ProjectManagerShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -188,13 +189,5 @@ public class MainApplicationTest extends BaseTest {
         System.out.println(" passed");
         main = new MainApplication();
         assertEquals(System.getProperty("user.name"), main.getUserName());
-    }
-    
-    @Test
-    public void testOkToOpen(){
-        ProjectManagerShellModel shellModel = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
-        assertTrue(main.okToOpen(ProjectManagerShell.class));
-        shellModel.openAddProject();
-        assertFalse(main.okToOpen(ProjectManagerShell.class));
     }
 }

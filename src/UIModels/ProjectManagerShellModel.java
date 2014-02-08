@@ -50,8 +50,8 @@ public class ProjectManagerShellModel extends BaseUIModel{
         return selected; 
     }
     
-    public void setSelected(ProjectModel aProject){
-        
+    public void removeShell(JFrame aShell){
+        openShells.remove(aShell);
     }
     
     public DefaultListModel getListModel(){
@@ -73,6 +73,17 @@ public class ProjectManagerShellModel extends BaseUIModel{
         main.addProject(newProjectName);
     }
     
+    public ProjectModel projectAdded(ProjectModel newProject){
+        projectList.addElement(newProject);
+        return newProject;
+    }
+    
+    /**
+     * meant for shells that shouldn't have more than one 
+     * instance open at a time
+     * @param shell
+     * @return 
+     */
     public boolean okToOpen(Object shell){
         for(JFrame openShell : openShells){
             if(openShell.getClass() == shell){
@@ -82,8 +93,6 @@ public class ProjectManagerShellModel extends BaseUIModel{
         }
         return true;
     }
-    
-    
     
     public void openAddProject(){
         if(this.okToOpen(AddNewProjectShell.class)) {

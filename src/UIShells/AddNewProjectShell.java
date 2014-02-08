@@ -7,6 +7,8 @@ package UIShells;
 import Exceptions.NameAlreadyExistsException;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  *
@@ -16,19 +18,27 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     private ProjectManagerShellModel model;
     private ProjectModel baseNewProject;
     
-    /**
-     * Creates new form AddNewProjectShell
-     */
-    public AddNewProjectShell() {
-        initComponents();
-    }
-    
     public AddNewProjectShell(ProjectManagerShellModel model) {
         initComponents();
         this.model = model;
         baseNewProject = new ProjectModel(model.getApplication(), "New Project");
         this.authorNameField.setText(model.getUserName());
         this.setVisible(true);
+        
+        //this should also be pushed up.
+        this.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosed(WindowEvent e){
+                signalClosedAndDispose();
+            }
+        });
+    }
+    
+    //this method should be pushed up
+    //as should the corresponding removeShell() method
+    private void signalClosedAndDispose(){
+        model.removeShell(this);
+        this.dispose();
     }
     
     /**
@@ -136,12 +146,13 @@ public class AddNewProjectShell extends javax.swing.JFrame {
             //pop-up with error message
             successfulAdd = false;
         }
-        if(successfulAdd)
-            this.dispose();
+        if(successfulAdd) {
+            this.signalClosedAndDispose();
+        }
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
     private void cancelProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelProjectButtonActionPerformed
-        this.dispose();
+        this.signalClosedAndDispose();
     }//GEN-LAST:event_cancelProjectButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField authorNameField;

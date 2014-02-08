@@ -47,7 +47,7 @@ public class MainApplication {
     
     public ProjectModel addProject(ProjectModel newProject){
         projects.add(newProject);
-        return newProject;
+        return shellModel.projectAdded(newProject);
     }
     
     public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{

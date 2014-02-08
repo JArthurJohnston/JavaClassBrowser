@@ -8,11 +8,13 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIShells.AddNewProjectShell;
 import UIShells.ProjectManagerShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -52,7 +54,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
     }
     
     private void setUpModel(){
-        model = new ProjectManagerShellModel(main);
+        model = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
     }
 
     @Test
@@ -69,16 +71,10 @@ public class ProjectManagerShellModelTest extends BaseTest{
         assertTrue(shell.isVisible());
         assertEquals(main.getUserName(), model.getUserName());
         ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
-        assertEquals(1, openShells.size());
-        assertEquals(ProjectManagerShell.class, openShells.get(0).getClass());
-        ArrayList shellModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
-        //assertEquals(1, shellModels.size());
-        //assertEquals(ProjectManagerShellModel.class, shellModels.get(0).getClass());
-        //assertEquals(model, shellModels.get(0));
+        assertEquals(0, openShells.size());
     }
     @Test
     public void testConstructor_mainWithpreExistingProjects(){
-        System.out.println("test constructor(main) with pre-existing projects");
         ProjectModel expSelected = main.addProject(new ProjectModel(main, "first"));
         main.addProject(new ProjectModel(main, "second"));
         this.setUpModel();
@@ -112,5 +108,16 @@ public class ProjectManagerShellModelTest extends BaseTest{
     @Test
     public void testGetApplication(){
         assertEquals(main, model.getApplication());
+    }
+    
+    @Test
+    public void testOkToOpen(){
+        assertTrue(model.okToOpen(AddNewProjectShell.class));
+        model.openAddProject();
+        AddNewProjectShell newShell = (AddNewProjectShell)((ArrayList)this.getVariableFromClass(model, "openShells")).get(0);
+        JButton cancelButton = (JButton)this.getVariableFromClass(newShell, "cancelProjectButton");
+        assertFalse(model.okToOpen(AddNewProjectShell.class));
+        cancelButton.doClick();
+        assertTrue(model.okToOpen(AddNewProjectShell.class));
     }
 }
