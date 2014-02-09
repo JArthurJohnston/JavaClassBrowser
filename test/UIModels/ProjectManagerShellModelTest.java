@@ -5,8 +5,10 @@
 package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.NothingSelectedException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import Models.ClassModel;
 import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
 import UIShells.ProjectManagerShell;
@@ -56,6 +58,17 @@ public class ProjectManagerShellModelTest extends BaseTest{
     private void setUpModel(){
         model = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
     }
+    
+    private ProjectModel setUpProject(){
+        ProjectModel aProject = new ProjectModel(main, "New Project");
+        ClassModel aClass;
+        try{
+            aProject.addPackage("New Package").addClass("New Class");
+        }catch(NameAlreadyExistsException ex){
+            fail("exception thrown");
+        }
+        return aProject;
+    }
 
     @Test
     public void testConstructor_main() {
@@ -72,6 +85,8 @@ public class ProjectManagerShellModelTest extends BaseTest{
         assertEquals(main.getUserName(), model.getUserName());
         ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
         assertEquals(0, openShells.size());
+        ArrayList openShellModels = (ArrayList)this.getVariableFromClass(model, "openShellModels");
+        assertEquals(ArrayList.class, openShellModels.getClass());
     }
     @Test
     public void testConstructor_mainWithpreExistingProjects(){
@@ -119,5 +134,28 @@ public class ProjectManagerShellModelTest extends BaseTest{
         assertFalse(model.okToOpen(AddNewProjectShell.class));
         cancelButton.doClick();
         assertTrue(model.okToOpen(AddNewProjectShell.class));
+    }
+    @Test
+    public void testRemoveProject(){
+        model.removeProject(null);
+        fail("not yet written");
+    }
+    
+    @Test
+    public void testOpenClassBrowser(){
+        try {
+            model.openClassBrowser();
+            fail("exception not thrown");
+        } catch (NothingSelectedException ex) {
+        }
+        ProjectModel aProject = this.setUpProject();
+        this.setUpModel();
+        ArrayList shellModels = (ArrayList)this.getVariableFromClass(model, "openShellModels");
+        try {
+            model.openClassBrowser();
+        } catch (NothingSelectedException ex) {
+            fail("exception thrown when it shouldnt "+ ex.getMessage());
+        }
+        assertEquals(1, shellModels.size());
     }
 }

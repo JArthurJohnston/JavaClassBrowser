@@ -26,4 +26,8 @@ public class BaseException extends Exception{
     protected static String constructMessage(Object sender, Object target){
         return target.toString() + message + sender.toString();
     }
+    
+    protected String createMessage(Object sender, Object target){
+        return target.toString() + message + sender.toString();
+    }
 }

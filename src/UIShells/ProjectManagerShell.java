@@ -1,42 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package UIShells;
 
+import Exceptions.NothingSelectedException;
+import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 /**
 
  * @author Arthur
  */
-public class ProjectManagerShell extends BaseUIModel {
-    private DefaultListModel projects;
-    private static String defaultProjectDescription = 
-                "Project Name:\nAuthor: \nDate Created: \nNumber of Packages: 1\nNumber of Classes: 0";;
-    ProjectManagerShellModel model;
-
-    /**
-     * Creates new form ProjectManagerShell
-     */
-    public ProjectManagerShell() {
-        initComponents();
-    }
-    
-    public ProjectManagerShell(ProjectManagerShellModel model){
-        projects = new DefaultListModel();
-        initComponents();
-        this.model = model;
-        projectList.setModel(model.getListModel());
-        if(model.getSelected() != null) {
-            projectInfo.setText(model.getSelected().getDescription());
-        }
-        else {
-            projectInfo.setText(defaultProjectDescription);
-        }
-    }
-
+public class ProjectManagerShell extends javax.swing.JFrame {
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,6 +24,7 @@ public class ProjectManagerShell extends BaseUIModel {
         projectList = new javax.swing.JList();
         projectInfo = new javax.swing.JTextField();
         addProjectButton = new javax.swing.JButton();
+        removeProjectButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -64,6 +39,13 @@ public class ProjectManagerShell extends BaseUIModel {
             }
         });
 
+        removeProjectButton.setText("-");
+        removeProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeProjectButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,6 +57,8 @@ public class ProjectManagerShell extends BaseUIModel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(removeProjectButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addProjectButton)))
                 .addContainerGap())
         );
@@ -86,7 +70,9 @@ public class ProjectManagerShell extends BaseUIModel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(projectInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addProjectButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addProjectButton)
+                    .addComponent(removeProjectButton))
                 .addContainerGap())
         );
 
@@ -96,16 +82,50 @@ public class ProjectManagerShell extends BaseUIModel {
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
         model.openAddProject();
     }//GEN-LAST:event_addProjectButtonActionPerformed
+
+    private void removeProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProjectButtonActionPerformed
+        try {
+            model.removeProject(this.getSelection());
+        } catch (NothingSelectedException ex) {
+            JOptionPane.showMessageDialog(null, ex, "No Selection Warning", WIDTH, null);
+        }
+    }//GEN-LAST:event_removeProjectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addProjectButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField projectInfo;
     private javax.swing.JList projectList;
+    private javax.swing.JButton removeProjectButton;
     // End of variables declaration//GEN-END:variables
-
-/*
- * The Following methods are for testing purposes only
- * 
- * a shell should never return its JList in production
- */
+    private DefaultListModel projects;
+    ProjectManagerShellModel model;
+    private static String defaultProjectDescription = 
+                "Project Name:\nAuthor: \nDate Created: \nNumber of Packages: 1\nNumber of Classes: 0";
+    
+    public ProjectManagerShell(ProjectManagerShellModel model){
+        projects = new DefaultListModel();
+        initComponents();
+        this.model = model;
+        projectList.setModel(model.getListModel());
+        if(model.getSelected() != null) {
+            projectInfo.setText(model.getSelected().getDescription());
+        }
+        else {
+            projectInfo.setText(defaultProjectDescription);
+        }
+    }
+    
+    private ProjectModel getSelection() throws NothingSelectedException{
+        ProjectModel selection = (ProjectModel)projectList.getSelectedValue();
+        if(selection == null) {
+            throw new NothingSelectedException(ProjectModel.getSelectionString());
+        } else {
+            return selection;
+        }
+    }
+    
+    private boolean hasSelection(){
+        return projectList.getSelectedValue() != null;
+    }
 }

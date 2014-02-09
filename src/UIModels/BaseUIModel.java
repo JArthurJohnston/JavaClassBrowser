@@ -2,17 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package UIShells;
+package UIModels;
 
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 
 /**
  * a class for any shared methods for all the UI stuff
  * 
  * @author Arthur
  */
-public class BaseUIModel extends javax.swing.JFrame{
+public class BaseUIModel {
+    protected ArrayList<JFrame> openShells;
+    protected ArrayList<BaseUIModel> openShellModels;
     
     /**
      * a method for filling list models.

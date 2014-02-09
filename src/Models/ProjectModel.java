@@ -62,12 +62,9 @@ public class ProjectModel extends BaseModel {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    
-    public boolean isClass(){
-        return false;
-    }
-    public boolean isMethod(){
-        return false;
+    @Override
+    public boolean isProject(){
+        return true;
     }
     
     protected PackageModel getParentPackage(){
@@ -183,5 +180,10 @@ public class ProjectModel extends BaseModel {
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
         }
+    }
+    
+    //static methods
+    public static String getSelectionString(){
+        return "Project";
     }
 }

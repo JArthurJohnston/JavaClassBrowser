@@ -73,6 +73,14 @@ public class ProjectModelTest {
         assertEquals(instance.getPackages().size(), 1);
         assertEquals(instance.getPackages().get("default package"), instance.getPackageList().get(0));
         assertEquals("DefaultName", instance.name());
+        
+    }
+    
+    @Test
+    //useless test
+    public void testStaticAccessors(){
+        assertEquals("Project", ProjectModel.getSelectionString());
+        
     }
     
     @Test

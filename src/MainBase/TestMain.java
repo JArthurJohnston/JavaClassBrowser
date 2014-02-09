@@ -10,6 +10,7 @@ package MainBase;
  */
 public class TestMain {
     public static void main (String args[]){
+       System.out.println(MainApplication.class.toString());
         new MainApplication();
     }
     

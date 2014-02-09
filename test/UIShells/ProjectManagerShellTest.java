@@ -43,9 +43,8 @@ public class ProjectManagerShellTest extends BaseTest{
     @Before
     public void setUp() {
         testMain = new MainApplication();
-        model = new ProjectManagerShellModel(testMain);
-        window = new ProjectManagerShell(model);
-        window.setVisible(true);
+        model = (ProjectManagerShellModel)this.getVariableFromClass(testMain, "shellModel");
+        window = (ProjectManagerShell)this.getVariableFromClass(model, "shell");
     }
     
     @After
@@ -124,6 +123,13 @@ public class ProjectManagerShellTest extends BaseTest{
         assertEquals(newShell, openWindows.get(openWindows.size()-1));
         //assertTrue(newShell.isFocused());
         //this is working, but i dont know how to test it.
+    }
+    
+    @Test
+    public void testRemoveProjectButton(){
+        JButton removeProjectButton = (JButton)this.getVariableFromClass(window, "removeProjectButton");
+        removeProjectButton.doClick();
+        
     }
     
 }

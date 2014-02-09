@@ -116,7 +116,7 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    public boolean isClass(){
+    protected boolean isClass(){
         return true;
     }
     

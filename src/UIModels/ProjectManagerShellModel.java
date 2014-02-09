@@ -4,13 +4,13 @@
  */
 package UIModels;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.NothingSelectedException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
-import UIShells.BaseUIModel;
 import UIShells.ProjectManagerShell;
-import java.awt.Frame;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -24,7 +24,6 @@ public class ProjectManagerShellModel extends BaseUIModel{
     private ProjectModel selected;
     private DefaultListModel projectList;
     private ProjectManagerShell shell;
-    private ArrayList<JFrame> openShells;
     
     /*
      * I either need to keep track of ALL open shells via the 
@@ -37,6 +36,7 @@ public class ProjectManagerShellModel extends BaseUIModel{
         this.main = main;
         this.fillListModel(main.getProjects(), projectList);
         openShells = new ArrayList();
+        openShellModels = new ArrayList();
         shell = new ProjectManagerShell(this);
         shell.setVisible(true);
     }
@@ -73,6 +73,10 @@ public class ProjectManagerShellModel extends BaseUIModel{
         main.addProject(newProjectName);
     }
     
+    public void removeProject(ProjectModel aProject){
+        //WRITE ME!!!
+    }
+    
     public ProjectModel projectAdded(ProjectModel newProject){
         projectList.addElement(newProject);
         return newProject;
@@ -99,6 +103,23 @@ public class ProjectManagerShellModel extends BaseUIModel{
             openShells.add(new AddNewProjectShell(this));
         }else{
             //get the currently opened shell and bring it to front.
+        }
+    }
+    
+    public void openClassBrowser() throws NothingSelectedException{
+        if(this.getSelected() == null) {
+            throw new NothingSelectedException("Project");
+        }
+        else {
+            openShellModels.add(new ClassBrowserShellModel(this.getSelected()));
+        }
+    }
+    
+    public void setSelection(ProjectModel aProject) throws DoesNotExistException{
+        if(!projectList.contains(aProject)) {
+            throw new DoesNotExistException(this, aProject);
+        } else {
+            this.selected = aProject;
         }
     }
     

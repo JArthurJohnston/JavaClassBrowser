@@ -25,20 +25,35 @@ public class BaseTest {
      * @param componentName
      * @return 
      */
-    public Object getVariableFromClass(Object fromShell, String componentName){
+    public Object getVariableFromClass(Object objOfOrigin, String varName){
         Field privateField = null;
         try {
-            privateField = fromShell.getClass().getDeclaredField(componentName);
-        } catch (NoSuchFieldException | SecurityException ex) {
+            privateField = getFieldFromClass(objOfOrigin.getClass(), varName);
+            privateField.setAccessible(true);
+        } catch (NoSuchFieldException ex) {
             Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        privateField.setAccessible(true);
         try {
-            return privateField.get(fromShell);
+            return privateField.get(objOfOrigin);
         } catch (IllegalArgumentException | IllegalAccessException ex) {
             Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
     
+    private Field getFieldFromClass(Class aClass, String fieldName) throws NoSuchFieldException{
+        try {
+            return aClass.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException ex) {
+            Class superClass = aClass.getSuperclass();
+            if (superClass == null) {
+                throw ex;
+            } else {
+                return getFieldFromClass(superClass, fieldName);
+            }
+        } catch (SecurityException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

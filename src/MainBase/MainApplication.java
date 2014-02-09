@@ -75,20 +75,4 @@ public class MainApplication {
     public void setUserName(String newUserName){
         this.userName = newUserName;
     }
-    /**
-     * there are some shells which should only have one instance
-     * opened at a time. this works by comparing their models, not the
-     * shells themselves.
-     * dont call this method if the shell youre working with
-     * could/should be allowed to be opened as many times as the user desires
-     * @param shellModel
-     * @return 
-     */
-    public boolean okToOpen(Object shellModel){
-        for(Object windowModel : openWindowModels){
-            if(shellModel.getClass() == windowModel.getClass())
-                return false;
-        }
-        return true;
-    }
 }

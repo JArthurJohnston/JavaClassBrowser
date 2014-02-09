@@ -8,7 +8,7 @@ package Models;
  *
  * @author Arthur
  */
-abstract class BaseModel {
+public abstract class BaseModel {
     protected String description;
     protected String path;
     protected String comment;
@@ -30,6 +30,12 @@ abstract class BaseModel {
     public Boolean isDefault(){
         return isDefault;
     }
+    public String getDescription(){
+        return description;
+    }
+    public String getComment(){
+        return comment;
+    }
     //setters
     public void setName(String name){
         this.name = name;
@@ -49,14 +55,19 @@ abstract class BaseModel {
     public void setChanged(boolean isChange){
         this.hasChange = isChange;
     }
-    //getters
-    public String getDescription(){
-        return description;
-    }
-    public String getComment(){
-        return comment;
-    }
     
+    protected boolean isClass(){
+        return false;
+    }
+    protected boolean isProject(){
+        return false;
+    }
+    protected boolean isMethod(){
+        return false;
+    }
+    protected boolean isVaribale(){
+        return false;
+    }
     
     @Override
     public String toString(){

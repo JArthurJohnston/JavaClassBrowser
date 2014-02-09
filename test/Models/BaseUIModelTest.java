@@ -5,7 +5,7 @@
 package Models;
 
 import MainBase.MainApplication;
-import UIShells.BaseUIModel;
+import UIModels.BaseUIModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.junit.After;
