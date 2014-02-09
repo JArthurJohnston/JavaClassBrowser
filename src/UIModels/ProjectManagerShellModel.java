@@ -69,8 +69,8 @@ public class ProjectManagerShellModel extends BaseUIModel{
         return main;
     }
     
-    public void addProject(String newProjectName) throws NameAlreadyExistsException{
-        main.addProject(newProjectName);
+    public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{
+        return main.addProject(newProjectName);
     }
     
     public void removeProject(ProjectModel aProject){
@@ -122,5 +122,4 @@ public class ProjectManagerShellModel extends BaseUIModel{
             this.selected = aProject;
         }
     }
-    
 }

@@ -8,6 +8,7 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
 import Models.VariableModel;
+import UIShells.ClassBrowserShell;
 import javax.swing.DefaultListModel;
 
 /**
@@ -15,7 +16,10 @@ import javax.swing.DefaultListModel;
  * @author Arthur
  */
 public class ClassBrowserShellModel extends BaseUIModel{
+    private ClassBrowserShell shell;
     private DefaultListModel classList;
+    private DefaultListModel variableList;
+    private DefaultListModel methodList;
     private ClassModel selectedClass;
     private VariableModel selectedVariable;
     private MethodModel selectedMethod;
@@ -23,5 +27,12 @@ public class ClassBrowserShellModel extends BaseUIModel{
     
     public ClassBrowserShellModel(ProjectModel project){
         this.baseProject = project;
+        shell = new ClassBrowserShell(this);
     }
+    
+    private void fillListModels(){
+        classList = new DefaultListModel();
+        this.fillListModel(baseProject.getClasses(), classList);
+    }
+    
 }

@@ -7,7 +7,9 @@ package Models;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Internal.BaseTest;
 import MainBase.MainApplication;
+import Types.ReturnType;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +24,7 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class ClassModelTest {
+public class ClassModelTest extends BaseTest{
     private MainApplication main;
     private ProjectModel parentProject;
     private PackageModel parentPackage;
@@ -172,4 +174,24 @@ public class ClassModelTest {
         }
     }
     
+    @Test
+    public void testAddVariable(){
+        VariableModel var = new VariableModel(instance, ReturnType.CHAR, "aVar");
+        ArrayList varList = (ArrayList)this.getVariableFromClass(instance, "variables");
+        try {
+            instance.addVariable(var);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, varList.size());
+        try {
+            instance.addVariable(var);
+            fail("exception not thrown");
+        } catch (NameAlreadyExistsException ex) {}
+    }
+    
+    @Test
+    public void testRemoveVariable(){
+        fail("write me!");
+    }
 }

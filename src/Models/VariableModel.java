@@ -22,8 +22,6 @@ public class VariableModel extends BaseModel{
         this.type = type;
     }
     
-
-    
     /*
      * Getters
      */

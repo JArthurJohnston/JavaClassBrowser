@@ -31,6 +31,8 @@ public class ProjectModel extends BaseModel {
     /*
      * Constructors
      */
+    
+    //default constructor is for testing purposes.
     public ProjectModel(){
         this.name = defaultName;
         isDefault = true;

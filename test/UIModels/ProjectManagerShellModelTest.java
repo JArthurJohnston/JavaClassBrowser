@@ -4,6 +4,7 @@
  */
 package UIModels;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.NothingSelectedException;
 import Internal.BaseTest;
@@ -60,12 +61,17 @@ public class ProjectManagerShellModelTest extends BaseTest{
     }
     
     private ProjectModel setUpProject(){
-        ProjectModel aProject = new ProjectModel(main, "New Project");
+        ProjectModel aProject = null;
+        try {
+            aProject = model.addProject("New Project");
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         ClassModel aClass;
         try{
             aProject.addPackage("New Package").addClass("New Class");
         }catch(NameAlreadyExistsException ex){
-            fail("exception thrown");
+            fail(ex.getMessage());
         }
         return aProject;
     }
@@ -151,6 +157,11 @@ public class ProjectManagerShellModelTest extends BaseTest{
         ProjectModel aProject = this.setUpProject();
         this.setUpModel();
         ArrayList shellModels = (ArrayList)this.getVariableFromClass(model, "openShellModels");
+        try {
+            model.setSelection(aProject);
+        } catch (DoesNotExistException ex) {
+            fail("exception thrown when it shouldnt "+ ex.getMessage());
+        }
         try {
             model.openClassBrowser();
         } catch (NothingSelectedException ex) {

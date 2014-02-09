@@ -25,6 +25,7 @@ public class ClassModel extends PackageModel{
     private ArrayList<MethodModel> inheritedMethods;
     private ArrayList<VariableModel> instanceVars;
     private ArrayList<VariableModel> classVars;
+    private ArrayList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
      
     public ClassModel(){}
@@ -50,8 +51,9 @@ public class ClassModel extends PackageModel{
         this.instanceMethods = new ArrayList();
         this.classMethods = new ArrayList();
         this.constructors = new ArrayList();
-        this.instanceVars = new ArrayList();
-        this.classVars = new ArrayList();
+        //this.instanceVars = new ArrayList();
+        //this.classVars = new ArrayList();
+        this.variables = new ArrayList();
     }
     
     private boolean okToAddMethod(String newMethodName){
@@ -61,6 +63,36 @@ public class ClassModel extends PackageModel{
             }
         }
         return true;
+    }
+    
+    private boolean okToAddVariable(VariableModel newVar){
+        for(VariableModel v: variables){
+            if(v.name().compareTo(newVar.name())==0) {
+                return false;
+            }
+        }
+        /*
+        for(VariableModel v: classVars){
+            if(v.name().compareTo(newVar.name())==0) {
+                return false;
+            }
+        }
+        for(VariableModel v: instanceVars){
+            if(v.name().compareTo(newVar.name())==0) {
+                return false;
+            }
+        }
+        */
+        return true;
+    }
+    
+    public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
+        if(this.okToAddVariable(newVar)){
+            variables.add(newVar);
+            return newVar;
+        }else {
+            throw new NameAlreadyExistsException(this, newVar);
+        }
     }
     
     public MethodModel addMethod(String newMethodName, ClassType type, ScopeType scope, 
