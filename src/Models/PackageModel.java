@@ -100,41 +100,21 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    protected PackageModel addPackage(PackageModel newPackage){
+    protected PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
         if(newPackage.parent == this) {
             this.packageList.add(newPackage);
         }
         return project.addPackage(newPackage);
     }
     
-    /**
-     * Deprecated
-     * @param newClassName
-     * @return
-     * @throws NameAlreadyExistsException 
-     */
-    public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
-        if(this.okToAddClass(newClassName)){
-            ClassModel newClass = new ClassModel(this, newClassName);
-            return project.addClass(this.addClass(newClass));
-        }else {
-            throw new NameAlreadyExistsException(this, newClassName);
-        }
-    }
     
     @Override
-    protected ClassModel addClass(ClassModel newClass){
-        this.classList.add(newClass);
+    protected ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+        project.addClass(newClass);
+        classList.add(newClass);
         return newClass;
     }
     
-    protected void addClassToList(ClassModel newClass){
-        if(this.classList.isEmpty()){
-            classList.add(newClass);
-            parent.addClass(newClass);
-        }
-            
-    }
     
     public ClassModel removeClass(String aClassName) throws ClassDoesNotExistException{
         if(!this.okToAddClass(aClassName)){

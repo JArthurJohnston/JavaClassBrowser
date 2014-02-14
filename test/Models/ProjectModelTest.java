@@ -88,9 +88,9 @@ public class ProjectModelTest extends BaseTest{
     @Test
     public void testAddPackage() {
         System.out.println("testAddPackage");
-        PackageModel newPackage = new PackageModel();
+        PackageModel newPackage = null;
         try {
-            newPackage = instance.addPackage("New Package");
+            newPackage = instance.addPackage(new PackageModel(instance,"New Package"));
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
@@ -104,10 +104,9 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(newPackage ,instance.getPackageList().get(1));
         
         try {
-            instance.addPackage("New Package");
+            instance.addPackage(new PackageModel(instance, "New Package"));
             fail("NameAlreadyExistsException not thrown");
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.FINEST, null, ex);
         }
         assertTrue(instance.getPackages().size() == 2);
         assertTrue(instance.getPackageList().size() == 2);
@@ -117,43 +116,36 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testAddClass(){
-        System.out.println("TestAddClass");
-        PackageModel testPackage = new PackageModel();
+        PackageModel testPackage = null;
         try {
-            testPackage = instance.addPackage("Test Package");
+            testPackage = instance.addPackage(new PackageModel(instance,"Test Package"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         assertTrue(testPackage.name().compareTo("Test Package") == 0);
         assertEquals(2, instance.getPackages().size());
         assertEquals(testPackage, instance.getPackages().get("Test Package"));
         assertEquals(testPackage, instance.getPackageList().get(1));
-        ClassModel newClass = new ClassModel();
+        ClassModel newClass = null;
         try {
-            newClass = testPackage.addClass("NewClass");
+            newClass = testPackage.addClass(new ClassModel(testPackage, "NewClass"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         assertEquals(1, instance.getClasses().size());
         assertEquals(newClass, instance.getClasses().get("NewClass"));
         try {
-            testPackage.addClass("NewClass");
+            testPackage.addClass(new ClassModel(testPackage, "NewClass"));
             fail("Expected exception was not thrown");
-        } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.FINEST, null, ex);
-        }
+        } catch (NameAlreadyExistsException ex) {}
     }
     
     @Test
     public void testRemovePackage(){
-        System.out.println("testRemovePackage");
-        PackageModel packageToBeRemoved = new PackageModel();
+        PackageModel packageToBeRemoved = null;
         try {
-            packageToBeRemoved = instance.addPackage("PackageToBeRemoved");
+            packageToBeRemoved = instance.addPackage(new PackageModel(instance, "PackageToBeRemoved"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         assertTrue(instance.getPackages().containsKey("PackageToBeRemoved"));
@@ -162,7 +154,6 @@ public class ProjectModelTest extends BaseTest{
         try {
             instance.removePackage(packageToBeRemoved);
         } catch (PackageDoesNotExistException ex) {
-            Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         assertFalse(instance.getPackages().containsValue(packageToBeRemoved));
@@ -199,10 +190,17 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testPackageClassLists(){
-        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(instance, "packageClassLists");
+        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(instance, "packageClasses");
         assertEquals(LinkedList.class, tLClasses.getClass());
         assertEquals(0, tLClasses.size());
         PackageModel newPackage = new PackageModel(instance, "New Package");
-        instance.addPackage(newPackage);
+        PackageModel aPackage;
+        try {
+            aPackage = instance.addPackage(newPackage);
+            ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, tLClasses.size());
     }
 }

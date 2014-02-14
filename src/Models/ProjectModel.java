@@ -25,7 +25,6 @@ public class ProjectModel extends BaseModel {
     private LinkedList packageClasses;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
-    private LinkedList<BaseModel> masterList;
     protected Date dateCreated;
     private String userName;
     
@@ -107,6 +106,7 @@ public class ProjectModel extends BaseModel {
         this.userName = newUserName;
     }
     
+    @Override
     public String getDescription(){
         return "Project Name: "+this.name+"\n"+
                 "Author: "+this.getUserName()+"\n"+
@@ -136,31 +136,17 @@ public class ProjectModel extends BaseModel {
     protected boolean okToRemovePackage(PackageModel aPackage){
         return this.packages.containsValue(aPackage);
     }
-    /**
-     * Checks the packages hash for duplicates, if none
-     * it creates a new package and calls addPackage(PackageModel)
-     * to have it added to the hash and/or the list
-     * 
-     * @param String newPackageName
-     * @return PageModel newPackage
-     * @throws NameAlreadyExistsException 
-     */
-    public PackageModel addPackage(String newPackageName) throws NameAlreadyExistsException{
-        if(this.okToAddPackage(newPackageName)){
-            PackageModel newPackage = new PackageModel(this, newPackageName);
-            this.addPackage(newPackage);
+    
+    protected PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+        if(this.okToAddPackage(newPackage.name())){
+            this.packages.put(newPackage.name(), newPackage);
+            if(newPackage.getParent() == this) {
+                this.packageList.add(newPackage);
+            }
             return newPackage;
         }else {
-            throw new NameAlreadyExistsException(this, newPackageName);
+            throw new NameAlreadyExistsException(this, newPackage);
         }
-    }
-    
-    protected PackageModel addPackage(PackageModel newPackage){
-        this.packages.put(newPackage.name(), newPackage);
-        if(newPackage.getParent() == this) {
-            this.packageList.add(newPackage);
-        }
-        return newPackage;
     }
     /**
      * Note: this method should be overridden and called ONLY in the 
@@ -170,9 +156,13 @@ public class ProjectModel extends BaseModel {
      * @param ClassModel newClass
      * @return ClassModel
      */
-    protected ClassModel addClass(ClassModel newClass){
-        classes.put(newClass.name(), newClass);
-        return newClass;
+    protected ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+        if(this.okToAddClass(newClass.name())){
+            classes.put(newClass.name(), newClass);
+            return newClass;
+        }else {
+            throw new NameAlreadyExistsException(this, newClass);
+        }
     }
     
     protected PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
