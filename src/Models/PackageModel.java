@@ -8,6 +8,7 @@ import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -15,6 +16,7 @@ import java.util.ArrayList;
  */
 public class PackageModel extends ProjectModel {
     private ArrayList<PackageModel> packageList;
+    protected LinkedList topLevelClasses;
     protected ProjectModel project;
     protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
@@ -79,6 +81,7 @@ public class PackageModel extends ProjectModel {
     protected void setUpFields(){
         packageList = new ArrayList();
         classList = new ArrayList();
+        topLevelClasses = new LinkedList();
     }
     
     @Override
@@ -104,6 +107,12 @@ public class PackageModel extends ProjectModel {
         return project.addPackage(newPackage);
     }
     
+    /**
+     * Deprecated
+     * @param newClassName
+     * @return
+     * @throws NameAlreadyExistsException 
+     */
     public ClassModel addClass(String newClassName) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClassName)){
             ClassModel newClass = new ClassModel(this, newClassName);
@@ -117,6 +126,14 @@ public class PackageModel extends ProjectModel {
     protected ClassModel addClass(ClassModel newClass){
         this.classList.add(newClass);
         return newClass;
+    }
+    
+    protected void addClassToList(ClassModel newClass){
+        if(this.classList.isEmpty()){
+            classList.add(newClass);
+            parent.addClass(newClass);
+        }
+            
     }
     
     public ClassModel removeClass(String aClassName) throws ClassDoesNotExistException{
@@ -163,6 +180,10 @@ public class PackageModel extends ProjectModel {
     }
     public ProjectModel getParent(){
         return parent;
+    }
+    
+    public LinkedList getTopLevelClasses(){
+        return topLevelClasses;
     }
     
 }

@@ -32,7 +32,7 @@ public class ClassBrowserShellModel extends BaseUIModel{
     
     private void fillListModels(){
         classList = new DefaultListModel();
-        this.fillListModel(baseProject.getClasses(), classList);
+        //this.fillListModel(baseProject.getClasses(), classList);
     }
     
 }

@@ -22,6 +22,7 @@ import java.util.LinkedList;
 public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
+    private LinkedList packageClasses;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
     private LinkedList<BaseModel> masterList;
@@ -37,12 +38,14 @@ public class ProjectModel extends BaseModel {
         this.name = defaultName;
         isDefault = true;
         this.setUpFields();
+        packageClasses = new LinkedList();
     }
     
     public ProjectModel(MainApplication main, String name){
         this.userName = main.getUserName();
         this.name = name;
         this.setUpFields();
+        packageClasses = new LinkedList();
     }
     
     /*
@@ -187,5 +190,9 @@ public class ProjectModel extends BaseModel {
     //static methods
     public static String getSelectionString(){
         return "Project";
+    }
+    
+    public LinkedList getPackageClasses(){
+        return packageClasses;
     }
 }

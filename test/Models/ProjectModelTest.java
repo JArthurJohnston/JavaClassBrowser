@@ -6,10 +6,12 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -23,7 +25,7 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class ProjectModelTest {
+public class ProjectModelTest extends BaseTest{
     private MainApplication testMain;
     private ProjectModel instance;
     
@@ -193,5 +195,14 @@ public class ProjectModelTest {
         instance.setUserName("Kyle Raynor");
         assertEquals("Kyle Raynor", instance.getUserName());
         assertEquals("Barry Allen", testMain.getUserName());
+    }
+    
+    @Test
+    public void testPackageClassLists(){
+        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(instance, "packageClassLists");
+        assertEquals(LinkedList.class, tLClasses.getClass());
+        assertEquals(0, tLClasses.size());
+        PackageModel newPackage = new PackageModel(instance, "New Package");
+        instance.addPackage(newPackage);
     }
 }

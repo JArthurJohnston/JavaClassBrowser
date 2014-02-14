@@ -7,8 +7,10 @@ package Models;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -22,7 +24,8 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class PackageModelTest {
+public class PackageModelTest extends BaseTest{
+    
     private MainApplication main;
     PackageModel instance;
     ProjectModel parentProject;
@@ -158,5 +161,16 @@ public class PackageModelTest {
         } catch (PackageDoesNotExistException ex) {
             Logger.getLogger(PackageModelTest.class.getName()).log(Level.FINE, null, ex);
         }
+    }
+    
+    @Test
+    public void testTopLevelClasses(){
+        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(instance, "topLevelClasses");
+        assertEquals(LinkedList.class, tLClasses.getClass());
+        assertEquals(0, tLClasses.size());
+        ClassModel newClass = new ClassModel(instance, "NewClass");
+        instance.addClass(newClass);
+        assertEquals(1, tLClasses.size());
+        assertEquals(1, instance.getParent().getPackageClasses());
     }
 }
