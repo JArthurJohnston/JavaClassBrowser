@@ -70,10 +70,9 @@ public class MainApplicationTest extends BaseTest {
         System.out.print("Test getProjects");
         assertEquals(0, main.getProjects().size());
         try {
-            newProject = main.addProject("new project");
+            newProject = main.addProject(new ProjectModel(main, "new project"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrown when it shouldnt");
+            fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
         assertEquals(newProject, main.getProjects().get(0));
@@ -81,8 +80,7 @@ public class MainApplicationTest extends BaseTest {
         try {
             main.removeProject(newProject);
         } catch (DoesNotExistException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrown when it shouldnt");
+            fail(ex.getMessage());
         }
         assertEquals(0, main.getProjects().size());
     }
@@ -91,7 +89,11 @@ public class MainApplicationTest extends BaseTest {
     public void testAddProject_projectModel(){
         System.out.print("test addProject from projectModel");
         ProjectModel newProject = new ProjectModel(main, "new project");
-        assertEquals(newProject, main.addProject(newProject));
+        try {
+            assertEquals(newProject, main.addProject(newProject));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(1, main.getProjects().size());
         assertEquals(newProject, main.getProjects().get(0));
         System.out.println(" passed");
@@ -99,22 +101,18 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testAddProject_stringProjectName(){
-        System.out.print("test addProject from string");
         ProjectModel newProject = null;
         try {
-            newProject = main.addProject("new project");
+            newProject = main.addProject(new ProjectModel(main,"new project"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrown when it shouldnt");
+            fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
         assertEquals(newProject, main.getProjects().get(0));
         try {
-            main.addProject("new project");
+            main.addProject(new ProjectModel(main, "new project"));
             fail("exception not thrown");
-        } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.FINE, null, ex);
-        }
+        } catch (NameAlreadyExistsException ex) {}
         System.out.println(" passed");
     }
     
@@ -136,15 +134,16 @@ public class MainApplicationTest extends BaseTest {
         try {
             main.removeProject(aProject);
             fail("exception not thrown");
-        } catch (DoesNotExistException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.FINE, null, ex);
+        } catch (DoesNotExistException ex) {}
+        try {
+            main.addProject(aProject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
         }
-        main.addProject(aProject);
         try {
             main.removeProject(aProject);
         } catch (DoesNotExistException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrown when it shouldnt");
+            fail(ex.getMessage());
         }
         System.out.println(" passes");
     }
@@ -154,31 +153,31 @@ public class MainApplicationTest extends BaseTest {
         System.out.print("test okToDelete");
         ProjectModel aProject = new ProjectModel(main, "a project");
         assertFalse(main.okToDelete(aProject));
-        main.addProject(aProject);
+        try {
+            main.addProject(aProject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertTrue(main.okToDelete(aProject));
         System.out.println(" passed");
     }
     
     @Test
     public void testOKToAddProject(){
-        System.out.print("test okToAdd");
         assertTrue(main.okToAdd("new project"));
         try {
-            main.addProject("new project");
+            main.addProject(new ProjectModel(main,"new project"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrwon when it shouldnt");
+            fail(ex.getMessage());
         }
         assertFalse(main.okToAdd("new project"));
         assertTrue(main.okToAdd("another project"));
         try {
-            main.addProject("another project");
+            main.addProject(new ProjectModel(main,"another project"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(MainApplicationTest.class.getName()).log(Level.SEVERE, null, ex);
-            fail("exception thrwon when it shouldnt");
+            fail(ex.getMessage());
         }
         assertFalse(main.okToAdd("another project"));
-        System.out.println(" passed");
     }
     
     @Test

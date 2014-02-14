@@ -45,17 +45,12 @@ public class MainApplication {
         return projects.contains(aProject);
     }
     
-    public ProjectModel addProject(ProjectModel newProject){
-        projects.add(newProject);
-        return shellModel.projectAdded(newProject);
-    }
-    
-    public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{
-        if(this.okToAdd(newProjectName)){
-            ProjectModel newProject = new ProjectModel(this, newProjectName);
-            return this.addProject(newProject);
+    public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
+        if(this.okToAdd(newProject.name())){
+            projects.add(newProject);
+            return shellModel.projectAdded(newProject);
         }else {
-            throw new NameAlreadyExistsException(this, newProjectName);
+            throw new NameAlreadyExistsException(this, newProject);
         }
     }
     

@@ -11,8 +11,6 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Types.ReturnType;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -28,7 +26,7 @@ public class ClassModelTest extends BaseTest{
     private MainApplication main;
     private ProjectModel parentProject;
     private PackageModel parentPackage;
-    private ClassModel instance;
+    private ClassModel testClass;
     
     public ClassModelTest() {
     }
@@ -45,13 +43,13 @@ public class ClassModelTest extends BaseTest{
     public void setUp() throws NameAlreadyExistsException {
         main = new MainApplication();
         parentProject = new ProjectModel(main,"Parent Project");
-        parentPackage = parentProject.addPackage("Parent Package");
-        instance = parentPackage.addClass("InstanceClass");
+        parentPackage = parentProject.addPackage(new PackageModel(parentProject, "Parent Package"));
+        testClass = parentPackage.addClass(new ClassModel(parentPackage,"InstanceClass"));
     }
     
     @After
     public void tearDown() {
-        instance = null;
+        testClass = null;
         parentPackage = null;
         parentProject = null;
         main = null;
@@ -59,17 +57,16 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testInitialize(){
-        System.out.println("testInitialize");
-        assertEquals("InstanceClass", instance.name());
-        assertEquals(parentProject, instance.getProject());
-        assertEquals(parentPackage, instance.getParent());
-        assertEquals(ClassModel.class, instance.getClass());
-        assertEquals(0, instance.getClassList().size());
-        assertEquals(ArrayList.class, instance.getClassList().getClass());
-        assertEquals(ArrayList.class, instance.getClassMethods().getClass());
-        assertEquals(ArrayList.class, instance.getInstanceMethods().getClass());
-        assertEquals(ArrayList.class, instance.getConstructors().getClass());
-        assertEquals(0, instance.getConstructors().size());
+        assertEquals("InstanceClass", testClass.name());
+        assertEquals(parentProject, testClass.getProject());
+        assertEquals(parentPackage, testClass.getParent());
+        assertEquals(ClassModel.class, testClass.getClass());
+        assertEquals(0, testClass.getClassList().size());
+        assertEquals(ArrayList.class, testClass.getClassList().getClass());
+        assertEquals(ArrayList.class, testClass.getClassMethods().getClass());
+        assertEquals(ArrayList.class, testClass.getInstanceMethods().getClass());
+        assertEquals(ArrayList.class, testClass.getConstructors().getClass());
+        assertEquals(0, testClass.getConstructors().size());
                 
     }
 
@@ -78,114 +75,97 @@ public class ClassModelTest extends BaseTest{
      */
     @Test
     public void testAddClass() {
-        System.out.println("addClass");
-        ClassModel newSubClass = new ClassModel();
+        ClassModel newSubClass = null;
         try {
-            newSubClass = instance.addClass("NewSubClass");
+            newSubClass = testClass.addClass(new ClassModel(testClass, "NewSubClass"));
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
-        assertEquals(instance, newSubClass.getParent());
+        assertEquals(testClass, newSubClass.getParent());
         assertEquals(parentProject, newSubClass.getProject());
         assertEquals(2, parentProject.getClasses().size());
-        assertEquals(1, instance.getClassList().size());
-        assertEquals(newSubClass, instance.getClassList().get(0));
+        assertEquals(1, testClass.getClassList().size());
+        assertEquals(newSubClass, testClass.getClassList().get(0));
         assertEquals(newSubClass, parentProject.getClasses().get("NewSubClass"));
         try {
-            instance.addClass("NewSubClass");
+            testClass.addClass(new ClassModel(testClass,"NewSubClass"));
             fail("Expected exception not thrown");
         } catch (NameAlreadyExistsException ex) {
             assertEquals(NameAlreadyExistsException.class, ex.getClass());
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
         }
     }
     
     @Test
     public void testRemoveClass(){
-        ClassModel classToBeRemoved = new ClassModel();
-        System.out.println("testRemoveClass");
+        ClassModel classToBeRemoved = null;
         try {
-            classToBeRemoved = instance.addClass("ClassToBeRemoved");
+            classToBeRemoved = testClass.addClass(new ClassModel(testClass, "ClassToBeRemoved"));
             assertEquals(2, parentProject.getClasses().size());
-            assertEquals(1, instance.getClassList().size());
-            assertTrue(instance.getClassList().contains(classToBeRemoved));
-        } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            assertEquals(1, testClass.getClassList().size());
+            assertTrue(testClass.getClassList().contains(classToBeRemoved));
+        } catch (NameAlreadyExistsException ex) {}
         try {
-            instance.removeClass("ClassToBeRemoved");
+            testClass.removeClass("ClassToBeRemoved");
         } catch (ClassDoesNotExistException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         try {
-            instance.removeClass("ClassToBeRemoved");
+            testClass.removeClass("ClassToBeRemoved");
             fail("Exception not thrown");
-        } catch (ClassDoesNotExistException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
-        }
+        } catch (ClassDoesNotExistException ex) {}
         assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
-        assertFalse(instance.getClassList().contains(classToBeRemoved));
+        assertFalse(testClass.getClassList().contains(classToBeRemoved));
     }
     
     @Test
     public void testAddMethod(){
         MethodModel newMethod = new MethodModel();
-        System.out.println("testAddMethod");
         try {
-            newMethod = instance.addMethod("newMethod");
+            newMethod = testClass.addMethod("newMethod");
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
             fail("Exception thrown when it shouldnt");
         }
-        assertEquals(instance, newMethod.getParent());
-        assertEquals(1, instance.getMethods().size());
+        assertEquals(testClass, newMethod.getParent());
+        assertEquals(1, testClass.getMethods().size());
         try {
-            instance.addMethod("newMethod");
+            testClass.addMethod("newMethod");
             fail("Exception not thrown");
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
             assertEquals(NameAlreadyExistsException.class, ex.getClass());
         }
     }
     
     @Test
     public void testRemoveMethod(){
-        System.out.println("testRemoveMethod");
         try {
-            instance.addMethod("aMethodForTesting");
-            assertEquals(1, instance.getMethods().size());
+            testClass.addMethod("aMethodForTesting");
+            assertEquals(1, testClass.getMethods().size());
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
         }
         try {
-            instance.removeMethod("aMethodForTesting");
+            testClass.removeMethod("aMethodForTesting");
         } catch (MethodDoesNotExistException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
-        assertEquals(0, instance.getMethods().size());
+        assertEquals(0, testClass.getMethods().size());
         try {
-            instance.removeMethod("aNonExistantMethod");
+            testClass.removeMethod("aNonExistantMethod");
             fail("Exception not thrown");
-        } catch (MethodDoesNotExistException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.FINE, null, ex);
-        }
+        } catch (MethodDoesNotExistException ex) {}
     }
     
     @Test
     public void testAddVariable(){
-        VariableModel var = new VariableModel(instance, ReturnType.CHAR, "aVar");
-        ArrayList varList = (ArrayList)this.getVariableFromClass(instance, "variables");
+        VariableModel var = new VariableModel(testClass, ReturnType.CHAR, "aVar");
+        ArrayList varList = (ArrayList)this.getVariableFromClass(testClass, "variables");
         try {
-            instance.addVariable(var);
+            testClass.addVariable(var);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, varList.size());
         try {
-            instance.addVariable(var);
+            testClass.addVariable(var);
             fail("exception not thrown");
         } catch (NameAlreadyExistsException ex) {}
     }
