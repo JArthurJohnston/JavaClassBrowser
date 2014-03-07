@@ -77,12 +77,7 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testGetType() {
-        System.out.println("getType");
-        MethodModel instance = new MethodModel();
-        ClassType expResult = null;
-        ClassType result = instance.getType();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        assertEquals(null, method.getType());
         fail("The test case is a prototype.");
     }
 

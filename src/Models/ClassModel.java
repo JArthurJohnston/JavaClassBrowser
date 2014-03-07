@@ -66,6 +66,7 @@ public class ClassModel extends PackageModel{
     }
     
     private boolean okToAddVariable(VariableModel newVar){
+        //check for redefining instanceVar
         for(VariableModel v: variables){
             if(v.name().compareTo(newVar.name())==0) {
                 return false;
