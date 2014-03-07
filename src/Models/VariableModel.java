@@ -11,15 +11,13 @@ import Types.ReturnType;
  * @author Arthur
  */
 public class VariableModel extends BaseModel{
-    private ClassModel parent;
     private ReturnType type;
     private Object value;
     
     
-    public VariableModel(ClassModel parent, ReturnType type, String name){
-        this.parent = parent;
-        this.name = name;
+    public VariableModel ( ReturnType type, String name){
         this.type = type;
+        this.name = name;
     }
     
     /*
@@ -30,9 +28,6 @@ public class VariableModel extends BaseModel{
     }
     public Object getValue(){
         return value;
-    }
-    public ClassModel getParent(){
-        return parent;
     }
     
     
