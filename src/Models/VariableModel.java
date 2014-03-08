@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Types.ClassType;
 import Types.ReturnType;
 
 /**
@@ -11,6 +12,7 @@ import Types.ReturnType;
  * @author Arthur
  */
 public class VariableModel extends BaseModel{
+    private ClassType staticOrInstance;
     private ReturnType type;
     private Object value;
     

@@ -9,6 +9,7 @@ package Models;
 import Internal.BaseTest;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,7 +23,6 @@ import static org.junit.Assert.*;
  */
 public class MethodModelTest extends BaseTest{
     private MethodModel method;
-    private ClassModel parentClass;
     
     public MethodModelTest() {
     }
@@ -37,20 +37,17 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        this.setUpParentClass();
-        method = new MethodModel(parentClass, "aMethod");
+        method = new MethodModel("aMethod");
     }
     
     @After
     public void tearDown() {
         method = null;
-        parentClass = null;
     }
     
     private void setUpParentClass(){
         ProjectModel aProject = new ProjectModel();
         PackageModel aPackage = new PackageModel(aProject, "a package");
-        parentClass = new ClassModel(aPackage, "AClass");
     }
 
     /**
@@ -66,18 +63,34 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testSetSource() {
-        String methodSource = (String)this.getVariableFromClass(method, "source");
-        assertEquals("", methodSource);
+        
+        assertEquals("", method.getSource());
         method.setSource("some text for source code");
-        assertEquals("some text for source code", methodSource);
+        assertEquals("some text for source code", method.getSource());
+    }
+    
+    @Test
+    public void testMethodSignature(){
+        MethodModel otherMethod = new MethodModel("anotherMethod");
+        assertFalse(method.matchSignature(otherMethod));
+        otherMethod.setName("aMethod");
+        assertTrue(method.matchSignature(otherMethod));
+    }
+    
+    @Test
+    public void testParameters(){
+        ArrayList params = (ArrayList)this.getVariableFromClass(method, "parameters");
+        assertEquals(0, params.size());
     }
 
     /**
      * Test of getType method, of class MethodModel.
      */
     @Test
-    public void testGetType() {
-        assertEquals(null, method.getType());
+    public void testInstanceOrStatic() {
+        assertEquals(ClassType.INSTANCE, method.getType());
+        method.setType(ClassType.CLASS);
+        assertEquals(ClassType.CLASS, method.getType());
         fail("The test case is a prototype.");
     }
 
@@ -86,13 +99,7 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testScope() {
-        System.out.println("scope");
-        MethodModel instance = new MethodModel();
-        ScopeType expResult = null;
-        ScopeType result = instance.scope();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(ScopeType.PUBLIC, method.scope());
     }
 
     /**
