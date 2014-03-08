@@ -8,6 +8,7 @@ package Models;
 
 import Internal.BaseTest;
 import Types.ClassType;
+import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import org.junit.After;
@@ -75,6 +76,20 @@ public class MethodModelTest extends BaseTest{
         assertFalse(method.matchSignature(otherMethod));
         otherMethod.setName("aMethod");
         assertTrue(method.matchSignature(otherMethod));
+        VariableModel intVar = new VariableModel(ReturnType.INT, "x");
+        VariableModel charVar = new VariableModel(ReturnType.INT, "y");
+        ArrayList vars = new ArrayList();
+        vars.add(intVar);
+        vars.add(charVar);
+        otherMethod.setParameters(vars);
+        assertFalse(method.matchSignature(otherMethod));
+        method.setParameters(vars);
+        assertTrue(method.matchSignature(otherMethod));
+    }
+    
+    @Test
+    public void testMatchSignatureWithObjects(){
+        fail("need to figure out objects as parameters");
     }
     
     @Test

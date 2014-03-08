@@ -84,6 +84,9 @@ public class MethodModel extends ClassModel{
         */
         this.type = newType;
     }
+    public void setParameters(ArrayList params){
+        this.parameters = params;
+    }
     
     /*
      * Getters
