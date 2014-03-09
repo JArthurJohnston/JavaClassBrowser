@@ -185,4 +185,10 @@ public class ProjectModel extends BaseModel {
     public LinkedList getPackageClasses(){
         return packageClasses;
     }
+    
+    
+    private static void setUpJavaLangClasses(HashMap classes){
+        PackageModel javaDotLang = new PackageModel("Java.Lang");
+    }
+    
 }

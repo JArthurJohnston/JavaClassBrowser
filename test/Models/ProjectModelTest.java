@@ -203,4 +203,9 @@ public class ProjectModelTest extends BaseTest{
         }
         assertEquals(1, tLClasses.size());
     }
+    
+    @Test
+    public void testBasicTypes(){
+        assertEquals(instance.basicTypes().size() == 10);
+    }
 }

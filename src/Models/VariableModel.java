@@ -22,10 +22,13 @@ public class VariableModel extends BaseModel{
         this.name = name;
     }
     
+    
     /*
      * Getters
      */
     public ReturnType getType(){
+        if(type == ReturnType.OBJECT)
+            return this.value.
         return type;
     }
     public Object getValue(){

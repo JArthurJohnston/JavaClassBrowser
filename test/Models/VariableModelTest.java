@@ -62,7 +62,7 @@ public class VariableModelTest {
         parentClass = new ClassModel(parentPackage, "AClass");
     }
     private MethodModel setUpParentMethod(){
-        parentMethod = new MethodModel(parentClass, "aMethod");
+        parentMethod = new MethodModel("aMethod");
         return parentMethod;
     }
 
