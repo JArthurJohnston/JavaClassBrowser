@@ -19,15 +19,22 @@ public class MethodModel extends ClassModel{
     private ReturnType returnType;
     private ClassType type;
     private ArrayList<VariableModel> parameters;
-    private LinkedList definitions;
+    private LinkedList references;
     
+    //testing constructors
     public MethodModel(){}
     public MethodModel(String name){
         this.initializeFields();
         this.name = name;
     }
+    public MethodModel(ClassModel parent, String name){
+        this.parent = parent;
+        this.project = parent.project;
+        this.initializeFields();
+        this.name = name;
+    }
     
-    public MethodModel(ClassModel parentClass, ClassType type, ScopeType scope, ReturnType returnType, String name){
+    public MethodModel(ClassModel parentClass, ClassType type, ScopeType scopes, String name){
         this.initializeFields();
         this.parent = parentClass;
         this.project = parentClass.project;
@@ -52,7 +59,7 @@ public class MethodModel extends ClassModel{
         this.scope = ScopeType.PUBLIC;
         this.parameters = new ArrayList();
         this.returnType = ReturnType.VOID;
-        this.definitions = new LinkedList();
+        this.references = new LinkedList();
     }
     
     @Override
@@ -76,7 +83,7 @@ public class MethodModel extends ClassModel{
     }
     
     public MethodModel addDefinition(MethodModel newDef){
-        this.definitions.add(newDef);
+        this.references.add(newDef);
         return newDef;
     }
     
@@ -117,8 +124,8 @@ public class MethodModel extends ClassModel{
     public ArrayList<VariableModel> getParameters(){
         return parameters;
     }
-    public LinkedList getDefinitions(){
-        return definitions;
+    public LinkedList getReferences(){
+        return references;
     }
     
     

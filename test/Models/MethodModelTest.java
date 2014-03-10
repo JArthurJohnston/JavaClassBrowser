@@ -12,6 +12,8 @@ import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,7 +41,8 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        method = new MethodModel("aMethod");
+        method = new MethodModel(this.setUpParentClass(), 
+                ClassType.INSTANCE, ScopeType.PUBLIC, "aMethod");
     }
     
     @After
@@ -47,9 +50,10 @@ public class MethodModelTest extends BaseTest{
         method = null;
     }
     
-    private void setUpParentClass(){
+    private ClassModel setUpParentClass(){
         ProjectModel aProject = new ProjectModel();
         PackageModel aPackage = new PackageModel(aProject, "a package");
+        return new ClassModel(aPackage, "ParentClass");
     }
 
     /**
@@ -118,7 +122,7 @@ public class MethodModelTest extends BaseTest{
     }
     
     @Test
-    public void testReturnType(){
+    public void testReturnType(){      
         fail("return types should be a ClassModel, not an Enum");
     }
 
@@ -143,20 +147,29 @@ public class MethodModelTest extends BaseTest{
     }
     
     @Test
-    public void testDefinitionsOf(){
-        assertEquals(LinkedList.class, method.getDefinitions().getClass());
-        assertTrue(method.getDefinitions().isEmpty());
+    public void testReferences(){
+        assertEquals(LinkedList.class, method.getReferences().getClass());
+        assertTrue(method.getReferences().isEmpty());
         MethodModel newMethodDef = null;
         try {
            newMethodDef =  new ClassModel("anotherClass").addMethod("aMethod");
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertTrue(method.getDefinitions().contains(newMethodDef));
+        //assertTrue(method.getReferences().contains(newMethodDef));
+        fail("need to write logic to check for method references in method source");
     }
     
     @Test
-    public void testReferences(){
-        fail("Write me!");
+    public void testAddReference(){
+        
+        ClassModel aClass = new ClassModel(method.parent.getParentPackage(), "AnotherClass");
+        try {
+            aClass.addMethod("aMethod");
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+       fail("same reason as above");
     }
+    
 }

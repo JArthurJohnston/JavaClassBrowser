@@ -8,6 +8,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -42,8 +43,8 @@ public class AddNewProjectShellTest extends BaseTest{
     public void setUp() {
         main = new MainApplication();
         main.setUserName("Kyle Raynor");
-        model = new ProjectManagerShellModel(main);
-        shell = new AddNewProjectShell(model);
+        model = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
+        shell = model.openAddProject();
     }
     
     @After
@@ -94,5 +95,14 @@ public class AddNewProjectShellTest extends BaseTest{
         assertEquals(1, main.getProjects().size());
         assertEquals("New Project", main.getProjects().get(0).name());
         assertFalse(shell.isVisible());
+    }
+    
+    @Test
+    public void testCancelButton(){
+        ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
+        assertTrue(openShells.contains(shell));
+        JButton cancelButton = (JButton)this.getVariableFromClass(shell, "cancelProjectButton");
+        cancelButton.doClick();
+        assertFalse(openShells.contains(shell));
     }
 }
