@@ -22,6 +22,7 @@ import java.util.LinkedList;
 public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
+    private HashMap <String, LinkedList<MethodModel>> methods;
     private LinkedList packageClasses;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
@@ -78,6 +79,9 @@ public class ProjectModel extends BaseModel {
     /*
      * Getters
      */
+    public LinkedList getMethodDefinitions(String methodName){
+        return methods.get(methodName);
+    }
     public HashMap<String, ClassModel> getClasses(){
         return classes;
     }
@@ -186,9 +190,12 @@ public class ProjectModel extends BaseModel {
         return packageClasses;
     }
     
-    
-    private static void setUpJavaLangClasses(HashMap classes){
-        PackageModel javaDotLang = new PackageModel("Java.Lang");
+    public MethodModel addMethodDefinition(MethodModel newMethod){
+        if(methods.containsKey(newMethod.name()))
+            methods.get(newMethod.name()).addDefinition(newMethod);
+        else
+            methods.put(newMethod.name(), newMethod);
+        return newMethod;
     }
     
 }

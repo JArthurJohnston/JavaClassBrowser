@@ -28,7 +28,11 @@ public class ClassModel extends PackageModel{
     private ArrayList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
      
+    //use these constructors for testing only
     public ClassModel(){}
+    public ClassModel(String name){
+        this.name = name;
+    }
     
     public ClassModel(PackageModel parent, String name, ScopeType scope){
         this.project = parent.getProject();
@@ -72,18 +76,6 @@ public class ClassModel extends PackageModel{
                 return false;
             }
         }
-        /*
-        for(VariableModel v: classVars){
-            if(v.name().compareTo(newVar.name())==0) {
-                return false;
-            }
-        }
-        for(VariableModel v: instanceVars){
-            if(v.name().compareTo(newVar.name())==0) {
-                return false;
-            }
-        }
-        */
         return true;
     }
     
@@ -99,7 +91,7 @@ public class ClassModel extends PackageModel{
     public MethodModel addMethod(String newMethodName, ClassType type, ScopeType scope, 
             ReturnType returnType, boolean isOverride) throws NameAlreadyExistsException{
         if(this.okToAddMethod(newMethodName)){
-            MethodModel newMethod = new MethodModel(newMethodName, type, scope, returnType, isOverride);
+            MethodModel newMethod = new MethodModel(this,type, scope, returnType, newMethodName);
             return this.addMethod(newMethod);
         }else {
             throw new NameAlreadyExistsException(this, newMethodName);

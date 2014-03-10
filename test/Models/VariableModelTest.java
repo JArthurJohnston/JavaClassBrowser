@@ -6,8 +6,8 @@
 
 package Models;
 
-import Exceptions.NameAlreadyExistsException;
-import Types.ReturnType;
+import Internal.BaseTest;
+import Types.ScopeType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,11 +19,7 @@ import static org.junit.Assert.*;
  *
  * @author arthur
  */
-public class VariableModelTest {
-    private ProjectModel parentProject;
-    private PackageModel parentPackage;
-    private ClassModel parentClass;
-    private MethodModel parentMethod;
+public class VariableModelTest extends BaseTest{
     private VariableModel var;
     
     public VariableModelTest() {
@@ -39,31 +35,13 @@ public class VariableModelTest {
     
     @Before
     public void setUp() {
-        this.setUpParents();
-        try {
-            var = parentClass.addVariable(new VariableModel(ReturnType.INT, "aVar"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        ClassModel type = new ClassModel("Type");
+        var = new VariableModel(ScopeType.PRIVATE, type, "x");
     }
     
     @After
     public void tearDown() {
-        parentProject = null;
-        parentPackage = null;
-        parentClass = null;
-        parentMethod = null;
         var = null;
-    }
-    
-    private void setUpParents(){
-        parentProject = new ProjectModel();
-        parentPackage = new PackageModel(parentProject, "a package");
-        parentClass = new ClassModel(parentPackage, "AClass");
-    }
-    private MethodModel setUpParentMethod(){
-        parentMethod = new MethodModel("aMethod");
-        return parentMethod;
     }
 
     /**
@@ -71,15 +49,7 @@ public class VariableModelTest {
      */
     @Test
     public void testGetType() {
-        assertEquals(ReturnType.INT, var.getType());
-    }
-
-    /**
-     * Test of getValue method, of class VariableModel.
-     */
-    @Test
-    public void testGetValue() {
-        assertEquals(null, var.getValue());
+        assertEquals(ClassModel.class, var.getType().getClass());
     }
 
     /**
@@ -87,25 +57,29 @@ public class VariableModelTest {
      */
     @Test
     public void testSetType() {
-        var.setType(ReturnType.CHAR);
-        assertEquals(ReturnType.CHAR, var.getType());
+        ClassModel newType = new ClassModel("NewType");
+        var.setType(newType);
+        assertEquals(newType, var.getType());
     }
 
-    /**
-     * Test of setValue method, of class VariableModel.
-     */
-    @Test
-    public void testSetValue() {
-        var.setValue(5);
-        assertEquals(5, var.getValue());
-    }
 
     /**
      * Test of toSourceString method, of class VariableModel.
      */
     @Test
     public void testToSourceString() {
-        fail("The test case is a prototype.");
+        String expected = "private Type x;";
+        assertTrue(this.compareStrings(expected, var.toSourceString()));
+        var.setScope(ScopeType.NONE);
+        expected = "Type x;";
+        assertTrue(this.compareStrings(expected, var.toSourceString()));
+    }
+    
+    @Test 
+    public void testToSourceStringWithInitializedValue(){
+        //set var initial value
+        String expected = "private Type x = new Type()";
+        assertEquals("private Type x = new Type()", var.toSourceString());
     }
 
     @Test

@@ -6,11 +6,12 @@
 
 package Models;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Types.ClassType;
-import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -76,8 +77,8 @@ public class MethodModelTest extends BaseTest{
         assertFalse(method.matchSignature(otherMethod));
         otherMethod.setName("aMethod");
         assertTrue(method.matchSignature(otherMethod));
-        VariableModel intVar = new VariableModel(ReturnType.INT, "x");
-        VariableModel charVar = new VariableModel(ReturnType.INT, "y");
+        VariableModel intVar = new VariableModel(ScopeType.NONE, new ClassModel("Int"),"x");
+        VariableModel charVar = new VariableModel(ScopeType.NONE, new ClassModel("Char"),"y");
         ArrayList vars = new ArrayList();
         vars.add(intVar);
         vars.add(charVar);
@@ -87,10 +88,6 @@ public class MethodModelTest extends BaseTest{
         assertTrue(method.matchSignature(otherMethod));
     }
     
-    @Test
-    public void testMatchSignatureWithObjects(){
-        fail("need to figure out objects as parameters");
-    }
     
     @Test
     public void testParameters(){
@@ -106,7 +103,6 @@ public class MethodModelTest extends BaseTest{
         assertEquals(ClassType.INSTANCE, method.getType());
         method.setType(ClassType.CLASS);
         assertEquals(ClassType.CLASS, method.getType());
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -115,6 +111,15 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testScope() {
         assertEquals(ScopeType.PUBLIC, method.scope());
+        method.setScope(ScopeType.PROTECTED);
+        assertEquals(ScopeType.PROTECTED, method.getScope());
+        method.setScope(ScopeType.PRIVATE);
+        assertEquals(ScopeType.PRIVATE, method.getScope());
+    }
+    
+    @Test
+    public void testReturnType(){
+        fail("return types should be a ClassModel, not an Enum");
     }
 
     /**
@@ -122,12 +127,6 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testGetPath() {
-        System.out.println("getPath");
-        MethodModel instance = new MethodModel();
-        String expResult = "";
-        String result = instance.getPath();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -136,13 +135,28 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testToSourceString() {
-        System.out.println("toSourceString");
-        MethodModel instance = new MethodModel();
-        String expResult = "";
-        String result = instance.toSourceString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        method.setSource("Some.testCode();");
+        String expected = "public void aMethod(){\n"
+                + "Some.testCode();\n"
+                + "}";
+        assertTrue(this.compareStrings(expected, method.toSourceString()));
     }
     
+    @Test
+    public void testDefinitionsOf(){
+        assertEquals(LinkedList.class, method.getDefinitions().getClass());
+        assertTrue(method.getDefinitions().isEmpty());
+        MethodModel newMethodDef = null;
+        try {
+           newMethodDef =  new ClassModel("anotherClass").addMethod("aMethod");
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(method.getDefinitions().contains(newMethodDef));
+    }
+    
+    @Test
+    public void testReferences(){
+        fail("Write me!");
+    }
 }

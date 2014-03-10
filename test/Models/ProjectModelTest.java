@@ -205,7 +205,9 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Test
-    public void testBasicTypes(){
-        assertEquals(instance.basicTypes().size() == 10);
+    public void testMethodHash(){
+        HashMap projectMethods = (HashMap)this.getVariableFromClass(instance, "methods");
+        assertEquals(HashMap.class, projectMethods.getClass());
+        instance.addMethod(new MethodModel("aMethod"));
     }
 }

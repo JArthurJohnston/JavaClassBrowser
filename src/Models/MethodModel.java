@@ -8,6 +8,7 @@ import Types.ClassType;
 import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * 
@@ -16,27 +17,30 @@ import java.util.ArrayList;
 public class MethodModel extends ClassModel{
     private String source;
     private ReturnType returnType;
-    private Object signature; //#todo, figure this out...again
     private ClassType type;
     private ArrayList<VariableModel> parameters;
+    private LinkedList definitions;
     
     public MethodModel(){}
-    
-    public MethodModel(ClassType type, ScopeType scope, ReturnType returnType, String name){
+    public MethodModel(String name){
         this.initializeFields();
+        this.name = name;
+    }
+    
+    public MethodModel(ClassModel parentClass, ClassType type, ScopeType scope, ReturnType returnType, String name){
+        this.initializeFields();
+        this.parent = parentClass;
+        this.project = parentClass.project;
         this.name = name;
         this.type = type;
         this.scope = scope;
         this.returnType = returnType;
     }
     
-    public MethodModel(String name){
+    public MethodModel (ClassModel parentClass, ClassType instanceOrStatic, ReturnType type, ArrayList params, String name){
         this.initializeFields();
-        this.name = name;
-    }
-    
-    public MethodModel (ClassType instanceOrStatic, ReturnType type, ArrayList params, String name){
-        this.initializeFields();
+        this.parent = parentClass;
+        this.project = parentClass.project;
         this.name = name;
         this.type = instanceOrStatic;
         this.returnType = type;
@@ -48,6 +52,7 @@ public class MethodModel extends ClassModel{
         this.scope = ScopeType.PUBLIC;
         this.parameters = new ArrayList();
         this.returnType = ReturnType.VOID;
+        this.definitions = new LinkedList();
     }
     
     @Override
@@ -60,12 +65,19 @@ public class MethodModel extends ClassModel{
             return false;
         } else if(this.parameters.size() != otherMethod.getParameters().size()){
             return false;
-        } 
-        for(int i=0; i< parameters.size(); i++){
-            if(this.parameters.get(i).getType() != otherMethod.getParameters().get(i).getType())
-                return false;
+        }else{
+            int i;
+            for(i=0; i< parameters.size(); i++){
+                if(this.parameters.get(i).getType() != (otherMethod.parameters.get(i).getType()))
+                    break;
+            }
+            return i >= parameters.size();
         }
-        return true;
+    }
+    
+    public MethodModel addDefinition(MethodModel newDef){
+        this.definitions.add(newDef);
+        return newDef;
     }
     
     /*
@@ -105,6 +117,9 @@ public class MethodModel extends ClassModel{
     public ArrayList<VariableModel> getParameters(){
         return parameters;
     }
+    public LinkedList getDefinitions(){
+        return definitions;
+    }
     
     
     /*
@@ -117,13 +132,14 @@ public class MethodModel extends ClassModel{
     
     @Override
     public String toSourceString(){
-        return this.getSource();
-    }
-    
-    public class MethodSignature{
-        
-        public MethodSignature(ReturnType methodReturn, String methodName, ArrayList params){
-            
+        String signature =  this.scope.toString().toLowerCase() + " " + 
+                            this.returnType.toString().toLowerCase() +" "+ 
+                            this.name() + "(";
+        for(VariableModel param: parameters){
+            if(param != parameters.get(0))
+                signature += ", ";
+            signature += param.getType().name()+" "+param.name();
         }
+        return signature + "){\n"+ this.getSource() + "\n}";
     }
 }

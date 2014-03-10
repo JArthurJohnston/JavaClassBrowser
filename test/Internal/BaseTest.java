@@ -56,4 +56,14 @@ public class BaseTest {
         }
         return null;
     }
+    
+    public boolean compareStrings(String a, String b){
+        if(a.compareTo(b)!=0){
+            System.out.println("Expected: "+a);
+            System.out.println("Got:      "+b);
+            return false;
+        }
+        return true;
+    }
+    
 }

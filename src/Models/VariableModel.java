@@ -5,45 +5,39 @@
 package Models;
 
 import Types.ClassType;
-import Types.ReturnType;
+import Types.ScopeType;
 
 /**
  *
  * @author Arthur
  */
 public class VariableModel extends BaseModel{
-    private ClassType staticOrInstance;
-    private ReturnType type;
+    private ScopeType scope;
+    private ClassModel type;
     private Object value;
     
     
-    public VariableModel ( ReturnType type, String name){
+    public VariableModel (ScopeType scope, ClassModel type, String name){
+        this.scope = scope;
         this.type = type;
         this.name = name;
     }
     
-    
     /*
      * Getters
      */
-    public ReturnType getType(){
-        if(type == ReturnType.OBJECT)
-            return this.value.
+    public ClassModel getType(){
         return type;
     }
-    public Object getValue(){
-        return value;
-    }
-    
     
     /*
      * Setters
      */
-    public void setType(ReturnType type){
+    public void setType(ClassModel type){
         this.type = type;
     }
-    public void setValue(Object value){
-        this.value = value;
+    public void setScope(ScopeType scope){
+        this.scope = scope;
     }
     
     /*
@@ -51,7 +45,10 @@ public class VariableModel extends BaseModel{
      */
     @Override
     public String toSourceString() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String source = new String();
+        if(this.scope != ScopeType.NONE)
+            source = this.scope.toString().toLowerCase() + " ";
+        return source+this.type.name()+" "+this.name()+";";
     }
 
     @Override
