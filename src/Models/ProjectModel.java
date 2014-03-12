@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import MainBase.MainApplication;
@@ -22,7 +23,7 @@ import java.util.LinkedList;
 public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
-    private HashMap <String, LinkedList<MethodModel>> methods;
+    private HashMap <String, MethodContainer> methods;
     private LinkedList packageClasses;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
@@ -61,6 +62,7 @@ public class ProjectModel extends BaseModel {
         PackageModel defaultPackage = new PackageModel(this);
         packages.put(defaultPackage.name(), defaultPackage);
         packageList.add(defaultPackage);
+        methods = new HashMap();
     }
     @Override
     public String toSourceString() {
@@ -79,9 +81,6 @@ public class ProjectModel extends BaseModel {
     /*
      * Getters
      */
-    public LinkedList getMethodDefinitions(String methodName){
-        return methods.get(methodName);
-    }
     public HashMap<String, ClassModel> getClasses(){
         return classes;
     }
@@ -190,12 +189,53 @@ public class ProjectModel extends BaseModel {
         return packageClasses;
     }
     
-    public MethodModel addMethodDefinition(MethodModel newMethod){
-        if(methods.containsKey(newMethod.name()))
-            methods.get(newMethod.name()).addDefinition(newMethod);
-        else
-            methods.put(newMethod.name(), newMethod);
+    public MethodModel addMethod(MethodModel newMethod){
+        if(methods.containsKey(newMethod.name())){
+            methods.get(newMethod.name()).addMethod(newMethod);
+        }else{
+            methods.put(newMethod.name(), new MethodContainer(newMethod));
+        }
         return newMethod;
     }
+    public LinkedList getMethodDefinitions(MethodModel aMethod) throws MethodDoesNotExistException{
+        MethodContainer method = methods.get(aMethod.name());
+        if(method != null){
+            return method.getDefinitions();
+        }
+        throw new MethodDoesNotExistException(this, aMethod);
+    }
+    public LinkedList getMethodReferences(MethodModel aMethod) throws MethodDoesNotExistException{
+        MethodContainer method = methods.get(aMethod.name());
+        if(method != null){
+            return method.getReferences();
+        }
+        throw new MethodDoesNotExistException(this, aMethod);
+    }
     
+    
+    private class MethodContainer{
+        private String name;
+        private LinkedList definitions;
+        private LinkedList references;
+        
+        public MethodContainer(MethodModel aMethod){
+            this.name = aMethod.name();
+            this.definitions = new LinkedList();
+            this.definitions.add(aMethod);
+            this.references = new LinkedList();
+            this.references.add(aMethod);
+        }
+        
+        public LinkedList getReferences(){
+            return references;
+        }
+        public LinkedList getDefinitions(){
+            return definitions;
+        }
+        public MethodModel addMethod(MethodModel newMethod){
+            definitions.add(newMethod);
+            references.add(newMethod);
+            return newMethod;
+        }
+    }
 }

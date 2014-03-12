@@ -91,7 +91,7 @@ public class ClassModel extends PackageModel{
     public MethodModel addMethod(String newMethodName, ClassType type, ScopeType scope, 
             ReturnType returnType, boolean isOverride) throws NameAlreadyExistsException{
         if(this.okToAddMethod(newMethodName)){
-            MethodModel newMethod = new MethodModel(this,type, scope, returnType, newMethodName);
+            MethodModel newMethod = new MethodModel(this, type, scope, newMethodName);
             return this.addMethod(newMethod);
         }else {
             throw new NameAlreadyExistsException(this, newMethodName);
@@ -110,11 +110,11 @@ public class ClassModel extends PackageModel{
         return this.addMethod(newMethodName, ClassType.INSTANCE, ScopeType.PUBLIC, ReturnType.VOID, false);
     }
     
-    private MethodModel addMethod(MethodModel newMethod){
+    public MethodModel addMethod(MethodModel newMethod){
         if(newMethod.getType() == ClassType.CLASS) {
-            classMethods.add(newMethod);
+            classMethods.add(this.project.addMethod(newMethod));
         }else if(newMethod.getType() == ClassType.INSTANCE) {
-            instanceMethods.add(newMethod);
+            instanceMethods.add(this.project.addMethod(newMethod));
         }
         methods.add(newMethod);
         return newMethod;

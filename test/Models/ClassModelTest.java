@@ -10,6 +10,7 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Types.ReturnType;
+import Types.ScopeType;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -156,7 +157,7 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testAddVariable(){
-        VariableModel var = new VariableModel(testClass, ReturnType.CHAR, "aVar");
+        VariableModel var = new VariableModel(ScopeType.PUBLIC, testClass, "aVar");
         ArrayList varList = (ArrayList)this.getVariableFromClass(testClass, "variables");
         try {
             testClass.addVariable(var);
