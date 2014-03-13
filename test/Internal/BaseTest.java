@@ -4,9 +4,15 @@
  */
 package Internal;
 
+import Exceptions.NameAlreadyExistsException;
+import Models.ClassModel;
+import Models.MethodModel;
+import Models.PackageModel;
+import Models.ProjectModel;
 import java.lang.reflect.Field;                   
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.junit.Assert.fail;
 
 /**
  * uses reflection to grab private stuff from objects for testing
@@ -64,6 +70,30 @@ public class BaseTest {
             return false;
         }
         return true;
+    }
+    
+    public void addClassToParent(ClassModel newObject, PackageModel parentObject){
+        try {
+            parentObject.addClass(newObject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    public void addPackageToProject(PackageModel newObject, ProjectModel parentObject){
+        try {
+            parentObject.addPackage(newObject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    public void addMethodToClass(MethodModel newObject, ClassModel parentObject){
+        try {
+            parentObject.addClass(newObject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
 }

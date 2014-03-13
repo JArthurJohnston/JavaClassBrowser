@@ -100,7 +100,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    protected PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+    public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
         if(newPackage.parent == this) {
             this.packageList.add(newPackage);
         }
@@ -109,7 +109,7 @@ public class PackageModel extends ProjectModel {
     
     
     @Override
-    protected ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         project.addClass(newClass);
         classList.add(newClass);
         return newClass;
@@ -148,9 +148,16 @@ public class PackageModel extends ProjectModel {
     /*
      * Getters
      */
-    public ArrayList<ClassModel> getClassList(){
-        return classList;
+    @Override
+    public LinkedList getClassList(){
+        LinkedList myClassList = new LinkedList();
+        for(ClassModel c : classList){
+            myClassList.add(c);
+            myClassList.addAll(c.getClassList());
+        }
+        return myClassList;
     }
+    
     @Override
     public ArrayList<PackageModel> getPackageList(){
         return packageList;

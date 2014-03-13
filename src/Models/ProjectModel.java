@@ -24,7 +24,6 @@ public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
     private HashMap <String, MethodContainer> methods;
-    private LinkedList packageClasses;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
     protected Date dateCreated;
@@ -39,14 +38,12 @@ public class ProjectModel extends BaseModel {
         this.name = defaultName;
         isDefault = true;
         this.setUpFields();
-        packageClasses = new LinkedList();
     }
     
     public ProjectModel(MainApplication main, String name){
         this.userName = main.getUserName();
         this.name = name;
         this.setUpFields();
-        packageClasses = new LinkedList();
     }
     
     /*
@@ -140,7 +137,7 @@ public class ProjectModel extends BaseModel {
         return this.packages.containsValue(aPackage);
     }
     
-    protected PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+    public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
         if(this.okToAddPackage(newPackage.name())){
             this.packages.put(newPackage.name(), newPackage);
             if(newPackage.getParent() == this) {
@@ -159,7 +156,7 @@ public class ProjectModel extends BaseModel {
      * @param ClassModel newClass
      * @return ClassModel
      */
-    protected ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClass.name())){
             classes.put(newClass.name(), newClass);
             return newClass;
@@ -185,8 +182,12 @@ public class ProjectModel extends BaseModel {
         return "Project";
     }
     
-    public LinkedList getPackageClasses(){
-        return packageClasses;
+    public LinkedList getClassList(){
+        LinkedList classList = new LinkedList();
+        for(PackageModel p : packageList){
+            classList.addAll(p.getClassList());
+        }
+        return classList;
     }
     
     public MethodModel addMethod(MethodModel newMethod){

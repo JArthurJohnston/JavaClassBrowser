@@ -188,21 +188,6 @@ public class ProjectModelTest extends BaseTest{
         assertEquals("Barry Allen", testMain.getUserName());
     }
     
-    @Test
-    public void testPackageClassLists(){
-        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(project, "packageClasses");
-        assertEquals(LinkedList.class, tLClasses.getClass());
-        assertEquals(0, tLClasses.size());
-        PackageModel newPackage = new PackageModel(project, "New Package");
-        PackageModel aPackage;
-        try {
-            aPackage = project.addPackage(newPackage);
-            ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(1, tLClasses.size());
-    }
     
     @Test
     public void testMethodHash(){
@@ -213,5 +198,34 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(1, projectMethods.size());
         project.addMethod(new MethodModel("aMethod"));
         assertEquals(1, projectMethods.size());
+    }
+    
+    @Test
+    public void testListClasses(){
+        ClassModel aClass = null;
+        assertEquals(0, project.getClassList().size());
+        PackageModel aPackage = null;
+        try {
+            aPackage = project.addPackage(new PackageModel(project, "New Package"));
+            aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, project.getClassList().size());
+        ClassModel anotherClass = null;
+        try {
+            anotherClass = aClass.addClass(new ClassModel(aClass, "AnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(2, project.getClassList().size());
+        try {
+            anotherClass.addClass(new ClassModel(aClass, "YetAnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(3, project.getClassList().size());
+        PackageModel anotherPackage = new PackageModel(project, "Another Package");
+        this.addClassToParent(new ClassModel(aPackage, "AnotherClassInAnotherPackage"), anotherPackage);
     }
 }
