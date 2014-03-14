@@ -12,6 +12,9 @@ import MainBase.MainApplication;
 import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -24,7 +27,6 @@ import org.junit.Test;
  * @author Arthur
  */
 public class ClassModelTest extends BaseTest{
-    private MainApplication main;
     private ProjectModel parentProject;
     private PackageModel parentPackage;
     private ClassModel testClass;
@@ -42,8 +44,7 @@ public class ClassModelTest extends BaseTest{
     
     @Before
     public void setUp() throws NameAlreadyExistsException {
-        main = new MainApplication();
-        parentProject = new ProjectModel(main,"Parent Project");
+        parentProject = new ProjectModel("Parent Project");
         parentPackage = parentProject.addPackage(new PackageModel(parentProject, "Parent Package"));
         testClass = parentPackage.addClass(new ClassModel(parentPackage,"InstanceClass"));
     }
@@ -53,7 +54,6 @@ public class ClassModelTest extends BaseTest{
         testClass = null;
         parentPackage = null;
         parentProject = null;
-        main = null;
     }
     
     @Test
@@ -63,7 +63,7 @@ public class ClassModelTest extends BaseTest{
         assertEquals(parentPackage, testClass.getParent());
         assertEquals(ClassModel.class, testClass.getClass());
         assertEquals(0, testClass.getClassList().size());
-        assertEquals(ArrayList.class, testClass.getClassList().getClass());
+        assertEquals(LinkedList.class, testClass.getClassList().getClass());
         assertEquals(ArrayList.class, testClass.getClassMethods().getClass());
         assertEquals(ArrayList.class, testClass.getInstanceMethods().getClass());
         assertEquals(ArrayList.class, testClass.getConstructors().getClass());
@@ -153,6 +153,23 @@ public class ClassModelTest extends BaseTest{
             testClass.removeMethod("aNonExistantMethod");
             fail("Exception not thrown");
         } catch (MethodDoesNotExistException ex) {}
+    }
+    
+    @Test
+    public void testMoveToPackage(){
+        PackageModel anotherPackage = new PackageModel(parentProject, "AnotherPackage");
+        try {
+            testClass.moveToPackage(anotherPackage);
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        assertTrue(anotherPackage.getClassList().contains(testClass));
+        assertFalse(parentPackage.getClassList().contains(testClass));
+        ClassModel subClass = 
+                this.addClassToParent(new ClassModel(testClass, "SubClass"), testClass);
+        assertEquals(anotherPackage, subClass.getParentPackage());
+        assertTrue(anotherPackage.getClassList().contains(subClass));
+        assertFalse(parentPackage.getClassList().contains(subClass));
     }
     
     @Test

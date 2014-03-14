@@ -126,7 +126,7 @@ public class PackageModel extends ProjectModel {
     
     public ClassModel removeClass (ClassModel aClass){
         if(aClass.parent == this) {
-            this.getClassList().remove(aClass);
+            this.classList.remove(aClass);
         }
         project.getClasses().remove(aClass.name());
         return aClass;

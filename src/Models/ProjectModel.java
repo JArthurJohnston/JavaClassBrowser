@@ -39,6 +39,10 @@ public class ProjectModel extends BaseModel {
         isDefault = true;
         this.setUpFields();
     }
+    public ProjectModel(String name){
+        this.name = name;
+        this.setUpFields();
+    }
     
     public ProjectModel(MainApplication main, String name){
         this.userName = main.getUserName();
@@ -124,7 +128,7 @@ public class ProjectModel extends BaseModel {
     /**
      * checks the hash to see if a class with the desired name
      * already exists
-     * @param String className
+     * @param className
      * @return boolean
      */
     protected boolean okToAddClass(String className){

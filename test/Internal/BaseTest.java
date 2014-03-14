@@ -9,7 +9,10 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;                   
+import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.fail;
@@ -72,28 +75,49 @@ public class BaseTest {
         return true;
     }
     
-    public void addClassToParent(ClassModel newObject, PackageModel parentObject){
+    public ClassModel addClassToParent(ClassModel newObject, PackageModel parentObject){
         try {
             parentObject.addClass(newObject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        return newObject;
     }
     
-    public void addPackageToProject(PackageModel newObject, ProjectModel parentObject){
+    public PackageModel addPackageToProject(PackageModel newObject, ProjectModel parentObject){
         try {
             parentObject.addPackage(newObject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        return newObject;
     }
     
-    public void addMethodToClass(MethodModel newObject, ClassModel parentObject){
+    public MethodModel addMethodToClass(MethodModel newObject, ClassModel parentObject){
         try {
             parentObject.addClass(newObject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        return newObject;
     }
     
+    /**
+     * Compares two lists, checks to see if their sizes
+     * are the same, then check to see if their elements are the same.
+     * note, this means that the ORDER of the elements is important.
+     * Keep that in mind when your building a list in a test.
+     * @param a
+     * @param b
+     * @return 
+     */
+    public boolean compareLists(List a, List b){
+        if(a.size() != b.size())
+            return false;
+        for(int i=0;i<a.size();i++){
+            if(a.get(i) != b.get(i))
+                return false;
+        }
+        return true;
+    }
 }

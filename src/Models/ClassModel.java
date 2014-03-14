@@ -191,4 +191,9 @@ public class ClassModel extends PackageModel{
     public String getPath(){
         return this.getParentPackage().getPath() + this.path;
     }
+    
+    public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException{
+        this.getParentPackage().removeClass(this);
+        aPackage.addClass(this);
+    }
 }

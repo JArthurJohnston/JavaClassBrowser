@@ -25,7 +25,7 @@ import org.junit.Test;
 public class PackageModelTest extends BaseTest{
     
     private MainApplication main;
-    PackageModel instance;
+    PackageModel testPackage;
     ProjectModel parentProject;
     
     public PackageModelTest() {
@@ -41,28 +41,24 @@ public class PackageModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        main = new MainApplication();
-        parentProject = new ProjectModel(main, "AProject");
-        try {
-            instance = parentProject.addPackage(new PackageModel(parentProject, "New Package"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        parentProject = new ProjectModel("AProject");
+        testPackage = 
+                this.addPackageToProject(new PackageModel(parentProject, "New Package"), parentProject);
     }
     
     @After
     public void tearDown() {
         parentProject = null;
-        instance = null;
+        testPackage = null;
     }
 
     @Test
     public void testInitialize(){
         System.out.println("testInitialize");
-        assertEquals(parentProject, instance.getParent());
-        assertEquals(parentProject, instance.getProject());
-        assertEquals(ArrayList.class, instance.getClassList().getClass());
-        assertEquals(0,instance.getClassList().size());
+        assertEquals(parentProject, testPackage.getParent());
+        assertEquals(parentProject, testPackage.getProject());
+        assertEquals(LinkedList.class, testPackage.getClassList().getClass());
+        assertEquals(0,testPackage.getClassList().size());
     }
     
     
@@ -73,57 +69,48 @@ public class PackageModelTest extends BaseTest{
     public void testAddClass() {
         ClassModel newClass = null;
         try {
-            newClass =  instance.addClass(new ClassModel(instance, "NewClass"));
+            newClass =  testPackage.addClass(new ClassModel(testPackage, "NewClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(1, instance.getClassList().size());
-        assertEquals(newClass, instance.getClassList().get(0));
-        assertEquals(1, ((ProjectModel)instance.getParent()).getClasses().size());
-        assertEquals(((ProjectModel)instance.getParent()).getClasses().get("NewClass"), newClass);
+        assertEquals(1, testPackage.getClassList().size());
+        assertEquals(newClass, testPackage.getClassList().get(0));
+        assertEquals(1, ((ProjectModel)testPackage.getParent()).getClasses().size());
+        assertEquals(((ProjectModel)testPackage.getParent()).getClasses().get("NewClass"), newClass);
     }
     
     @Test
     public void testAddSubClass(){
-        ClassModel newClass = new ClassModel();
-        ClassModel aClass = new ClassModel();
-        assertEquals(parentProject, instance.getParent());
-        assertEquals(parentProject, instance.getProject());
-        try {
-            aClass = instance.addClass(new ClassModel(instance,"AClass"));
-            assertEquals(parentProject, aClass.getProject());
-            assertEquals(instance, aClass.getParent());
-            newClass = aClass.addClass(new ClassModel(aClass,"NewSubClass"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        assertEquals(parentProject, testPackage.getParent());
+        assertEquals(parentProject, testPackage.getProject());
+        
+        ClassModel aClass = 
+                this.addClassToParent(new ClassModel(testPackage,"AClass"), testPackage);
+        ClassModel newClass = 
+                this.addClassToParent(new ClassModel(aClass,"NewSubClass"), aClass);
+        
         assertEquals(2, parentProject.getClasses().size());
         assertEquals(newClass, parentProject.getClasses().get("NewSubClass"));
-        assertEquals(1, instance.getClassList().size());
-        assertEquals(aClass, instance.getClassList().get(0));
-        assertEquals(aClass, newClass.getParent());
-        assertEquals(newClass, aClass.getClassList().get(0));
+        assertEquals(2, testPackage.getClassList().size());
+        assertTrue(testPackage.getClassList().contains(newClass));
+        assertEquals(aClass, testPackage.getClassList().get(0));
     }
     
     @Test
     public void testRemoveClass(){
-        ClassModel classToBeRemoved = null;
-        try {
-            classToBeRemoved = instance.addClass(new ClassModel(instance, "ClassToBeRemoved"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertTrue(instance.getClassList().contains(classToBeRemoved));
+        ClassModel classToBeRemoved = 
+                this.addClassToParent(new ClassModel(testPackage, "ClassToBeRemoved"), testPackage);
+        assertTrue(testPackage.getClassList().contains(classToBeRemoved));
         assertTrue(parentProject.getClasses().containsKey("ClassToBeRemoved"));
         assertTrue(parentProject.getClasses().containsValue(classToBeRemoved));
         try {
-            instance.removeClass("ClassToBeRemoved");
+            testPackage.removeClass("ClassToBeRemoved");
         } catch (ClassDoesNotExistException ex) {
             fail(ex.getMessage());
         }
         assertFalse(parentProject.getClasses().containsValue(classToBeRemoved));
         assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
-        assertFalse(instance.getClassList().contains(classToBeRemoved));
+        assertFalse(testPackage.getClassList().contains(classToBeRemoved));
     }
     
     @Test
@@ -131,38 +118,55 @@ public class PackageModelTest extends BaseTest{
         System.out.println("TestRemovePackage");
         PackageModel packageToBeRemoved = null;
         try {
-            packageToBeRemoved = instance.addPackage(new PackageModel(instance, "Packge to be Removed"));
+            packageToBeRemoved = testPackage.addPackage(new PackageModel(testPackage, "Packge to be Removed"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(parentProject.getPackages().containsValue(packageToBeRemoved));
-        assertTrue(instance.getPackageList().contains(packageToBeRemoved));
+        assertTrue(testPackage.getPackageList().contains(packageToBeRemoved));
         try {
-            instance.removePackage(packageToBeRemoved);
+            testPackage.removePackage(packageToBeRemoved);
         } catch (PackageDoesNotExistException ex) {
             fail(ex.getMessage());
         }
         assertFalse(parentProject.getPackages().containsValue(packageToBeRemoved));
-        assertFalse(instance.getPackageList().contains(packageToBeRemoved));
+        assertFalse(testPackage.getPackageList().contains(packageToBeRemoved));
         try {
-            instance.removePackage(packageToBeRemoved);
+            testPackage.removePackage(packageToBeRemoved);
             fail("exception not thrown");
         } catch (PackageDoesNotExistException ex) {}
     }
     
     @Test
     public void testTopLevelClasses(){
-        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(instance, "topLevelClasses");
+        LinkedList tLClasses = (LinkedList)this.getVariableFromClass(testPackage, "topLevelClasses");
         assertEquals(LinkedList.class, tLClasses.getClass());
         assertEquals(0, tLClasses.size());
         ClassModel newClass = null;
         try {
-            newClass = instance.addClass(new ClassModel(instance, "NewClass"));
+            newClass = testPackage.addClass(new ClassModel(testPackage, "NewClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, tLClasses.size());
-        assertEquals(1, instance.getParent().getPackageClasses());
+        assertEquals(1, testPackage.getParent().getClassList()); //this should be tested in testGetClassList
         assertTrue(tLClasses.contains(newClass));
+        //this test may no longer be necessary...
+    }
+    
+    @Test
+    public void testGetClassList(){
+        LinkedList testClasses = new LinkedList();
+        assertTrue(testPackage.getClassList().isEmpty());
+        ClassModel aClass = 
+                this.addClassToParent(new ClassModel(testPackage, "AClass"), testPackage);
+        testClasses.add(aClass);
+        assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
+        ClassModel anotherClass = this.addClassToParent(new ClassModel(testPackage, "AnotherClass"), testPackage);
+        testClasses.add(anotherClass);
+        assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
+        PackageModel anotherPackage = 
+                this.addPackageToProject(new PackageModel(parentProject, "Another Package"), parentProject);
+        
     }
 }
