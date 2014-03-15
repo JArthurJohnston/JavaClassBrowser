@@ -90,13 +90,11 @@ public class ClassModel extends PackageModel{
         }
     }
     
-    public MethodModel addMethod(String newMethodName, ClassType type, ScopeType scope, 
-            ReturnType returnType, boolean isOverride) throws NameAlreadyExistsException{
-        if(this.okToAddMethod(newMethodName)){
-            MethodModel newMethod = new MethodModel(this, type, scope, newMethodName);
-            return this.addMethod(newMethod);
+    public MethodModel addClassMethod(MethodModel newMethod) throws NameAlreadyExistsException{
+        if(this.okToAddMethod(newMethod.name())){
+            return this.addMethod(this.project.addMethod(newMethod));
         }else {
-            throw new NameAlreadyExistsException(this, newMethodName);
+            throw new NameAlreadyExistsException(this, newMethod);
         }
     }
     

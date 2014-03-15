@@ -230,4 +230,29 @@ public class ProjectModelTest extends BaseTest{
                 this.addClassToParent(new ClassModel(subPackage, "SubPackageClass"), subPackage);
         assertEquals(5, project.getClassList().size());
     }
+    
+    private MethodModel setUpProjectMethod(){
+        HashMap methods = (HashMap)this.getVariableFromClass(project, "methods");
+        assertEquals(0, methods.size());
+        MethodModel aMethod = project.addMethod(
+                new MethodModel(
+                        new ClassModel(
+                                new PackageModel(project, "A Pak"),"AClass"),"aMethod"));
+        assertEquals(1, methods.size());
+        assertEquals(MethodModel.class, aMethod.getClass());
+        return aMethod;
+    }
+    
+    @Test
+    public void testRenameMethod(){
+        MethodModel aMethod = this.setUpProjectMethod();
+        project.renameMethod(aMethod, "newMethodName");
+    }
+    
+    @Test
+    public void testRemoveMethod(){
+        MethodModel aMethod = this.setUpProjectMethod();
+        project.removeMethod(aMethod);
+    }
+    
 }

@@ -12,8 +12,6 @@ import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -225,5 +225,9 @@ public class ClassModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertTrue(testClass.getVariables().isEmpty());
+        try {
+            testClass.removeVariable(aVar);
+            fail("exception not thrown");
+        } catch (DoesNotExistException ex) { }
     }
 }

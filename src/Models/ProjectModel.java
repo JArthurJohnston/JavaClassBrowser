@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
@@ -141,6 +142,14 @@ public class ProjectModel extends BaseModel {
         return this.packages.containsValue(aPackage);
     }
     
+    /**
+     * takes in a package and checks to see if a package with that name
+     * and path already exists in the project.
+     * 
+     * @param newPackage the package the user wants to add to the project
+     * @return PackageModel, the package being added to the project
+     * @throws NameAlreadyExistsException 
+     */
     public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
         if(this.okToAddPackage(newPackage.name())){
             this.packages.put(newPackage.name(), newPackage);
@@ -157,8 +166,9 @@ public class ProjectModel extends BaseModel {
      * PackageModel or ClassModel classes. these overridden methods should 
      * then call super.addClass(ClassModel)
      * adds a class to the hash.
-     * @param ClassModel newClass
-     * @return ClassModel
+     * 
+     * @param ClassModel the class being added to the project
+     * @return ClassModel the class being added to the project
      */
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClass.name())){
@@ -169,6 +179,13 @@ public class ProjectModel extends BaseModel {
         }
     }
     
+    /**
+     * If the package does indeed exist, it will be removed
+     * 
+     * @param aPackage the package being removed
+     * @return the package being removed
+     * @throws PackageDoesNotExistException 
+     */
     protected PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
         if(this.okToRemovePackage(aPackage)){
             this.packages.remove(aPackage.name());
@@ -186,6 +203,13 @@ public class ProjectModel extends BaseModel {
         return "Project";
     }
     
+    /**
+     * Generates and returns a LinkedList of every class
+     * in a project, or every class in a package, or every subclass 
+     * in a class' heirarchy.
+     * 
+     * @return LinkedList of ClassModels
+     */
     public LinkedList getClassList(){
         LinkedList classList = new LinkedList();
         for(PackageModel p : packageList){
@@ -194,6 +218,13 @@ public class ProjectModel extends BaseModel {
         return classList;
     }
     
+    /**
+     * adds a method to the project's method hash, or adds it to 
+     * an existing methods list of references or definitions
+     * 
+     * @param newMethod the method being added
+     * @return the method being added
+     */
     public MethodModel addMethod(MethodModel newMethod){
         if(methods.containsKey(newMethod.name())){
             methods.get(newMethod.name()).addMethod(newMethod);
@@ -202,6 +233,13 @@ public class ProjectModel extends BaseModel {
         }
         return newMethod;
     }
+    
+    /**
+     * returns a LinkedList of method definitions
+     * @param aMethod 
+     * @return a LinkedList of MethodModels
+     * @throws MethodDoesNotExistException 
+     */
     public LinkedList getMethodDefinitions(MethodModel aMethod) throws MethodDoesNotExistException{
         MethodContainer method = methods.get(aMethod.name());
         if(method != null){
@@ -209,6 +247,13 @@ public class ProjectModel extends BaseModel {
         }
         throw new MethodDoesNotExistException(this, aMethod);
     }
+    
+    /**
+     * returns a LinkedList of method references
+     * @param aMethod
+     * @return a LinkedList of MethodModels
+     * @throws MethodDoesNotExistException 
+     */
     public LinkedList getMethodReferences(MethodModel aMethod) throws MethodDoesNotExistException{
         MethodContainer method = methods.get(aMethod.name());
         if(method != null){
@@ -217,7 +262,14 @@ public class ProjectModel extends BaseModel {
         throw new MethodDoesNotExistException(this, aMethod);
     }
     
+    public MethodModel removeMethod(MethodModel aMethod){
+        MethodModel aMethod = 
+    }
     
+    /**
+     * a wrapper class for containing a list of methods
+     * and their definitions and references.
+     */
     private class MethodContainer{
         private String name;
         private LinkedList definitions;
@@ -242,5 +294,18 @@ public class ProjectModel extends BaseModel {
             references.add(newMethod);
             return newMethod;
         }
+            /*
+            renaming means removing a definition and a reference
+            if those are the only definitions and references, the
+            method needs to be removed from the hash
+            AND the re-named method has to be added to the hash (if 
+            it does not already exist)
+            if theres already a method in the hash with that name
+            the re-named method must be added to its
+            definitions/references.
+            
+            alternatively, a method rename = a method add. leaving the original
+            in place.
+            */
     }
 }
