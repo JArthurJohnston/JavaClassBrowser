@@ -4,12 +4,14 @@
  */
 package Models;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Types.ClassType;
 import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -25,7 +27,7 @@ public class ClassModel extends PackageModel{
     private ArrayList<MethodModel> inheritedMethods;
     private ArrayList<VariableModel> instanceVars;
     private ArrayList<VariableModel> classVars;
-    private ArrayList<VariableModel> variables;
+    private LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
      
     //use these constructors for testing only
@@ -57,7 +59,7 @@ public class ClassModel extends PackageModel{
         this.constructors = new ArrayList();
         //this.instanceVars = new ArrayList();
         //this.classVars = new ArrayList();
-        this.variables = new ArrayList();
+        this.variables = new LinkedList();
     }
     
     private boolean okToAddMethod(String newMethodName){
@@ -140,6 +142,14 @@ public class ClassModel extends PackageModel{
         return aMethod;
     }
     
+    public VariableModel removeVariable(VariableModel aVar) throws DoesNotExistException{
+        if(!variables.contains(aVar))
+            throw new DoesNotExistException(this, aVar);
+        else
+            variables.remove(aVar);
+        return aVar;
+    }
+    
     @Override
     protected boolean isClass(){
         return true;
@@ -177,6 +187,9 @@ public class ClassModel extends PackageModel{
     public ArrayList getClassVariables(){
         return classVars;
     }
+    public LinkedList getVariables(){
+        return variables;
+    }
     /*
      * Setters
      */
@@ -195,5 +208,6 @@ public class ClassModel extends PackageModel{
     public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException{
         this.getParentPackage().removeClass(this);
         aPackage.addClass(this);
+        this.parent = aPackage;
     }
 }

@@ -5,11 +5,11 @@
 package Models;
 
 import Exceptions.ClassDoesNotExistException;
+import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
-import MainBase.MainApplication;
-import Types.ReturnType;
+import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -161,10 +161,11 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.moveToPackage(anotherPackage);
         } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(ClassModelTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
         }
         assertTrue(anotherPackage.getClassList().contains(testClass));
         assertFalse(parentPackage.getClassList().contains(testClass));
+        assertEquals(anotherPackage, testClass.getParentPackage());
         ClassModel subClass = 
                 this.addClassToParent(new ClassModel(testClass, "SubClass"), testClass);
         assertEquals(anotherPackage, subClass.getParentPackage());
@@ -175,7 +176,7 @@ public class ClassModelTest extends BaseTest{
     @Test
     public void testAddVariable(){
         VariableModel var = new VariableModel(ScopeType.PUBLIC, testClass, "aVar");
-        ArrayList varList = (ArrayList)this.getVariableFromClass(testClass, "variables");
+        LinkedList varList = (LinkedList)this.getVariableFromClass(testClass, "variables");
         try {
             testClass.addVariable(var);
         } catch (NameAlreadyExistsException ex) {
@@ -189,7 +190,40 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Test
+    public void testGetVariables(){
+        assertEquals(0, testClass.getVariables().size());
+        try {
+            testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
+            testClass.addVariable(new VariableModel(ScopeType.PUBLIC, testClass, "anotherVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(2, testClass.getVariables().size());
+        try {
+            testClass.removeVariable((VariableModel)testClass.getVariables().get(0));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, testClass.getVariables().size());
+        try {
+            testClass.removeVariable(new VariableModel(ScopeType.NONE, testClass, "nonExistentVar"));
+            fail("Exception not thrown");
+        } catch (DoesNotExistException ex) {}
+    }
+    
+    @Test
     public void testRemoveVariable(){
-        fail("write me!");
+        VariableModel aVar = null;
+        try {
+            aVar = testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            testClass.removeVariable(aVar);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getVariables().isEmpty());
     }
 }

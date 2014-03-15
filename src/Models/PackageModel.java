@@ -16,7 +16,6 @@ import java.util.LinkedList;
  */
 public class PackageModel extends ProjectModel {
     private ArrayList<PackageModel> packageList;
-    protected LinkedList topLevelClasses;
     protected ProjectModel project;
     protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
@@ -81,7 +80,6 @@ public class PackageModel extends ProjectModel {
     protected void setUpFields(){
         packageList = new ArrayList();
         classList = new ArrayList();
-        topLevelClasses = new LinkedList();
     }
     
     @Override
@@ -144,7 +142,6 @@ public class PackageModel extends ProjectModel {
         }
     }
     
-    
     /*
      * Getters
      */
@@ -169,8 +166,5 @@ public class PackageModel extends ProjectModel {
         return parent;
     }
     
-    public LinkedList getTopLevelClasses(){
-        return topLevelClasses;
-    }
     
 }

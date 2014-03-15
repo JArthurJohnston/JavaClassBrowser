@@ -46,6 +46,8 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         instanceVarList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         staticVarList = new javax.swing.JList();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        importsList = new javax.swing.JList();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
@@ -92,6 +94,10 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         jScrollPane2.setViewportView(staticVarList);
 
         jTabbedPane1.addTab("Static Variables", jScrollPane2);
+
+        jScrollPane7.setViewportView(importsList);
+
+        jTabbedPane1.addTab("Imports", jScrollPane7);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -167,6 +173,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList classListControl;
+    private javax.swing.JList importsList;
     private javax.swing.JList instanceMethodList;
     private javax.swing.JList instanceVarList;
     private javax.swing.JEditorPane jEditorPane1;
@@ -182,6 +189,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
