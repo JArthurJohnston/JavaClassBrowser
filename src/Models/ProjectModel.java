@@ -120,7 +120,6 @@ public class ProjectModel extends BaseModel {
                 "Number of Classes: "+classes.size();
     }
 
-
     /*
      ************************* Logic **********************************
      */
@@ -225,7 +224,7 @@ public class ProjectModel extends BaseModel {
      * @param newMethod the method being added
      * @return the method being added
      */
-    public MethodModel addMethod(MethodModel newMethod){
+    public MethodModel addMethodDefinition(MethodModel newMethod){
         if(methods.containsKey(newMethod.name())){
             methods.get(newMethod.name()).addMethod(newMethod);
         }else{
@@ -240,12 +239,12 @@ public class ProjectModel extends BaseModel {
      * @return a LinkedList of MethodModels
      * @throws MethodDoesNotExistException 
      */
-    public LinkedList getMethodDefinitions(MethodModel aMethod) throws MethodDoesNotExistException{
+    public LinkedList getMethodDefinitions(MethodModel aMethod){
         MethodContainer method = methods.get(aMethod.name());
         if(method != null){
             return method.getDefinitions();
         }
-        throw new MethodDoesNotExistException(this, aMethod);
+        return new LinkedList();
     }
     
     /**
@@ -254,16 +253,37 @@ public class ProjectModel extends BaseModel {
      * @return a LinkedList of MethodModels
      * @throws MethodDoesNotExistException 
      */
-    public LinkedList getMethodReferences(MethodModel aMethod) throws MethodDoesNotExistException{
+    public LinkedList getMethodReferences(MethodModel aMethod) {
         MethodContainer method = methods.get(aMethod.name());
         if(method != null){
             return method.getReferences();
         }
-        throw new MethodDoesNotExistException(this, aMethod);
+        return new LinkedList();
     }
     
-    public MethodModel removeMethod(MethodModel aMethod){
-        MethodModel aMethod = 
+    public MethodModel removeMethod(MethodModel aMethod) throws DoesNotExistException{
+        MethodContainer existingMethod = methods.get(aMethod.name());
+        if(existingMethod == null)
+            throw new DoesNotExistException(this, aMethod);
+        MethodModel found = null;
+        for(MethodModel m : existingMethod.getDefinitions()){
+            if(m == aMethod){
+                found = m;
+                break;
+            }
+        }
+        if(found != null)
+            existingMethod.getDefinitions().remove(found);
+        found = null;
+        for(MethodModel m : existingMethod.getReferences()){
+            if(m == aMethod){
+                found = m;
+                break;
+            }
+        }
+        if(found != null)
+            existingMethod.getDefinitions().remove(found);
+        return aMethod;
     }
     
     /**
@@ -283,12 +303,14 @@ public class ProjectModel extends BaseModel {
             this.references.add(aMethod);
         }
         
-        public LinkedList getReferences(){
+        public LinkedList<MethodModel> getReferences(){
             return references;
         }
-        public LinkedList getDefinitions(){
+        
+        public LinkedList<MethodModel> getDefinitions(){
             return definitions;
         }
+        
         public MethodModel addMethod(MethodModel newMethod){
             definitions.add(newMethod);
             references.add(newMethod);

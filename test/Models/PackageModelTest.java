@@ -9,6 +9,7 @@ import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -58,6 +59,9 @@ public class PackageModelTest extends BaseTest{
         assertEquals(parentProject, testPackage.getProject());
         assertEquals(LinkedList.class, testPackage.getClassList().getClass());
         assertEquals(0,testPackage.getClassList().size());
+        assertEquals(ArrayList.class, testPackage.getPackageList().getClass());
+        assertEquals(0, testPackage.getPackageList().size());
+        assertEquals(0, testPackage.getClassList().size());
     }
     
     
@@ -172,5 +176,13 @@ public class PackageModelTest extends BaseTest{
         assertEquals(testPackage, subClass.getParentPackage());
         assertEquals(2, testPackage.getClassList().size());
         assertEquals(1, anotherPackage.getClassList().size());
+        PackageModel subPackage = 
+                this.addPackageToProject(
+                        new PackageModel(testPackage, "Sub Package"), testPackage);
+        ClassModel subPackageClass = 
+                this.addClassToParent(
+                        new ClassModel(subPackage, "NewSubClass"), subPackage);
+        assertEquals(1, subPackage.getClassList().size());
+        assertEquals(3, testPackage.getClassList().size());
     }
 }

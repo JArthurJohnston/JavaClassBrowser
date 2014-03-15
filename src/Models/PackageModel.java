@@ -152,6 +152,9 @@ public class PackageModel extends ProjectModel {
             myClassList.add(c);
             myClassList.addAll(c.getClassList());
         }
+        for(PackageModel p : this.packageList){
+            myClassList.addAll(p.getClassList());
+        }
         return myClassList;
     }
     

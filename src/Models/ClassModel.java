@@ -102,15 +102,14 @@ public class ClassModel extends PackageModel{
      * #test
      * This addMethod is for testing purposes only. 
      * use the long one in production
-     * @param newMethodName
-     * @return
-     * @throws NameAlreadyExistsException 
+     * @param newMethod the method being added
+     * @return the method being added
      */
-    protected MethodModel addMethod(String newMethodName) throws NameAlreadyExistsException{
-        return this.addMethod(newMethodName, ClassType.INSTANCE, ScopeType.PUBLIC, ReturnType.VOID, false);
-    }
     
-    public MethodModel addMethod(MethodModel newMethod){
+    @Override
+    public MethodModel addMethod(MethodModel newMethod) throws NameAlreadyExistsException{
+        if(!this.okToAddMethod(newMethod.name()))
+            throw new NameAlreadyExistsException(this, newMethod);
         if(newMethod.getType() == ClassType.CLASS) {
             classMethods.add(this.project.addMethod(newMethod));
         }else if(newMethod.getType() == ClassType.INSTANCE) {
@@ -129,7 +128,7 @@ public class ClassModel extends PackageModel{
         throw new MethodDoesNotExistException(this, methodName);
     }
     
-    private MethodModel removeMethod(MethodModel aMethod){
+    public MethodModel removeMethod(MethodModel aMethod){
         methods.remove(aMethod);
         if(classMethods.contains(aMethod)) {
             classMethods.remove(aMethod);

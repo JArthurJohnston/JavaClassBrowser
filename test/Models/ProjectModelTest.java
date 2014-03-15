@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Internal.BaseTest;
@@ -26,7 +27,6 @@ import org.junit.Test;
  * @author Arthur
  */
 public class ProjectModelTest extends BaseTest{
-    private MainApplication testMain;
     private ProjectModel project;
     
     public ProjectModelTest() {
@@ -42,18 +42,14 @@ public class ProjectModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        testMain = new MainApplication();
-        testMain.setUserName("Barry Allen");
-        project = new ProjectModel(testMain, "Test Project");
+        project = new ProjectModel("Test Project");
     }
     
     @After
     public void tearDown() {
-        testMain = null;
         project = null;
     }
 
-    
     @Test
     public void testInitialize(){
         System.out.println("testInitialize");
@@ -75,14 +71,12 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(project.getPackages().size(), 1);
         assertEquals(project.getPackages().get("default package"), project.getPackageList().get(0));
         assertEquals("DefaultName", project.name());
-        
     }
     
     @Test
     //useless test
     public void testStaticAccessors(){
         assertEquals("Project", ProjectModel.getSelectionString());
-        
     }
     
     @Test
@@ -181,6 +175,9 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testUserName(){
+        MainApplication testMain = new MainApplication();
+        testMain.setUserName("Barry Allen");
+        project = new ProjectModel(testMain, "New Project");
         System.out.println("test user name");
         assertEquals(testMain.getUserName(), project.getUserName());
         project.setUserName("Kyle Raynor");
@@ -188,15 +185,14 @@ public class ProjectModelTest extends BaseTest{
         assertEquals("Barry Allen", testMain.getUserName());
     }
     
-    
     @Test
     public void testMethodHash(){
         HashMap projectMethods = (HashMap)this.getVariableFromClass(project, "methods");
         assertEquals(0, projectMethods.size());
         assertEquals(HashMap.class, projectMethods.getClass());
-        project.addMethod(new MethodModel("aMethod"));
+        project.addMethodDefinition(new MethodModel("aMethod"));
         assertEquals(1, projectMethods.size());
-        project.addMethod(new MethodModel("aMethod"));
+        project.addMethodDefinition(new MethodModel("aMethod"));
         assertEquals(1, projectMethods.size());
     }
     
@@ -229,30 +225,30 @@ public class ProjectModelTest extends BaseTest{
         ClassModel subPackageClass = 
                 this.addClassToParent(new ClassModel(subPackage, "SubPackageClass"), subPackage);
         assertEquals(5, project.getClassList().size());
+        
     }
     
     private MethodModel setUpProjectMethod(){
-        HashMap methods = (HashMap)this.getVariableFromClass(project, "methods");
-        assertEquals(0, methods.size());
-        MethodModel aMethod = project.addMethod(
+        MethodModel aMethod = project.addMethodDefinition(
                 new MethodModel(
                         new ClassModel(
                                 new PackageModel(project, "A Pak"),"AClass"),"aMethod"));
-        assertEquals(1, methods.size());
-        assertEquals(MethodModel.class, aMethod.getClass());
         return aMethod;
     }
     
     @Test
-    public void testRenameMethod(){
-        MethodModel aMethod = this.setUpProjectMethod();
-        project.renameMethod(aMethod, "newMethodName");
-    }
-    
-    @Test
     public void testRemoveMethod(){
+        HashMap methods = (HashMap)this.getVariableFromClass(project, "methods");
         MethodModel aMethod = this.setUpProjectMethod();
-        project.removeMethod(aMethod);
+        try {
+            project.removeMethod(aMethod);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(project.getMethodDefinitions(aMethod).contains(aMethod));
+        assertFalse(project.getMethodReferences(aMethod).contains(aMethod));
+        assertFalse(methods.containsKey(aMethod.name()));
+        assertFalse(methods.containsValue(aMethod));
     }
     
 }

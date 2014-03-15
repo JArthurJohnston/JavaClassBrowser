@@ -139,7 +139,7 @@ public class ClassModelTest extends BaseTest{
     @Test
     public void testRemoveMethod(){
         try {
-            testClass.addMethod("aMethodForTesting");
+            testClass.addMethod(new MethodModel(testClass, "aMethodForTesting"));
             assertEquals(1, testClass.getMethods().size());
         } catch (NameAlreadyExistsException ex) {
         }
@@ -229,5 +229,10 @@ public class ClassModelTest extends BaseTest{
             testClass.removeVariable(aVar);
             fail("exception not thrown");
         } catch (DoesNotExistException ex) { }
+    }
+    
+    @Test
+    public void testGetClassList(){
+        assertTrue(testClass.getClassList().isEmpty());
     }
 }
