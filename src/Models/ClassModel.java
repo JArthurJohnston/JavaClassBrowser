@@ -4,11 +4,11 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Types.ClassType;
-import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,6 +29,7 @@ public class ClassModel extends PackageModel{
     private ArrayList<VariableModel> classVars;
     private LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
+    private static String hasSubClassesError = "Class has subclasses.";
      
     //use these constructors for testing only
     public ClassModel(){}
@@ -81,20 +82,22 @@ public class ClassModel extends PackageModel{
         return true;
     }
     
+    @Override
+    public ClassModel removeClass(ClassModel aClass){
+        if(aClass == this){
+            if(!this.classList.isEmpty())
+                throw new CannotBeDeletedException(aClass, hasSubClassesError);
+            else
+                return ((PackageModel)this.parent).removeClass(aClass);
+        }
+    }
+    
     public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
         if(this.okToAddVariable(newVar)){
             variables.add(newVar);
             return newVar;
         }else {
             throw new NameAlreadyExistsException(this, newVar);
-        }
-    }
-    
-    public MethodModel addClassMethod(MethodModel newMethod) throws NameAlreadyExistsException{
-        if(this.okToAddMethod(newMethod.name())){
-            return this.addMethod(this.project.addMethod(newMethod));
-        }else {
-            throw new NameAlreadyExistsException(this, newMethod);
         }
     }
     
@@ -106,14 +109,13 @@ public class ClassModel extends PackageModel{
      * @return the method being added
      */
     
-    @Override
     public MethodModel addMethod(MethodModel newMethod) throws NameAlreadyExistsException{
         if(!this.okToAddMethod(newMethod.name()))
             throw new NameAlreadyExistsException(this, newMethod);
         if(newMethod.getType() == ClassType.CLASS) {
-            classMethods.add(this.project.addMethod(newMethod));
+            classMethods.add(this.project.addMethodDefinition(newMethod));
         }else if(newMethod.getType() == ClassType.INSTANCE) {
-            instanceMethods.add(this.project.addMethod(newMethod));
+            instanceMethods.add(this.project.addMethodDefinition(newMethod));
         }
         methods.add(newMethod);
         return newMethod;
@@ -206,5 +208,13 @@ public class ClassModel extends PackageModel{
         this.getParentPackage().removeClass(this);
         aPackage.addClass(this);
         this.parent = aPackage;
+    }
+    
+    @Override
+    public LinkedList getClassList(){
+        LinkedList myClassList = new LinkedList();
+        myClassList.add(this);
+        myClassList.addAll(this.classList);
+        return myClassList;
     }
 }

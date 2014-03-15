@@ -9,12 +9,9 @@ import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
-import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -62,7 +59,6 @@ public class ClassModelTest extends BaseTest{
         assertEquals(parentProject, testClass.getProject());
         assertEquals(parentPackage, testClass.getParent());
         assertEquals(ClassModel.class, testClass.getClass());
-        assertEquals(0, testClass.getClassList().size());
         assertEquals(LinkedList.class, testClass.getClassList().getClass());
         assertEquals(ArrayList.class, testClass.getClassMethods().getClass());
         assertEquals(ArrayList.class, testClass.getInstanceMethods().getClass());
@@ -76,17 +72,20 @@ public class ClassModelTest extends BaseTest{
      */
     @Test
     public void testAddClass() {
+        ArrayList packageClasses = (ArrayList)this.getVariableFromClass(parentPackage, "classList");
         ClassModel newSubClass = null;
         try {
             newSubClass = testClass.addClass(new ClassModel(testClass, "NewSubClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        assertTrue(parentPackage.getClassList().contains(newSubClass));
+        assertFalse(packageClasses.contains(newSubClass));
         assertEquals(testClass, newSubClass.getParent());
         assertEquals(parentProject, newSubClass.getProject());
         assertEquals(2, parentProject.getClasses().size());
-        assertEquals(1, testClass.getClassList().size());
-        assertEquals(newSubClass, testClass.getClassList().get(0));
+        assertEquals(2, testClass.getClassList().size());
+        assertEquals(newSubClass, testClass.getClassList().getLast());
         assertEquals(newSubClass, parentProject.getClasses().get("NewSubClass"));
         try {
             testClass.addClass(new ClassModel(testClass,"NewSubClass"));
@@ -102,7 +101,6 @@ public class ClassModelTest extends BaseTest{
         try {
             classToBeRemoved = testClass.addClass(new ClassModel(testClass, "ClassToBeRemoved"));
             assertEquals(2, parentProject.getClasses().size());
-            assertEquals(1, testClass.getClassList().size());
             assertTrue(testClass.getClassList().contains(classToBeRemoved));
         } catch (NameAlreadyExistsException ex) {}
         try {
@@ -116,20 +114,32 @@ public class ClassModelTest extends BaseTest{
         } catch (ClassDoesNotExistException ex) {}
         assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
         assertFalse(testClass.getClassList().contains(classToBeRemoved));
+        testClass.removeClass(testClass);
+        //fail("test how it behaves when the user asks it to remove itself.");
+        assertFalse(parentProject.getClassList().contains(testClass));
+    }
+    
+    @Test
+    public void testRemoveClassWithSubClasses(){
+        ClassModel newSubClass = 
+                this.addClassToParent(
+                        new ClassModel(testClass, "NewSubClass"), testClass);
+        testClass.removeClass(testClass);
+        fail("there should be an exception");
     }
     
     @Test
     public void testAddMethod(){
         MethodModel newMethod = new MethodModel();
         try {
-            newMethod = testClass.addMethod("newMethod");
+            newMethod = testClass.addMethod(new MethodModel(testClass, "newMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail("Exception thrown when it shouldnt");
         }
         assertEquals(testClass, newMethod.getParent());
         assertEquals(1, testClass.getMethods().size());
         try {
-            testClass.addMethod("newMethod");
+            testClass.addMethod(new MethodModel(testClass, "newMethod"));
             fail("Exception not thrown");
         } catch (NameAlreadyExistsException ex) {
             assertEquals(NameAlreadyExistsException.class, ex.getClass());
@@ -233,6 +243,16 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testGetClassList(){
-        assertTrue(testClass.getClassList().isEmpty());
+        assertEquals(1, testClass.getClassList().size());
+        assertEquals(testClass, testClass.getClassList().getFirst());
+        ClassModel newClass = 
+                this.addClassToParent(
+                        new ClassModel(testClass, "NewClass"), testClass);
+        assertEquals(newClass, testClass.getClassList().getLast());
+        assertEquals(2, testClass.getClassList().size());
+        testClass.removeClass(newClass);
+        assertEquals(1, testClass.getClassList().size());
+        assertEquals(testClass, testClass.getClassList().getLast());
+        assertEquals(testClass.getClassList().getFirst(), testClass.getClassList().getLast());
     }
 }

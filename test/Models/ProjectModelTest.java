@@ -157,7 +157,7 @@ public class ProjectModelTest extends BaseTest{
     @Test
     public void testDescription(){
         //remember, every project starts out with a package called 'default package'
-        System.out.print("test description");
+        project.setUserName("Barry Allen");
         String expectedDescr = "Project Name: Test Project\n"+
                                "Author: Barry Allen\n"+
                                "Date Created: "+new Date().toString()+"\n"+

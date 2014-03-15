@@ -127,6 +127,10 @@ public class PackageModel extends ProjectModel {
             this.classList.remove(aClass);
         }
         project.getClasses().remove(aClass.name());
+        /*
+        I should NOT be calling project.getClasses()
+        project should have its own removeClass() method!
+        */
         return aClass;
     }
     
@@ -149,7 +153,6 @@ public class PackageModel extends ProjectModel {
     public LinkedList getClassList(){
         LinkedList myClassList = new LinkedList();
         for(ClassModel c : classList){
-            myClassList.add(c);
             myClassList.addAll(c.getClassList());
         }
         for(PackageModel p : this.packageList){

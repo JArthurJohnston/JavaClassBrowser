@@ -150,7 +150,7 @@ public class MethodModelTest extends BaseTest{
         assertTrue(method.getReferences().isEmpty());
         MethodModel newMethodDef = null;
         try {
-           newMethodDef =  new ClassModel("anotherClass").addMethod("aMethod");
+           newMethodDef =  new ClassModel("anotherClass").addMethod(new MethodModel("aMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -163,7 +163,7 @@ public class MethodModelTest extends BaseTest{
         
         ClassModel aClass = new ClassModel(method.parent.getParentPackage(), "AnotherClass");
         try {
-            aClass.addMethod("aMethod");
+            aClass.addMethod(new MethodModel("aMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

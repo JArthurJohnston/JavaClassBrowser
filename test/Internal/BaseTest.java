@@ -9,9 +9,7 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;                   
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,8 +66,9 @@ public class BaseTest {
     
     public boolean compareStrings(String a, String b){
         if(a.compareTo(b)!=0){
-            System.out.println("Expected: "+a);
-            System.out.println("Got:      "+b);
+            System.out.println("Expected:\n"+a);
+            System.out.println("****");
+            System.out.println("Got:\n"+b);
             return false;
         }
         return true;
