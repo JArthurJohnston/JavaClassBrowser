@@ -10,7 +10,6 @@ import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import Types.ReturnType;
 import Types.ScopeType;
 import UIShells.ClassBrowserShell;
 import org.junit.After;
@@ -47,9 +46,9 @@ public class ClassBrowserShellModelTest extends BaseTest{
             ClassModel aClass = aPackage.addClass(new ClassModel (aPackage, "First Class"));
             aPackage.addClass(new ClassModel(aPackage, "Second Class"));
             aPackage.addClass(new ClassModel(aPackage, "Third Class"));
-            aClass.addMethod("firstMethod", ClassType.CLASS, ScopeType.NONE, ReturnType.FLOAT, true);
-            aClass.addMethod("secondMethod", ClassType.CLASS, ScopeType.NONE, ReturnType.FLOAT, true);
-            aClass.addMethod("thirdMethod", ClassType.CLASS, ScopeType.NONE, ReturnType.FLOAT, true);
+            this.addMethodToClass("firstMethod", aClass);
+            this.addMethodToClass("secondMethod", aClass);
+            this.addMethodToClass("thirdMethod", aClass);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

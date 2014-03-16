@@ -40,8 +40,7 @@ public class MethodModelTest extends BaseTest{
     @Before
     public void setUp() {
         ClassModel parentClass = this.setUpParentClass();
-        method = this.addMethodToClass(
-                new MethodModel(parentClass, "amethod"), parentClass);
+        method = this.addMethodToClass("aMethod", parentClass);
     }
     
     @After
@@ -52,10 +51,8 @@ public class MethodModelTest extends BaseTest{
     private ClassModel setUpParentClass(){
         ProjectModel aProject = new ProjectModel("A Project");
         PackageModel aPackage = 
-                this.addPackageToProject(
-                        new PackageModel(aProject,"a package"), aProject);
-        return this.addClassToParent(
-                new ClassModel(aPackage, "ParentClass"), aPackage);
+                this.addPackageToProject("a package", aProject);
+        return this.addClassToParent("ParentClass", aPackage);
     }
 
     /**
@@ -177,20 +174,19 @@ public class MethodModelTest extends BaseTest{
         PackageModel parentPackage = method.getParentPackage();
         assertEquals(1, parentProject.getMethodDefinitions(method).size());
         assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
-        ClassModel aClass = this.addClassToParent(new ClassModel(parentPackage, "anotherClass"), parentPackage);
-        MethodModel anotherMethod = this.addMethodToClass(new MethodModel(aClass, "newMethod"), aClass);
-        assertEquals(1, parentProject.getMethodDefinitions(method).size());
+        ClassModel aClass = this.addClassToParent("anotherClass", parentPackage);
+        MethodModel anotherMethod = this.addMethodToClass("aMethod", aClass);
+        assertEquals(2, parentProject.getMethodDefinitions(method).size());
         assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
         assertEquals(anotherMethod, parentProject.getMethodDefinitions(method).getLast());
-        
     }
     
     @Test
     public void testGetParentPackage(){
         ProjectModel aProject = new ProjectModel("aProject");
-        PackageModel aPackage = this.addPackageToProject(new PackageModel(aProject, "APackage"), aProject);
-        ClassModel aClass = this.addClassToParent(new ClassModel(aPackage, "AClass"), aPackage);
-        method = this.addMethodToClass(new MethodModel(aClass, "aMethod"), aClass);
+        PackageModel aPackage = this.addPackageToProject("APackage", aProject);
+        ClassModel aClass = this.addClassToParent("AClass", aPackage);
+        method = this.addMethodToClass("aMethod", aClass);
         assertEquals(aPackage, method.getParentPackage());
     }
 }

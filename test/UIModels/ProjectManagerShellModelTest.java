@@ -68,11 +68,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         ClassModel aClass;
-        try{
-            aProject.addPackage("New Package").addClass("New Class");
-        }catch(NameAlreadyExistsException ex){
-            fail(ex.getMessage());
-        }
+        this.addPackageToProject("New Package", aProject);
         return aProject;
     }
 
@@ -96,8 +92,13 @@ public class ProjectManagerShellModelTest extends BaseTest{
     }
     @Test
     public void testConstructor_mainWithpreExistingProjects(){
-        ProjectModel expSelected = main.addProject(new ProjectModel(main, "first"));
-        main.addProject(new ProjectModel(main, "second"));
+        ProjectModel expSelected = null;
+        try {
+            expSelected = main.addProject(new ProjectModel(main, "first"));
+            main.addProject(new ProjectModel(main, "second"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         this.setUpModel();
         assertEquals(expSelected, model.getSelected());
         assertEquals(2, model.getListModel().size());
@@ -108,7 +109,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
         System.out.println("test get selected");
         assertEquals(null, model.getSelected());
         try {
-            main.addProject("new Project");
+            main.addProject(new ProjectModel(main, "New Project"));
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(ProjectManagerShellModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -117,7 +118,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
     @Test
     public void testSetUserName(){
         try {
-            main.addProject("A Project");
+            main.addProject(new ProjectModel(main,"A Project"));
         } catch (NameAlreadyExistsException ex) {
             fail("exception thrown when it shouldnt");
             Logger.getLogger(ProjectManagerShellModelTest.class.getName()).log(Level.SEVERE, null, ex);

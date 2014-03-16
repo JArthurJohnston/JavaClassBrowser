@@ -69,8 +69,8 @@ public class ProjectManagerShellModel extends BaseUIModel{
         return main;
     }
     
-    public ProjectModel addProject(String newProjectName) throws NameAlreadyExistsException{
-        return main.addProject(newProjectName);
+    public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
+        return main.addProject(newProject);
     }
     
     public void removeProject(ProjectModel aProject){

@@ -108,7 +108,8 @@ public class PackageModel extends ProjectModel {
     @Override
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         project.addClass(newClass);
-        classList.add(newClass);
+        if(newClass.parent == this)
+            classList.add(newClass);
         return newClass;
     }
     

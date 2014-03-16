@@ -257,6 +257,10 @@ public class ProjectModelTest extends BaseTest{
         MethodModel aMethod = this.addMethodToClass("newMethod", aClass);
         assertEquals(aMethod, project.getMethodDefinitions(aMethod).getFirst());
         assertEquals(1, project.getMethodDefinitions(aMethod).size());
+        ClassModel anotherClass = this.addClassToParent("AnotherClass", aPackage);
+        aMethod = this.addMethodToClass("newMethod", anotherClass);
+        assertEquals(2, project.getMethodDefinitions(aMethod).size());
+        assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
     }
     
     @Test

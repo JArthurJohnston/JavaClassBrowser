@@ -5,7 +5,6 @@
 package Models;
 
 import Exceptions.CannotBeDeletedException;
-import Exceptions.ClassDoesNotExistException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
@@ -14,8 +13,6 @@ import Internal.BaseTest;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -101,12 +98,8 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testRemoveClass(){
-        ClassModel classToBeRemoved = null;
-        try {
-            classToBeRemoved = testClass.addClass(new ClassModel(testClass, "ClassToBeRemoved"));
-        } catch (NameAlreadyExistsException ex) {}
+        ClassModel classToBeRemoved = this.addClassToParent("ClassToBeRemoved", parentPackage);
         assertEquals(2, parentProject.getClasses().size());
-        assertTrue(testClass.getClassList().contains(classToBeRemoved));
         assertEquals(parentPackage, classToBeRemoved.getParentPackage());
         try {
             classToBeRemoved.remove();
@@ -116,7 +109,7 @@ public class ClassModelTest extends BaseTest{
         //if the above were in java 6 youd have to use the  || operator
         assertFalse(testClass.getClassList().contains(classToBeRemoved));
         assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
-        this.addClassToParent(classToBeRemoved, testClass);
+        classToBeRemoved = this.addClassToParent("ClassToBeRemoved", testClass);
         try {
             testClass.remove();
             fail("exception not thrown");
@@ -125,7 +118,6 @@ public class ClassModelTest extends BaseTest{
         }
         assertTrue(testClass.getClassList().contains(classToBeRemoved));
     }
-    
     
     @Test
     public void testAddMethod(){
@@ -175,8 +167,7 @@ public class ClassModelTest extends BaseTest{
         assertTrue(anotherPackage.getClassList().contains(testClass));
         assertFalse(parentPackage.getClassList().contains(testClass));
         assertEquals(anotherPackage, testClass.getParentPackage());
-        ClassModel subClass = 
-                this.addClassToParent(new ClassModel(testClass, "SubClass"), testClass);
+        ClassModel subClass = this.addClassToParent("SubClass", testClass);
         assertEquals(anotherPackage, subClass.getParentPackage());
         assertTrue(anotherPackage.getClassList().contains(subClass));
         assertFalse(parentPackage.getClassList().contains(subClass));
@@ -244,9 +235,7 @@ public class ClassModelTest extends BaseTest{
     public void testGetClassList(){
         assertEquals(1, testClass.getClassList().size());
         assertEquals(testClass, testClass.getClassList().getFirst());
-        ClassModel newClass = 
-                this.addClassToParent(
-                        new ClassModel(testClass, "NewClass"), testClass);
+        ClassModel newClass =  this.addClassToParent("NewClass", testClass);
         assertEquals(newClass, testClass.getClassList().getLast());
         assertEquals(2, testClass.getClassList().size());
         try {
@@ -262,7 +251,7 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testGetReturnTyppe(){
-        assertEquals("InstanceClass",testClass.getReturnType());
+        assertEquals(testClass,testClass.getReturnType());
         fail("need to test for primitive types");
     }
 }

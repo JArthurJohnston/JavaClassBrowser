@@ -4,8 +4,6 @@
  */
 package Models;
 
-import Exceptions.CannotBeDeletedException;
-import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -45,7 +43,7 @@ public class PackageModelTest extends BaseTest{
     public void setUp() {
         parentProject = new ProjectModel("AProject");
         testPackage = 
-                this.addPackageToProject(new PackageModel(parentProject, "New Package"), parentProject);
+                this.addPackageToProject("New Package", parentProject);
     }
     
     @After
@@ -94,9 +92,9 @@ public class PackageModelTest extends BaseTest{
         assertEquals(parentProject, testPackage.getProject());
         
         ClassModel aClass = 
-                this.addClassToParent(new ClassModel(testPackage,"AClass"), testPackage);
+                this.addClassToParent("AClass", testPackage);
         ClassModel newClass = 
-                this.addClassToParent(new ClassModel(aClass,"NewSubClass"), aClass);
+                this.addClassToParent("NewSubClass", aClass);
         
         assertEquals(2, parentProject.getClasses().size());
         assertEquals(newClass, parentProject.getClasses().get("NewSubClass"));
@@ -108,7 +106,7 @@ public class PackageModelTest extends BaseTest{
     @Test
     public void testRemoveClass(){
         ClassModel classToBeRemoved = 
-                this.addClassToParent(new ClassModel(testPackage, "ClassToBeRemoved"), testPackage);
+                this.addClassToParent("ClassToBeRemoved", testPackage);
         assertTrue(testPackage.getClassList().contains(classToBeRemoved));
         assertTrue(parentProject.getClasses().containsKey("ClassToBeRemoved"));
         assertTrue(parentProject.getClasses().containsValue(classToBeRemoved));
@@ -150,20 +148,16 @@ public class PackageModelTest extends BaseTest{
     public void testGetClassList(){
         LinkedList testClasses = new LinkedList();
         assertTrue(testPackage.getClassList().isEmpty());
-        ClassModel aClass = 
-                this.addClassToParent(new ClassModel(testPackage, "AClass"), testPackage);
-        ClassModel subClass = 
-                this.addClassToParent(new ClassModel(testPackage, "Subclass"), testPackage);
+        ClassModel aClass = this.addClassToParent("AClass", testPackage);
+        ClassModel subClass = this.addClassToParent("Subclass", testPackage);
         assertTrue(testPackage.getClassList().contains(subClass));
         testClasses.add(aClass);
         testClasses.add(subClass);
         assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
-        ClassModel anotherClass = 
-                this.addClassToParent(new ClassModel(testPackage, "AnotherClass"), testPackage);
+        ClassModel anotherClass = this.addClassToParent("AnotherClass", testPackage);
         testClasses.add(anotherClass);
         assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
-        PackageModel anotherPackage = 
-                this.addPackageToProject(new PackageModel(parentProject, "Another Package"), parentProject);
+        PackageModel anotherPackage = this.addPackageToProject("Another Package", parentProject);
         assertEquals(3, testPackage.getClassList().size());
         try {
             aClass.moveToPackage(anotherPackage);
@@ -178,13 +172,15 @@ public class PackageModelTest extends BaseTest{
         assertEquals(testPackage, subClass.getParentPackage());
         assertEquals(2, testPackage.getClassList().size());
         assertEquals(1, anotherPackage.getClassList().size());
-        PackageModel subPackage = 
-                this.addPackageToProject(
-                        new PackageModel(testPackage, "Sub Package"), testPackage);
-        ClassModel subPackageClass = 
-                this.addClassToParent(
-                        new ClassModel(subPackage, "NewSubClass"), subPackage);
+        //test it gets the classes in sub-packages
+        PackageModel subPackage =  this.addPackageToProject("Sub Package", testPackage);
+        ClassModel subPackageClass = this.addClassToParent("NewSubClass", subPackage);
         assertEquals(1, subPackage.getClassList().size());
+        /*
+        for(Object c : testPackage.getClassList()){
+            System.out.println(c.toString());
+        }
+        */
         assertEquals(3, testPackage.getClassList().size());
     }
 }
