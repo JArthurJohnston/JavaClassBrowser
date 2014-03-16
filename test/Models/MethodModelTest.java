@@ -8,6 +8,7 @@ package Models;
 
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
+import LanguageBase.JavaLang;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -39,8 +40,7 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        method = new MethodModel(this.setUpParentClass(), 
-                ClassType.INSTANCE, ScopeType.PUBLIC, "aMethod");
+        method = new MethodModel(this.setUpParentClass(), "aMethod");
     }
     
     @After
@@ -75,7 +75,7 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testMethodSignature(){
-        MethodModel otherMethod = new MethodModel("anotherMethod");
+        MethodModel otherMethod = new MethodModel(new ClassModel("AClass"),"anotherMethod");
         assertFalse(method.matchSignature(otherMethod));
         otherMethod.setName("aMethod");
         assertTrue(method.matchSignature(otherMethod));
@@ -112,7 +112,7 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testScope() {
-        assertEquals(ScopeType.PUBLIC, method.scope());
+        assertEquals(ScopeType.PRIVATE, method.scope());
         method.setScope(ScopeType.PROTECTED);
         assertEquals(ScopeType.PROTECTED, method.getScope());
         method.setScope(ScopeType.PRIVATE);
@@ -121,7 +121,10 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testReturnType(){      
-        fail("return types should be a ClassModel, not an Enum");
+        assertEquals(JavaLang.getVoid(), method.getReturnType());
+        ClassModel newReturn = new ClassModel("AClass");
+        method.setReturnType(newReturn);
+        assertEquals(newReturn, method.getReturnType());
     }
 
     /**
@@ -138,7 +141,7 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testToSourceString() {
         method.setSource("Some.testCode();");
-        String expected = "public void aMethod(){\n"
+        String expected = "private void aMethod(){\n"
                 + "Some.testCode();\n"
                 + "}";
         assertTrue(this.compareStrings(expected, method.toSourceString()));
@@ -147,27 +150,20 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testReferences(){
         assertEquals(LinkedList.class, method.getReferences().getClass());
-        assertTrue(method.getReferences().isEmpty());
-        MethodModel newMethodDef = null;
-        try {
-           newMethodDef =  new ClassModel("anotherClass").addMethod(new MethodModel("aMethod"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        //assertTrue(method.getReferences().contains(newMethodDef));
         fail("need to write logic to check for method references in method source");
     }
     
     @Test
     public void testAddReference(){
-        
-        ClassModel aClass = new ClassModel(method.parent.getParentPackage(), "AnotherClass");
-        try {
-            aClass.addMethod(new MethodModel("aMethod"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
        fail("same reason as above");
     }
     
+    @Test
+    public void testGetParentPackage(){
+        ProjectModel aProject = new ProjectModel("aProject");
+        PackageModel aPackage = this.addPackageToProject(new PackageModel(aProject, "APackage"), aProject);
+        ClassModel aClass = this.addClassToParent(new ClassModel(aPackage, "AClass"), aPackage);
+        method = this.addMethodToClass(new MethodModel(aClass, "aMethod"), aClass);
+        assertEquals(aPackage, method.getParentPackage());
+    }
 }

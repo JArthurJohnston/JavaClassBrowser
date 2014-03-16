@@ -4,8 +4,8 @@
  */
 package Models;
 
+import LanguageBase.JavaLang;
 import Types.ClassType;
-import Types.ReturnType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,37 +23,48 @@ public class MethodModel extends ClassModel{
     
     //testing constructors
     public MethodModel(){}
-    public MethodModel(String name){
-        this.initializeFields();
-        this.name = name;
-    }
     public MethodModel(ClassModel parent, String name){
+        this(parent, ScopeType.PRIVATE, ClassType.INSTANCE, 
+                JavaLang.getVoid(), name, new ArrayList(), new String());
+    }
+    
+    /**
+     * this is THE constructor for non-constructor methods
+     * @param parent
+     * @param scope
+     * @param instanceOrStatic
+     * @param returnType
+     * @param name
+     * @param params
+     * @param source 
+     */
+    public MethodModel(ClassModel parent, ScopeType scope, ClassType instanceOrStatic, 
+            ClassModel returnType, String name, ArrayList params, String source){
+        this.project = parent.getProject();
         this.parent = parent;
-        this.project = parent.project;
-        this.initializeFields();
-        this.name = name;
-    }
-    
-    public MethodModel(ClassModel parentClass, ClassType type, ScopeType scopes, String name){
-        this.initializeFields();
-        this.parent = parentClass;
-        this.project = parentClass.project;
-        this.name = name;
-        this.type = type;
-    }
-    
-    public MethodModel (ClassModel parentClass, ClassType instanceOrStatic, ArrayList params, String name){
-        this.initializeFields();
-        this.parent = parentClass;
-        this.project = parentClass.project;
-        this.name = name;
         this.type = instanceOrStatic;
+        this.scope = scope;
+        this.source = source;
+        this.returnType = returnType;
+        this.name = name;
         this.parameters = params;
     }
     
     /**
-     * the most full constructor for MethodModel
+     * Constructor for constructor type methods
+     * @param parent
+     * @param scope
+     * @param params
+     * @param source 
      */
+    public MethodModel(ClassModel parent, ScopeType scope, ArrayList params, String source){
+        this.parent = parent;
+        this.project = parent.getProject();
+        this.name = parent.name();
+        this.returnType = parent;
+        this.parameters = params;
+        this.source = source;
+    }
     
     private void initializeFields(){
         this.type = ClassType.INSTANCE;
@@ -105,6 +116,15 @@ public class MethodModel extends ClassModel{
     }
     public void setParameters(ArrayList params){
         this.parameters = params;
+    }
+    
+    @Override
+    public ClassModel getReturnType(){
+        return returnType;
+    }
+    
+    public void setReturnType(ClassModel aClassValue){
+        this.returnType = aClassValue;
     }
     
     /*

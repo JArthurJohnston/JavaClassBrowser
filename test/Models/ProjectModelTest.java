@@ -190,9 +190,9 @@ public class ProjectModelTest extends BaseTest{
         HashMap projectMethods = (HashMap)this.getVariableFromClass(project, "methods");
         assertEquals(0, projectMethods.size());
         assertEquals(HashMap.class, projectMethods.getClass());
-        project.addMethodDefinition(new MethodModel("aMethod"));
+        project.addMethodDefinition(new MethodModel(new ClassModel("aClass"), "aMethod"));
         assertEquals(1, projectMethods.size());
-        project.addMethodDefinition(new MethodModel("aMethod"));
+        project.addMethodDefinition(new MethodModel(new ClassModel("anotherClass"), "aMethod"));
         assertEquals(1, projectMethods.size());
     }
     

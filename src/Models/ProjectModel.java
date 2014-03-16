@@ -31,6 +31,7 @@ public class ProjectModel extends BaseModel {
     protected Date dateCreated;
     private String userName;
     
+    
     /*
      * Constructors
      */
@@ -292,6 +293,7 @@ public class ProjectModel extends BaseModel {
             existingMethod.getDefinitions().remove(found);
         return aMethod;
     }
+    
     
     /**
      * a wrapper class for containing a list of methods

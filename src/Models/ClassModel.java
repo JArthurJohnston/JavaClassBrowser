@@ -231,7 +231,9 @@ public class ClassModel extends PackageModel{
         return myClassList;
     }
     
-    public String getReturnType(){
-        return this.name;
+    public ClassModel getReturnType(){
+        return this;
     }
+    
+    
 }
