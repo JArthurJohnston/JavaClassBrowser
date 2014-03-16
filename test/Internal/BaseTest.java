@@ -74,31 +74,31 @@ public class BaseTest {
         return true;
     }
     
-    public ClassModel addClassToParent(ClassModel newObject, PackageModel parentObject){
+    public ClassModel addClassToParent(String newClassName, PackageModel parentObject){
         try {
-            parentObject.addClass(newObject);
+            return parentObject.addClass(new ClassModel(parentObject, newClassName));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        return newObject;
+        return null;
     }
     
-    public PackageModel addPackageToProject(PackageModel newObject, ProjectModel parentObject){
+    public PackageModel addPackageToProject(String newPackageName, ProjectModel parentObject){
         try {
-            parentObject.addPackage(newObject);
+            return parentObject.addPackage(new PackageModel(parentObject, newPackageName));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        return newObject;
+        return null;
     }
     
-    public MethodModel addMethodToClass(MethodModel newObject, ClassModel parentObject){
+    public MethodModel addMethodToClass(String newMethodName, ClassModel parentObject){
         try {
-            parentObject.addClass(newObject);
+            return parentObject.addMethod(new MethodModel(parentObject, newMethodName));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        return newObject;
+        return null;
     }
     
     /**

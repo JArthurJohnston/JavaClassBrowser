@@ -25,7 +25,7 @@ import java.util.LinkedList;
 public class ProjectModel extends BaseModel {
     //private variables
     private HashMap <String, ClassModel> classes;
-    private HashMap <String, MethodContainer> methods;
+    private HashMap <String, LinkedList<MethodModel>> methods;
     private HashMap <String, PackageModel> packages;
     private ArrayList<PackageModel> packageList;
     protected Date dateCreated;
@@ -234,9 +234,11 @@ public class ProjectModel extends BaseModel {
      */
     public MethodModel addMethodDefinition(MethodModel newMethod){
         if(methods.containsKey(newMethod.name())){
-            methods.get(newMethod.name()).addMethod(newMethod);
+            methods.get(newMethod.name()).add(newMethod);
         }else{
-            methods.put(newMethod.name(), new MethodContainer(newMethod));
+            LinkedList newMethodList = new LinkedList();
+            newMethodList.add(newMethod);
+            methods.put(newMethod.name(), newMethodList);
         }
         return newMethod;
     }
@@ -245,55 +247,21 @@ public class ProjectModel extends BaseModel {
      * returns a LinkedList of method definitions
      * @param aMethod 
      * @return a LinkedList of MethodModels
-     * @throws MethodDoesNotExistException 
      */
     public LinkedList getMethodDefinitions(MethodModel aMethod){
-        MethodContainer method = methods.get(aMethod.name());
-        if(method != null){
-            return method.getDefinitions();
-        }
-        return new LinkedList();
+        return methods.get(aMethod.name());
     }
     
-    /**
-     * returns a LinkedList of method references
-     * @param aMethod
-     * @return a LinkedList of MethodModels
-     * @throws MethodDoesNotExistException 
-     */
-    public LinkedList getMethodReferences(MethodModel aMethod) {
-        MethodContainer method = methods.get(aMethod.name());
-        if(method != null){
-            return method.getReferences();
-        }
-        return new LinkedList();
-    }
-    
-    public MethodModel removeMethod(MethodModel aMethod) throws DoesNotExistException{
-        MethodContainer existingMethod = methods.get(aMethod.name());
-        if(existingMethod == null)
-            throw new DoesNotExistException(this, aMethod);
-        MethodModel found = null;
-        for(MethodModel m : existingMethod.getDefinitions()){
-            if(m == aMethod){
-                found = m;
-                break;
-            }
-        }
-        if(found != null)
-            existingMethod.getDefinitions().remove(found);
-        found = null;
-        for(MethodModel m : existingMethod.getReferences()){
-            if(m == aMethod){
-                found = m;
-                break;
-            }
-        }
-        if(found != null)
-            existingMethod.getDefinitions().remove(found);
+    public MethodModel removeMethod(MethodModel aMethod) throws VeryVeryBadException{
+        if(!methods.get(aMethod.name()).remove(aMethod))
+            throw new VeryVeryBadException(this, aMethod);
+        if(methods.get(aMethod.name()).isEmpty())
+            methods.remove(aMethod.name());
         return aMethod;
+        /*
+        need to add logic to warn the user if theyre removing a method with references
+        */
     }
-    
     
     /**
      * a wrapper class for containing a list of methods

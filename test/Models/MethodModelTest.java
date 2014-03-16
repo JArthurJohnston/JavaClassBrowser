@@ -6,7 +6,6 @@
 
 package Models;
 
-import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import LanguageBase.JavaLang;
 import Types.ClassType;
@@ -40,7 +39,9 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        method = new MethodModel(this.setUpParentClass(), "aMethod");
+        ClassModel parentClass = this.setUpParentClass();
+        method = this.addMethodToClass(
+                new MethodModel(parentClass, "amethod"), parentClass);
     }
     
     @After
@@ -49,9 +50,12 @@ public class MethodModelTest extends BaseTest{
     }
     
     private ClassModel setUpParentClass(){
-        ProjectModel aProject = new ProjectModel();
-        PackageModel aPackage = new PackageModel(aProject, "a package");
-        return new ClassModel(aPackage, "ParentClass");
+        ProjectModel aProject = new ProjectModel("A Project");
+        PackageModel aPackage = 
+                this.addPackageToProject(
+                        new PackageModel(aProject,"a package"), aProject);
+        return this.addClassToParent(
+                new ClassModel(aPackage, "ParentClass"), aPackage);
     }
 
     /**
@@ -60,6 +64,17 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testIsMethod() {
         assertTrue(method.isMethod());
+    }
+    
+    @Test
+    public void testInheritedFields(){
+        assertEquals(ClassModel.class, method.getParent().getClass());
+        assertEquals("ParentClass", method.getParent().name());
+        assertEquals(ProjectModel.class, method.project.getClass());
+        assertEquals("A Project", method.project.name());
+        assertEquals(PackageModel.class, method.getParentPackage().getClass());
+        assertEquals(method.getParentPackage(), method.parent.getParentPackage());
+        assertEquals("a package", method.getParentPackage().name());
     }
 
     /**
@@ -91,10 +106,13 @@ public class MethodModelTest extends BaseTest{
     }
     
     
+    
+    
     @Test
     public void testParameters(){
         ArrayList params = (ArrayList)this.getVariableFromClass(method, "parameters");
         assertEquals(0, params.size());
+        fail("Write more of me!");
     }
 
     /**
@@ -106,6 +124,7 @@ public class MethodModelTest extends BaseTest{
         method.setType(ClassType.CLASS);
         assertEquals(ClassType.CLASS, method.getType());
     }
+    
 
     /**
      * Test of scope method, of class MethodModel.
@@ -153,9 +172,17 @@ public class MethodModelTest extends BaseTest{
         fail("need to write logic to check for method references in method source");
     }
     
-    @Test
-    public void testAddReference(){
-       fail("same reason as above");
+    @Test public void testDefinitions(){
+        ProjectModel parentProject = method.project;
+        PackageModel parentPackage = method.getParentPackage();
+        assertEquals(1, parentProject.getMethodDefinitions(method).size());
+        assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
+        ClassModel aClass = this.addClassToParent(new ClassModel(parentPackage, "anotherClass"), parentPackage);
+        MethodModel anotherMethod = this.addMethodToClass(new MethodModel(aClass, "newMethod"), aClass);
+        assertEquals(1, parentProject.getMethodDefinitions(method).size());
+        assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
+        assertEquals(anotherMethod, parentProject.getMethodDefinitions(method).getLast());
+        
     }
     
     @Test

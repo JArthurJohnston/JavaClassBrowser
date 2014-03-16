@@ -7,6 +7,7 @@ package Models;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
@@ -52,7 +53,6 @@ public class ProjectModelTest extends BaseTest{
 
     @Test
     public void testInitialize(){
-        System.out.println("testInitialize");
         assertEquals(project.getClasses().size(),  0);
         assertEquals(project.getClasses().getClass(),  HashMap.class);
         assertEquals(project.getPackages().getClass(),  HashMap.class);
@@ -200,20 +200,20 @@ public class ProjectModelTest extends BaseTest{
     public void testListClasses(){
         assertEquals(0, project.getClassList().size());
         PackageModel aPackage = 
-                this.addPackageToProject(new PackageModel(project, "New Package"), project);
+                this.addPackageToProject("New Package", project);
         ClassModel aClass =     
-                this.addClassToParent(new ClassModel(aPackage, "AClass"), aPackage);
+                this.addClassToParent("AClass", aPackage);
         assertEquals(1, project.getClassList().size());
         ClassModel anotherClass = 
-                this.addClassToParent(new ClassModel(aClass, "AnotherClass"), aClass);
+                this.addClassToParent( "AnotherClass", aClass);
         assertEquals(2, project.getClassList().size());
         ClassModel yetAnotherClass = 
-                this.addClassToParent(new ClassModel(aClass, "YetAnotherClass"), anotherClass);
+                this.addClassToParent("YetAnotherClass", anotherClass);
         assertEquals(3, project.getClassList().size());
         PackageModel anotherPackage = 
-                this.addPackageToProject(new PackageModel(project, "Another Package"), project);
+                this.addPackageToProject("Another Package", project);
         ClassModel classInAnotherPackage = 
-                this.addClassToParent(new ClassModel(aPackage, "AnotherClassInAnotherPackage"), anotherPackage);
+                this.addClassToParent("AnotherClassInAnotherPackage", anotherPackage);
         assertEquals(4, project.getClassList().size());
         LinkedList classList = project.getClassList();
         assertEquals(aClass, classList.get(0));
@@ -221,9 +221,9 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(yetAnotherClass, classList.get(2));
         assertEquals(classInAnotherPackage, classList.get(3));
         PackageModel subPackage = 
-                this.addPackageToProject(new PackageModel(aPackage, "Sub Package"), aPackage);
+                this.addPackageToProject("Sub Package", aPackage);
         ClassModel subPackageClass = 
-                this.addClassToParent(new ClassModel(subPackage, "SubPackageClass"), subPackage);
+                this.addClassToParent("SubPackageClass", subPackage);
         assertEquals(5, project.getClassList().size());
         
     }
@@ -242,13 +242,25 @@ public class ProjectModelTest extends BaseTest{
         MethodModel aMethod = this.setUpProjectMethod();
         try {
             project.removeMethod(aMethod);
-        } catch (DoesNotExistException ex) {
+        } catch (VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
-        assertFalse(project.getMethodDefinitions(aMethod).contains(aMethod));
-        assertFalse(project.getMethodReferences(aMethod).contains(aMethod));
+        assertNull(project.getMethodDefinitions(aMethod));
         assertFalse(methods.containsKey(aMethod.name()));
         assertFalse(methods.containsValue(aMethod));
     }
     
+    @Test
+    public void testGetMethodDefinitions(){
+        PackageModel aPackage = this.addPackageToProject("A Package", project);
+        ClassModel aClass = this.addClassToParent("AClass", aPackage);
+        MethodModel aMethod = this.addMethodToClass("newMethod", aClass);
+        assertEquals(aMethod, project.getMethodDefinitions(aMethod).getFirst());
+        assertEquals(1, project.getMethodDefinitions(aMethod).size());
+    }
+    
+    @Test
+    public void testGetMethodReferences(){
+        fail("write me!");
+    }
 }
