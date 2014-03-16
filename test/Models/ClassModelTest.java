@@ -259,4 +259,10 @@ public class ClassModelTest extends BaseTest{
         assertEquals(testClass, testClass.getClassList().getLast());
         assertEquals(testClass.getClassList().getFirst(), testClass.getClassList().getLast());
     }
+    
+    @Test
+    public void testGetReturnTyppe(){
+        assertEquals("InstanceClass",testClass.getReturnType());
+        fail("need to test for primitive types");
+    }
 }

@@ -16,7 +16,7 @@ import java.util.LinkedList;
  */
 public class MethodModel extends ClassModel{
     private String source;
-    private ReturnType returnType;
+    private ClassModel returnType;
     private ClassType type;
     private ArrayList<VariableModel> parameters;
     private LinkedList references;
@@ -40,25 +40,25 @@ public class MethodModel extends ClassModel{
         this.project = parentClass.project;
         this.name = name;
         this.type = type;
-        this.scope = scope;
-        this.returnType = returnType;
     }
     
-    public MethodModel (ClassModel parentClass, ClassType instanceOrStatic, ReturnType type, ArrayList params, String name){
+    public MethodModel (ClassModel parentClass, ClassType instanceOrStatic, ArrayList params, String name){
         this.initializeFields();
         this.parent = parentClass;
         this.project = parentClass.project;
         this.name = name;
         this.type = instanceOrStatic;
-        this.returnType = type;
         this.parameters = params;
     }
+    
+    /**
+     * the most full constructor for MethodModel
+     */
     
     private void initializeFields(){
         this.type = ClassType.INSTANCE;
         this.scope = ScopeType.PUBLIC;
         this.parameters = new ArrayList();
-        this.returnType = ReturnType.VOID;
         this.references = new LinkedList();
     }
     
@@ -127,7 +127,6 @@ public class MethodModel extends ClassModel{
     public LinkedList getReferences(){
         return references;
     }
-    
     
     /*
      * Overridden methods

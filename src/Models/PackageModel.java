@@ -112,6 +112,12 @@ public class PackageModel extends ProjectModel {
         return newClass;
     }
     
+    /**
+     * used to accept a class that is being moved from a package to this
+     * package
+     * @param aClass the class being moved
+     * @return the class being moved
+     */
     public ClassModel adoptClass(ClassModel aClass){
         this.classList.add(aClass);
         return aClass;

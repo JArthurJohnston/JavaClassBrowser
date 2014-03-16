@@ -121,7 +121,6 @@ public class ClassModel extends PackageModel{
      * @param newMethod the method being added
      * @return the method being added
      */
-    
     public MethodModel addMethod(MethodModel newMethod) throws NameAlreadyExistsException{
         if(!this.okToAddMethod(newMethod.name()))
             throw new NameAlreadyExistsException(this, newMethod);
@@ -143,6 +142,7 @@ public class ClassModel extends PackageModel{
         throw new MethodDoesNotExistException(this, methodName);
     }
     
+    @Override
     public MethodModel removeMethod(MethodModel aMethod){
         methods.remove(aMethod);
         if(classMethods.contains(aMethod)) {
@@ -229,5 +229,9 @@ public class ClassModel extends PackageModel{
         myClassList.add(this);
         myClassList.addAll(this.classList);
         return myClassList;
+    }
+    
+    public String getReturnType(){
+        return this.name;
     }
 }
