@@ -7,6 +7,7 @@ package Models;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Exceptions.VeryVeryBadException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -114,24 +115,18 @@ public class PackageModel extends ProjectModel {
     }
     
     
-    public ClassModel removeClass(String aClassName) throws ClassDoesNotExistException{
-        if(!this.okToAddClass(aClassName)){
-            return this.removeClass(project.getClasses().get(aClassName));
-        }else {
-            throw new ClassDoesNotExistException(this, aClassName);
-        }
+    @Override
+    protected ClassModel removeClass (ClassModel aClass) throws VeryVeryBadException{
+        if(aClass.parent != this)
+            throw new VeryVeryBadException(this, aClass);
+        return project.removeClass(aClass);
     }
     
-    public ClassModel removeClass (ClassModel aClass){
-        if(aClass.parent == this) {
-            this.classList.remove(aClass);
-        }
-        project.getClasses().remove(aClass.name());
-        /*
-        I should NOT be calling project.getClasses()
-        project should have its own removeClass() method!
-        */
-        return aClass;
+    protected ClassModel classMoved(ClassModel aClass) throws VeryVeryBadException{
+        if(this.classList.remove(aClass))
+            return aClass;
+        else
+            throw new VeryVeryBadException(this, aClass);
     }
     
     @Override

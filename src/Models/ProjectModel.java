@@ -8,6 +8,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import java.util.ArrayList;
 import java.util.Date;
@@ -195,6 +196,12 @@ public class ProjectModel extends BaseModel {
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
         }
+    }
+    
+    protected ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
+        if(!classes.containsKey(aClass.name()))
+            throw new VeryVeryBadException(this, aClass);
+        return (ClassModel)classes.remove(aClass.name());
     }
     
     //static methods

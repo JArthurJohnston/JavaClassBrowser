@@ -8,6 +8,7 @@ import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -82,14 +83,10 @@ public class ClassModel extends PackageModel{
         return true;
     }
     
-    @Override
-    public ClassModel removeClass(ClassModel aClass){
-        if(aClass == this){
-            if(!this.classList.isEmpty())
-                throw new CannotBeDeletedException(aClass, hasSubClassesError);
-            else
-                return ((PackageModel)this.parent).removeClass(aClass);
-        }
+    public ClassModel remove() throws CannotBeDeletedException, VeryVeryBadException{
+        if(!this.classList.isEmpty())
+            throw new CannotBeDeletedException(this, hasSubClassesError);
+        return ((PackageModel)this.parent).removeClass(this);
     }
     
     public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
@@ -204,10 +201,10 @@ public class ClassModel extends PackageModel{
         return this.getParentPackage().getPath() + this.path;
     }
     
-    public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException{
-        this.getParentPackage().removeClass(this);
-        aPackage.addClass(this);
+    public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException, VeryVeryBadException{
+        this.getParentPackage().classMoved(this);
         this.parent = aPackage;
+        aPackage.addClass(this);
     }
     
     @Override
