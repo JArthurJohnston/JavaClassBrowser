@@ -4,7 +4,6 @@
  */
 package Models;
 
-import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -106,7 +105,6 @@ public class PackageModel extends ProjectModel {
         return project.addPackage(newPackage);
     }
     
-    
     @Override
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         project.addClass(newClass);
@@ -114,11 +112,17 @@ public class PackageModel extends ProjectModel {
         return newClass;
     }
     
+    public ClassModel adoptClass(ClassModel aClass){
+        this.classList.add(aClass);
+        return aClass;
+    }
     
     @Override
     protected ClassModel removeClass (ClassModel aClass) throws VeryVeryBadException{
-        if(aClass.parent != this)
-            throw new VeryVeryBadException(this, aClass);
+        if(aClass.parent == this){
+            if(!this.classList.remove(aClass))
+                throw new VeryVeryBadException(false, aClass);
+        }
         return project.removeClass(aClass);
     }
     
@@ -166,6 +170,5 @@ public class PackageModel extends ProjectModel {
     public ProjectModel getParent(){
         return parent;
     }
-    
     
 }

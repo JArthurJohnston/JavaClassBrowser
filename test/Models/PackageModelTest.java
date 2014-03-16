@@ -4,9 +4,11 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
+import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
@@ -111,8 +113,8 @@ public class PackageModelTest extends BaseTest{
         assertTrue(parentProject.getClasses().containsKey("ClassToBeRemoved"));
         assertTrue(parentProject.getClasses().containsValue(classToBeRemoved));
         try {
-            testPackage.removeClass("ClassToBeRemoved");
-        } catch (ClassDoesNotExistException ex) {
+            testPackage.removeClass(classToBeRemoved);
+        } catch (VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
         assertFalse(parentProject.getClasses().containsValue(classToBeRemoved));
@@ -165,7 +167,7 @@ public class PackageModelTest extends BaseTest{
         assertEquals(3, testPackage.getClassList().size());
         try {
             aClass.moveToPackage(anotherPackage);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (NameAlreadyExistsException | VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
         assertTrue(anotherPackage.getClassList().contains(aClass));

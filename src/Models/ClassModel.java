@@ -83,10 +83,26 @@ public class ClassModel extends PackageModel{
         return true;
     }
     
+    /**
+     * The ClassModel removes itself from its package and project, 
+     * it asks the package and project to remove it, after it checks to see
+     * if it has any subclasses. if it does, it will throw an exception.
+     * 
+     * @return the ClassModel that has been removed from the package and project
+     * @throws CannotBeDeletedException
+     * @throws VeryVeryBadException 
+     */
     public ClassModel remove() throws CannotBeDeletedException, VeryVeryBadException{
         if(!this.classList.isEmpty())
             throw new CannotBeDeletedException(this, hasSubClassesError);
-        return ((PackageModel)this.parent).removeClass(this);
+        return parent.removeClass(this);
+    }
+    
+    @Override
+    protected ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
+        if(!this.classList.remove(aClass))
+            throw new VeryVeryBadException(this, aClass);
+        return this.getParentPackage().removeClass(aClass);
     }
     
     public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
@@ -147,7 +163,7 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    protected boolean isClass(){
+    public boolean isClass(){
         return true;
     }
     
@@ -204,7 +220,7 @@ public class ClassModel extends PackageModel{
     public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException, VeryVeryBadException{
         this.getParentPackage().classMoved(this);
         this.parent = aPackage;
-        aPackage.addClass(this);
+        aPackage.adoptClass(this);
     }
     
     @Override

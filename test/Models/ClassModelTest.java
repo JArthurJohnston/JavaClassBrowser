@@ -4,14 +4,18 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
 import Exceptions.ClassDoesNotExistException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -100,33 +104,28 @@ public class ClassModelTest extends BaseTest{
         ClassModel classToBeRemoved = null;
         try {
             classToBeRemoved = testClass.addClass(new ClassModel(testClass, "ClassToBeRemoved"));
-            assertEquals(2, parentProject.getClasses().size());
-            assertTrue(testClass.getClassList().contains(classToBeRemoved));
         } catch (NameAlreadyExistsException ex) {}
+        assertEquals(2, parentProject.getClasses().size());
+        assertTrue(testClass.getClassList().contains(classToBeRemoved));
+        assertEquals(parentPackage, classToBeRemoved.getParentPackage());
         try {
-            testClass.removeClass("ClassToBeRemoved");
-        } catch (ClassDoesNotExistException ex) {
+            classToBeRemoved.remove();
+        } catch (VeryVeryBadException | CannotBeDeletedException ex) {
             fail(ex.getMessage());
         }
-        try {
-            testClass.removeClass("ClassToBeRemoved");
-            fail("Exception not thrown");
-        } catch (ClassDoesNotExistException ex) {}
-        assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
+        //if the above were in java 6 youd have to use the  || operator
         assertFalse(testClass.getClassList().contains(classToBeRemoved));
-        testClass.removeClass(testClass);
-        //fail("test how it behaves when the user asks it to remove itself.");
-        assertFalse(parentProject.getClassList().contains(testClass));
+        assertFalse(parentProject.getClasses().containsKey("ClassToBeRemoved"));
+        this.addClassToParent(classToBeRemoved, testClass);
+        try {
+            testClass.remove();
+            fail("exception not thrown");
+        } catch (CannotBeDeletedException | VeryVeryBadException ex) {
+            assertEquals(CannotBeDeletedException.class, ex.getClass());
+        }
+        assertTrue(testClass.getClassList().contains(classToBeRemoved));
     }
     
-    @Test
-    public void testRemoveClassWithSubClasses(){
-        ClassModel newSubClass = 
-                this.addClassToParent(
-                        new ClassModel(testClass, "NewSubClass"), testClass);
-        testClass.removeClass(testClass);
-        fail("there should be an exception");
-    }
     
     @Test
     public void testAddMethod(){
@@ -170,7 +169,7 @@ public class ClassModelTest extends BaseTest{
         PackageModel anotherPackage = new PackageModel(parentProject, "AnotherPackage");
         try {
             testClass.moveToPackage(anotherPackage);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (NameAlreadyExistsException | VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
         assertTrue(anotherPackage.getClassList().contains(testClass));
@@ -250,7 +249,12 @@ public class ClassModelTest extends BaseTest{
                         new ClassModel(testClass, "NewClass"), testClass);
         assertEquals(newClass, testClass.getClassList().getLast());
         assertEquals(2, testClass.getClassList().size());
-        testClass.removeClass(newClass);
+        try {
+            newClass.remove();
+        } catch (CannotBeDeletedException | VeryVeryBadException ex) {
+            assertEquals(VeryVeryBadException.class, ex.getClass());
+            fail(ex.getMessage());
+        }
         assertEquals(1, testClass.getClassList().size());
         assertEquals(testClass, testClass.getClassList().getLast());
         assertEquals(testClass.getClassList().getFirst(), testClass.getClassList().getLast());
