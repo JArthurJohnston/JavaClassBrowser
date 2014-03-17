@@ -5,8 +5,8 @@
 package UIShells;
 
 import Exceptions.NameAlreadyExistsException;
+import MainBase.MainApplication;
 import Models.ProjectModel;
-import UIModels.ProjectManagerShellModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,14 +15,15 @@ import java.awt.event.WindowEvent;
  * @author Arthur
  */
 public class AddNewProjectShell extends javax.swing.JFrame {
-    private ProjectManagerShellModel model;
-    private ProjectModel baseNewProject;
+    private MainApplication main;
+    private ProjectModel newProject;
     
-    public AddNewProjectShell(ProjectManagerShellModel model) {
+    public AddNewProjectShell(MainApplication main) {
         initComponents();
-        this.model = model;
-        baseNewProject = new ProjectModel(model.getApplication(), "New Project");
-        this.authorNameField.setText(model.getUserName());
+        this.main = main;
+        this.newProject =  new ProjectModel(this.main, new String());
+        newProject.setUserName(main.getUserName());
+        this.authorNameField.setText(main.getUserName());
         this.setVisible(true);
         
         //this should also be pushed up.
@@ -37,9 +38,25 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     //this method should be pushed up
     //as should the corresponding removeShell() method
     private void signalClosedAndDispose(){
-        model.removeShell(this);
+        main.removeShell(this);
         this.dispose();
     }
+    
+    private void updateProject(){
+        newProject.setName(projectNameField.getText());
+        newProject.setUserName(authorNameField.getText());
+    }
+    
+    private boolean isProjectValid(){
+        if(newProject.name() == null)
+            return false;
+        if(newProject.name().compareTo(new String()) == 0)
+            return false;
+        if(!main.okToAdd(newProject.name()))
+            return false;
+        return true;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -137,18 +154,17 @@ public class AddNewProjectShell extends javax.swing.JFrame {
     }//GEN-LAST:event_projectNameFieldActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
-        boolean successfulAdd;
+        this.updateProject();
+        if(!this.isProjectValid())
+            return;
         try {
             //change this to send over the projectModel
-            model.addProject(projectNameField.getText());
-            successfulAdd = true;
+            main.addProject(newProject);
         } catch (NameAlreadyExistsException ex) {
             //pop-up with error message
-            successfulAdd = false;
+            return;
         }
-        if(successfulAdd) {
-            this.signalClosedAndDispose();
-        }
+        this.signalClosedAndDispose();
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
     private void cancelProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelProjectButtonActionPerformed

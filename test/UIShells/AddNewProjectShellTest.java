@@ -25,7 +25,6 @@ import static org.junit.Assert.*;
  */
 public class AddNewProjectShellTest extends BaseTest{
     private MainApplication main;
-    private ProjectManagerShellModel model;
     private AddNewProjectShell shell;
     
     public AddNewProjectShellTest() {
@@ -43,14 +42,12 @@ public class AddNewProjectShellTest extends BaseTest{
     public void setUp() {
         main = new MainApplication();
         main.setUserName("Kyle Raynor");
-        model = (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
-        shell = model.openAddProject();
+        shell = new AddNewProjectShell(main);
     }
     
     @After
     public void tearDown() {
         main = null;
-        model = null;
         shell = null;
     }
 
@@ -61,9 +58,6 @@ public class AddNewProjectShellTest extends BaseTest{
     public void testConstructor() {
         System.out.println("testConstructor");
         assertTrue(shell.isVisible());
-        ProjectManagerShellModel shellModel = 
-                (ProjectManagerShellModel)this.getVariableFromClass(shell, "model");
-        assertEquals(model, shellModel);
         JTextField testProjectName = (JTextField)this.getVariableFromClass(shell, "projectNameField");
         assertTrue(testProjectName.isVisible());
         assertTrue(testProjectName.isEditable());
@@ -81,14 +75,14 @@ public class AddNewProjectShellTest extends BaseTest{
     
     @Test
     public void testNewProjectModel(){
-        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "baseNewProject");
+        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "newProject");
         assertEquals(ProjectModel.class, baseNewProject.getClass());
         assertEquals(main.getUserName(), baseNewProject.getUserName());
     }
     
     @Test
     public void testCreateProjectButton(){
-        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "baseNewProject");
+        ProjectModel baseNewProject = (ProjectModel)this.getVariableFromClass(shell, "newProject");
         JButton createButton = (JButton)this.getVariableFromClass(shell, "createProjectButton");
         assertTrue(createButton.isVisible());
         createButton.doClick();
@@ -96,13 +90,18 @@ public class AddNewProjectShellTest extends BaseTest{
         assertEquals("New Project", main.getProjects().get(0).name());
         assertFalse(shell.isVisible());
     }
+    @Test
+    public void testIsProjectValid(){
+        fail("write me!");
+    }
     
     @Test
-    public void testCancelButton(){
-        ArrayList openShells = (ArrayList)this.getVariableFromClass(model, "openShells");
-        assertTrue(openShells.contains(shell));
-        JButton cancelButton = (JButton)this.getVariableFromClass(shell, "cancelProjectButton");
-        cancelButton.doClick();
-        assertFalse(openShells.contains(shell));
+    public void testCloseAndDispose(){
+        ArrayList shells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
+        JButton cancel = (JButton)this.getVariableFromClass(shell, "cancelProjectButton");
+        shells.add(shell);
+        cancel.doClick();
+        assertFalse(shells.contains(shell));
+        assertTrue(shells.isEmpty());
     }
 }

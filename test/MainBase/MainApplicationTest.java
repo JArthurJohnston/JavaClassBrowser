@@ -178,4 +178,14 @@ public class MainApplicationTest extends BaseTest {
         main = new MainApplication();
         assertEquals(System.getProperty("user.name"), main.getUserName());
     }
+    
+    @Test
+    public void testOpenAddProject(){
+        ArrayList openShells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
+        assertTrue(openShells.isEmpty());
+        main.openAddProjectShell();
+        assertEquals(1, openShells.size());
+        main.openAddProjectShell();
+        assertEquals(1, openShells.size());
+    }
 }

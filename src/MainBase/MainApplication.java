@@ -3,8 +3,9 @@ package MainBase;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
-import UIModels.ProjectManagerShellModel;
+import UIShells.AddNewProjectShell;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 
 /**
  * MainApplication is the top-level model for the whole program
@@ -15,16 +16,16 @@ import java.util.ArrayList;
  * @author Arthur
  */
 public class MainApplication {
-    private ProjectManagerShellModel shellModel;
     private ArrayList<ProjectModel> projects;
     private ArrayList openWindowModels;
+    private ArrayList openWindowShells;
     private String userName;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
         projects = new ArrayList();
         openWindowModels = new ArrayList();
-        shellModel = new ProjectManagerShellModel(this);
+        openWindowShells = new ArrayList();
         //openWindowModels.add(shellModel);
     }
     
@@ -48,10 +49,10 @@ public class MainApplication {
     public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
         if(this.okToAdd(newProject.name())){
             projects.add(newProject);
-            return shellModel.projectAdded(newProject);
         }else {
             throw new NameAlreadyExistsException(this, newProject);
         }
+        return newProject;
     }
     
     public ProjectModel removeProject(ProjectModel aProject) throws DoesNotExistException{
@@ -70,4 +71,18 @@ public class MainApplication {
     public void setUserName(String newUserName){
         this.userName = newUserName;
     }
+    
+    public void removeShell(JFrame shell){
+        openWindowShells.remove(shell);
+    }
+    
+    public void openAddProjectShell(){
+        for(Object shell : openWindowShells){
+            if(shell.getClass() == AddNewProjectShell.class)
+                return;
+        }
+        openWindowShells.add(new AddNewProjectShell(this));
+    }
+    
+    
 }

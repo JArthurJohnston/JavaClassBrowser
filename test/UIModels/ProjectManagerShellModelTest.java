@@ -63,7 +63,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
     private ProjectModel setUpProject(){
         ProjectModel aProject = null;
         try {
-            aProject = model.addProject("New Project");
+            aProject = model.addProject(new ProjectModel(main,"New Project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -74,8 +74,6 @@ public class ProjectManagerShellModelTest extends BaseTest{
 
     @Test
     public void testConstructor_main() {
-        // used to be called 'testInitialize'
-        System.out.println("test constructor(main)");
         assertEquals(main, this.getVariableFromClass(model, "main"));
         assertEquals(null, this.getVariableFromClass(model, "selected"));
         DefaultListModel listModel = (DefaultListModel)this.getVariableFromClass(model, "projectList");
@@ -90,6 +88,7 @@ public class ProjectManagerShellModelTest extends BaseTest{
         ArrayList openShellModels = (ArrayList)this.getVariableFromClass(model, "openShellModels");
         assertEquals(ArrayList.class, openShellModels.getClass());
     }
+    
     @Test
     public void testConstructor_mainWithpreExistingProjects(){
         ProjectModel expSelected = null;
