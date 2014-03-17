@@ -5,6 +5,7 @@
 package UIModels;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
@@ -25,7 +26,7 @@ public class BaseUIModel {
      * @param list
      * @param listModel 
      */
-    public void fillListModel(ArrayList list, DefaultListModel listModel){
+    public void fillListModel(List list, DefaultListModel listModel){
         for(int i=0; i < list.size(); i++){
             listModel.addElement(list.get(i));
         }

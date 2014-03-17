@@ -32,6 +32,8 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        classListRightClickMenu = new javax.swing.JPopupMenu();
+        addClassRightClickMenu = new javax.swing.JMenuItem();
         jSplitPane2 = new javax.swing.JSplitPane();
         jSplitPane3 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
@@ -57,6 +59,13 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         staticMethodList = new javax.swing.JList();
         jScrollPane5 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        addClassMenuItem = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+
+        addClassRightClickMenu.setText("jMenuItem1");
+        classListRightClickMenu.add(addClassRightClickMenu);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -157,6 +166,18 @@ public class ClassBrowserShell extends javax.swing.JFrame {
 
         jSplitPane2.setRightComponent(jScrollPane5);
 
+        jMenu1.setText("File");
+
+        addClassMenuItem.setText("New Class");
+        jMenu1.add(addClassMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,7 +193,10 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addClassMenuItem;
+    private javax.swing.JMenuItem addClassRightClickMenu;
     private javax.swing.JList classListControl;
+    private javax.swing.JPopupMenu classListRightClickMenu;
     private javax.swing.JList importsList;
     private javax.swing.JList instanceMethodList;
     private javax.swing.JList instanceVarList;
@@ -180,6 +204,9 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;

@@ -6,11 +6,10 @@ package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
+import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import Types.ClassType;
-import Types.ScopeType;
 import UIShells.ClassBrowserShell;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,6 +23,7 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class ClassBrowserShellModelTest extends BaseTest{
+    private MainApplication main;
     private ClassBrowserShellModel model;
     private ProjectModel aProject;
     

@@ -16,7 +16,7 @@ import javax.swing.DefaultListModel;
  * @author Arthur
  */
 public class ClassBrowserShellModel extends BaseUIModel{
-    private ClassBrowserShell shell;
+    private final ClassBrowserShell shell;
     private DefaultListModel classList;
     private DefaultListModel variableList;
     private DefaultListModel methodList;
