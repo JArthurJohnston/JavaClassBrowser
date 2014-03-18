@@ -50,13 +50,33 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="756" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="projectsToggleButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="packageListButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="247" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="35" max="32767" attributes="0"/>
+          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+              <Component id="packageListButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Component id="projectsToggleButton" alignment="3" min="-2" max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JToggleButton" name="packageListButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Paqckages"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="projectsToggleButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Projects"/>
+      </Properties>
+    </Component>
+  </SubComponents>
 </Form>

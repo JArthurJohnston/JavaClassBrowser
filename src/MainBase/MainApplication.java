@@ -5,6 +5,8 @@ import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIShells.AddNewProjectShell;
 import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
 /**
@@ -83,6 +85,4 @@ public class MainApplication {
         }
         openWindowShells.add(new AddNewProjectShell(this));
     }
-    
-    
 }

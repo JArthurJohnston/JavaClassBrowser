@@ -102,9 +102,6 @@ public class MethodModelTest extends BaseTest{
         assertTrue(method.matchSignature(otherMethod));
     }
     
-    
-    
-    
     @Test
     public void testParameters(){
         ArrayList params = (ArrayList)this.getVariableFromClass(method, "parameters");

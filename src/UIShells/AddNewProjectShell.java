@@ -14,7 +14,7 @@ import java.awt.event.WindowEvent;
  *
  * @author Arthur
  */
-public class AddNewProjectShell extends javax.swing.JFrame {
+public class AddNewProjectShell extends BaseUIShell {
     private MainApplication main;
     private ProjectModel newProject;
     

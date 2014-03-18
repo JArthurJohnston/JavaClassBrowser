@@ -20,8 +20,6 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         initComponents();
         this.model = model;
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
