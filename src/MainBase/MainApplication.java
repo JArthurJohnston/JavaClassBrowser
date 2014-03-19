@@ -5,8 +5,6 @@ import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIShells.AddNewProjectShell;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
 /**
@@ -22,6 +20,7 @@ public class MainApplication {
     private ArrayList openWindowModels;
     private ArrayList openWindowShells;
     private String userName;
+    private ProjectModel selectedProject;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
@@ -84,5 +83,12 @@ public class MainApplication {
                 return;
         }
         openWindowShells.add(new AddNewProjectShell(this));
+    }
+    
+    public void setSelectedProejct(ProjectModel aProject){
+        this.selectedProject = aProject;
+    }
+    public ProjectModel getSelectedProject(){
+        return selectedProject;
     }
 }

@@ -11,11 +11,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- *
+ * 
  * @author Arthur
  */
 public class AddNewProjectShell extends BaseUIShell {
-    private MainApplication main;
     private ProjectModel newProject;
     
     public AddNewProjectShell(MainApplication main) {
@@ -37,9 +36,10 @@ public class AddNewProjectShell extends BaseUIShell {
     
     //this method should be pushed up
     //as should the corresponding removeShell() method
-    private void signalClosedAndDispose(){
+    @Override
+    protected void signalClosedAndDispose(){
         main.removeShell(this);
-        this.dispose();
+        super.signalClosedAndDispose();
     }
     
     private void updateProject(){
@@ -56,7 +56,6 @@ public class AddNewProjectShell extends BaseUIShell {
             return false;
         return true;
     }
-    
     
     /**
      * This method is called from within the constructor to initialize the form.

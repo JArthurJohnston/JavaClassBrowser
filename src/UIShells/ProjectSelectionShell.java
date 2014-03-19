@@ -7,7 +7,10 @@
 package UIShells;
 
 import MainBase.MainApplication;
+import Models.ProjectModel;
 import javax.swing.DefaultListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -22,10 +25,35 @@ public class ProjectSelectionShell extends BaseUIShell {
      */
     public ProjectSelectionShell(MainApplication main) {
         super();
+        initComponents();
         this.main = main;
+        this.setUpSelectionList();
+        this.setInitialValues();
+        this.setVisible(true);
+    }
+    
+    private void setInitialValues(){
+        if(main.getProjects().isEmpty())
+            return;
+        if(main.getSelectedProject() == null)
+            projectSelectionList.setSelectedIndex(0);
+    }
+    
+    private void setUpSelectionList(){
         projects = new DefaultListModel();
         this.fillListModel(main.getProjects(), projects);
-        initComponents();
+        projectSelectionList.setModel(projects);
+        projectSelectionList.getSelectionModel().addListSelectionListener(this.setUpProjectListener());
+    }
+    
+    private ListSelectionListener setUpProjectListener(){
+        return new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting())
+                    main.setSelectedProejct((ProjectModel)projectSelectionList.getSelectedValue());
+            }
+        };
     }
 
     /**
@@ -49,6 +77,11 @@ public class ProjectSelectionShell extends BaseUIShell {
         jScrollPane1.setViewportView(projectSelectionList);
 
         addProjectButton.setText("+");
+        addProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProjectButtonActionPerformed(evt);
+            }
+        });
 
         removeProjectButton.setText("-");
 
@@ -92,6 +125,10 @@ public class ProjectSelectionShell extends BaseUIShell {
         // TODO add your handling code here:
     }//GEN-LAST:event_closeProjectListButtonActionPerformed
 
+    private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
+        main.openAddProjectShell();
+    }//GEN-LAST:event_addProjectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addProjectButton;
     private javax.swing.JButton closeProjectListButton;
@@ -99,4 +136,6 @@ public class ProjectSelectionShell extends BaseUIShell {
     private javax.swing.JList projectSelectionList;
     private javax.swing.JButton removeProjectButton;
     // End of variables declaration//GEN-END:variables
+
+    
 }
