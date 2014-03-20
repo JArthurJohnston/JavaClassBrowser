@@ -10,6 +10,7 @@ import Internal.BaseTest;
 import Models.ProjectModel;
 import UIModels.ProjectManagerShellModel;
 import UIShells.ProjectManagerShell;
+import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -108,14 +109,15 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testAddProjectUpdatesShell(){
-        ProjectManagerShellModel shellModel = 
-                (ProjectManagerShellModel)this.getVariableFromClass(main, "shellModel");
-        ProjectManagerShell shell = 
-                (ProjectManagerShell)this.getVariableFromClass(shellModel, "shell");
-        //get the project list model from the shell
-        //add a project to main
-        //assert that the shells project list updates when projects are added/removed from main
+    public void testProjectSelectionShellConnections(){
+        ArrayList openShells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
+        main.openProjectSelectionShell();
+        assertEquals(1, openShells.size());
+        assertEquals(ProjectSelectionShell.class, openShells.get(0).getClass());
+        main.openProjectSelectionShell();
+        assertEquals(1, openShells.size());
+        main.openAddProjectShell();
+        assertEquals(2, openShells.size());
     }
     
     @Test

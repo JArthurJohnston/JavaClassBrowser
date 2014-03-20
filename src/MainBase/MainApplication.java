@@ -4,6 +4,8 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIShells.AddNewProjectShell;
+import UIShells.BaseUIShell;
+import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 
@@ -18,7 +20,7 @@ import javax.swing.JFrame;
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
     private ArrayList openWindowModels;
-    private ArrayList openWindowShells;
+    private ArrayList <BaseUIShell>openWindowShells;
     private String userName;
     private ProjectModel selectedProject;
     
@@ -50,6 +52,7 @@ public class MainApplication {
     public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
         if(this.okToAdd(newProject.name())){
             projects.add(newProject);
+            this.projectAdded(newProject);
         }else {
             throw new NameAlreadyExistsException(this, newProject);
         }
@@ -59,11 +62,23 @@ public class MainApplication {
     public ProjectModel removeProject(ProjectModel aProject) throws DoesNotExistException{
         if(this.okToDelete(aProject)) {
             projects.remove(aProject);
+            this.projectRemoved(aProject);
         }
         else {
             throw new DoesNotExistException(this, aProject);
         }
         return aProject;
+    }
+    
+    private void projectAdded(ProjectModel newProject){
+        for(BaseUIShell shell : openWindowShells){
+            shell.projectAdded(newProject);
+        }
+    }
+    private void projectRemoved(ProjectModel newProject){
+        for(BaseUIShell shell : openWindowShells){
+            shell.projectRemoved(newProject);
+        }
     }
     
     public String getUserName(){
@@ -73,16 +88,27 @@ public class MainApplication {
         this.userName = newUserName;
     }
     
-    public void removeShell(JFrame shell){
+    public void removeShell(BaseUIShell shell){
         openWindowShells.remove(shell);
     }
     
     public void openAddProjectShell(){
+        if(this.okToOpenShell(AddNewProjectShell.class))
+            openWindowShells.add(new AddNewProjectShell(this));
+    }
+    public void openProjectSelectionShell(){
+        if(this.okToOpenShell(ProjectSelectionShell.class))
+            openWindowShells.add(new ProjectSelectionShell(this));
+    }
+    
+    private boolean okToOpenShell(Object shellClass){
+        if(openWindowShells.isEmpty())
+            return true;
         for(Object shell : openWindowShells){
-            if(shell.getClass() == AddNewProjectShell.class)
-                return;
+            if(shell.getClass() == shellClass)
+                return false;
         }
-        openWindowShells.add(new AddNewProjectShell(this));
+        return true;
     }
     
     public void setSelectedProejct(ProjectModel aProject){
