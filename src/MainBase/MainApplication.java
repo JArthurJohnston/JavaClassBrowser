@@ -64,6 +64,10 @@ public class MainApplication {
     public ProjectModel removeProject(ProjectModel aProject) throws DoesNotExistException{
         if(this.okToDelete(aProject)) {
             projects.remove(aProject);
+            if(this.selectedProject == aProject){
+                if(!this.projects.isEmpty())
+                    selectedProject = projects.get(0);
+            }
             this.projectRemoved(aProject);
         }
         else {
@@ -90,8 +94,16 @@ public class MainApplication {
         this.userName = newUserName;
     }
     
-    public void removeShell(BaseUIShell shell){
-        openWindowShells.remove(shell);
+    public void removeShell(Object shellClass){
+        BaseUIShell aShell = null;
+        for(BaseUIShell shell : openWindowShells){
+            if(shell.getClass() == shellClass){
+                aShell = shell;
+                break;
+            }
+        }
+        if(aShell != null)
+            openWindowShells.remove(aShell);
     }
     
     public void openAddProjectShell(){
@@ -118,5 +130,10 @@ public class MainApplication {
     }
     public ProjectModel getSelectedProject(){
         return selectedProject;
+    }
+    
+    public BaseUIShell addShell(BaseUIShell shell){
+        openWindowShells.add(shell);
+        return shell;
     }
 }

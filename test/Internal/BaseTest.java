@@ -13,8 +13,9 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Test;
 
 /**
  * uses reflection to grab private stuff from objects for testing
@@ -121,8 +122,20 @@ public class BaseTest {
         return true;
     }
     
-    @Test
-    public void testCloseAndDispose(){
-        fail("subclass responsibility");
+    private boolean listHasClass(List aList, Object aClass){
+        for(Object o : aList){
+            if(o.getClass() == aClass)
+                return true;
+        }
+        return false;
     }
+    
+    protected void assertListHasClass(List aList, Object aClass){
+        assertTrue(this.listHasClass(aList, aClass));
+    }
+    
+    protected void denyListHasClass(List aList, Object aClass){
+        assertFalse(this.listHasClass(aList, aClass));
+    }
+    
 }

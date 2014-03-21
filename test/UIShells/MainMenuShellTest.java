@@ -6,8 +6,11 @@
 
 package UIShells;
 
+import Internal.BaseShellTest;
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import java.util.ArrayList;
+import javax.swing.JToggleButton;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,9 +22,8 @@ import static org.junit.Assert.*;
  *
  * @author arthur
  */
-public class MainMenuShellTest extends BaseTest{
+public class MainMenuShellTest extends BaseShellTest{
     private MainMenuShell shell;
-    private MainApplication main;
     
     
     public MainMenuShellTest() {
@@ -42,7 +44,10 @@ public class MainMenuShellTest extends BaseTest{
     }
     
     @After
+    @Override
     public void tearDown() {
+        super.tearDown();
+        shell = null;
     }
 
     /**
@@ -51,6 +56,26 @@ public class MainMenuShellTest extends BaseTest{
     @Test
     public void testInitilizedFields() {
         assertEquals(MainApplication.class, main.getClass());
+        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
     }
     
+    @Test
+    @Override
+    public void testCloseAndDispose(){
+        shell.signalClosedAndDispose();
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
+    }
+    
+    @Test
+    public void testProjectsButton(){
+        JToggleButton projectsButton = (JToggleButton)this.getVariableFromClass(shell, "projectsToggleButton");
+        projectsButton.doClick();
+        assertListHasClass(((ArrayList)
+                this.getVariableFromClass(main, "openWindowShells")), ProjectSelectionShell.class);
+        assertTrue(projectsButton.isSelected());
+        projectsButton.doClick();
+        assertFalse(projectsButton.isSelected());
+        denyListHasClass(((ArrayList)
+                this.getVariableFromClass(main, "openWindowShells")), ProjectSelectionShell.class);
+    }
 }

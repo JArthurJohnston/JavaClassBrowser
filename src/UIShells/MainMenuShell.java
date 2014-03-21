@@ -7,13 +7,15 @@
 package UIShells;
 
 import MainBase.MainApplication;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JToggleButton;
 
 /**
  *
  * @author arthur
  */
-public class MainMenuShell extends javax.swing.JFrame {
-    private MainApplication main;
+public class MainMenuShell extends BaseUIShell {
 
     /**
      * Creates new form MainMenuShell
@@ -21,6 +23,14 @@ public class MainMenuShell extends javax.swing.JFrame {
     public MainMenuShell() {
         main = new MainApplication();
         initComponents();
+        main.addShell(this);
+        this.setUpListeners();
+    }
+    public MainMenuShell(MainApplication main){
+        this.main = main;
+        initComponents();
+        main.addShell(this);
+        this.setUpListeners();
     }
 
     /**
@@ -44,6 +54,11 @@ public class MainMenuShell extends javax.swing.JFrame {
         packageListButton.setText("Paqckages");
 
         projectsToggleButton.setText("Projects");
+        projectsToggleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                projectsToggleButtonActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -85,6 +100,10 @@ public class MainMenuShell extends javax.swing.JFrame {
     private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectMenuItemActionPerformed
          main.openAddProjectShell();
     }//GEN-LAST:event_newProjectMenuItemActionPerformed
+
+    private void projectsToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectsToggleButtonActionPerformed
+        //should be handeled by the listeners
+    }//GEN-LAST:event_projectsToggleButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,4 +148,19 @@ public class MainMenuShell extends javax.swing.JFrame {
     private javax.swing.JToggleButton packageListButton;
     private javax.swing.JToggleButton projectsToggleButton;
     // End of variables declaration//GEN-END:variables
+    
+    private void setUpListeners(){
+        projectsToggleButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JToggleButton button = (JToggleButton)e.getSource();
+                if(button.isSelected())
+                    main.openProjectSelectionShell();
+                else
+                    main.removeShell(ProjectSelectionShell.class);
+            }
+        });
+    }
+
+
 }

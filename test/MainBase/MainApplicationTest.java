@@ -6,10 +6,9 @@ package MainBase;
 
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
+import Internal.BaseShellTest;
 import Internal.BaseTest;
 import Models.ProjectModel;
-import UIModels.ProjectManagerShellModel;
-import UIShells.ProjectManagerShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
@@ -190,4 +189,5 @@ public class MainApplicationTest extends BaseTest {
         main.openAddProjectShell();
         assertEquals(1, openShells.size());
     }
+    
 }

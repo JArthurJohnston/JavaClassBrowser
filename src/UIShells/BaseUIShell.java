@@ -35,7 +35,7 @@ public class BaseUIShell extends javax.swing.JFrame {
     }
     
     protected void signalClosedAndDispose(){
-        main.removeShell(this);
+        main.removeShell(this.getClass());
         this.dispose();
     }
         

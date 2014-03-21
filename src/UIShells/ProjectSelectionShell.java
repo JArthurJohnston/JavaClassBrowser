@@ -161,6 +161,7 @@ public class ProjectSelectionShell extends BaseUIShell {
     @Override
     public void projectRemoved(ProjectModel aProject){
         projects.removeElement(aProject);
+        System.out.println(projects.get(1).toString());
         this.updateFields();
     }
     
