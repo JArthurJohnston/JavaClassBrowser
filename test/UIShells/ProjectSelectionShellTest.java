@@ -103,7 +103,9 @@ public class ProjectSelectionShellTest extends BaseTest{
         assertEquals(DefaultListModel.class, list.getModel().getClass());
         assertEquals(2, main.getProjects().size());
         assertEquals(2, list.getModel().getSize());
-        assertEquals(list.getSelectedValue(), main.getProjects().get(0));
+        assertEquals(main.getProjects().get(0), list.getModel().getElementAt(0));
+        assertEquals(main.getProjects().get(1), list.getModel().getElementAt(1));
+        assertEquals(list.getSelectedValue(), main.getProjects().get(0)); 
         list.setSelectedIndex(1);
         assertEquals(main.getProjects().get(1), main.getSelectedProject());
     }
@@ -120,6 +122,15 @@ public class ProjectSelectionShellTest extends BaseTest{
         assertEquals(1, projectList.getSize());
         assertTrue(main.getSelectedProject() != null);
         assertTrue(removeButton.isEnabled());
+        removeButton.doClick();
+        assertTrue(projectList.isEmpty());
+        assertTrue(main.getProjects().isEmpty());
+        assertEquals(null, main.getSelectedProject());
+        assertEquals(0, projectList.getSize());
+        assertFalse(removeButton.isEnabled());
+        this.setUpMainProjects();
+        this.refreshShell();
+        
     }
     
     @Test
@@ -133,6 +144,7 @@ public class ProjectSelectionShellTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertEquals(aProject, list.getModel().getElementAt(0));
+        assertEquals(aProject, list.getSelectedValue());
         try {
             aProject = main.addProject(new ProjectModel(main, "another project"));
         } catch (NameAlreadyExistsException ex) {
@@ -140,6 +152,7 @@ public class ProjectSelectionShellTest extends BaseTest{
         }
         assertEquals(2, list.getModel().getSize());
         assertEquals(aProject, list.getModel().getElementAt(1));
+        assertEquals(aProject, list.getSelectedValue());
     }
     
     @Test
@@ -157,5 +170,15 @@ public class ProjectSelectionShellTest extends BaseTest{
         }
         assertEquals(1, list.getModel().getSize());
         assertFalse(main.getProjects().contains(projectToBeRemoved));
+        
+    }
+    
+    @Override
+    public void testCloseAndDispose(){
+        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
+        shell.signalClosedAndDispose();
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
+        //could probably just push this up
+        //though, that would mean id have to write a base shell test class.
     }
 }

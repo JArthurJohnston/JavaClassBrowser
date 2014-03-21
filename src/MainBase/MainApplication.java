@@ -51,6 +51,8 @@ public class MainApplication {
     
     public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
         if(this.okToAdd(newProject.name())){
+            if(projects.isEmpty())
+                this.setSelectedProejct(newProject);
             projects.add(newProject);
             this.projectAdded(newProject);
         }else {

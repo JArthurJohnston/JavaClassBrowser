@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 
 /**
  * uses reflection to grab private stuff from objects for testing
@@ -118,5 +119,10 @@ public class BaseTest {
                 return false;
         }
         return true;
+    }
+    
+    @Test
+    public void testCloseAndDispose(){
+        fail("subclass responsibility");
     }
 }

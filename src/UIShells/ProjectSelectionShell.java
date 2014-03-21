@@ -6,8 +6,11 @@
 
 package UIShells;
 
+import Exceptions.DoesNotExistException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -28,25 +31,18 @@ public class ProjectSelectionShell extends BaseUIShell {
         initComponents();
         this.main = main;
         this.setUpSelectionList();
-        this.setInitialValues();
+        this.updateFields();
         this.setVisible(true);
     }
     
-    private void setInitialValues(){
-        if(main.getProjects().isEmpty()){
-            removeProjectButton.setEnabled(false);
-            return;
-        }
-        if(main.getSelectedProject() == null){
-            projectSelectionList.setSelectedIndex(0);
-        }
-    }
     private void setUpSelectionList(){
         projects = new DefaultListModel();
         this.fillListModel(main.getProjects(), projects);
         projectSelectionList.setModel(projects);
         projectSelectionList.getSelectionModel().addListSelectionListener(this.setUpProjectListener());
+        this.updateFields();
     }
+    
     
     private ListSelectionListener setUpProjectListener(){
         return new ListSelectionListener(){
@@ -82,6 +78,11 @@ public class ProjectSelectionShell extends BaseUIShell {
         });
 
         removeProjectButton.setText("-");
+        removeProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeProjectButtonActionPerformed(evt);
+            }
+        });
 
         closeProjectListButton.setText("^");
         closeProjectListButton.addActionListener(new java.awt.event.ActionListener() {
@@ -127,6 +128,15 @@ public class ProjectSelectionShell extends BaseUIShell {
         main.openAddProjectShell();
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
+    private void removeProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProjectButtonActionPerformed
+        if(projectSelectionList.getSelectedValue() != null)
+            try {
+                main.removeProject((ProjectModel)projectSelectionList.getSelectedValue());
+        } catch (DoesNotExistException ex) {
+            Logger.getLogger(ProjectSelectionShell.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_removeProjectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addProjectButton;
     private javax.swing.JButton closeProjectListButton;
@@ -136,19 +146,22 @@ public class ProjectSelectionShell extends BaseUIShell {
     // End of variables declaration//GEN-END:variables
 
     private void updateFields(){
-        if(projectSelectionList.getSelectedValue() != null)
-            removeProjectButton.setEnabled(true);
+        projectSelectionList.setSelectedValue(main.getSelectedProject(), true);
+        removeProjectButton.setEnabled(main.getSelectedProject() != null);
     }
     
     @Override
     public void projectAdded(ProjectModel aProject){
         projects.addElement(aProject);
-        if(projects.isEmpty())
-            projectSelectionList.setSelectedValue(aProject, true);
+        if(projects.isEmpty()){
+            projectSelectionList.setSelectedIndex(0);
+        }
+        this.updateFields();
     }
     @Override
     public void projectRemoved(ProjectModel aProject){
         projects.removeElement(aProject);
+        this.updateFields();
     }
     
 }
