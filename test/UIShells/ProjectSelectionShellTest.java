@@ -72,6 +72,7 @@ public class ProjectSelectionShellTest extends BaseTest{
         main.openProjectSelectionShell();
         shell = (ProjectSelectionShell)((ArrayList)this.getVariableFromClass(main, "openWindowShells")).get(0);
         projectList = (DefaultListModel)this.getVariableFromClass(shell, "projects");
+        assertEquals(projectList.size(), main.getProjects().size());
     }
 
     @Test
@@ -130,7 +131,12 @@ public class ProjectSelectionShellTest extends BaseTest{
         assertFalse(removeButton.isEnabled());
         this.setUpMainProjects();
         this.refreshShell();
-        
+        assertEquals(2, main.getProjects().size());
+        removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
+        assertTrue(removeButton.isEnabled());
+        removeButton.doClick();
+        assertEquals(1, main.getProjects().size());
+        assertTrue(removeButton.isEnabled());
     }
     
     @Test
