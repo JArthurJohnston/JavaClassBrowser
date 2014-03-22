@@ -23,6 +23,10 @@ public class BaseUIShell extends javax.swing.JFrame {
     protected BaseUIShell(){
         setUpClosedWindowListener();
     }
+    protected BaseUIShell(MainApplication main){
+        this.main = main;
+        setUpClosedWindowListener();
+    }
     
     private void setUpClosedWindowListener(){
         //this should also be pushed up.
@@ -34,7 +38,7 @@ public class BaseUIShell extends javax.swing.JFrame {
         });
     }
     
-    protected void signalClosedAndDispose(){
+    public void signalClosedAndDispose(){
         main.removeShell(this.getClass());
         this.dispose();
     }

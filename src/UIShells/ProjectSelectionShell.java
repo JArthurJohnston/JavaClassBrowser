@@ -129,9 +129,8 @@ public class ProjectSelectionShell extends BaseUIShell {
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void removeProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProjectButtonActionPerformed
-        if(projectSelectionList.getSelectedValue() != null)
-            try {
-                main.removeProject((ProjectModel)projectSelectionList.getSelectedValue());
+        try {
+            main.removeProject((ProjectModel)projectSelectionList.getSelectedValue());
         } catch (DoesNotExistException ex) {
             Logger.getLogger(ProjectSelectionShell.class.getName()).log(Level.SEVERE, null, ex);
         }

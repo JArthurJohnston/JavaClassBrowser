@@ -11,6 +11,8 @@ import Internal.BaseTest;
 import Models.ProjectModel;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -190,4 +192,47 @@ public class MainApplicationTest extends BaseTest {
         assertEquals(1, openShells.size());
     }
     
+    @Test
+    public void testAddingProjectSetsSelected(){
+        ProjectModel aProject = null;
+        try {
+            aProject = main.addProject(new ProjectModel(main, "a Project"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(aProject, main.getSelectedProject());
+        try {
+            main.addProject(new ProjectModel(main, "another project"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(aProject, main.getSelectedProject());
+    }
+    
+    @Test
+    public void testRemoveProjectChangesSelected(){
+        ProjectModel aProject = null;
+        ProjectModel anotherProject = null;
+        try {
+            aProject = main.addProject(new ProjectModel(main, "a Project"));
+            anotherProject =  main.addProject(new ProjectModel(main, "another project"));
+            main.addProject(new ProjectModel(main, "yet another project"));
+            assertEquals(3, main.getProjects().size());
+            assertEquals(aProject, main.getSelectedProject());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            main.removeProject(aProject);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(anotherProject, main.getSelectedProject());
+        try {
+            main.removeProject(anotherProject);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(main.getSelectedProject() != null);
+    }
 }

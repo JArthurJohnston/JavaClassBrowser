@@ -7,7 +7,6 @@
 package UIShells;
 
 import Internal.BaseShellTest;
-import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
 import javax.swing.JToggleButton;
@@ -23,8 +22,6 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class MainMenuShellTest extends BaseShellTest{
-    private MainMenuShell shell;
-    
     
     public MainMenuShellTest() {
     }
@@ -47,7 +44,6 @@ public class MainMenuShellTest extends BaseShellTest{
     @Override
     public void tearDown() {
         super.tearDown();
-        shell = null;
     }
 
     /**

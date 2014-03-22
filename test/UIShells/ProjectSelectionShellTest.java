@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class ProjectSelectionShellTest extends BaseShellTest{
-    private ProjectSelectionShell shell;
     private DefaultListModel projectList;
     
     public ProjectSelectionShellTest() {
@@ -53,8 +52,6 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     @Override
     public void tearDown() {
         super.tearDown();
-        shell.signalClosedAndDispose();
-        shell = null;
         projectList = null;
     }
     
@@ -62,6 +59,7 @@ public class ProjectSelectionShellTest extends BaseShellTest{
         try {
             main.addProject(new ProjectModel(main, "a project"));
             main.addProject(new ProjectModel(main, "another project"));
+            assertTrue(main.getSelectedProject() != null);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -132,6 +130,7 @@ public class ProjectSelectionShellTest extends BaseShellTest{
         this.setUpMainProjects();
         this.refreshShell();
         assertEquals(2, main.getProjects().size());
+        assertTrue(main.getSelectedProject() != null);
         removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
         assertTrue(removeButton.isEnabled());
         removeButton.doClick();

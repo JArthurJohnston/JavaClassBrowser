@@ -7,7 +7,6 @@ import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
-import javax.swing.JFrame;
 
 /**
  * MainApplication is the top-level model for the whole program
@@ -67,6 +66,7 @@ public class MainApplication {
             if(this.selectedProject == aProject){
                 if(!this.projects.isEmpty())
                     selectedProject = projects.get(0);
+                else selectedProject = null;
             }
             this.projectRemoved(aProject);
         }
