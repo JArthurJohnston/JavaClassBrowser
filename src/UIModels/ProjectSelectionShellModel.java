@@ -6,6 +6,7 @@
 
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIShells.ProjectSelectionShell;
@@ -35,8 +36,8 @@ public class ProjectSelectionShellModel extends BaseUIModel{
         return (ProjectSelectionShell)shell;
     }
     
-    @Override
-    public void projectAdded(ProjectModel aProject){
-        projectList.addElement(aProject);
+    public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
+        projectList.addElement(main.addProject(newProject));
+        return newProject; //in case the shell wont update itself when the listmodel changes
     }
 }

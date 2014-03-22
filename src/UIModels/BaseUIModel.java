@@ -5,7 +5,6 @@
 package UIModels;
 
 import MainBase.MainApplication;
-import Models.*;
 import UIShells.BaseUIShell;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -37,20 +36,4 @@ public class BaseUIModel {
             listModel.addElement(list.get(i));
         }
     }
-    /*
-    each shell overrides this if applicable
-    this way main can tell each open shell that something has been added,
-    if a shell needs to know this, it will. otherwise its a noop
-    */
-    public void projectAdded(ProjectModel added){}
-    public void classAdded(ClassModel added){}
-    public void methodAdded(MethodModel added){}
-    public void packageAdded(PackageModel added){}
-    public void variableAdded(VariableModel added){}
-    
-    public void projectRemoved(ProjectModel removed){}
-    public void classRemoved(ClassModel removed){}
-    public void packageRemoved(PackageModel removed){}
-    public void methodRemoved(MethodModel removed){}
-    public void variableRemoved(VariableModel removed){}
 }
