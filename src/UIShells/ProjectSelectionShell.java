@@ -9,6 +9,7 @@ package UIShells;
 import Exceptions.DoesNotExistException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIModels.ProjectSelectionShellModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -33,6 +34,9 @@ public class ProjectSelectionShell extends BaseUIShell {
         this.setUpSelectionList();
         this.updateFields();
         this.setVisible(true);
+    }
+    public ProjectSelectionShell(ProjectSelectionShellModel model){
+        
     }
     
     private void setUpSelectionList(){

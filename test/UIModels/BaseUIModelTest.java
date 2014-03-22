@@ -4,7 +4,10 @@
  */
 package UIModels;
 
+import Internal.BaseTest;
+import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIShells.BaseUIShell;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.junit.After;
@@ -18,8 +21,9 @@ import static org.junit.Assert.*;
  *
  * @author Arthur
  */
-public class BaseUIModelTest {
-    private BaseUIModel base;
+public class BaseUIModelTest extends BaseTest{
+    protected MainApplication main;
+    protected BaseUIModel model;
     private ArrayList testModels;
     private DefaultListModel testList;
     
@@ -36,16 +40,14 @@ public class BaseUIModelTest {
     
     @Before
     public void setUp() {
-        base = new BaseUIModel();
-        testModels = new ArrayList();
-        testList = new DefaultListModel();
+        main = new MainApplication();
+        model = new BaseUIModel(main);
     }
     
     @After
     public void tearDown() {
-        base = null;
-        testModels = null;
-        testList = null;
+        model = null;
+        main = null;
     }
 
     /**
@@ -53,12 +55,14 @@ public class BaseUIModelTest {
      */
     @Test
     public void testFillListModel() {
-        base.fillListModel(testModels, testList);
+        testModels = new ArrayList();
+        testList = new DefaultListModel();
+        model.fillListModel(testModels, testList);
         assertEquals(0, testList.size());
         testModels.add(new ProjectModel());
         testModels.add(new ProjectModel());
         testModels.add(new ProjectModel());
-        base.fillListModel(testModels, testList);
+        model.fillListModel(testModels, testList);
         assertEquals(3, testList.size());
     }
 }

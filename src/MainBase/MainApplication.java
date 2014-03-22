@@ -3,6 +3,8 @@ package MainBase;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
+import UIModels.BaseUIModel;
+import UIModels.ProjectSelectionShellModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
 import UIShells.ProjectSelectionShell;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
  */
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
-    private ArrayList openWindowModels;
+    private ArrayList <BaseUIModel>openWindowModels;
     private ArrayList <BaseUIShell>openWindowShells;
     private String userName;
     private ProjectModel selectedProject;
@@ -77,8 +79,8 @@ public class MainApplication {
     }
     
     private void projectAdded(ProjectModel newProject){
-        for(BaseUIShell shell : openWindowShells){
-            shell.projectAdded(newProject);
+        for(BaseUIModel model : openWindowModels){
+            model.projectAdded(newProject);
         }
     }
     private void projectRemoved(ProjectModel newProject){
@@ -110,16 +112,31 @@ public class MainApplication {
         if(this.okToOpenShell(AddNewProjectShell.class))
             openWindowShells.add(new AddNewProjectShell(this));
     }
-    public void openProjectSelectionShell(){
-        if(this.okToOpenShell(ProjectSelectionShell.class))
-            openWindowShells.add(new ProjectSelectionShell(this));
+    public ProjectSelectionShellModel openProjectSelectionShell(){
+        ProjectSelectionShellModel model = null;
+        if(this.okToOpenShell(ProjectSelectionShellModel.class)){
+            model = new ProjectSelectionShellModel(this);
+            openWindowModels.add(model);
+        }
+        return model;
     }
     
-    private boolean okToOpenShell(Object shellClass){
-        if(openWindowShells.isEmpty())
+    /**
+     * boolean okToOpenShell.
+     * used to check and see if certain shells are already open.
+     * some shells don't need this check.
+     * Note: the method takes a model as a parameter, since EVERY
+     * shill will have a corresponding model. and since Main should only
+     * be communicating with that model, not the actual shell.
+     * 
+     * @param modelClass
+     * @return 
+     */
+    private boolean okToOpenShell(Object modelClass){
+        if(openWindowModels.isEmpty())
             return true;
-        for(Object shell : openWindowShells){
-            if(shell.getClass() == shellClass)
+        for(BaseUIModel model : openWindowModels){
+            if(model.getClass() == modelClass)
                 return false;
         }
         return true;
