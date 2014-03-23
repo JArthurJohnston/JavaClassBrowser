@@ -80,6 +80,7 @@ public class MainApplication {
         if(this.okToOpenShell(AddNewProjectShell.class))
             openWindowShells.add(new AddNewProjectShell(this));
     }
+    
     public ProjectSelectionShellModel openProjectSelectionShell(){
         ProjectSelectionShellModel model = null;
         if(this.okToOpenShell(ProjectSelectionShellModel.class)){

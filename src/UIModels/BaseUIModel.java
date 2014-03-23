@@ -15,7 +15,6 @@ import javax.swing.DefaultListModel;
  * @author Arthur
  */
 public class BaseUIModel {
-    protected BaseUIShell shell;
     protected MainApplication main;
     
     public BaseUIModel(){}

@@ -18,6 +18,7 @@ import javax.swing.DefaultListModel;
  * @author arthur
  */
 public class ProjectSelectionShellModel extends BaseUIModel{
+    private ProjectSelectionShell shell;
     private DefaultListModel projectList;
     
     public ProjectSelectionShellModel(MainApplication main){
@@ -69,6 +70,7 @@ public class ProjectSelectionShellModel extends BaseUIModel{
     
     public void close(){
         main.removeModel(this);
-        shell.dispose();
+        if(shell != null)
+            shell.dispose();
     }
 }

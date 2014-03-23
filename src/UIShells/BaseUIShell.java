@@ -31,10 +31,7 @@ public class BaseUIShell extends javax.swing.JFrame {
         });
     }
     
-    public void signalClosedAndDispose(){
-        //main.removeShell(this.getClass());
-        this.dispose();
-    }
+    protected void signalClosedAndDispose(){ } // might just wanna get rid of this?
         
     /**
      * a method for filling list models.

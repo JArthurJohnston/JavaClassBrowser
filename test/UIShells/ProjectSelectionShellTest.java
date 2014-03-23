@@ -6,14 +6,13 @@
 
 package UIShells;
 
-import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIModels.ProjectSelectionShellModel;
-import java.util.ArrayList;
-import javax.swing.DefaultListModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JList;
 import org.junit.After;
@@ -28,6 +27,7 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class ProjectSelectionShellTest extends BaseShellTest{
+    private ProjectSelectionShell shell;
     private ProjectSelectionShellModel model;
     
     public ProjectSelectionShellTest() {
@@ -44,157 +44,64 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     @Before
     public void setUp() {
         main = new MainApplication();
-        main.openProjectSelectionShell();
-        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
-        model = (ProjectSelectionShellModel)models.get(0);
+        model = main.openProjectSelectionShell();
         shell = model.showShell();
-        assertEquals(ProjectSelectionShellModel.class, model.getClass());
-        assertEquals(ProjectSelectionShell.class, shell.getClass());
     }
     
     @After
-    @Override
     public void tearDown() {
         model.close();
-        model = null;
         shell = null;
+        model = null;
         main = null;
     }
     
-    private void setUpMainProjects(){
+    private ProjectSelectionShell refreshShell(){
+        model.close();
+        model = null;
+        model = main.openProjectSelectionShell();
+        return model.showShell();
+    }
+    
+    private void setUpMainWithProjects(){
         try {
-            model.addProject(new ProjectModel(main, "a project"));
-            model.addProject(new ProjectModel(main, "another project"));
-            assertTrue(main.getSelectedProject() != null);
+            main.setSelectedProejct(main.addProject(new ProjectModel(main, "a project")));
+            main.addProject(new ProjectModel(main, "another project"));
+            main.addProject(new ProjectModel(main, "yet another project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-    }
-    
-    private void refreshShell(){
-        shell.signalClosedAndDispose();
-        main.openProjectSelectionShell();
-        model =  ((ProjectSelectionShellModel)
-                ((ArrayList)this.getVariableFromClass(main, "openWindowModels")).get(0));
-        shell = model.showShell();
+        shell = this.refreshShell();
     }
 
     @Test
-    public void testInitializedFields() {
-        assertEquals(main, this.getVariableFromClass(shell, "main"));
-        JButton removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
-        assertTrue(shell.isVisible());
-        assertTrue(model.getListModel().isEmpty());
-        assertFalse(removeButton.isEnabled());
-        this.setUpMainProjects();
-        this.refreshShell();
-        removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
-        assertTrue(removeButton.isEnabled());
-        assertTrue(shell.isVisible());
-        assertEquals(2, model.getListModel().size());
-        assertEquals(ProjectModel.class, model.getListModel().get(0).getClass());
-        ProjectModel aProject = (ProjectModel)model.getListModel().get(0);
-        this.compareStrings("a project", aProject.name());
-        aProject = (ProjectModel)model.getListModel().get(1);
-        this.compareStrings("another project", aProject.name());
-    }
-    
-    @Test
-    public void testProjectSelectionList(){
-        this.setUpMainProjects();
-        this.refreshShell();
-        JList list = (JList)this.getVariableFromClass(shell, "projectSelectionList");
-        assertTrue(list.isVisible());
-        assertEquals(DefaultListModel.class, list.getModel().getClass());
-        assertEquals(2, main.getProjects().size());
-        assertEquals(2, list.getModel().getSize());
-        assertEquals(main.getProjects().get(0), list.getModel().getElementAt(0));
-        assertEquals(main.getProjects().get(1), list.getModel().getElementAt(1));
-        assertEquals(list.getSelectedValue(), main.getProjects().get(0)); 
-        list.setSelectedIndex(1);
-        assertEquals(main.getProjects().get(1), main.getSelectedProject());
-    }
-    
-    @Test
-    public void testRemoveProjectButton(){
-        JButton removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
-        assertFalse(removeButton.isEnabled());
+    public void testInitialProjectList() {
+        JList projectList = (JList)this.getVariableFromClass(shell, "projectList");
+        assertEquals(0, projectList.getModel().getSize());
         try {
-            main.addProject(new ProjectModel(main, "a project"));
+            model.addProject(new ProjectModel(main, "a project"));
+            model.addProject(new ProjectModel(main, "another project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(1, model.getListModel().getSize());
-        assertTrue(main.getSelectedProject() != null);
-        assertTrue(removeButton.isEnabled());
-        removeButton.doClick();
-        assertTrue(model.getListModel().isEmpty());
-        assertTrue(main.getProjects().isEmpty());
-        assertEquals(null, main.getSelectedProject());
-        assertEquals(0, model.getListModel().getSize());
-        assertFalse(removeButton.isEnabled());
-        this.setUpMainProjects();
-        this.refreshShell();
-        assertEquals(2, main.getProjects().size());
-        assertTrue(main.getSelectedProject() != null);
-        removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
-        assertTrue(removeButton.isEnabled());
-        removeButton.doClick();
-        assertEquals(1, main.getProjects().size());
-        assertTrue(removeButton.isEnabled());
+        shell = this.refreshShell();
+        projectList = (JList)this.getVariableFromClass(shell, "projectList");
+        assertEquals(2, projectList.getModel().getSize());
     }
     
     @Test
-    public void testAddingProjectToMainFillsList(){
-        JList list = (JList)this.getVariableFromClass(shell, "projectSelectionList");
-        assertEquals(0, list.getModel().getSize());
-        ProjectModel aProject = null;
-        try {
-            aProject = main.addProject(new ProjectModel(main, "a project"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(aProject, list.getModel().getElementAt(0));
-        assertEquals(aProject, list.getSelectedValue());
-        try {
-            aProject = main.addProject(new ProjectModel(main, "another project"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(2, list.getModel().getSize());
-        assertEquals(aProject, list.getModel().getElementAt(1));
-        //assertEquals(aProject, list.getSelectedValue());
-        /*
-        this getSelected stuff is really tripping me up. 
-        Ill save it for later...
-        */
+    public void testSelectionUpdatesModel(){
+        this.setUpMainWithProjects();
+        JList projectList = (JList)this.getVariableFromClass(shell, "projectList");
+        assertEquals(projectList.getSelectedValue(), main.getSelectedProject());
     }
     
     @Test
-    public void testRemoveProjectUpdatesList(){
-        this.setUpMainProjects();
-        this.refreshShell();
-        JList list = (JList)this.getVariableFromClass(shell, "projectSelectionList");
-        assertEquals(2, list.getModel().getSize());
-        list.setSelectedIndex(0);
-        ProjectModel projectToBeRemoved = (ProjectModel)list.getSelectedValue();
-        assertTrue(main.getProjects().contains(projectToBeRemoved));
-        try {
-            main.removeProject(projectToBeRemoved);
-        } catch (DoesNotExistException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(1, list.getModel().getSize());
-        assertFalse(main.getProjects().contains(projectToBeRemoved));
-        
-    }
-    
     @Override
     public void testCloseAndDispose(){
-        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
-        shell.signalClosedAndDispose();
-        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
-        //could probably just push this up
-        //though, that would mean id have to write a base shell test class.
+        JButton remove = (JButton)this.getVariableFromClass(shell, "closeShellButton");
+        remove.doClick();
+        assertFalse(shell.isVisible());
     }
+    
 }

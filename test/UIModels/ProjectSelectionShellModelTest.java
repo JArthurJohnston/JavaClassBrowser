@@ -11,6 +11,8 @@ import Exceptions.NameAlreadyExistsException;
 import Models.ProjectModel;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -49,6 +51,11 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     @Override
     public void tearDown() {
         super.tearDown();
+    }
+    
+    private void refreshModel(){
+        model.close();
+        model = main.openProjectSelectionShell();
     }
 
     @Test
@@ -225,5 +232,15 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     public void testGetListModel(){
         assertEquals(DefaultListModel.class, model.getListModel().getClass());
         assertTrue(model.getListModel().isEmpty());
+        try {
+            main.addProject(new ProjectModel(main, "aProject"));
+            main.addProject(new ProjectModel(main, "another Project"));
+            main.addProject(new ProjectModel(main, "yet another Project"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        this.refreshModel();
+        assertEquals(DefaultListModel.class, model.getListModel().getClass());
+        assertEquals(3, model.getListModel().size());
     }
 }

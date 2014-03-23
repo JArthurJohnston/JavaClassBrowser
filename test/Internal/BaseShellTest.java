@@ -7,7 +7,6 @@
 package Internal;
 
 import MainBase.MainApplication;
-import UIShells.BaseUIShell;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -16,14 +15,8 @@ import org.junit.Test;
  * @author arthur
  */
 public class BaseShellTest extends BaseTest{
-    protected BaseUIShell shell;
     protected MainApplication main;
     
-    public void tearDown(){
-        shell.signalClosedAndDispose();
-        shell = null;
-        main = null;
-    }
     
     /**
      * returns true only if the class is BaseShellTest.
