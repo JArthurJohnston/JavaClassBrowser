@@ -6,24 +6,46 @@
 
 package UIShells;
 
-import UIModels.ProjectSelectionShellModel;
+import Models.ProjectModel;
+import UIModels.ProjectSelectionModel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author arthur
  */
 public class ProjectSelectionShell extends BaseUIShell {
-    private ProjectSelectionShellModel model;
+    private ProjectSelectionModel model;
 
     /**
      * Creates new form ProjectSelectionShell
      * @param model
      */
-    public ProjectSelectionShell(ProjectSelectionShellModel model) {
+    public ProjectSelectionShell(ProjectSelectionModel model) {
         initComponents();
         this.model = model;
         this.projectList.setModel(model.getListModel());
+        this.projectList.setSelectedValue(model.getSelectedProject(), true);
+        this.projectList.getSelectionModel().addListSelectionListener(this.setUpProjectListener());
+        this.updateFields();
     }
+    
+    private ListSelectionListener setUpProjectListener(){
+        return new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting())
+                    model.setSelectedProject((ProjectModel)projectList.getSelectedValue());
+            }
+        };
+    }
+    
+    private void updateFields(){
+        this.removeProjectButton.setEnabled(model.getSelectedProject() != null);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

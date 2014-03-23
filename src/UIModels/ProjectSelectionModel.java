@@ -10,6 +10,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIShells.AddNewProjectShell;
 import UIShells.ProjectSelectionShell;
 import javax.swing.DefaultListModel;
 
@@ -17,13 +18,15 @@ import javax.swing.DefaultListModel;
  *
  * @author arthur
  */
-public class ProjectSelectionShellModel extends BaseUIModel{
+public class ProjectSelectionModel extends BaseUIModel{
     private ProjectSelectionShell shell;
     private DefaultListModel projectList;
+    private boolean openedAddProject;
     
-    public ProjectSelectionShellModel(MainApplication main){
+    public ProjectSelectionModel(MainApplication main){
         super(main);
         this.fillProjectList();
+        openedAddProject = false;
     }
     
     private void fillProjectList(){
@@ -62,6 +65,10 @@ public class ProjectSelectionShellModel extends BaseUIModel{
         return main.setSelectedProejct(aProject);
     }
     
+    public ProjectModel getSelectedProject(){
+        return main.getSelectedProject();
+    }
+    
     private ProjectModel getFirstProject(){
         if(main.getProjects().isEmpty())
             return null;
@@ -72,5 +79,16 @@ public class ProjectSelectionShellModel extends BaseUIModel{
         main.removeModel(this);
         if(shell != null)
             shell.dispose();
+    }
+    
+    public AddNewProjectShell addProject(){
+        if(!openedAddProject){
+            return new AddNewProjectShell(this);
+        }
+        return null;
+    }
+    
+    public MainApplication getMain(){
+        return main;
     }
 }

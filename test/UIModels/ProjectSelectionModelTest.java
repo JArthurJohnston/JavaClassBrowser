@@ -9,6 +9,7 @@ package UIModels;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.ProjectModel;
+import UIShells.AddNewProjectShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -25,11 +26,11 @@ import static org.junit.Assert.*;
  *
  * @author arthur
  */
-public class ProjectSelectionShellModelTest extends BaseUIModelTest{
+public class ProjectSelectionModelTest extends BaseUIModelTest{
     private ProjectSelectionShell shell;
-    private ProjectSelectionShellModel model;
+    private ProjectSelectionModel model;
     
-    public ProjectSelectionShellModelTest() {
+    public ProjectSelectionModelTest() {
     }
     
     @BeforeClass
@@ -242,5 +243,12 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
         this.refreshModel();
         assertEquals(DefaultListModel.class, model.getListModel().getClass());
         assertEquals(3, model.getListModel().size());
+    }
+    
+    @Test
+    public void testAddProjectOpensOneShell(){
+        AddNewProjectShell newPShell = model.addProject();
+        AddNewProjectShell newerPShell = model.addProject();
+        assertEquals(newPShell, newerPShell);
     }
 }

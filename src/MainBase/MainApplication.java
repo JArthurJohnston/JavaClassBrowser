@@ -4,7 +4,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIModels.BaseUIModel;
-import UIModels.ProjectSelectionShellModel;
+import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
 import UIShells.ProjectSelectionShell;
@@ -81,10 +81,10 @@ public class MainApplication {
             openWindowShells.add(new AddNewProjectShell(this));
     }
     
-    public ProjectSelectionShellModel openProjectSelectionShell(){
-        ProjectSelectionShellModel model = null;
-        if(this.okToOpenShell(ProjectSelectionShellModel.class)){
-            model = new ProjectSelectionShellModel(this);
+    public ProjectSelectionModel openProjectSelectionShell(){
+        ProjectSelectionModel model = null;
+        if(this.okToOpenShell(ProjectSelectionModel.class)){
+            model = new ProjectSelectionModel(this);
             openWindowModels.add(model);
         }
         return model;

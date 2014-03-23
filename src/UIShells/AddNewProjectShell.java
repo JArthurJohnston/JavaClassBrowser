@@ -4,11 +4,8 @@
  */
 package UIShells;
 
-import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 /**
  * 
@@ -16,30 +13,22 @@ import java.awt.event.WindowEvent;
  */
 public class AddNewProjectShell extends BaseUIShell {
     private ProjectModel newProject;
+    private MainApplication main;
     
     public AddNewProjectShell(MainApplication main) {
+        super();
         initComponents();
         this.main = main;
-        this.newProject =  new ProjectModel(this.main, new String());
+        this.newProject =  new ProjectModel(main, new String());
         newProject.setUserName(main.getUserName());
         this.authorNameField.setText(main.getUserName());
         this.setVisible(true);
-        
-        //this should also be pushed up.
-        this.addWindowListener(new WindowAdapter(){
-            @Override
-            public void windowClosed(WindowEvent e){
-                signalClosedAndDispose();
-            }
-        });
     }
     
     //this method should be pushed up
     //as should the corresponding removeShell() method
     @Override
     protected void signalClosedAndDispose(){
-        main.removeShell(this);
-        super.signalClosedAndDispose();
     }
     
     private void updateProject(){
@@ -47,14 +36,12 @@ public class AddNewProjectShell extends BaseUIShell {
         newProject.setUserName(authorNameField.getText());
     }
     
-    private boolean isProjectValid(){
+    private boolean isProjectValid(){ 
         if(newProject.name() == null)
             return false;
         if(newProject.name().compareTo(new String()) == 0)
             return false;
-        if(!main.okToAdd(newProject.name()))
-            return false;
-        return true;
+        return main.okToAdd(newProject.name());
     }
     
     /**
@@ -153,17 +140,7 @@ public class AddNewProjectShell extends BaseUIShell {
     }//GEN-LAST:event_projectNameFieldActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
-        this.updateProject();
-        if(!this.isProjectValid())
-            return;
-        try {
-            //change this to send over the projectModel
-            main.addProject(newProject);
-        } catch (NameAlreadyExistsException ex) {
-            //pop-up with error message
-            return;
-        }
-        this.signalClosedAndDispose();
+   
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
     private void cancelProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelProjectButtonActionPerformed

@@ -10,7 +10,7 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
-import UIModels.ProjectSelectionShellModel;
+import UIModels.ProjectSelectionModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
  */
 public class ProjectSelectionShellTest extends BaseShellTest{
     private ProjectSelectionShell shell;
-    private ProjectSelectionShellModel model;
+    private ProjectSelectionModel model;
     
     public ProjectSelectionShellTest() {
     }
@@ -90,10 +90,19 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     }
     
     @Test
-    public void testSelectionUpdatesModel(){
+    public void testSelectionUpdatesModelAndMain(){
         this.setUpMainWithProjects();
         JList projectList = (JList)this.getVariableFromClass(shell, "projectList");
+        assertEquals(main.getSelectedProject(), projectList.getSelectedValue());
+        projectList.setSelectedIndex(1);
         assertEquals(projectList.getSelectedValue(), main.getSelectedProject());
+        assertEquals(main.getProjects().get(1), main.getSelectedProject());
+        projectList.setSelectedIndex(0);
+        assertEquals(projectList.getSelectedValue(), main.getSelectedProject());
+        assertEquals(main.getProjects().get(0), main.getSelectedProject());
+        projectList.setSelectedIndex(2);
+        assertEquals(projectList.getSelectedValue(), main.getSelectedProject());
+        assertEquals(main.getProjects().get(2), main.getSelectedProject());
     }
     
     @Test
@@ -102,6 +111,31 @@ public class ProjectSelectionShellTest extends BaseShellTest{
         JButton remove = (JButton)this.getVariableFromClass(shell, "closeShellButton");
         remove.doClick();
         assertFalse(shell.isVisible());
+        assertFalse(this.mainContainsModel(model));
+    }
+    
+    @Test
+    public void testRemoveProjectButton(){
+        fail();
+    }
+    
+    @Test 
+    public void testRemoveProjectButtonDissablesEnables(){
+        JButton remove = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
+        assertFalse(remove.isEnabled());
+        this.setUpMainWithProjects();
+        remove = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
+        assertTrue(remove.isEnabled());
+    }
+    
+    @Test
+    public void testAddProjectButton(){
+        fail();
+    }
+    
+    @Test 
+    public void testProjectInfo(){
+        fail();
     }
     
 }
