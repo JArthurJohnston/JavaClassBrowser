@@ -51,31 +51,22 @@ public class MainApplication {
     }
     
     public ProjectModel addProject(ProjectModel newProject) throws NameAlreadyExistsException{
-        if(this.okToAdd(newProject.name())){
-            if(projects.isEmpty())
-                this.setSelectedProejct(newProject);
+        if(this.okToAdd(newProject.name()))
             projects.add(newProject);
-        }else {
+        else {
             throw new NameAlreadyExistsException(this, newProject);
         }
         return newProject;
     }
     
     public ProjectModel removeProject(ProjectModel aProject) throws DoesNotExistException{
-        if(this.okToDelete(aProject)) {
+        if(this.okToDelete(aProject))
             projects.remove(aProject);
-            if(this.selectedProject == aProject){
-                if(!this.projects.isEmpty())
-                    selectedProject = projects.get(0);
-                else selectedProject = null;
-            }
-        }
         else {
             throw new DoesNotExistException(this, aProject);
         }
         return aProject;
     }
-    
     
     public String getUserName(){
         return userName;
@@ -119,8 +110,9 @@ public class MainApplication {
         return true;
     }
     
-    public void setSelectedProejct(ProjectModel aProject){
+    public ProjectModel setSelectedProejct(ProjectModel aProject){
         this.selectedProject = aProject;
+        return selectedProject;
     }
     public ProjectModel getSelectedProject(){
         return selectedProject;
@@ -129,5 +121,9 @@ public class MainApplication {
     public BaseUIShell addShell(BaseUIShell shell){
         openWindowShells.add(shell);
         return shell;
+    }
+    
+    public void removeModel(BaseUIModel model){
+        openWindowModels.remove(model);
     }
 }

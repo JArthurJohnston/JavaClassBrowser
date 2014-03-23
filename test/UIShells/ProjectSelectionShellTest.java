@@ -11,6 +11,7 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import UIModels.ProjectSelectionShellModel;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class ProjectSelectionShellTest extends BaseShellTest{
-    private DefaultListModel projectList;
+    private ProjectSelectionShellModel model;
     
     public ProjectSelectionShellTest() {
     }
@@ -44,21 +45,26 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     public void setUp() {
         main = new MainApplication();
         main.openProjectSelectionShell();
-        shell = (ProjectSelectionShell)((ArrayList)this.getVariableFromClass(main, "openWindowShells")).get(0);
-        projectList = (DefaultListModel)this.getVariableFromClass(shell, "projects");
+        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
+        model = (ProjectSelectionShellModel)models.get(0);
+        shell = model.showShell();
+        assertEquals(ProjectSelectionShellModel.class, model.getClass());
+        assertEquals(ProjectSelectionShell.class, shell.getClass());
     }
     
     @After
     @Override
     public void tearDown() {
-        super.tearDown();
-        projectList = null;
+        model.close();
+        model = null;
+        shell = null;
+        main = null;
     }
     
     private void setUpMainProjects(){
         try {
-            main.addProject(new ProjectModel(main, "a project"));
-            main.addProject(new ProjectModel(main, "another project"));
+            model.addProject(new ProjectModel(main, "a project"));
+            model.addProject(new ProjectModel(main, "another project"));
             assertTrue(main.getSelectedProject() != null);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -68,9 +74,9 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     private void refreshShell(){
         shell.signalClosedAndDispose();
         main.openProjectSelectionShell();
-        shell = (ProjectSelectionShell)((ArrayList)this.getVariableFromClass(main, "openWindowShells")).get(0);
-        projectList = (DefaultListModel)this.getVariableFromClass(shell, "projects");
-        assertEquals(projectList.size(), main.getProjects().size());
+        model =  ((ProjectSelectionShellModel)
+                ((ArrayList)this.getVariableFromClass(main, "openWindowModels")).get(0));
+        shell = model.showShell();
     }
 
     @Test
@@ -78,18 +84,18 @@ public class ProjectSelectionShellTest extends BaseShellTest{
         assertEquals(main, this.getVariableFromClass(shell, "main"));
         JButton removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
         assertTrue(shell.isVisible());
-        assertTrue(projectList.isEmpty());
+        assertTrue(model.getListModel().isEmpty());
         assertFalse(removeButton.isEnabled());
         this.setUpMainProjects();
         this.refreshShell();
         removeButton = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
         assertTrue(removeButton.isEnabled());
         assertTrue(shell.isVisible());
-        assertEquals(2, projectList.size());
-        assertEquals(ProjectModel.class, projectList.get(0).getClass());
-        ProjectModel aProject = (ProjectModel)projectList.get(0);
+        assertEquals(2, model.getListModel().size());
+        assertEquals(ProjectModel.class, model.getListModel().get(0).getClass());
+        ProjectModel aProject = (ProjectModel)model.getListModel().get(0);
         this.compareStrings("a project", aProject.name());
-        aProject = (ProjectModel)projectList.get(1);
+        aProject = (ProjectModel)model.getListModel().get(1);
         this.compareStrings("another project", aProject.name());
     }
     
@@ -118,14 +124,14 @@ public class ProjectSelectionShellTest extends BaseShellTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(1, projectList.getSize());
+        assertEquals(1, model.getListModel().getSize());
         assertTrue(main.getSelectedProject() != null);
         assertTrue(removeButton.isEnabled());
         removeButton.doClick();
-        assertTrue(projectList.isEmpty());
+        assertTrue(model.getListModel().isEmpty());
         assertTrue(main.getProjects().isEmpty());
         assertEquals(null, main.getSelectedProject());
-        assertEquals(0, projectList.getSize());
+        assertEquals(0, model.getListModel().getSize());
         assertFalse(removeButton.isEnabled());
         this.setUpMainProjects();
         this.refreshShell();

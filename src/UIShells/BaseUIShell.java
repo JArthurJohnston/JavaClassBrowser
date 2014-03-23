@@ -6,7 +6,6 @@
 
 package UIShells;
 
-import MainBase.MainApplication;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -17,13 +16,8 @@ import javax.swing.DefaultListModel;
  * @author arthur
  */
 public class BaseUIShell extends javax.swing.JFrame {
-    protected MainApplication main;
     
     protected BaseUIShell(){
-        setUpClosedWindowListener();
-    }
-    protected BaseUIShell(MainApplication main){
-        this.main = main;
         setUpClosedWindowListener();
     }
     
@@ -38,7 +32,7 @@ public class BaseUIShell extends javax.swing.JFrame {
     }
     
     public void signalClosedAndDispose(){
-        main.removeShell(this.getClass());
+        //main.removeShell(this.getClass());
         this.dispose();
     }
         

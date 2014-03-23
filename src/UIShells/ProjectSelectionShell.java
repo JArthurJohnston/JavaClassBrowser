@@ -6,13 +6,8 @@
 
 package UIShells;
 
-import Exceptions.DoesNotExistException;
-import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIModels.ProjectSelectionShellModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -21,30 +16,22 @@ import javax.swing.event.ListSelectionListener;
  * @author arthur
  */
 public class ProjectSelectionShell extends BaseUIShell {
-    private DefaultListModel projects;
-
+    private ProjectSelectionShellModel model;
     /**
      * Creates new form ProjectSelectionShell
-     * @param main
+     * @param model
      */
-    public ProjectSelectionShell(MainApplication main) {
+    public ProjectSelectionShell(ProjectSelectionShellModel model) {
         super();
         initComponents();
-        this.main = main;
+        this.model = model;
         this.setUpSelectionList();
-        this.updateFields();
         this.setVisible(true);
-    }
-    public ProjectSelectionShell(ProjectSelectionShellModel model){
-        
     }
     
     private void setUpSelectionList(){
-        projects = new DefaultListModel();
-        this.fillListModel(main.getProjects(), projects);
-        projectSelectionList.setModel(projects);
+        projectSelectionList.setModel(model.getListModel());
         projectSelectionList.getSelectionModel().addListSelectionListener(this.setUpProjectListener());
-        this.updateFields();
     }
     
     
@@ -52,9 +39,6 @@ public class ProjectSelectionShell extends BaseUIShell {
         return new ListSelectionListener(){
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting())
-                    main.setSelectedProejct((ProjectModel)projectSelectionList.getSelectedValue());
-                updateFields();
             }
         };
     }
@@ -129,15 +113,11 @@ public class ProjectSelectionShell extends BaseUIShell {
     }//GEN-LAST:event_closeProjectListButtonActionPerformed
 
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
-        main.openAddProjectShell();
+        
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void removeProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProjectButtonActionPerformed
-        try {
-            main.removeProject((ProjectModel)projectSelectionList.getSelectedValue());
-        } catch (DoesNotExistException ex) {
-            Logger.getLogger(ProjectSelectionShell.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_removeProjectButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -148,23 +128,5 @@ public class ProjectSelectionShell extends BaseUIShell {
     private javax.swing.JButton removeProjectButton;
     // End of variables declaration//GEN-END:variables
 
-    private void updateFields(){
-        projectSelectionList.setSelectedValue(main.getSelectedProject(), true);
-        removeProjectButton.setEnabled(main.getSelectedProject() != null);
-    }
-    
-    @Override
-    public void projectAdded(ProjectModel aProject){
-        projects.addElement(aProject);
-        if(projects.isEmpty()){
-            projectSelectionList.setSelectedIndex(0);
-        }
-        this.updateFields();
-    }
-    @Override
-    public void projectRemoved(ProjectModel aProject){
-        projects.removeElement(aProject);
-        this.updateFields();
-    }
     
 }

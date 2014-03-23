@@ -11,8 +11,6 @@ import Exceptions.NameAlreadyExistsException;
 import Models.ProjectModel;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -71,12 +69,12 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     
     @Override
     public void testFillListModel(){
-        assertTrue(((DefaultListModel)this.getVariableFromClass(model, "projectList")).isEmpty());
+        assertTrue(model.getListModel().isEmpty());
     }
     
     @Test
-    public void testAddProjectToMainUpdatesModel(){
-        DefaultListModel projects = (DefaultListModel)this.getVariableFromClass(model, "projectList");
+    public void testAddProject(){
+        DefaultListModel projects = model.getListModel();
         assertTrue(projects.isEmpty());
         ProjectModel aProject = null;
         try {
@@ -96,8 +94,8 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     }
     
     @Test
-    public void testAddDuplicateProjectDoesNOTUpdateModel(){
-        DefaultListModel projects = (DefaultListModel)this.getVariableFromClass(model, "projectList");
+    public void testAddDuplicateProject(){
+        DefaultListModel projects = model.getListModel();
         ProjectModel aProject = null;
         try {
             model.addProject(aProject = new ProjectModel(main, "a project"));
@@ -117,8 +115,8 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     
     
     @Test
-    public void testAddProjectsSetsMainSelected(){
-        DefaultListModel projects = (DefaultListModel)this.getVariableFromClass(model, "projectList");
+    public void testAddProjectsSetsSelected(){
+        DefaultListModel projects = model.getListModel();
         ProjectModel aProject = null;
         try {
             model.addProject(aProject = new ProjectModel(main, "a project"));
@@ -132,11 +130,29 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
         } catch (NameAlreadyExistsException ex) {
         }
         assertEquals(aProject, main.getSelectedProject());
+    }
+    
+    @Test
+    public void testRemoveProject(){
+        DefaultListModel projects = model.getListModel();
+        ProjectModel aProject = null;
+        try {
+            aProject = model.addProject(new ProjectModel(main, "aProject"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(projects.contains(aProject));
+        try {
+            model.removeProject(aProject);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(projects.contains(aProject));
     }
     
     @Test
     public void testRemoveProjectFromMainUpdatesModel(){
-        DefaultListModel projects = (DefaultListModel)this.getVariableFromClass(model, "projectList");
+        DefaultListModel projects = model.getListModel();
         ProjectModel aProject = null;
         try {
             aProject = main.addProject(new ProjectModel(main, "a project"));
@@ -149,16 +165,65 @@ public class ProjectSelectionShellModelTest extends BaseUIModelTest{
     }
     
     @Test
-    public void testAddProject(){
-        ProjectModel aProject = null;
+    public void testRemoveProjectPropogatesException(){
         try {
-            model.addProject(aProject = new ProjectModel(main, "a project"));
+            model.removeProject(new ProjectModel(main, "a project"));
+            fail("exception not thrown");
+        } catch (DoesNotExistException ex) {
+            assertEquals(DoesNotExistException.class, ex.getClass());
+        }
+    }
+    
+    @Test 
+    public void testRemoveProjectChangesSelected(){
+        ProjectModel aProject = null;
+        assertNull(main.getSelectedProject());
+        try {
+            aProject = model.addProject(new ProjectModel(main, "a project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(1, main.getProjects().size());
         assertEquals(aProject, main.getSelectedProject());
-        assertTrue(main.getProjects().contains(aProject));
-        assertTrue(((DefaultListModel)this.getVariableFromClass(model, "projectList")).contains(aProject));
+        try {
+            model.removeProject(aProject);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertNull(main.getSelectedProject());
+        ProjectModel anotherProject = null;
+        try {
+            model.addProject(aProject);
+            anotherProject = model.addProject(new ProjectModel(main, "another project"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(aProject, main.getSelectedProject());
+        try {
+            model.removeProject(aProject);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(anotherProject, main.getSelectedProject());
+    }
+    
+    @Test
+    public void testSetSelected(){
+        ProjectModel aProject =  model.setSelectedProject(new ProjectModel(main, "aProject"));
+        assertEquals(aProject, main.getSelectedProject());
+    }
+    
+    @Test
+    public void testCloseAndDispose(){
+        shell = model.showShell();
+        assertTrue(shell.isVisible());
+        model.close();
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
+        assertFalse(shell.isVisible());
+    }
+    
+    @Test
+    public void testGetListModel(){
+        assertEquals(DefaultListModel.class, model.getListModel().getClass());
+        assertTrue(model.getListModel().isEmpty());
     }
 }
