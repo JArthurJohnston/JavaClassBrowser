@@ -76,9 +76,12 @@ public class MainApplication {
     }
     
     
-    public void openAddProjectShell(){
-        if(this.okToOpenShell(AddNewProjectShell.class))
-            openWindowShells.add(new AddNewProjectShell(this));
+    public AddNewProjectShell openAddProjectShell(){
+        AddNewProjectShell addShell = null;
+        if(this.okToOpenShell(AddNewProjectShell.class)){
+            openWindowShells.add(addShell = new AddNewProjectShell(this));
+        }
+        return addShell;
     }
     
     public ProjectSelectionModel openProjectSelectionShell(){

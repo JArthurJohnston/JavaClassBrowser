@@ -6,9 +6,13 @@
 
 package UIShells;
 
+import Exceptions.DoesNotExistException;
 import Models.ProjectModel;
 import UIModels.ProjectSelectionModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -166,6 +170,15 @@ public class ProjectSelectionShell extends BaseUIShell {
     @Override
     protected void signalClosedAndDispose(){
         model.close();
+    }
+    
+    private void removeProject(){
+        if(this.projectList.getSelectedValue() != null)
+            try {
+                model.removeProject((ProjectModel)projectList.getSelectedValue());
+        } catch (DoesNotExistException ex) {
+            JOptionPane.showConfirmDialog(null, ex, "Error", JOptionPane.OK_OPTION);
+        }
     }
 
 }

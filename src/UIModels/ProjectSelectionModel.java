@@ -21,12 +21,10 @@ import javax.swing.DefaultListModel;
 public class ProjectSelectionModel extends BaseUIModel{
     private ProjectSelectionShell shell;
     private DefaultListModel projectList;
-    private boolean openedAddProject;
     
     public ProjectSelectionModel(MainApplication main){
         super(main);
         this.fillProjectList();
-        openedAddProject = false;
     }
     
     private void fillProjectList(){
@@ -39,6 +37,7 @@ public class ProjectSelectionModel extends BaseUIModel{
             shell =  new ProjectSelectionShell(this);
         if(!shell.isVisible())
             shell.setVisible(true);
+        main.addShell(shell);
         return (ProjectSelectionShell)shell;
     }
     
@@ -82,10 +81,7 @@ public class ProjectSelectionModel extends BaseUIModel{
     }
     
     public AddNewProjectShell addProject(){
-        if(!openedAddProject){
-            return new AddNewProjectShell(this);
-        }
-        return null;
+        return main.openAddProjectShell();
     }
     
     public MainApplication getMain(){

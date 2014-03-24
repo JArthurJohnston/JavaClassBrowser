@@ -116,7 +116,11 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     
     @Test
     public void testRemoveProjectButton(){
-        fail();
+        this.setUpMainWithProjects();
+        ProjectModel aProject = model.getMain().getProjects().get(0);
+        JButton remove = (JButton)this.getVariableFromClass(shell, "removeProjectButton");
+        remove.doClick();
+        assertFalse(model.getMain().getProjects().contains(aProject));
     }
     
     @Test 

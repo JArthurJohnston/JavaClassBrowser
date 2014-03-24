@@ -31,6 +31,10 @@ public class ProjectModel extends BaseModel {
     protected Date dateCreated;
     private String userName;
     
+    public static String DELETE_WARNING = "You are about to delete this project\n"
+            + "This operation cannot be undone.\n"
+            + "Continue?";
+    
     
     /*
      * Constructors
