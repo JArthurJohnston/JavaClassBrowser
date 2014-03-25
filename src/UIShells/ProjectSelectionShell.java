@@ -11,7 +11,6 @@ import Models.ProjectModel;
 import UIModels.ProjectSelectionModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -148,7 +147,12 @@ public class ProjectSelectionShell extends BaseUIShell {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removeProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProjectButtonActionPerformed
-        // TODO add your handling code here:
+        //this should also throw give the user a confirm dialog.
+        try {
+            model.removeProject((ProjectModel)this.projectList.getSelectedValue());
+        } catch (DoesNotExistException ex) {
+            JOptionPane.showConfirmDialog(null, ex.getMessage(), "Error", JOptionPane.YES_NO_OPTION);
+        }
     }//GEN-LAST:event_removeProjectButtonActionPerformed
 
     private void closeShellButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeShellButtonActionPerformed

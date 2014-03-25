@@ -8,6 +8,8 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Models.ProjectModel;
+import UIShells.AddNewProjectShell;
+import UIShells.BaseUIShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
@@ -24,8 +26,7 @@ import static org.junit.Assert.*;
 public class MainApplicationTest extends BaseTest {
     private MainApplication main;
     
-    public MainApplicationTest() {
-    }
+    public MainApplicationTest(){}
     
     @BeforeClass
     public static void setUpClass() {
@@ -59,6 +60,7 @@ public class MainApplicationTest extends BaseTest {
         assertEquals(0, mainOpenWindowModels.size());
         //assertEquals(ProjectManagerShellModel.class,mainOpenWindowModels.get(0).getClass());
     }
+    
     @Test
     public void testGetProjects() {
         ProjectModel newProject = null;
@@ -231,5 +233,25 @@ public class MainApplicationTest extends BaseTest {
             fail(ex.getMessage());
         }
         assertTrue(main.getSelectedProject() != null);
+    }
+    
+    @Test
+    public void testAddProjectUpdatesShells(){
+        fail();
+    }
+    
+    @Test
+    public void testAddShell(){
+        BaseUIShell aShell;
+        main.addShell(aShell = new AddNewProjectShell(main));
+        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(aShell));
+    }
+    
+    @Test
+    public void testRemoveShell(){
+        BaseUIShell aShell;
+        main.addShell(aShell = new AddNewProjectShell(main));
+        main.removeShell(aShell);
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(aShell));
     }
 }

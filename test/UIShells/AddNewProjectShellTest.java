@@ -7,7 +7,6 @@ package UIShells;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
-import UIModels.ProjectManagerShellModel;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,6 +46,7 @@ public class AddNewProjectShellTest extends BaseTest{
     
     @After
     public void tearDown() {
+        shell.signalClosedAndDispose();
         main = null;
         shell = null;
     }
@@ -69,8 +69,6 @@ public class AddNewProjectShellTest extends BaseTest{
         JLabel testProjectInfo = (JLabel)this.getVariableFromClass(shell, "projectInfoField");
         String expectedString = "Project Name: New Name\nAuthor: Kyle Raynor\n";
         //assertEquals(expectedString, testProjectInfo.getText());
-        
-        
     }
     
     @Test
@@ -86,8 +84,7 @@ public class AddNewProjectShellTest extends BaseTest{
         JButton createButton = (JButton)this.getVariableFromClass(shell, "createProjectButton");
         assertTrue(createButton.isVisible());
         createButton.doClick();
-        assertEquals(1, main.getProjects().size());
-        assertEquals("New Project", main.getProjects().get(0).name());
+        assertTrue(main.getProjects().contains(baseNewProject));
         assertFalse(shell.isVisible());
     }
     @Test
@@ -103,5 +100,24 @@ public class AddNewProjectShellTest extends BaseTest{
         cancel.doClick();
         assertFalse(shells.contains(shell));
         assertTrue(shells.isEmpty());
+    }
+    
+    @Test
+    public void testCancelButton(){
+        JButton cancel = (JButton)this.getVariableFromClass(shell, "cancelProjectButton");
+        ProjectModel aProject = (ProjectModel)this.getVariableFromClass(shell, "newProject");
+        cancel.doClick();
+        assertFalse(main.getProjects().contains(aProject));
+        assertFalse(shell.isVisible());
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
+    }
+    
+    @Test
+    public void testChangeProjectNameFieldUpdatesProject(){
+        fail();
+    }
+    @Test
+    public void testChangeAuthorFieldUpdatesProject(){
+        fail();
     }
 }

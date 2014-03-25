@@ -130,4 +130,8 @@ public class MainApplication {
     public void removeModel(BaseUIModel model){
         openWindowModels.remove(model);
     }
+    
+    public void removeShell(BaseUIShell aShell){
+        openWindowShells.remove(aShell);
+    }
 }

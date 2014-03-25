@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class MainMenuShellTest extends BaseShellTest{
+    private MainMenuShell shell;
     
     public MainMenuShellTest() {
     }
@@ -41,9 +42,8 @@ public class MainMenuShellTest extends BaseShellTest{
     }
     
     @After
-    @Override
     public void tearDown() {
-        super.tearDown();
+        shell = null;
     }
 
     /**

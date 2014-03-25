@@ -4,8 +4,12 @@
  */
 package UIShells;
 
+import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * 
@@ -29,6 +33,8 @@ public class AddNewProjectShell extends BaseUIShell {
     //as should the corresponding removeShell() method
     @Override
     protected void signalClosedAndDispose(){
+        main.removeShell(this);
+        this.dispose();
     }
     
     private void updateProject(){
@@ -140,7 +146,13 @@ public class AddNewProjectShell extends BaseUIShell {
     }//GEN-LAST:event_projectNameFieldActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
-   
+        this.updateProject();
+        try {
+            main.addProject(newProject);
+            this.signalClosedAndDispose();
+        } catch (NameAlreadyExistsException ex) {
+            JOptionPane.showConfirmDialog(null, ex.getMessage(), "Project Already Exists", JOptionPane.OK_OPTION);
+        }
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
     private void cancelProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelProjectButtonActionPerformed
