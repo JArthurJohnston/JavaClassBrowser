@@ -77,11 +77,16 @@ public class ClassBrowserShellModelTest extends BaseTest{
     public void testAddClassUpdates(){
         try {
             PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
-            model.addClass(new ClassModel(aPackage, "AClass"));
+            //model.addClass(new ClassModel(aPackage, "AClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, model.getProject().getClassList().size());
         assertEquals("AClass", model.getSelectedClass().name());
+    }
+    
+    @Test
+    public void testSelectedPackage(){
+        
     }
 }

@@ -134,9 +134,10 @@ public class PackageModel extends ProjectModel {
     }
     
     protected ClassModel classMoved(ClassModel aClass) throws VeryVeryBadException{
-        if(this.classList.remove(aClass))
+        if(this.classList.remove(aClass)){
+            //need to add aClass's subClasses, and ONLT its subclasses DAMMIT!!!
             return aClass;
-        else
+        }else
             throw new VeryVeryBadException(this, aClass);
     }
     

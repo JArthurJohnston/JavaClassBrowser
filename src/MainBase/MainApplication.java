@@ -4,6 +4,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIModels.BaseUIModel;
+import UIModels.ClassBrowserShellModel;
 import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
@@ -25,6 +26,7 @@ public class MainApplication {
     private ArrayList <BaseUIShell>openWindowShells;
     private String userName;
     private ProjectModel selectedProject;
+    private PackageModel selectedPackage;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
@@ -136,9 +138,20 @@ public class MainApplication {
         openWindowShells.remove(aShell);
     }
     
-    public ClassBrowserShell openAddClassBrowser(){
-        ClassBrowserShell newShell;
-        openWindowShells.add(newShell = new ClassBrowserShell(this.getSelectedProject());
-        return newShell;
+    public PackageModel selectedPackage(){
+        if(this.selectedProject == null)
+            return null;
+        if(this.selectedPackage == null){
+            if(selectedProject.getPackages().isEmpty())
+                return null;
+            selectedPackage = selectedProject.getPackageList().get(0);
+        }
+        return selectedPackage;
+    }
+    
+    public ClassBrowserShellModel openAddClassBrowser(){
+        ClassBrowserShellModel newShellModel = null;
+        openWindowModels.add(newShellModel = new ClassBrowserShellModel(this));
+        return newShellModel;
     }
 }

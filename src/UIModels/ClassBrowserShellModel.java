@@ -40,10 +40,13 @@ public class ClassBrowserShellModel extends BaseUIModel{
         return selectedClass;
     }
     
-    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+    public ClassModel addClassToPackage(ClassModel newClass) throws NameAlreadyExistsException{
         if(this.selectedClass == null)
             selectedClass = newClass;
         return baseProject.addClass(newClass);
     }
     
+    public ClassModel addClassToClass(ClassModel newClass){
+        
+    }
 }

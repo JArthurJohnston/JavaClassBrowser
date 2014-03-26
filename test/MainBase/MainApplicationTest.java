@@ -8,6 +8,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Models.ProjectModel;
+import UIModels.ClassBrowserShellModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
 import UIShells.ClassBrowserShell;
@@ -258,6 +259,12 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testOpenAddClassBrowser(){
-        ClassBrowserShell classBrowser = main.openAddClassBrowser();
+        ClassBrowserShellModel classBrowserModel = main.openAddClassBrowser();
+        fail();
+    }
+    
+    @Test
+    public void testSelectedPackage(){
+        fail();
     }
 }

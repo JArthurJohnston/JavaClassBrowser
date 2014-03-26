@@ -241,4 +241,48 @@ public class PackageModelTest extends BaseTest{
         assertEquals(2, testPackage.getClassList().size());
         assertTrue(testPackage.getClassList().contains(aSubClass));
     }
+    
+    @Test
+    public void testClassListAfterClassMoved(){
+        ClassModel aClass = null;
+        PackageModel anotherPackage = null;
+        try {
+            aClass = testPackage.addClass(new ClassModel(testPackage, "AClass"));
+            anotherPackage = parentProject.addPackage(new PackageModel(parentProject, "Yet another Package"));
+            assertTrue(testPackage.getClassList().contains(aClass));
+            assertTrue(anotherPackage.getClassList().isEmpty());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            aClass.moveToPackage(anotherPackage);
+        } catch (NameAlreadyExistsException | VeryVeryBadException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testPackage.getClassList().isEmpty());
+        assertEquals(1, anotherPackage.getClassList().size());
+    }
+    
+    @Test
+    public void testPackageRetainsSubclassesAfterParentMoved(){
+        ClassModel parentClass = null;
+        ClassModel subClass = null;
+        PackageModel anotherPackage = null;
+        try {
+            parentClass = testPackage.addClass(new ClassModel(testPackage, "parent"));
+            subClass = parentClass.addClass(new ClassModel(parentClass, "sub"));
+            anotherPackage = parentProject.addPackage(new PackageModel(parentProject, "another package"));
+            assertEquals(2, testPackage.getClassList().size());
+            assertTrue(testPackage.getClassList().contains(parentClass));
+            assertTrue(testPackage.getClassList().contains(subClass));
+            parentClass.moveToPackage(anotherPackage);
+        } catch (NameAlreadyExistsException | VeryVeryBadException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, testPackage.getClassList().size());
+        assertEquals(1, anotherPackage.getClassList().size());
+        assertFalse(testPackage.getClassList().contains(parentClass));
+        assertTrue(anotherPackage.getClassList().contains(parentClass));
+        assertTrue(testPackage.getClassList().contains(subClass));
+    }
 }
