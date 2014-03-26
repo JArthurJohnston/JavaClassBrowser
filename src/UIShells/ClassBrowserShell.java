@@ -5,6 +5,7 @@
 package UIShells;
 
 import UIModels.ClassBrowserShellModel;
+import javax.swing.DefaultListModel;
 
 /**
  *
@@ -19,6 +20,16 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     public ClassBrowserShell(ClassBrowserShellModel model) {
         initComponents();
         this.model = model;
+        this.setUpInitialListsModels();
+    }
+    
+    private void setUpInitialListsModels(){
+        this.classList.setModel(new DefaultListModel());
+        model.fillListModel(model.getProject().getClassList(), (DefaultListModel)classList.getModel());
+        this.instanceMethodList.setModel(new DefaultListModel());
+        this.instanceVarList.setModel(new DefaultListModel());
+        this.staticMethodList.setModel(new DefaultListModel());
+        this.staticVarList.setModel(new DefaultListModel());
     }
 
     /**
@@ -37,7 +48,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        classListControl = new javax.swing.JList();
+        classList = new javax.swing.JList();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -71,7 +82,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
 
         jLabel4.setText("Classes");
 
-        jScrollPane6.setViewportView(classListControl);
+        jScrollPane6.setViewportView(classList);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -193,7 +204,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addClassMenuItem;
     private javax.swing.JMenuItem addClassRightClickMenu;
-    private javax.swing.JList classListControl;
+    private javax.swing.JList classList;
     private javax.swing.JPopupMenu classListRightClickMenu;
     private javax.swing.JList importsList;
     private javax.swing.JList instanceMethodList;

@@ -10,6 +10,7 @@ import Internal.BaseTest;
 import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
+import UIShells.ClassBrowserShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
@@ -253,5 +254,10 @@ public class MainApplicationTest extends BaseTest {
         main.addShell(aShell = new AddNewProjectShell(main));
         main.removeShell(aShell);
         assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(aShell));
+    }
+    
+    @Test
+    public void testOpenAddClassBrowser(){
+        ClassBrowserShell classBrowser = main.openAddClassBrowser();
     }
 }

@@ -4,11 +4,13 @@
  */
 package UIModels;
 
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
 import Models.VariableModel;
 import UIShells.ClassBrowserShell;
+import java.util.List;
 import javax.swing.DefaultListModel;
 
 /**
@@ -17,22 +19,27 @@ import javax.swing.DefaultListModel;
  */
 public class ClassBrowserShellModel extends BaseUIModel{
     private final ClassBrowserShell shell;
-    private DefaultListModel classList;
-    private DefaultListModel variableList;
-    private DefaultListModel methodList;
     private ClassModel selectedClass;
     private VariableModel selectedVariable;
     private MethodModel selectedMethod;
-    private ProjectModel baseProject;
+    private final ProjectModel baseProject;
     
     public ClassBrowserShellModel(ProjectModel project){
+        super();
         this.baseProject = project;
         shell = new ClassBrowserShell(this);
     }
     
-    private void fillListModels(){
-        classList = new DefaultListModel();
-        //this.fillListModel(baseProject.getClasses(), classList);
+    private DefaultListModel setUpAndFillListModel(List<BaseModel> aList){
+        DefaultListModel model = new DefaultListModel();
+        for(BaseModel b : aList){
+            model.addElement(b);
+        }
+        return model;
+    }
+    
+    public ProjectModel getProject(){
+        return baseProject;
     }
     
 }

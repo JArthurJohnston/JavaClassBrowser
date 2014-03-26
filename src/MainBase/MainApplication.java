@@ -7,6 +7,7 @@ import UIModels.BaseUIModel;
 import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
+import UIShells.ClassBrowserShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 
@@ -133,5 +134,11 @@ public class MainApplication {
     
     public void removeShell(BaseUIShell aShell){
         openWindowShells.remove(aShell);
+    }
+    
+    public ClassBrowserShell openAddClassBrowser(){
+        ClassBrowserShell newShell;
+        openWindowShells.add(newShell = new ClassBrowserShell(this.getSelectedProject());
+        return newShell;
     }
 }

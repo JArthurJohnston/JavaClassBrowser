@@ -7,9 +7,9 @@ package UIShells;
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ProjectModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * 
@@ -24,8 +24,10 @@ public class AddNewProjectShell extends BaseUIShell {
         initComponents();
         this.main = main;
         this.newProject =  new ProjectModel(main, new String());
-        newProject.setUserName(main.getUserName());
+        this.newProject.setUserName(main.getUserName());
         this.authorNameField.setText(main.getUserName());
+        this.projectNameField.getDocument().addDocumentListener(this.setUpDocListener());
+        this.authorNameField.getDocument().addDocumentListener(this.setUpDocListener());
         this.setVisible(true);
     }
     
@@ -50,6 +52,21 @@ public class AddNewProjectShell extends BaseUIShell {
         return main.okToAdd(newProject.name());
     }
     
+    private DocumentListener setUpDocListener(){
+        return new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateProject();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateProject();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        };
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,11 +89,6 @@ public class AddNewProjectShell extends BaseUIShell {
         jLabel1.setText(" Project Name: ");
 
         projectNameField.setText("New Project");
-        projectNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                projectNameFieldActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Project Author:");
 
@@ -141,12 +153,10 @@ public class AddNewProjectShell extends BaseUIShell {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void projectNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_projectNameFieldActionPerformed
-
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
         this.updateProject();
+        if(!this.isProjectValid())
+            return;
         try {
             main.addProject(newProject);
             this.signalClosedAndDispose();

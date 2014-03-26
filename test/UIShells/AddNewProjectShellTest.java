@@ -89,7 +89,16 @@ public class AddNewProjectShellTest extends BaseTest{
     }
     @Test
     public void testIsProjectValid(){
-        fail("write me!");
+        JTextField projectName = (JTextField)this.getVariableFromClass(shell, "projectNameField");
+        JButton createButton = (JButton)this.getVariableFromClass(shell, "createProjectButton");
+        projectName.setText("");
+        createButton.doClick();
+        assertTrue(shell.isVisible());
+        assertTrue(main.getProjects().isEmpty());
+        projectName.setText("Some project");
+        createButton.doClick();
+        assertFalse(shell.isVisible());
+        assertEquals(1, main.getProjects().size());
     }
     
     @Test
@@ -114,10 +123,16 @@ public class AddNewProjectShellTest extends BaseTest{
     
     @Test
     public void testChangeProjectNameFieldUpdatesProject(){
-        fail();
+        ProjectModel newProject = (ProjectModel)this.getVariableFromClass(shell, "newProject");
+        JTextField projectName = (JTextField)this.getVariableFromClass(shell, "projectNameField");
+        projectName.setText("project with new name");
+        assertEquals("project with new name", newProject.name());
     }
     @Test
     public void testChangeAuthorFieldUpdatesProject(){
-        fail();
+        ProjectModel newProject = (ProjectModel)this.getVariableFromClass(shell, "newProject");
+        JTextField author = (JTextField)this.getVariableFromClass(shell, "authorNameField");
+        author.setText("Hal Jordan");
+        assertEquals("Hal Jordan", newProject.getUserName());
     }
 }

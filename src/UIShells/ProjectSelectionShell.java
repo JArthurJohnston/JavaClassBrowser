@@ -9,8 +9,6 @@ package UIShells;
 import Exceptions.DoesNotExistException;
 import Models.ProjectModel;
 import UIModels.ProjectSelectionModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
