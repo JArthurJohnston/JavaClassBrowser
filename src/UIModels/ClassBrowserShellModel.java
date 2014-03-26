@@ -4,6 +4,8 @@
  */
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
+import MainBase.MainApplication;
 import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
@@ -24,22 +26,24 @@ public class ClassBrowserShellModel extends BaseUIModel{
     private MethodModel selectedMethod;
     private final ProjectModel baseProject;
     
-    public ClassBrowserShellModel(ProjectModel project){
-        super();
-        this.baseProject = project;
+    public ClassBrowserShellModel(MainApplication main){
+        super(main);
+        this.baseProject = main.getSelectedProject();
         shell = new ClassBrowserShell(this);
-    }
-    
-    private DefaultListModel setUpAndFillListModel(List<BaseModel> aList){
-        DefaultListModel model = new DefaultListModel();
-        for(BaseModel b : aList){
-            model.addElement(b);
-        }
-        return model;
     }
     
     public ProjectModel getProject(){
         return baseProject;
+    }
+    
+    public ClassModel getSelectedClass(){
+        return selectedClass;
+    }
+    
+    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+        if(this.selectedClass == null)
+            selectedClass = newClass;
+        return baseProject.addClass(newClass);
     }
     
 }

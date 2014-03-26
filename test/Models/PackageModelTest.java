@@ -11,6 +11,8 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -182,5 +184,61 @@ public class PackageModelTest extends BaseTest{
         }
         */
         assertEquals(3, testPackage.getClassList().size());
+    }
+    
+    @Test
+    public void testClassListAfterClassAdded(){
+        assertTrue(testPackage.getClassList().isEmpty());
+        ClassModel aClass = null;
+        try {
+            testPackage.addClass(aClass = new ClassModel(testPackage, "NewClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testPackage.getClassList().contains(aClass));
+    }
+    
+    @Test
+    public void testClassListClassWithSubclass(){
+        ClassModel aClass = null;
+        ClassModel aSubClass = null;
+        try {
+            testPackage.addClass(aClass = new ClassModel(testPackage, "NewClass"));
+            aClass.addClass(aSubClass = new ClassModel(aClass, "NewSubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(2, testPackage.getClassList().size());
+        assertTrue(testPackage.getClassList().contains(aClass));
+        assertTrue(testPackage.getClassList().contains(aSubClass));
+    }
+    
+    @Test
+    public void testClassListForClassWithinSubPackage(){
+        ClassModel aClass = null;
+        PackageModel subPackage = null;
+        try {
+            subPackage = testPackage.addPackage(new PackageModel(testPackage, "SubPackage"));
+            aClass = subPackage.addClass(new ClassModel(subPackage, "NewClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, testPackage.getClassList().size());
+        assertTrue(testPackage.getClassList().contains(aClass));
+    }
+    
+    @Test
+    public void testClassListForSubclassWithinSubPackage(){
+        ClassModel aSubClass = null;
+        PackageModel subPackage = null;
+        try {
+            subPackage = testPackage.addPackage(new PackageModel(testPackage, "SubPackage"));
+            ClassModel aClass = subPackage.addClass(new ClassModel(subPackage, "NewClass"));
+            aSubClass = aClass.addClass(new ClassModel(aClass, "NewSubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(2, testPackage.getClassList().size());
+        assertTrue(testPackage.getClassList().contains(aSubClass));
     }
 }

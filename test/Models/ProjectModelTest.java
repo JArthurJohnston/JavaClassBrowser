@@ -199,13 +199,21 @@ public class ProjectModelTest extends BaseTest{
     @Test
     public void testListClasses(){
         assertEquals(0, project.getClassList().size());
-        PackageModel aPackage = 
-                this.addPackageToProject("New Package", project);
-        ClassModel aClass =     
-                this.addClassToParent("AClass", aPackage);
+        PackageModel aPackage = null;
+        ClassModel aClass = null;
+        try {
+            aPackage = project.addPackage(new PackageModel(project, "New Package"));
+            aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(1, project.getClassList().size());
-        ClassModel anotherClass = 
-                this.addClassToParent( "AnotherClass", aClass);
+        ClassModel anotherClass = null;
+        try {
+            anotherClass = aClass.addClass(new ClassModel(aClass, "AnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(2, project.getClassList().size());
         ClassModel yetAnotherClass = 
                 this.addClassToParent("YetAnotherClass", anotherClass);

@@ -4,8 +4,6 @@
  */
 package Models;
 
-import Exceptions.DoesNotExistException;
-import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -179,9 +177,9 @@ public class ProjectModel extends BaseModel {
         if(this.okToAddClass(newClass.name())){
             classes.put(newClass.name(), newClass);
             return newClass;
-        }else {
+        }else 
             throw new NameAlreadyExistsException(this, newClass);
-        }
+        
     }
     
     /**

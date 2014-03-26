@@ -11,6 +11,8 @@ import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -25,7 +27,7 @@ import static org.junit.Assert.*;
 public class ClassBrowserShellModelTest extends BaseTest{
     private MainApplication main;
     private ClassBrowserShellModel model;
-    private ProjectModel aProject;
+    private ProjectModel project;
     
     public ClassBrowserShellModelTest() {
     }
@@ -40,24 +42,19 @@ public class ClassBrowserShellModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        aProject = new ProjectModel();
+        main = new MainApplication();
         try {
-            PackageModel aPackage = aProject.addPackage(new PackageModel(aProject, "A Package"));
-            ClassModel aClass = aPackage.addClass(new ClassModel (aPackage, "First Class"));
-            aPackage.addClass(new ClassModel(aPackage, "Second Class"));
-            aPackage.addClass(new ClassModel(aPackage, "Third Class"));
-            this.addMethodToClass("firstMethod", aClass);
-            this.addMethodToClass("secondMethod", aClass);
-            this.addMethodToClass("thirdMethod", aClass);
+            project = main.setSelectedProejct(main.addProject(new ProjectModel(main,"A Project")));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        model = new ClassBrowserShellModel(aProject);
+        model = new ClassBrowserShellModel(main);
     }
     
     @After
     public void tearDown() {
-        aProject = null;
+        main = null;
+        project = null;
         model = null;
     }
 
@@ -65,5 +62,26 @@ public class ClassBrowserShellModelTest extends BaseTest{
     public void testConstructor(){
         ClassBrowserShell shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
         assertEquals(ClassBrowserShell.class, shell.getClass());
+        assertEquals(ProjectModel.class, model.getProject().getClass());
+        assertEquals(main.getSelectedProject(), model.getProject());
+        assertEquals(project, model.getProject());
+    }
+    
+    @Test
+    public void testClassSelected(){
+        assertEquals(null, model.getSelectedClass());
+        fail("dependant on add class");
+    }
+    
+    @Test
+    public void testAddClassUpdates(){
+        try {
+            PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
+            model.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, model.getProject().getClassList().size());
+        assertEquals("AClass", model.getSelectedClass().name());
     }
 }
