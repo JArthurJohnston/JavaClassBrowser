@@ -194,50 +194,6 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testAddingProjectSetsSelected(){
-        ProjectModel aProject = null;
-        try {
-            aProject = main.addProject(new ProjectModel(main, "a Project"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(aProject, main.getSelectedProject());
-        try {
-            main.addProject(new ProjectModel(main, "another project"));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(aProject, main.getSelectedProject());
-    }
-    
-    @Test
-    public void testRemoveProjectChangesSelected(){
-        ProjectModel aProject = null;
-        ProjectModel anotherProject = null;
-        try {
-            aProject = main.addProject(new ProjectModel(main, "a Project"));
-            anotherProject =  main.addProject(new ProjectModel(main, "another project"));
-            main.addProject(new ProjectModel(main, "yet another project"));
-            assertEquals(3, main.getProjects().size());
-            assertEquals(aProject, main.getSelectedProject());
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        try {
-            main.removeProject(aProject);
-        } catch (DoesNotExistException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(anotherProject, main.getSelectedProject());
-        try {
-            main.removeProject(anotherProject);
-        } catch (DoesNotExistException ex) {
-            fail(ex.getMessage());
-        }
-        assertTrue(main.getSelectedProject() != null);
-    }
-    
-    @Test
     public void testAddProjectUpdatesShells(){
         fail();
     }

@@ -9,6 +9,7 @@ import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
 import UIShells.ClassBrowserShell;
+import UIShells.PackageSelectionShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 
@@ -149,9 +150,20 @@ public class MainApplication {
         return selectedPackage;
     }
     
+    public PackageModel setSelectedPackage(PackageModel aPackage){
+        selectedPackage = aPackage;
+        return selectedPackage;
+    }
+    
     public ClassBrowserShellModel openAddClassBrowser(){
-        ClassBrowserShellModel newShellModel = null;
+        ClassBrowserShellModel newShellModel;
         openWindowModels.add(newShellModel = new ClassBrowserShellModel(this));
         return newShellModel;
+    }
+    
+    public PackageSelectionShell openPackageSelectionShell(){
+        PackageSelectionShell shell;
+        openWindowShells.add(shell = new PackageSelectionShell(this));
+        return shell;
     }
 }
