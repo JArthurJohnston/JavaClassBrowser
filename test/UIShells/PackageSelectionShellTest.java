@@ -8,6 +8,7 @@ package UIShells;
 
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
+import UIModels.PackageSelectionShellModel;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,6 +23,7 @@ import static org.junit.Assert.*;
  */
 public class PackageSelectionShellTest extends BaseShellTest{
     private PackageSelectionShell shell;
+    private PackageSelectionShellModel model;
     
     public PackageSelectionShellTest() {
     }
@@ -37,7 +39,8 @@ public class PackageSelectionShellTest extends BaseShellTest{
     @Before
     public void setUp() {
         main = new MainApplication();
-        shell = main.openPackageSelectionShell();
+        model = main.openPackageSelection();
+        shell = model.getShell();
     }
     
     @After

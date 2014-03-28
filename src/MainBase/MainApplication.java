@@ -5,6 +5,7 @@ import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIModels.BaseUIModel;
 import UIModels.ClassBrowserShellModel;
+import UIModels.PackageSelectionShellModel;
 import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
@@ -161,9 +162,9 @@ public class MainApplication {
         return newShellModel;
     }
     
-    public PackageSelectionShell openPackageSelectionShell(){
-        PackageSelectionShell shell;
-        openWindowShells.add(shell = new PackageSelectionShell(this));
+    public PackageSelectionShellModel openPackageSelection(){
+        PackageSelectionShellModel shell;
+        openWindowModels.add(shell = new PackageSelectionShellModel(this));
         return shell;
     }
 }
