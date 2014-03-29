@@ -7,11 +7,10 @@
 package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.PackageDoesNotExistException;
 import Models.PackageModel;
 import Models.ProjectModel;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -83,8 +82,8 @@ public class PackageSelectionShellModelTest extends BaseUIModelTest{
     
     @Test
     public void testSelectedPackage(){
-        assertNull(model.selectedPackage());
-        fail();
+        assertTrue(this.compareStrings("default package", model.getSelectedPackage().name()));
+        model.setSelectedPackage(new PackageModel(main.getSelectedProject(), "another package"));
     }
     
     @Test
@@ -95,6 +94,31 @@ public class PackageSelectionShellModelTest extends BaseUIModelTest{
         assertEquals(3, model.getPackageList().size());
     }
     
+    @Test
+    public void testAddPackage(){
+        PackageModel aPackage = null;
+        try {
+            model.addPackage(aPackage = new PackageModel(main.getSelectedProject(), "another package"));
+            assertEquals(PackageModel.class, aPackage.getClass());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(model.getPackageList().contains(aPackage));
+    }
     
+    @Test
+    public void testRemovePackage(){
+        PackageModel aPackage = null;
+        try {
+            model.addPackage(aPackage = new PackageModel(main.getSelectedProject(), "another package"));
+            assertEquals(PackageModel.class, aPackage.getClass());
+            assertTrue(model.getPackageList().contains(aPackage));
+            
+            model.removePackage(aPackage);
+        } catch (NameAlreadyExistsException | PackageDoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(model.getPackageList().contains(aPackage));
+    }
     
 }

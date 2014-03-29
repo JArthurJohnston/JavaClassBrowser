@@ -6,6 +6,8 @@
 
 package UIModels;
 
+import Exceptions.NameAlreadyExistsException;
+import Exceptions.PackageDoesNotExistException;
 import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
@@ -24,7 +26,16 @@ public class PackageSelectionShellModel extends BaseUIModel{
         super(main);
     }
     
-    public PackageModel selectedPackage(){
+    public PackageModel getSelectedPackage(){
+        if(selectedPackage == null)
+            if(!this.getPackageList().isEmpty())
+                selectedPackage = (PackageModel)this.getPackageList().get(0);
+        return selectedPackage;
+    }
+    
+    public PackageModel setSelectedPackage(PackageModel aPackage){
+        if(selectedPackage != aPackage)
+            selectedPackage = aPackage;
         return selectedPackage;
     }
     
@@ -45,4 +56,13 @@ public class PackageSelectionShellModel extends BaseUIModel{
             shell = new PackageSelectionShell(this);
         return shell;
     }
+    
+    public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+        return this.selectedProject().addPackage(newPackage);
+    }
+    
+    public PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
+        return this.selectedProject().removePackage(aPackage);
+    }
+    
 }

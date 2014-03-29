@@ -189,7 +189,7 @@ public class ProjectModel extends BaseModel {
      * @return the package being removed
      * @throws PackageDoesNotExistException 
      */
-    protected PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
+    public PackageModel removePackage(PackageModel aPackage) throws PackageDoesNotExistException{
         if(this.okToRemovePackage(aPackage)){
             this.packages.remove(aPackage.name());
             if(aPackage.parent == this){
@@ -201,7 +201,7 @@ public class ProjectModel extends BaseModel {
         }
     }
     
-    protected ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
+    public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         if(!classes.containsKey(aClass.name()))
             throw new VeryVeryBadException(this, aClass);
         return (ClassModel)classes.remove(aClass.name());

@@ -285,4 +285,15 @@ public class PackageModelTest extends BaseTest{
         assertTrue(anotherPackage.getClassList().contains(parentClass));
         assertTrue(testPackage.getClassList().contains(subClass));
     }
+    
+    @Test
+    public void testAddPackageTriggersUpdateShells(){
+        fail("main should tell every shell except the caller"
+                + "to update itself with the new package, if appliable");
+    }
+    @Test
+    public void testAddClassTriggersUpdateShells(){
+        fail("main should tell every shell except the caller"
+                + "to update itself with the new package, if appliable");
+    }
 }

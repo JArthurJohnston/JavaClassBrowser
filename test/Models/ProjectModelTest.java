@@ -275,4 +275,15 @@ public class ProjectModelTest extends BaseTest{
     public void testGetMethodReferences(){
         fail("write me!");
     }
+    
+    @Test
+    public void testAddPackageTriggersUpdateShells(){
+        fail("main should tell every shell except the caller"
+                + "to update itself with the new package, if appliable");
+    }
+    @Test
+    public void testAddClassTriggersUpdateShells(){
+        fail("main should tell every shell except the caller"
+                + "to update itself with the new package, if appliable");
+    }
 }

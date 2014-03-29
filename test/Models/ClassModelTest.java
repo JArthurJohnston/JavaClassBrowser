@@ -254,4 +254,10 @@ public class ClassModelTest extends BaseTest{
         assertEquals(testClass,testClass.getReturnType());
         fail("need to test for primitive types");
     }
+    
+    @Test
+    public void testAddClassTriggersUpdateShells(){
+        fail("main should tell every shell except the caller"
+                + "to update itself with the new package, if appliable");
+    }
 }

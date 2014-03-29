@@ -10,6 +10,7 @@ import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import UIModels.PackageSelectionShellModel;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -59,6 +60,18 @@ public class PackageSelectionShellTest extends BaseShellTest{
     public void testCloseAndDispose(){
         shell.signalClosedAndDispose();
         assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(shell));
+    }
+    
+    @Test
+    public void testSelectionChangedSetsMain(){
+        fail("write add package first");
+    }
+    
+    @Test
+    public void testAddPackageButton(){
+        JButton addButton = (JButton)this.getVariableFromClass(shell, "addPackageButton");
+        addButton.doClick();
+        fail("need an AddPackageShell...");
     }
     
 }
