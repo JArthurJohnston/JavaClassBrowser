@@ -138,7 +138,7 @@ public class ProjectModel extends BaseModel {
     protected boolean okToAddClass(String className){
         return !this.classes.containsKey(className);
     }
-    protected boolean okToAddPackage(String packageName){
+    public boolean okToAddPackage(String packageName){
         return !this.packages.containsKey(packageName);
     }
     protected boolean okToRemovePackage(PackageModel aPackage){

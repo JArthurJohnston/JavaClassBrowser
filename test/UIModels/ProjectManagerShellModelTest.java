@@ -12,7 +12,6 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
-import UIShells.ProjectManagerShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

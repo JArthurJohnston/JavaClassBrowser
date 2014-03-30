@@ -43,7 +43,7 @@ public class PackageSelectionShellModel extends BaseUIModel{
         return this.selectedProject().getPackageList();
     }
     
-    private ProjectModel selectedProject(){
+    public ProjectModel selectedProject(){
         return main.getSelectedProject();
     }
     
