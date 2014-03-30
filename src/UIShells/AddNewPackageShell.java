@@ -12,6 +12,8 @@ import UIModels.PackageSelectionShellModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -28,13 +30,29 @@ public class AddNewPackageShell extends BaseUIShell {
         this.model = model;
         newPackage = new PackageModel(model.selectedProject(), new String());
         initComponents();
+        this.packageNameField.getDocument().addDocumentListener(this.setUpDocListener());
         this.setVisible(true);
     }
     
     private boolean isPackageValid(){
-        if(this.packageNameField.getText().compareTo(new String()) == 0)
+        if(this.newPackage.name().compareTo(new String()) == 0)
             return false;
         return model.selectedProject().okToAddPackage(this.packageNameField.getText());
+    }
+    
+    private DocumentListener setUpDocListener(){
+        return new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updatePackage();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updatePackage();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        };
     }
 
     /**
@@ -59,12 +77,6 @@ public class AddNewPackageShell extends BaseUIShell {
         packageDetailsField.setRows(5);
         jScrollPane1.setViewportView(packageDetailsField);
 
-        packageNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                packageNameFieldActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Package Name: ");
 
         addPackageButton.setText("Create");
@@ -75,6 +87,11 @@ public class AddNewPackageShell extends BaseUIShell {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,10 +131,6 @@ public class AddNewPackageShell extends BaseUIShell {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void packageNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_packageNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_packageNameFieldActionPerformed
-
     private void addPackageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPackageButtonActionPerformed
         if(this.isPackageValid())
             try {
@@ -128,6 +141,10 @@ public class AddNewPackageShell extends BaseUIShell {
         }
     }//GEN-LAST:event_addPackageButtonActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.signalClosedAndDispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPackageButton;
     private javax.swing.JButton cancelButton;
@@ -136,4 +153,14 @@ public class AddNewPackageShell extends BaseUIShell {
     private javax.swing.JTextArea packageDetailsField;
     private javax.swing.JTextField packageNameField;
     // End of variables declaration//GEN-END:variables
+
+    
+    private void updatePackage(){
+        newPackage.setName(this.packageNameField.getText());
+    }
+    
+    @Override
+    public void signalClosedAndDispose(){
+        this.dispose();
+    }
 }

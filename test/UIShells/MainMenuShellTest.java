@@ -67,11 +67,12 @@ public class MainMenuShellTest extends BaseShellTest{
         JToggleButton projectsButton = (JToggleButton)this.getVariableFromClass(shell, "projectsToggleButton");
         projectsButton.doClick();
         assertListHasClass(((ArrayList)
-                this.getVariableFromClass(main, "openWindowShells")), ProjectSelectionShell.class);
+                this.getVariableFromClass(main, "openWindowModels")), ProjectSelectionShell.class);
         assertTrue(projectsButton.isSelected());
         projectsButton.doClick();
         assertFalse(projectsButton.isSelected());
         denyListHasClass(((ArrayList)
                 this.getVariableFromClass(main, "openWindowShells")), ProjectSelectionShell.class);
     }
+    
 }

@@ -36,7 +36,7 @@ public class PackageModel extends ProjectModel {
      * It should only be called from a ProjectModel
      * 
      * Note:I know overridable calls in the constructor are bad, but in this case
-     * it cuts down on repitition. always make sure its called lase in the constructor
+     * it cuts down on repitition. always make sure its called last in the constructor
      * unless absolutely necessary
      * 
      * @param ProjectModel parent 
@@ -83,7 +83,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    protected boolean okToAddPackage(String newPackageName){
+    public boolean okToAddPackage(String newPackageName){
         return project.okToAddPackage(this.name()+"."+newPackageName);
     }
     
@@ -125,7 +125,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    protected ClassModel removeClass (ClassModel aClass) throws VeryVeryBadException{
+    public ClassModel removeClass (ClassModel aClass) throws VeryVeryBadException{
         if(aClass.parent == this){
             if(!this.classList.remove(aClass))
                 throw new VeryVeryBadException(false, aClass);

@@ -7,6 +7,7 @@
 package UIShells;
 
 import MainBase.MainApplication;
+import UIModels.ProjectSelectionModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JToggleButton;
@@ -16,6 +17,8 @@ import javax.swing.JToggleButton;
  * @author arthur
  */
 public class MainMenuShell extends BaseUIShell {
+    private MainApplication main;
+    private ProjectSelectionModel projectSelectionModel;
 
     /**
      * Creates new form MainMenuShell
@@ -54,11 +57,6 @@ public class MainMenuShell extends BaseUIShell {
         packageListButton.setText("Paqckages");
 
         projectsToggleButton.setText("Projects");
-        projectsToggleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                projectsToggleButtonActionPerformed(evt);
-            }
-        });
 
         jMenu1.setText("File");
 
@@ -98,12 +96,8 @@ public class MainMenuShell extends BaseUIShell {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newProjectMenuItemActionPerformed
-         main.openAddProjectShell();
+         
     }//GEN-LAST:event_newProjectMenuItemActionPerformed
-
-    private void projectsToggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_projectsToggleButtonActionPerformed
-        //should be handeled by the listeners
-    }//GEN-LAST:event_projectsToggleButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,9 +149,9 @@ public class MainMenuShell extends BaseUIShell {
             public void actionPerformed(ActionEvent e) {
                 JToggleButton button = (JToggleButton)e.getSource();
                 if(button.isSelected())
-                    main.openProjectSelectionShell();
+                    projectSelectionModel = main.openProjectSelection();
                 else
-                    main.removeShell(ProjectSelectionShell.class);
+                    main.removeModel(projectSelectionModel);
             }
         });
     }

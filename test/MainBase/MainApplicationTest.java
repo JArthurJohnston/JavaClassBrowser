@@ -113,10 +113,10 @@ public class MainApplicationTest extends BaseTest {
     @Test
     public void testProjectSelectionShellConnections(){
         ArrayList openShells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
-        main.openProjectSelectionShell();
+        main.openProjectSelection();
         assertEquals(1, openShells.size());
         assertEquals(ProjectSelectionShell.class, openShells.get(0).getClass());
-        main.openProjectSelectionShell();
+        main.openProjectSelection();
         assertEquals(1, openShells.size());
         main.openAddProjectShell();
         assertEquals(2, openShells.size());

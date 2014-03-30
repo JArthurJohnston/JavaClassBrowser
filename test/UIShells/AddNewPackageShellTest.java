@@ -9,11 +9,11 @@ package UIShells;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
+import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.PackageSelectionShellModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -58,7 +58,7 @@ public class AddNewPackageShellTest extends BaseShellTest{
     public void tearDown() {
         main = null;
         model = null;
-        shell.dispose();
+        shell.signalClosedAndDispose();
         shell = null;
     }
 
@@ -66,7 +66,14 @@ public class AddNewPackageShellTest extends BaseShellTest{
     public void testAddPackage() {
         JButton addButton = (JButton)this.getVariableFromClass(shell, "addPackageButton");
         addButton.doClick();
+        assertEquals(1, model.selectedProject().getPackageList().size());
+        assertTrue(shell.isVisible());
+        PackageModel newPackage = (PackageModel)this.getVariableFromClass(shell, "newPackage");
+        newPackage.setName("a name for package");
+        addButton.doClick();
+        assertTrue(model.selectedProject().getPackageList().contains(newPackage));
         assertEquals(2, model.selectedProject().getPackageList().size());
+        assertFalse(shell.isVisible());
     }
     
     @Test
@@ -80,6 +87,26 @@ public class AddNewPackageShellTest extends BaseShellTest{
     @Test
     public void shellIsModal(){
         fail();
+    }
+    
+    @Test
+    public void testPackageNameField(){
+        JTextField nameField = (JTextField)this.getVariableFromClass(shell, "packageNameField");
+        PackageModel newPackage = (PackageModel)this.getVariableFromClass(shell, "newPackage");
+        nameField.setText("new name for package");
+        assertTrue(this.compareStrings("new name for package" ,newPackage.name()));
+    }
+    
+    @Test 
+    public void testPackageDescriptionField(){
+        fail();
+    }
+    
+    @Test
+    @Override
+    public void testCloseAndDispose(){
+        shell.signalClosedAndDispose();
+        assertFalse(shell.isVisible());
     }
     
 }

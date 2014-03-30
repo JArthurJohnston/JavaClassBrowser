@@ -84,6 +84,11 @@ public class ProjectSelectionShell extends BaseUIShell {
         });
 
         createProjectButton.setText("Add");
+        createProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createProjectButtonActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Current Projects");
 
@@ -157,6 +162,10 @@ public class ProjectSelectionShell extends BaseUIShell {
         this.signalClosedAndDispose();
     }//GEN-LAST:event_closeShellButtonActionPerformed
 
+    private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
+        model.addProject();
+    }//GEN-LAST:event_createProjectButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeShellButton;
     private javax.swing.JButton createProjectButton;
@@ -182,5 +191,7 @@ public class ProjectSelectionShell extends BaseUIShell {
             JOptionPane.showConfirmDialog(null, ex, "Error", JOptionPane.OK_OPTION);
         }
     }
+    
+    
 
 }

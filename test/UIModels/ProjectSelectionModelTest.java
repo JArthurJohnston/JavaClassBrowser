@@ -12,8 +12,6 @@ import Models.ProjectModel;
 import UIShells.AddNewProjectShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import org.junit.After;
 import org.junit.AfterClass;

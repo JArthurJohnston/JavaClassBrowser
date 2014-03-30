@@ -7,7 +7,6 @@ package UIModels;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
-import UIShells.BaseUIShell;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import org.junit.After;

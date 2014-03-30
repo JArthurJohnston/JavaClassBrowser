@@ -11,8 +11,6 @@ import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import Models.ProjectModel;
 import UIModels.ProjectSelectionModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JList;
 import org.junit.After;
@@ -44,7 +42,7 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     @Before
     public void setUp() {
         main = new MainApplication();
-        model = main.openProjectSelectionShell();
+        model = main.openProjectSelection();
         shell = model.showShell();
     }
     
@@ -59,7 +57,7 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     private ProjectSelectionShell refreshShell(){
         model.close();
         model = null;
-        model = main.openProjectSelectionShell();
+        model = main.openProjectSelection();
         return model.showShell();
     }
     
@@ -134,7 +132,10 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     
     @Test
     public void testAddProjectButton(){
-        fail();
+        AddNewProjectShell addProjectShell = model.addProject();
+        assertEquals(AddNewProjectShell.class, addProjectShell.getClass());
+        assertTrue(addProjectShell.isVisible());
+        addProjectShell.dispose();
     }
     
     @Test 

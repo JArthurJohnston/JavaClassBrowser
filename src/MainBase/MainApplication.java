@@ -9,9 +9,6 @@ import UIModels.PackageSelectionShellModel;
 import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
-import UIShells.ClassBrowserShell;
-import UIShells.PackageSelectionShell;
-import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 
 /**
@@ -89,7 +86,7 @@ public class MainApplication {
         return addShell;
     }
     
-    public ProjectSelectionModel openProjectSelectionShell(){
+    public ProjectSelectionModel openProjectSelection(){
         ProjectSelectionModel model = null;
         if(this.okToOpenShell(ProjectSelectionModel.class)){
             model = new ProjectSelectionModel(this);

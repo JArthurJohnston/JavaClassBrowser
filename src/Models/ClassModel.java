@@ -99,7 +99,7 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    protected ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
+    public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         if(!this.classList.remove(aClass))
             throw new VeryVeryBadException(this, aClass);
         return this.getParentPackage().removeClass(aClass);
