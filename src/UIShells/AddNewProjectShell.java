@@ -18,8 +18,9 @@ import javax.swing.event.DocumentListener;
 public class AddNewProjectShell extends BaseUIShell {
     private ProjectModel newProject;
     private MainApplication main;
+    private static AddNewProjectShell instance = null;
     
-    public AddNewProjectShell(MainApplication main) {
+    protected AddNewProjectShell(MainApplication main) {
         super();
         initComponents();
         this.main = main;
@@ -29,6 +30,19 @@ public class AddNewProjectShell extends BaseUIShell {
         this.projectNameField.getDocument().addDocumentListener(this.setUpDocListener());
         this.authorNameField.getDocument().addDocumentListener(this.setUpDocListener());
         this.setVisible(true);
+    }
+    
+    public static AddNewProjectShell getInstance(MainApplication main){
+        if(instance == null)
+            instance = new AddNewProjectShell(main);
+        return instance;
+    }
+    
+    public static void closeInstance(){
+        if(instance != null){
+            instance.signalClosedAndDispose();
+            instance = null;
+        }
     }
     
     //this method should be pushed up

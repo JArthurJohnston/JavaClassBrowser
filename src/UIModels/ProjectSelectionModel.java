@@ -34,7 +34,7 @@ public class ProjectSelectionModel extends BaseUIModel{
     
     public ProjectSelectionShell showShell(){
         if(shell == null)
-            shell =  new ProjectSelectionShell(this);
+            shell =  ProjectSelectionShell.getInstance(this);
         if(!shell.isVisible())
             shell.setVisible(true);
         main.addShell(shell);

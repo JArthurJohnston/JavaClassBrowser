@@ -6,7 +6,7 @@
 
 package UIShells;
 
-import Models.ProjectModel;
+import Models.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -53,4 +53,8 @@ public class BaseUIShell extends javax.swing.JFrame {
         return JOptionPane.showConfirmDialog(null, ProjectModel.DELETE_WARNING, "Confirm Delete Project"
                 , JOptionPane.YES_NO_OPTION);
     }
+    
+    public void modelAdded(BaseModel newModel){}
+    public void modelChanged(BaseModel newModel){}
+    public void modelRemoved(BaseModel newModel){}
 }

@@ -49,7 +49,7 @@ public class ProjectSelectionShellTest extends BaseShellTest{
     @After
     public void tearDown() {
         model.close();
-        shell = null;
+        ProjectSelectionShell.closeInstance();
         model = null;
         main = null;
     }
@@ -70,6 +70,12 @@ public class ProjectSelectionShellTest extends BaseShellTest{
             fail(ex.getMessage());
         }
         shell = this.refreshShell();
+    }
+    
+    @Test
+    public void testShellIsSingleton(){
+        ProjectSelectionShell anotherShell = model.showShell();
+        assertEquals(shell, anotherShell);
     }
 
     @Test

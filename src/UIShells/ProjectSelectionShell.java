@@ -19,18 +19,33 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ProjectSelectionShell extends BaseUIShell {
     private ProjectSelectionModel model;
+    
+    private static ProjectSelectionShell instance = null;
 
     /**
      * Creates new form ProjectSelectionShell
      * @param model
      */
-    public ProjectSelectionShell(ProjectSelectionModel model) {
+    protected ProjectSelectionShell(ProjectSelectionModel model) {
         initComponents();
         this.model = model;
         this.projectList.setModel(model.getListModel());
         this.projectList.setSelectedValue(model.getSelectedProject(), true);
         this.projectList.getSelectionModel().addListSelectionListener(this.setUpProjectListener());
         this.updateFields();
+    }
+    
+    public static ProjectSelectionShell getInstance(ProjectSelectionModel model){
+        if(instance == null)
+            instance = new ProjectSelectionShell(model);
+        return instance;
+    }
+    
+    public static void closeInstance(){
+        if(instance != null){
+            instance.signalClosedAndDispose();
+            instance = null;
+        }
     }
     
     private ListSelectionListener setUpProjectListener(){

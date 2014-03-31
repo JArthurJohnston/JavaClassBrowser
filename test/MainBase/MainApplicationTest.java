@@ -9,9 +9,9 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
+import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
 import UIShells.BaseUIShell;
-import UIShells.ClassBrowserShell;
 import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
@@ -112,14 +112,12 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testProjectSelectionShellConnections(){
-        ArrayList openShells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
+        ArrayList openModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
         main.openProjectSelection();
-        assertEquals(1, openShells.size());
-        assertEquals(ProjectSelectionShell.class, openShells.get(0).getClass());
+        assertEquals(1, openModels.size());
+        assertEquals(ProjectSelectionModel.class, openModels.get(0).getClass());
         main.openProjectSelection();
-        assertEquals(1, openShells.size());
-        main.openAddProjectShell();
-        assertEquals(2, openShells.size());
+        assertEquals(1, openModels.size());
     }
     
     @Test
@@ -184,33 +182,17 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testOpenAddProject(){
-        ArrayList openShells = (ArrayList)this.getVariableFromClass(main, "openWindowShells");
-        assertTrue(openShells.isEmpty());
-        main.openAddProjectShell();
-        assertEquals(1, openShells.size());
-        main.openAddProjectShell();
-        assertEquals(1, openShells.size());
-    }
-    
-    @Test
     public void testAddProjectUpdatesShells(){
         fail();
     }
     
     @Test
-    public void testAddShell(){
-        BaseUIShell aShell;
-        main.addShell(aShell = new AddNewProjectShell(main));
-        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(aShell));
-    }
-    
-    @Test
-    public void testRemoveShell(){
-        BaseUIShell aShell;
-        main.addShell(aShell = new AddNewProjectShell(main));
-        main.removeShell(aShell);
-        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowShells")).contains(aShell));
+    public void testAddShellModel(){
+        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
+        assertTrue(models.isEmpty());
+        main.openAddProjectShell();
+        assertEquals(1, models.size());
+        assertEquals(ProjectSelectionModel.class, models.get(0).getClass());
     }
     
     @Test

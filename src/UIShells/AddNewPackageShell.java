@@ -20,18 +20,33 @@ import javax.swing.event.DocumentListener;
  * @author arthur
  */
 public class AddNewPackageShell extends BaseUIShell {
-    PackageSelectionShellModel model;
-    PackageModel newPackage;
+    private PackageSelectionShellModel model;
+    private PackageModel newPackage;
+    
+    private static AddNewPackageShell instance = null;
 
     /**
      * Creates new form AddNewPackageShell
      */
-    public AddNewPackageShell(PackageSelectionShellModel model) {
+    protected AddNewPackageShell(PackageSelectionShellModel model) {
         this.model = model;
         newPackage = new PackageModel(model.selectedProject(), new String());
         initComponents();
         this.packageNameField.getDocument().addDocumentListener(this.setUpDocListener());
         this.setVisible(true);
+    }
+    
+    public static AddNewPackageShell getInstance(PackageSelectionShellModel model){
+        if(instance == null)
+            instance = new AddNewPackageShell(model);
+        return instance;
+    }
+    
+    public static void closeInstance(){
+        if(instance != null){
+            instance.signalClosedAndDispose();
+            instance = null;
+        }
     }
     
     private boolean isPackageValid(){

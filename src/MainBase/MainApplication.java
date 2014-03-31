@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
     private ArrayList <BaseUIModel>openWindowModels;
-    private ArrayList <BaseUIShell>openWindowShells;
     private String userName;
     private ProjectModel selectedProject;
     private PackageModel selectedPackage;
@@ -31,7 +30,6 @@ public class MainApplication {
         userName = System.getProperty("user.name");
         projects = new ArrayList();
         openWindowModels = new ArrayList();
-        openWindowShells = new ArrayList();
         //openWindowModels.add(shellModel);
     }
     
@@ -79,11 +77,7 @@ public class MainApplication {
     
     
     public AddNewProjectShell openAddProjectShell(){
-        AddNewProjectShell addShell = null;
-        if(this.okToOpenShell(AddNewProjectShell.class)){
-            openWindowShells.add(addShell = new AddNewProjectShell(this));
-        }
-        return addShell;
+        return AddNewProjectShell.getInstance(this);
     }
     
     public ProjectSelectionModel openProjectSelection(){
@@ -124,18 +118,11 @@ public class MainApplication {
         return selectedProject;
     }
     
-    public BaseUIShell addShell(BaseUIShell shell){
-        openWindowShells.add(shell);
-        return shell;
-    }
     
     public void removeModel(BaseUIModel model){
         openWindowModels.remove(model);
     }
     
-    public void removeShell(BaseUIShell aShell){
-        openWindowShells.remove(aShell);
-    }
     
     public PackageModel selectedPackage(){
         if(this.selectedProject == null)
