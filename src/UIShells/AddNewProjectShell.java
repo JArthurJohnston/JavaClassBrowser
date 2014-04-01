@@ -49,7 +49,6 @@ public class AddNewProjectShell extends BaseUIShell {
     //as should the corresponding removeShell() method
     @Override
     protected void signalClosedAndDispose(){
-        main.removeShell(this);
         this.dispose();
     }
     

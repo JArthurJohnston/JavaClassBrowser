@@ -187,15 +187,6 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testAddShellModel(){
-        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
-        assertTrue(models.isEmpty());
-        main.openAddProjectShell();
-        assertEquals(1, models.size());
-        assertEquals(ProjectSelectionModel.class, models.get(0).getClass());
-    }
-    
-    @Test
     public void testOpenAddClassBrowser(){
         ClassBrowserShellModel classBrowserModel = main.openAddClassBrowser();
         fail();

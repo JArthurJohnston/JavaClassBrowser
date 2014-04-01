@@ -6,14 +6,13 @@ package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
-import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.PackageModel;
 import Models.ProjectModel;
 import Models.VariableModel;
 import UIShells.ClassBrowserShell;
-import java.util.List;
-import javax.swing.DefaultListModel;
+import java.util.LinkedList;
 
 /**
  *
@@ -24,29 +23,33 @@ public class ClassBrowserShellModel extends BaseUIModel{
     private ClassModel selectedClass;
     private VariableModel selectedVariable;
     private MethodModel selectedMethod;
-    private final ProjectModel baseProject;
+    private PackageModel selectedModel;
     
     public ClassBrowserShellModel(MainApplication main){
         super(main);
-        this.baseProject = main.getSelectedProject();
         shell = new ClassBrowserShell(this);
     }
     
-    public ProjectModel getProject(){
-        return baseProject;
+    public LinkedList getClasses(){
+        return this.selectedProject().getClassList();
     }
     
     public ClassModel getSelectedClass(){
+        if(selectedClass == null)
+            if(!this.selectedProject().getClassList().isEmpty())
+                selectedClass = (ClassModel)this.selectedProject().getClassList().get(0);
         return selectedClass;
     }
     
-    public ClassModel addClassToPackage(ClassModel newClass) throws NameAlreadyExistsException{
-        if(this.selectedClass == null)
-            selectedClass = newClass;
-        return baseProject.addClass(newClass);
+    public PackageModel setSelected(PackageModel newSelected){
+        
     }
     
-    public ClassModel addClassToClass(ClassModel newClass){
-        
+    public PackageModel selectedPackage(){
+        return main.selectedPackage();
+    }
+    
+    public ProjectModel selectedProject(){
+        return main.getSelectedProject();
     }
 }

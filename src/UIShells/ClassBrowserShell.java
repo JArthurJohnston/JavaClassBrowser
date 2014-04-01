@@ -25,7 +25,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     
     private void setUpInitialListsModels(){
         this.classList.setModel(new DefaultListModel());
-        model.fillListModel(model.getProject().getClassList(), (DefaultListModel)classList.getModel());
+        model.fillListModel(model.selectedProject().getClassList(), (DefaultListModel)classList.getModel());
         this.instanceMethodList.setModel(new DefaultListModel());
         this.instanceVarList.setModel(new DefaultListModel());
         this.staticMethodList.setModel(new DefaultListModel());

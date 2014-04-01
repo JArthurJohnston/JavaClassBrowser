@@ -57,36 +57,61 @@ public class ClassBrowserShellModelTest extends BaseTest{
         project = null;
         model = null;
     }
+    
+    private void setUpModelWithClasses(){
+        PackageModel aPackage = project.getPackageList().get(0);
+        try {
+            aPackage.addClass(new ClassModel(aPackage, "NewClass"));
+            aPackage.addClass(new ClassModel(aPackage, "AnotherNewClass"));
+            aPackage.addClass(new ClassModel(aPackage, "YetAnotherNewClass"));
+            assertEquals(3, project.getClassList().size());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model = new ClassBrowserShellModel(main);
+    }
 
     @Test
     public void testConstructor(){
         ClassBrowserShell shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
         assertEquals(ClassBrowserShell.class, shell.getClass());
-        assertEquals(ProjectModel.class, model.getProject().getClass());
-        assertEquals(main.getSelectedProject(), model.getProject());
-        assertEquals(project, model.getProject());
+        assertEquals(ProjectModel.class, model.selectedProject().getClass());
+        assertEquals(main.getSelectedProject(), model.selectedProject());
+        assertEquals(project, model.selectedProject());
+        this.setUpModelWithClasses();
+    }
+    
+    @Test
+    public void testInitialClassList(){
+        assertTrue(model.getClasses().isEmpty());
+        this.setUpModelWithClasses();
+        assertEquals(3, model.getClasses().size());
     }
     
     @Test
     public void testClassSelected(){
         assertEquals(null, model.getSelectedClass());
-        fail("dependant on add class");
+        this.setUpModelWithClasses();
+        assertEquals(project.getClassList().get(0), model.getSelectedClass());
     }
     
     @Test
     public void testAddClassUpdates(){
         try {
             PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
-            //model.addClass(new ClassModel(aPackage, "AClass"));
+            model.addClass(new ClassModel(aPackage, "AClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(1, model.getProject().getClassList().size());
+        assertEquals(1, model.selectedProject().getClassList().size());
         assertEquals("AClass", model.getSelectedClass().name());
     }
     
+    
     @Test
     public void testSelectedPackage(){
-        
+        assertEquals(PackageModel.class, model.selectedPackage().getClass());
+        assertEquals(main.selectedPackage(), model.selectedPackage());
+        assertTrue(this.compareStrings("default package", model.selectedPackage().name()));
     }
 }
