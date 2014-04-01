@@ -11,8 +11,6 @@ import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -89,24 +87,17 @@ public class ClassBrowserShellModelTest extends BaseTest{
     }
     
     @Test
-    public void testClassSelected(){
-        assertEquals(null, model.getSelectedClass());
-        this.setUpModelWithClasses();
-        assertEquals(project.getClassList().get(0), model.getSelectedClass());
-    }
-    
-    @Test
     public void testAddClassUpdates(){
+        ClassModel aClass = null;
         try {
             PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
-            model.addClass(new ClassModel(aPackage, "AClass"));
+            aClass = model.addClass(new ClassModel(model.selectedPackage(), "AClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, model.selectedProject().getClassList().size());
-        assertEquals("AClass", model.getSelectedClass().name());
+        assertTrue(model.selectedProject().getClassList().contains(aClass));
     }
-    
     
     @Test
     public void testSelectedPackage(){

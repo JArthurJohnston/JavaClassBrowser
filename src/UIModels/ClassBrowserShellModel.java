@@ -20,36 +20,34 @@ import java.util.LinkedList;
  */
 public class ClassBrowserShellModel extends BaseUIModel{
     private final ClassBrowserShell shell;
-    private ClassModel selectedClass;
-    private VariableModel selectedVariable;
-    private MethodModel selectedMethod;
+    private ProjectModel selectedProject;
     private PackageModel selectedModel;
     
     public ClassBrowserShellModel(MainApplication main){
         super(main);
+        selectedProject = main.getSelectedProject();
         shell = new ClassBrowserShell(this);
     }
     
     public LinkedList getClasses(){
-        return this.selectedProject().getClassList();
+        return this.selectedProject.getClassList();
     }
     
-    public ClassModel getSelectedClass(){
-        if(selectedClass == null)
-            if(!this.selectedProject().getClassList().isEmpty())
-                selectedClass = (ClassModel)this.selectedProject().getClassList().get(0);
-        return selectedClass;
+    public void setSelected(PackageModel newSelected){
+        selectedModel = newSelected;
     }
     
-    public PackageModel setSelected(PackageModel newSelected){
-        
+    public PackageModel getSelected(){
+        if(selectedModel == null)
+            selectedModel = this.selectedPackage();
+        return selectedModel;
+    }
+    
+    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+        return this.getSelected().addClass(newClass);
     }
     
     public PackageModel selectedPackage(){
         return main.selectedPackage();
-    }
-    
-    public ProjectModel selectedProject(){
-        return main.getSelectedProject();
     }
 }
