@@ -1,2 +1,3 @@
 -In the future Id like to implement my own List class that
 uses valueAdded and valueChanged listeners.
+-ProjectModel should not allow the user to delete a package if that package is the only one left in its list.
