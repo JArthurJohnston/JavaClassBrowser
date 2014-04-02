@@ -10,9 +10,6 @@ import Internal.BaseTest;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import UIModels.ProjectSelectionModel;
-import UIShells.AddNewProjectShell;
-import UIShells.BaseUIShell;
-import UIShells.ProjectSelectionShell;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -187,13 +184,20 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testOpenAddClassBrowser(){
-        ClassBrowserShellModel classBrowserModel = main.openAddClassBrowser();
+    public void testSelectedPackage(){
         fail();
     }
     
     @Test
-    public void testSelectedPackage(){
-        fail();
+    public void testAddClassBrowser(){
+        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
+        assertTrue(models.isEmpty());
+        main.openAddClassBrowser();
+        assertEquals(1, models.size());
+        assertEquals(ClassBrowserShellModel.class, models.get(0).getClass());
+        main.openAddClassBrowser();
+        assertEquals(2, models.size());
+        assertEquals(ClassBrowserShellModel.class, models.get(1).getClass());
+        assertFalse(models.get(0) == models.get(1));
     }
 }

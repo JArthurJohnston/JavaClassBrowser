@@ -7,6 +7,8 @@
 package UIShells;
 
 import Internal.BaseShellTest;
+import MainBase.MainApplication;
+import UIModels.ClassBrowserShellModel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,6 +21,7 @@ import static org.junit.Assert.*;
  * @author arthur
  */
 public class ClassBrowserShellTest extends BaseShellTest{
+    private ClassBrowserShellModel model;
     private ClassBrowserShell shell;
     
     public ClassBrowserShellTest() {
@@ -34,6 +37,8 @@ public class ClassBrowserShellTest extends BaseShellTest{
     
     @Before
     public void setUp() {
+        main = new MainApplication();
+        model = main.openAddClassBrowser();
     }
     
     @After

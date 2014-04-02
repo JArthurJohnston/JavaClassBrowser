@@ -8,7 +8,6 @@ import UIModels.ClassBrowserShellModel;
 import UIModels.PackageSelectionShellModel;
 import UIModels.ProjectSelectionModel;
 import UIShells.AddNewProjectShell;
-import UIShells.BaseUIShell;
 import java.util.ArrayList;
 
 /**
@@ -150,5 +149,10 @@ public class MainApplication {
         PackageSelectionShellModel shell;
         openWindowModels.add(shell = new PackageSelectionShellModel(this));
         return shell;
+    }
+    
+    public ClassBrowserShellModel openClassBrowser(){
+        openWindowModels.add(new ClassBrowserShellModel(this));
+        return (ClassBrowserShellModel)openWindowModels.get(openWindowModels.size()-1);
     }
 }

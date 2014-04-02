@@ -26,13 +26,11 @@ public class MainMenuShell extends BaseUIShell {
     public MainMenuShell() {
         main = new MainApplication();
         initComponents();
-        main.addShell(this);
         this.setUpListeners();
     }
     public MainMenuShell(MainApplication main){
         this.main = main;
         initComponents();
-        main.addShell(this);
         this.setUpListeners();
     }
 

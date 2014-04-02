@@ -7,10 +7,8 @@ package UIModels;
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.ClassModel;
-import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import Models.VariableModel;
 import UIShells.ClassBrowserShell;
 import java.util.LinkedList;
 
@@ -49,5 +47,9 @@ public class ClassBrowserShellModel extends BaseUIModel{
     
     public PackageModel selectedPackage(){
         return main.selectedPackage();
+    }
+    
+    public ProjectModel selectedProject(){
+        return selectedProject;
     }
 }
