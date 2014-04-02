@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -76,6 +77,22 @@ public class ProjectModelTest extends BaseTest{
     //useless test
     public void testStaticAccessors(){
         assertEquals("Project", ProjectModel.getSelectionString());
+    }
+    
+    @Test
+    public void testDefaultPackage(){
+        try {
+            assertEquals(PackageModel.class, project.getDefaultPackage().getClass());
+            assertEquals("default package", project.getDefaultPackage().name());
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            project.removePackage(project.getDefaultPackage());
+            project.getDefaultPackage();
+        } catch (DoesNotExistException | PackageDoesNotExistException ex) {
+            assertEquals(DoesNotExistException.class, ex.getClass());
+        }
     }
     
     @Test

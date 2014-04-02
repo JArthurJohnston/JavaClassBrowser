@@ -5,6 +5,7 @@
 package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
@@ -44,12 +45,14 @@ public class ClassBrowserShellModel extends BaseUIModel{
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         return this.getSelected().addClass(newClass);
     }
-    
-    public PackageModel selectedPackage(){
-        return main.selectedPackage();
+    public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
+        return this.getSelected().removeClass(aClass);
     }
     
     public ProjectModel selectedProject(){
         return selectedProject;
+    }
+    public void close(){
+        main.removeModel(this);
     }
 }

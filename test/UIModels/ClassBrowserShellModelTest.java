@@ -5,12 +5,16 @@
 package UIModels;
 
 import Exceptions.NameAlreadyExistsException;
+import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,7 +50,7 @@ public class ClassBrowserShellModelTest extends BaseTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        model = new ClassBrowserShellModel(main);
+        model = (ClassBrowserShellModel)main.addModel(new ClassBrowserShellModel(main));
     }
     
     @After
@@ -100,9 +104,34 @@ public class ClassBrowserShellModelTest extends BaseTest{
     }
     
     @Test
+    public void testRemoveClass(){
+        ClassModel aClass = null;
+        try {
+            PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
+            aClass = model.addClass(new ClassModel(model.selectedPackage(), "AClass"));
+            assertTrue(model.selectedProject().getClassList().contains(aClass));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            model.removeClass(aClass);
+        } catch (VeryVeryBadException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(model.selectedProject().getClassList().contains(aClass));
+    }
+    
+    @Test
     public void testSelectedPackage(){
         assertEquals(PackageModel.class, model.selectedPackage().getClass());
         assertEquals(main.selectedPackage(), model.selectedPackage());
         assertTrue(this.compareStrings("default package", model.selectedPackage().name()));
+    }
+    
+    @Test
+    public void testClosed(){
+        assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
+        model.close();
+        assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
     }
 }

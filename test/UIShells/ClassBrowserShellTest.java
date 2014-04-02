@@ -6,9 +6,15 @@
 
 package UIShells;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
+import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,17 +44,30 @@ public class ClassBrowserShellTest extends BaseShellTest{
     @Before
     public void setUp() {
         main = new MainApplication();
+        try {
+            main.addProject(new ProjectModel(main, "a project"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         model = main.openAddClassBrowser();
+        shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
     }
     
     @After
     public void tearDown() {
+        shell.dispose();
+        shell = null;
+        model = null;
+        main = null;
+    }
+    
+    private void setModelWithClasses(){
+        model.addClass(null)
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testListSetsSelected() {
+        JList classList = (JList)this.getVariableFromClass(shell, "classList");
     }
     
 }

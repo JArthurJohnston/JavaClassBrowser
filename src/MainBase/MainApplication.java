@@ -117,11 +117,14 @@ public class MainApplication {
         return selectedProject;
     }
     
+    public BaseUIModel addModel(BaseUIModel model){
+        openWindowModels.add(model);
+        return model;
+    }
     
     public void removeModel(BaseUIModel model){
         openWindowModels.remove(model);
     }
-    
     
     public PackageModel selectedPackage(){
         if(this.selectedProject == null)
