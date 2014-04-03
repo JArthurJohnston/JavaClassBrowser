@@ -95,7 +95,7 @@ public class ClassBrowserShellModelTest extends BaseTest{
         ClassModel aClass = null;
         try {
             PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
-            aClass = model.addClass(new ClassModel(model.selectedPackage(), "AClass"));
+            aClass = model.addClass(new ClassModel(model.getSelected(), "AClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -108,7 +108,7 @@ public class ClassBrowserShellModelTest extends BaseTest{
         ClassModel aClass = null;
         try {
             PackageModel aPackage = project.addPackage(new PackageModel(project, "a package"));
-            aClass = model.addClass(new ClassModel(model.selectedPackage(), "AClass"));
+            aClass = model.addClass(new ClassModel(model.getSelected(), "AClass"));
             assertTrue(model.selectedProject().getClassList().contains(aClass));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -122,16 +122,23 @@ public class ClassBrowserShellModelTest extends BaseTest{
     }
     
     @Test
-    public void testSelectedPackage(){
-        assertEquals(PackageModel.class, model.selectedPackage().getClass());
-        assertEquals(main.selectedPackage(), model.selectedPackage());
-        assertTrue(this.compareStrings("default package", model.selectedPackage().name()));
-    }
-    
-    @Test
     public void testClosed(){
         assertTrue(((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
         model.close();
         assertFalse(((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
+    }
+    
+    @Test
+    public void testGetSelected(){
+        ClassModel aClass = null;
+        assertEquals(PackageModel.class, model.getSelected().getClass());
+        assertEquals(project.getDefaultPackage(), model.getSelected());
+        try {
+            aClass = model.addClass(new ClassModel(model.getSelected(), "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model.setSelected(aClass);
+        assertEquals(aClass, model.getSelected());
     }
 }

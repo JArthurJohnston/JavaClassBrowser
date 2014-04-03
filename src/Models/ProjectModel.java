@@ -108,11 +108,10 @@ public class ProjectModel extends BaseModel {
     public String getUserName(){
         return userName;
     }
-    public PackageModel getDefaultPackage() throws DoesNotExistException{
+    public PackageModel getDefaultPackage(){
         if(!this.packageList.isEmpty())
             return packageList.get(0);
-        else
-            throw new DoesNotExistException(this, "no packages");
+        return null;
     }
     
     /*

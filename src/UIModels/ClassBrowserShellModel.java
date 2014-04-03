@@ -4,6 +4,7 @@
  */
 package UIModels;
 
+import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
@@ -12,6 +13,8 @@ import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,7 +41,9 @@ public class ClassBrowserShellModel extends BaseUIModel{
     
     public PackageModel getSelected(){
         if(selectedModel == null)
-            selectedModel = this.selectedPackage();
+            selectedModel = this.selectedProject.getDefaultPackage();
+        if(!selectedModel.getClassList().isEmpty())
+            selectedModel = (PackageModel) selectedModel.getClassList().getFirst();
         return selectedModel;
     }
     
