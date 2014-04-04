@@ -9,6 +9,7 @@ package UIShells;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
+import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class ClassBrowserShellTest extends BaseShellTest{
     public void setUp() {
         main = new MainApplication();
         try {
-            main.addProject(new ProjectModel(main, "a project"));
+            main.setSelectedProejct(main.addProject(new ProjectModel(main, "a project")));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -62,12 +63,38 @@ public class ClassBrowserShellTest extends BaseShellTest{
     }
     
     private void setModelWithClasses(){
-        model.addClass(null)
+        ClassModel one = null;
+        ClassModel two = null;
+        ClassModel three = null;
+        try {
+            one =  model.addClass(new ClassModel(model.getSelected(), "NewClass"));
+            two = model.addClass(new ClassModel(model.getSelected(), "AnotherClass"));
+            three = model.addClass(new ClassModel(model.getSelected(), "YetAnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(model.getClasses().contains(one));
+        assertTrue(model.getClasses().contains(two));
+        assertTrue(model.getClasses().contains(three));
+    }
+    
+    @Test
+    public void testListInitialize(){
+        JList classList = (JList)this.getVariableFromClass(shell, "classList");
+        assertEquals(0, classList.getModel().getSize());
+        this.setModelWithClasses();
+        shell.dispose();
+        shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
+        assertEquals(3, classList.getModel().getSize());
     }
 
     @Test
     public void testListSetsSelected() {
+        this.setModelWithClasses();
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
+        fail();
     }
+    
+    
     
 }
