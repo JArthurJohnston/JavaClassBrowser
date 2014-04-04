@@ -4,7 +4,6 @@
  */
 package UIModels;
 
-import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
@@ -13,22 +12,20 @@ import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Arthur
  */
 public class ClassBrowserShellModel extends BaseUIModel{
-    private final ClassBrowserShell shell;
+    private ClassBrowserShell shell;
     private ProjectModel selectedProject;
     private PackageModel selectedModel;
     
     public ClassBrowserShellModel(MainApplication main){
         super(main);
         selectedProject = main.getSelectedProject();
-        shell = new ClassBrowserShell(this);
+        this.openShell();
     }
     
     public LinkedList getClasses(){
@@ -59,5 +56,16 @@ public class ClassBrowserShellModel extends BaseUIModel{
     }
     public void close(){
         main.removeModel(this);
+    }
+    public ClassBrowserShell openShell(){
+        if(shell == null)
+            shell = new ClassBrowserShell(this);
+        return shell;
+    }
+    public void closeShell(){
+        if(shell != null){
+            shell.dispose();
+            shell = null;
+        }
     }
 }

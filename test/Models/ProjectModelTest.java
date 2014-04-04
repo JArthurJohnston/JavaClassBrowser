@@ -96,6 +96,11 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Test
+    public void testSetDefaultPackage(){
+        
+    }
+    
+    @Test
     public void testAddPackage() {
         System.out.println("testAddPackage");
         PackageModel newPackage = null;
@@ -302,4 +307,5 @@ public class ProjectModelTest extends BaseTest{
         fail("main should tell every shell except the caller"
                 + "to update itself with the new package, if appliable");
     }
+    
 }

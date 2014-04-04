@@ -12,9 +12,6 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -51,21 +48,29 @@ public class ClassBrowserShellTest extends BaseShellTest{
             fail(ex.getMessage());
         }
         model = main.openAddClassBrowser();
-        shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
+        shell = model.openShell();
     }
     
     @After
     public void tearDown() {
-        shell.dispose();
+        model.closeShell();
         shell = null;
         model = null;
         main = null;
     }
     
-    private void setModelWithClasses(){
+    private void reInitShell(){
+        model.closeShell();
+        shell = model.openShell();
+    }
+    
+    @Test
+    public void testAddClassesToModel(){
         ClassModel one = null;
         ClassModel two = null;
         ClassModel three = null;
+        assertEquals(main.getSelectedProject(), (ProjectModel)this.getVariableFromClass(model, "selectedProject"));
+        assertEquals(model.getSelected(), main.getSelectedProject().getPackageList().get(0));
         try {
             one =  model.addClass(new ClassModel(model.getSelected(), "NewClass"));
             two = model.addClass(new ClassModel(model.getSelected(), "AnotherClass"));
@@ -73,6 +78,11 @@ public class ClassBrowserShellTest extends BaseShellTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        assertEquals(3, model.getSelected().getClassList().size());
+        assertTrue(model.getSelected().getClassList().contains(one));
+        assertTrue(model.getSelected().getClassList().contains(two));
+        assertTrue(model.getSelected().getClassList().contains(three));
+        assertEquals(3, model.getClasses().size());
         assertTrue(model.getClasses().contains(one));
         assertTrue(model.getClasses().contains(two));
         assertTrue(model.getClasses().contains(three));
@@ -80,21 +90,18 @@ public class ClassBrowserShellTest extends BaseShellTest{
     
     @Test
     public void testListInitialize(){
+        assertEquals("a project", main.getSelectedProject().name());
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
         assertEquals(0, classList.getModel().getSize());
-        this.setModelWithClasses();
-        shell.dispose();
-        shell = (ClassBrowserShell)this.getVariableFromClass(model, "shell");
+        this.testAddClassesToModel();
+        this.reInitShell();
         assertEquals(3, classList.getModel().getSize());
     }
 
     @Test
     public void testListSetsSelected() {
-        this.setModelWithClasses();
+        this.testAddClassesToModel();
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
         fail();
     }
-    
-    
-    
 }

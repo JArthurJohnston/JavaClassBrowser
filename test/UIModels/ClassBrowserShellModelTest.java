@@ -72,6 +72,13 @@ public class ClassBrowserShellModelTest extends BaseTest{
         }
         model = new ClassBrowserShellModel(main);
     }
+    
+    @Test
+    public void testShellIsSingleton(){
+        ClassBrowserShell aShell = model.openShell();
+        ClassBrowserShell anotherShell = model.openShell();
+        assertEquals(anotherShell, aShell);
+    }
 
     @Test
     public void testConstructor(){
