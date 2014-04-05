@@ -12,6 +12,8 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -86,6 +88,10 @@ public class ClassBrowserShellTest extends BaseShellTest{
         assertTrue(model.getClasses().contains(one));
         assertTrue(model.getClasses().contains(two));
         assertTrue(model.getClasses().contains(three));
+        assertEquals(3, model.selectedProject().getClassList().size());
+        assertTrue(model.selectedProject().getClassList().contains(one));
+        assertTrue(model.selectedProject().getClassList().contains(two));
+        assertTrue(model.selectedProject().getClassList().contains(three));
     }
     
     @Test
@@ -95,13 +101,25 @@ public class ClassBrowserShellTest extends BaseShellTest{
         assertEquals(0, classList.getModel().getSize());
         this.testAddClassesToModel();
         this.reInitShell();
-        assertEquals(3, classList.getModel().getSize());
+        classList = (JList)this.getVariableFromClass(shell, "classList");
+        assertEquals(3, model.getSelected().getClassList().size());
+        assertEquals(3, classList.getModel().getSize()); 
     }
 
     @Test
     public void testListSetsSelected() {
         this.testAddClassesToModel();
+        LinkedList classes = model.getSelected().getClassList();
+        this.reInitShell();
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
-        fail();
+        assertEquals(3, classList.getModel().getSize());
+        assertEquals(classes.getFirst(), classList.getSelectedValue());
+    }
+    
+    @Test
+    @Override
+    public void testCloseAndDispose(){
+        model.close();
+        assertFalse(((ArrayList)(this.getVariableFromClass(main, "openWindowModels"))).contains(model));
     }
 }

@@ -4,8 +4,12 @@
  */
 package UIShells;
 
+import Models.PackageModel;
 import UIModels.ClassBrowserShellModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -24,15 +28,32 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     }
     
     private void setUpInitialListsModels(){
-        this.classList.setModel(new DefaultListModel());
+        this.setUpJList(classList);
         if(model.selectedProject() != null)
             model.fillListModel(model.selectedProject().getClassList(), (DefaultListModel)classList.getModel());
-        this.instanceMethodList.setModel(new DefaultListModel());
-        this.instanceVarList.setModel(new DefaultListModel());
-        this.staticMethodList.setModel(new DefaultListModel());
-        this.staticVarList.setModel(new DefaultListModel());
+        if(classList.getModel().getSize() != 0)
+            classList.setSelectedIndex(0);
+        this.setUpJList(instanceMethodList);
+        this.setUpJList(instanceVarList);
+        this.setUpJList(staticMethodList);
+        this.setUpJList(staticVarList);
     }
-
+    
+    private void setUpJList(JList aList){
+        aList.setModel(new DefaultListModel());
+        aList.getSelectionModel().addListSelectionListener(this.setUpListener());
+    }
+    
+    private ListSelectionListener setUpListener(){
+        return new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting())
+                    model.setSelected((PackageModel)((JList)(e.getSource())).getSelectedValue());
+            }
+        };
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
