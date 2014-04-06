@@ -285,6 +285,43 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Test
+    public void testGetStaticVars(){
+        VariableModel aVar = null;
+        assertTrue(testClass.getStaticVars().isEmpty());
+        try {
+            aVar = testClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel(), "aVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getVariables().contains(aVar));
+        assertTrue(testClass.getStaticVars().contains(aVar));
+        try {
+            aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "anotherVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(testClass.getStaticVars().contains(aVar));
+    }
+    
+    @Test
+    public void testGetInstanceVars(){
+        VariableModel aVar = null;
+        assertTrue(testClass.getStaticVars().isEmpty());
+        try {
+            aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "aVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getInstanceVars().contains(aVar));
+        try {
+            aVar = testClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel(), "anotherVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(testClass.getInstanceVars().contains(aVar));
+    }
+    
+    @Test
     public void testGetReturnTyppe(){
         assertEquals(testClass,testClass.getReturnType());
         fail("need to test for primitive types");

@@ -4,6 +4,8 @@
  */
 package Models;
 
+import Types.ClassType;
+
 /**
  *
  * @author Arthur
@@ -67,6 +69,10 @@ public abstract class BaseModel {
     }
     protected boolean isVaribale(){
         return false;
+    }
+    
+    protected ClassType getType(){
+        return null;
     }
     
     @Override

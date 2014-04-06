@@ -15,25 +15,35 @@ public class VariableModel extends BaseModel{
     private ScopeType scope;
     private ClassModel type;
     private Object value;
+    private ClassType staticOrInstance;
     
-    
-    public VariableModel (ScopeType scope, ClassModel type, String name){
+    public VariableModel(ScopeType scope, ClassModel type, String name){
         this.scope = scope;
         this.type = type;
+        this.name = name;
+    }
+    
+    public VariableModel(ClassType staticOrInstance, ClassModel objectType, String name){
+        this.staticOrInstance = staticOrInstance;
+        this.type = objectType;
         this.name = name;
     }
     
     /*
      * Getters
      */
-    public ClassModel getType(){
+    public ClassModel getObjectType(){
         return type;
+    }
+    @Override
+    public ClassType getType(){
+        return staticOrInstance;
     }
     
     /*
      * Setters
      */
-    public void setType(ClassModel type){
+    public void setObjectType(ClassModel type){
         this.type = type;
     }
     public void setScope(ScopeType scope){

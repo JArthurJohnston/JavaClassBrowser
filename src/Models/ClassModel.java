@@ -11,6 +11,7 @@ import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.BaseUIModel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -161,28 +162,36 @@ public class ClassModel extends PackageModel{
     }
     
     public LinkedList getStaticMethods(){
-        return this.getMethodsOfType(ClassType.CLASS);
+        return this.getModelsOfType(methods, ClassType.CLASS);
     }
-    public LinkedList getInstanceMethods(){
-        return this.getMethodsOfType(ClassType.INSTANCE);
+    public LinkedList<MethodModel> getInstanceMethods(){
+        return this.getModelsOfType(methods, ClassType.INSTANCE);
     }
     
-    private LinkedList<MethodModel> getMethodsOfType(ClassType aType){
-        LinkedList<MethodModel> aList = new LinkedList();
-        for(MethodModel m : methods){
-            if(m.getType() ==  aType)
+    private LinkedList getModelsOfType(LinkedList modelList, ClassType aType){
+        LinkedList aList = new LinkedList();
+        for(Object m : modelList){
+            if(((BaseModel)m).getType() == aType)
                 aList.add(m);
         }
         return aList;
     }
     
+    public LinkedList getVariables(){
+        return variables;
+    }
+    public LinkedList<VariableModel> getStaticVars(){
+        return this.getModelsOfType(variables, ClassType.CLASS);
+    }
+    
+    public LinkedList<VariableModel> getInstanceVars(){
+        return this.getModelsOfType(variables, ClassType.INSTANCE);
+    }
     
     public ScopeType getScope(){
         return this.scope;
     }
-    public LinkedList getVariables(){
-        return variables;
-    }
+    
     /*
      * Setters
      */

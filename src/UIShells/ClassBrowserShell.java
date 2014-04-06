@@ -45,16 +45,16 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private void fillListsFromClass(ClassModel selectedClass){
         if(selectedClass != null){
             model.fillListModel(
-                    selectedClass.getInstanceVariables(), 
+                    selectedClass.getInstanceVars(), 
                     (DefaultListModel)instanceVarList.getModel());
             model.fillListModel(
-                    selectedClass.getClassVariables(), 
+                    selectedClass.getStaticVars(), 
                     (DefaultListModel)staticVarList.getModel());
             model.fillListModel(
                     selectedClass.getInstanceMethods(), 
                     (DefaultListModel)instanceMethodList.getModel());
             model.fillListModel(
-                    selectedClass.getClassVariables(), 
+                    selectedClass.getStaticMethods(), 
                     (DefaultListModel)staticMethodList.getModel());
         }
     }
