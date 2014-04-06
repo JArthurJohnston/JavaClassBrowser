@@ -27,6 +27,10 @@ public class MethodModel extends ClassModel{
         this(parent, ScopeType.PRIVATE, ClassType.INSTANCE, 
                 JavaLang.getVoid(), name, new ArrayList(), new String());
     }
+    public MethodModel(ClassModel parent, String name, ClassType type){
+        this(parent, ScopeType.PRIVATE, type, JavaLang.getVoid(), 
+                name, new ArrayList(), new String());
+    }
     
     /**
      * this is THE constructor for non-constructor methods
@@ -65,6 +69,7 @@ public class MethodModel extends ClassModel{
         this.parameters = params;
         this.source = source;
     }
+    
     
     private void initializeFields(){
         this.type = ClassType.INSTANCE;

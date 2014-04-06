@@ -64,6 +64,11 @@ public class MethodModelTest extends BaseTest{
     }
     
     @Test
+    public void testIsConstructor(){
+        fail("Write me!");
+    }
+    
+    @Test
     public void testInheritedFields(){
         assertEquals(ClassModel.class, method.getParent().getClass());
         assertEquals("ParentClass", method.getParent().name());

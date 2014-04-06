@@ -4,6 +4,7 @@
  */
 package UIShells;
 
+import Models.ClassModel;
 import Models.PackageModel;
 import UIModels.ClassBrowserShellModel;
 import javax.swing.DefaultListModel;
@@ -30,26 +31,46 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private void setUpInitialListsModels(){
         this.setUpJList(classList);
         if(model.selectedProject() != null)
-            model.fillListModel(model.selectedProject().getClassList(), (DefaultListModel)classList.getModel());
+            model.fillListModel(model.selectedProject().getClassList(), 
+                    (DefaultListModel)classList.getModel());
         if(classList.getModel().getSize() != 0)
             classList.setSelectedIndex(0);
-        this.setUpJList(instanceMethodList);
-        this.setUpJList(instanceVarList);
-        this.setUpJList(staticMethodList);
         this.setUpJList(staticVarList);
+        this.setUpJList(instanceVarList);
+        this.setUpJList(instanceMethodList);
+        this.setUpJList(staticMethodList);
+        this.fillListsFromClass((ClassModel)classList.getSelectedValue());
+    }
+    
+    private void fillListsFromClass(ClassModel selectedClass){
+        if(selectedClass != null){
+            model.fillListModel(
+                    selectedClass.getInstanceVariables(), 
+                    (DefaultListModel)instanceVarList.getModel());
+            model.fillListModel(
+                    selectedClass.getClassVariables(), 
+                    (DefaultListModel)staticVarList.getModel());
+            model.fillListModel(
+                    selectedClass.getInstanceMethods(), 
+                    (DefaultListModel)instanceMethodList.getModel());
+            model.fillListModel(
+                    selectedClass.getClassVariables(), 
+                    (DefaultListModel)staticMethodList.getModel());
+        }
     }
     
     private void setUpJList(JList aList){
         aList.setModel(new DefaultListModel());
-        aList.getSelectionModel().addListSelectionListener(this.setUpListener());
+        aList.getSelectionModel().addListSelectionListener(this.setUpListener(aList));
     }
     
-    private ListSelectionListener setUpListener(){
+    private ListSelectionListener setUpListener(final JList aList){
         return new ListSelectionListener(){
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting())
-                    model.setSelected((PackageModel)((JList)(e.getSource())).getSelectedValue());
+                if(!e.getValueIsAdjusting()){
+                    model.setSelected((PackageModel)aList.getSelectedValue());
+                }
             }
         };
     }

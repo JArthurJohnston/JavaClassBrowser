@@ -21,13 +21,7 @@ import java.util.LinkedList;
 public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
-    private ArrayList<MethodModel> methods;
-    private ArrayList<MethodModel> instanceMethods;
-    private ArrayList<MethodModel> classMethods;
-    private ArrayList<ConstructorModel> constructors;
-    private ArrayList<MethodModel> inheritedMethods;
-    private ArrayList<VariableModel> instanceVars;
-    private ArrayList<VariableModel> classVars;
+    private LinkedList<MethodModel> methods;
     private LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
@@ -55,12 +49,7 @@ public class ClassModel extends PackageModel{
     @Override
     protected void setUpFields(){
         this.classList = new ArrayList();
-        this.methods = new ArrayList();
-        this.instanceMethods = new ArrayList();
-        this.classMethods = new ArrayList();
-        this.constructors = new ArrayList();
-        //this.instanceVars = new ArrayList();
-        //this.classVars = new ArrayList();
+        this.methods = new LinkedList();
         this.variables = new LinkedList();
     }
     
@@ -124,11 +113,6 @@ public class ClassModel extends PackageModel{
     public MethodModel addMethod(MethodModel newMethod) throws NameAlreadyExistsException{
         if(!this.okToAddMethod(newMethod.name()))
             throw new NameAlreadyExistsException(this, newMethod);
-        if(newMethod.getType() == ClassType.CLASS) {
-            classMethods.add(this.project.addMethodDefinition(newMethod));
-        }else if(newMethod.getType() == ClassType.INSTANCE) {
-            instanceMethods.add(this.project.addMethodDefinition(newMethod));
-        }
         methods.add(newMethod);
         return newMethod;
     }
@@ -144,14 +128,9 @@ public class ClassModel extends PackageModel{
     
     @Override
     public MethodModel removeMethod(MethodModel aMethod){
-        methods.remove(aMethod);
-        if(classMethods.contains(aMethod)) {
-            classMethods.remove(aMethod);
-        }
-        if(instanceMethods.contains(aMethod)) {
-            instanceMethods.remove(aMethod);
-        }
-        return aMethod;
+        if(methods.contains(aMethod)) 
+            return aMethod;
+        return null;
     }
     
     public VariableModel removeVariable(VariableModel aVar) throws DoesNotExistException{
@@ -177,27 +156,29 @@ public class ClassModel extends PackageModel{
         }
     }
     
-    public ArrayList getInstanceMethods(){
-        return instanceMethods;
-    }
-    public ArrayList getClassMethods(){
-        return classMethods;
-    }
-    public ArrayList getConstructors(){
-        return constructors;
-    }
-    
-    public ArrayList getMethods(){
+    public LinkedList getMethods(){
         return methods;
     }
+    
+    public LinkedList getStaticMethods(){
+        return this.getMethodsOfType(ClassType.CLASS);
+    }
+    public LinkedList getInstanceMethods(){
+        return this.getMethodsOfType(ClassType.INSTANCE);
+    }
+    
+    private LinkedList<MethodModel> getMethodsOfType(ClassType aType){
+        LinkedList<MethodModel> aList = new LinkedList();
+        for(MethodModel m : methods){
+            if(m.getType() ==  aType)
+                aList.add(m);
+        }
+        return aList;
+    }
+    
+    
     public ScopeType getScope(){
         return this.scope;
-    }
-    public ArrayList getInstanceVariables(){
-        return instanceVars;
-    }
-    public ArrayList getClassVariables(){
-        return classVars;
     }
     public LinkedList getVariables(){
         return variables;

@@ -10,9 +10,12 @@ import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
+import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -61,10 +64,6 @@ public class ClassModelTest extends BaseTest{
         assertEquals(parentPackage, testClass.getParent());
         assertEquals(ClassModel.class, testClass.getClass());
         assertEquals(LinkedList.class, testClass.getClassList().getClass());
-        assertEquals(ArrayList.class, testClass.getClassMethods().getClass());
-        assertEquals(ArrayList.class, testClass.getInstanceMethods().getClass());
-        assertEquals(ArrayList.class, testClass.getConstructors().getClass());
-        assertEquals(0, testClass.getConstructors().size());
                 
     }
 
@@ -247,6 +246,42 @@ public class ClassModelTest extends BaseTest{
         assertEquals(1, testClass.getClassList().size());
         assertEquals(testClass, testClass.getClassList().getLast());
         assertEquals(testClass.getClassList().getFirst(), testClass.getClassList().getLast());
+    }
+    
+    @Test
+    public void testGetStaticMethods(){
+        MethodModel aMethod = null;
+        assertTrue(testClass.getStaticMethods().isEmpty());
+        try {
+            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.CLASS));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getStaticMethods().contains(aMethod));
+        try {
+            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.INSTANCE));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(testClass.getStaticMethods().contains(aMethod));
+    }
+    
+    @Test
+    public void testGetInstanceMethods(){
+        MethodModel aMethod = null;
+        assertTrue(testClass.getInstanceMethods().isEmpty());
+        try {
+            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.INSTANCE));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getInstanceMethods().contains(aMethod));
+        try {
+            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.CLASS));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertFalse(testClass.getInstanceMethods().contains(aMethod));
     }
     
     @Test

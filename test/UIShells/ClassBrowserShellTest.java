@@ -10,10 +10,13 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseShellTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
+import Models.MethodModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,6 +69,19 @@ public class ClassBrowserShellTest extends BaseShellTest{
         shell = model.openShell();
     }
     
+    private ClassModel addMethodsToClass(ClassModel aClass){
+        try {
+            aClass.addMethod(new MethodModel(aClass, "aMethod"));
+            aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod"));
+            aClass.addMethod(new MethodModel(aClass, "evenBetterMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(4, aClass.getInstanceMethods().size());
+        return aClass;
+    }
+    
     @Test
     public void testAddClassesToModel(){
         ClassModel one = null;
@@ -95,6 +111,26 @@ public class ClassBrowserShellTest extends BaseShellTest{
     }
     
     @Test
+    public void testAddClassUpdatesClassList(){
+        JList classList = (JList)this.getVariableFromClass(shell, "classList");
+        assertEquals(0, classList.getModel().getSize());
+        try {
+            ClassModel aClass = model.addClass(new ClassModel(model.getSelected(), "aClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, classList.getModel().getSize());
+    }
+    
+    @Test
+    public void testAddClassWhenMethodSelected(){
+        fail("NEEDS to be written!!!!");
+        /*
+        if a class isnt selected, just add it to the selected package
+        */
+    }
+    
+    @Test
     public void testListInitialize(){
         assertEquals("a project", main.getSelectedProject().name());
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
@@ -107,13 +143,25 @@ public class ClassBrowserShellTest extends BaseShellTest{
     }
 
     @Test
-    public void testListSetsSelected() {
+    public void testListSetsSelectedClass() {
         this.testAddClassesToModel();
         LinkedList classes = model.getSelected().getClassList();
         this.reInitShell();
         JList classList = (JList)this.getVariableFromClass(shell, "classList");
         assertEquals(3, classList.getModel().getSize());
         assertEquals(classes.getFirst(), classList.getSelectedValue());
+        assertEquals("NewClass", ((ClassModel)classList.getSelectedValue()).name());
+        classList.setSelectedIndex(1);
+        assertEquals(classes.get(1), classList.getSelectedValue());
+        assertEquals("AnotherClass", ((ClassModel)classList.getSelectedValue()).name());
+        classList.setSelectedIndex(2);
+        assertEquals(classes.get(2), classList.getSelectedValue());
+        assertEquals("YetAnotherClass", ((ClassModel)classList.getSelectedValue()).name());
+    }
+    
+    @Test
+    public void testInitalMethodList(){
+        
     }
     
     @Test
