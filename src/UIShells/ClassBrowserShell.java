@@ -26,6 +26,11 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         initComponents();
         this.model = model;
         this.setUpInitialListsModels();
+        this.initializePanels();
+    }
+    
+    private void initializePanels(){
+        this.methodPresenter.initializeWithModel(model);
     }
     
     private void setUpInitialListsModels(){
@@ -37,8 +42,6 @@ public class ClassBrowserShell extends javax.swing.JFrame {
             classList.setSelectedIndex(0);
         this.setUpJList(staticVarList);
         this.setUpJList(instanceVarList);
-        this.setUpJList(instanceMethodList);
-        this.setUpJList(staticMethodList);
         this.fillListsFromClass((ClassModel)classList.getSelectedValue());
     }
     
@@ -50,12 +53,6 @@ public class ClassBrowserShell extends javax.swing.JFrame {
             model.fillListModel(
                     selectedClass.getStaticVars(), 
                     (DefaultListModel)staticVarList.getModel());
-            model.fillListModel(
-                    selectedClass.getInstanceMethods(), 
-                    (DefaultListModel)instanceMethodList.getModel());
-            model.fillListModel(
-                    selectedClass.getStaticMethods(), 
-                    (DefaultListModel)staticMethodList.getModel());
         }
     }
     
@@ -102,13 +99,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         staticVarList = new javax.swing.JList();
         jScrollPane7 = new javax.swing.JScrollPane();
         importsList = new javax.swing.JList();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        instanceMethodList = new javax.swing.JList();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        staticMethodList = new javax.swing.JList();
+        methodPresenter = new UIPanels.MethodPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -179,36 +170,18 @@ public class ClassBrowserShell extends javax.swing.JFrame {
 
         jSplitPane1.setLeftComponent(jPanel1);
 
-        jLabel2.setText("Methods");
-
-        jTabbedPane2.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-
-        jScrollPane3.setViewportView(instanceMethodList);
-
-        jTabbedPane2.addTab("Instance Methods", jScrollPane3);
-
-        jScrollPane4.setViewportView(staticMethodList);
-
-        jTabbedPane2.addTab("Static Methods", jScrollPane4);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+        javax.swing.GroupLayout methodPresenterLayout = new javax.swing.GroupLayout(methodPresenter);
+        methodPresenter.setLayout(methodPresenterLayout);
+        methodPresenterLayout.setHorizontalGroup(
+            methodPresenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 187, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE))
+        methodPresenterLayout.setVerticalGroup(
+            methodPresenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 296, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setRightComponent(jPanel2);
+        jSplitPane1.setRightComponent(methodPresenter);
 
         jSplitPane3.setRightComponent(jSplitPane1);
 
@@ -217,6 +190,8 @@ public class ClassBrowserShell extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jEditorPane1);
 
         jSplitPane2.setRightComponent(jScrollPane5);
+
+        getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -230,17 +205,6 @@ public class ClassBrowserShell extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -250,22 +214,17 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private javax.swing.JList classList;
     private javax.swing.JPopupMenu classListRightClickMenu;
     private javax.swing.JList importsList;
-    private javax.swing.JList instanceMethodList;
     private javax.swing.JList instanceVarList;
     private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
@@ -273,8 +232,7 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JList staticMethodList;
+    private UIPanels.MethodPanel methodPresenter;
     private javax.swing.JList staticVarList;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,6 +8,7 @@ import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import Models.ClassModel;
+import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.ClassBrowserShell;
@@ -19,8 +20,10 @@ import java.util.LinkedList;
  */
 public class ClassBrowserShellModel extends BaseUIModel{
     private ClassBrowserShell shell;
+    private ClassModel selectedClass;
     private ProjectModel selectedProject;
     private PackageModel selectedModel;
+    
     
     public ClassBrowserShellModel(MainApplication main){
         super(main);
@@ -54,6 +57,19 @@ public class ClassBrowserShellModel extends BaseUIModel{
     public ProjectModel selectedProject(){
         return selectedProject;
     }
+    
+    public ClassModel selectedClass(){
+        return selectedClass;
+    }
+    
+    public void setSelectedMethod(MethodModel aMethod){
+        this.setSelected(aMethod);
+    }
+    
+    public void setSelectedClass(ClassModel aClass){
+        this.selectedClass = aClass;
+    }
+    
     public void close(){
         main.removeModel(this);
     }

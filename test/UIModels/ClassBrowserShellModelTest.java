@@ -9,8 +9,10 @@ import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
+import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
+import Models.VariableModel;
 import UIShells.ClassBrowserShell;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -147,5 +149,72 @@ public class ClassBrowserShellModelTest extends BaseTest{
         }
         model.setSelected(aClass);
         assertEquals(aClass, model.getSelected());
+    }
+    
+    @Test
+    public void testSelectedClass(){
+        ClassModel aClass = model.selectedClass();
+        ClassModel anotherClass = null;
+        MethodModel aMethod = null;
+        assertEquals(null, aClass);
+        try {
+            aClass = model.addClass(new ClassModel(model.getSelected(), "aClass"));
+            anotherClass = model.addClass(new ClassModel(model.getSelected(), "AnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(aClass != null);
+        assertEquals(aClass, model.selectedClass());
+        model.setSelected(anotherClass);
+        assertEquals(anotherClass, model.selectedClass());
+        try {
+            aMethod = aClass.addMethod(new MethodModel(aClass, "aMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model.setSelected(aMethod);
+        assertEquals(aClass, model.selectedClass());
+        try {
+            aMethod = anotherClass.addMethod(new MethodModel(aClass, "aMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model.setSelected(aMethod);
+        assertEquals(anotherClass, model.selectedClass());
+    }
+    
+    @Test
+    public void testOnMethodSelected(){
+        ClassModel aClass = null;
+        MethodModel aMethod = null;
+        try {
+            aClass = model.addClass(new ClassModel(model.getSelected(), "AClass"));
+            aMethod = aClass.addMethod(new MethodModel(aClass, "aMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model.setSelectedMethod(aMethod);
+        assertEquals(aClass, model.selectedClass());
+        assertEquals(aMethod, model.getSelected());
+    }
+    
+    @Test
+    public void setSelectedClass(){
+        ClassModel aClass = null;
+        assertEquals(null, model.selectedClass());
+        try {
+            aClass = model.addClass(new ClassModel(model.getSelected(), "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        model.setSelectedClass(aClass);
+        assertEquals(aClass, model.selectedClass());
+    }
+    
+    @Test
+    public void testInitialSelectedClass(){
+        assertEquals(null, model.selectedClass());
+        this.setUpModelWithClasses();
+        assertEquals("AClass", model.selectedClass().name());
     }
 }

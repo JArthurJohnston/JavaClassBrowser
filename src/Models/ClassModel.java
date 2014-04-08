@@ -157,7 +157,7 @@ public class ClassModel extends PackageModel{
         }
     }
     
-    public LinkedList getMethods(){
+    public LinkedList<MethodModel> getMethods(){
         return methods;
     }
     

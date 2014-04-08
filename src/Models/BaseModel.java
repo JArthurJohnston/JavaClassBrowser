@@ -58,7 +58,7 @@ public abstract class BaseModel {
         this.hasChange = isChange;
     }
     
-    protected boolean isClass(){
+    public boolean isClass(){
         return false;
     }
     protected boolean isProject(){

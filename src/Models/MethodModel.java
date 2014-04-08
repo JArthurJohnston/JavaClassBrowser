@@ -173,4 +173,9 @@ public class MethodModel extends ClassModel{
         }
         return signature + "){\n"+ this.getSource() + "\n}";
     }
+    
+    @Override
+    public boolean isClass(){
+        return false;
+    }
 }
