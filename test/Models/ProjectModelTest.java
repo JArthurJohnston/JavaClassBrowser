@@ -81,23 +81,19 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testDefaultPackage(){
-        try {
-            assertEquals(PackageModel.class, project.getDefaultPackage().getClass());
-            assertEquals("default package", project.getDefaultPackage().name());
-        } catch (DoesNotExistException ex) {
-            fail(ex.getMessage());
-        }
+        assertEquals(PackageModel.class, project.getDefaultPackage().getClass());
+        assertEquals("default package", project.getDefaultPackage().name());
         try {
             project.removePackage(project.getDefaultPackage());
             project.getDefaultPackage();
-        } catch (DoesNotExistException | PackageDoesNotExistException ex) {
+        } catch ( PackageDoesNotExistException ex) {
             assertEquals(DoesNotExistException.class, ex.getClass());
         }
     }
     
     @Test
     public void testSetDefaultPackage(){
-        
+        fail("why am i not written?");
     }
     
     @Test
@@ -290,6 +286,14 @@ public class ProjectModelTest extends BaseTest{
         aMethod = this.addMethodToClass("newMethod", anotherClass);
         assertEquals(2, project.getMethodDefinitions(aMethod).size());
         assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
+    }
+    
+    @Test
+    public void testFindMethod(){
+        assertEquals(null, project.findMethod("aMethod"));
+        PackageModel aPackage = this.addPackageToProject("A Package", project);
+        ClassModel aClass = this.addClassToParent("AClass", aPackage);
+        MethodModel aMethod = this.addMethodToClass("newMethod", aClass);
     }
     
     @Test

@@ -28,6 +28,9 @@ public class ClassBrowserShellModel extends BaseUIModel{
     public ClassBrowserShellModel(MainApplication main){
         super(main);
         selectedProject = main.getSelectedProject();
+        if(selectedProject != null)
+            if(!selectedProject.getClassList().isEmpty())
+                selectedClass = selectedProject.getClassList().getFirst();
         this.openShell();
     }
     

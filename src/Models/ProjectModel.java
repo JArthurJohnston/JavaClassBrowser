@@ -4,7 +4,6 @@
  */
 package Models;
 
-import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -225,7 +224,7 @@ public class ProjectModel extends BaseModel {
      * 
      * @return LinkedList of ClassModels
      */
-    public LinkedList getClassList(){
+    public LinkedList<ClassModel> getClassList(){
         LinkedList classList = new LinkedList();
         for(PackageModel p : packageList){
             classList.addAll(p.getClassList());
@@ -302,15 +301,6 @@ public class ProjectModel extends BaseModel {
             return newMethod;
         }
             /*
-            renaming means removing a definition and a reference
-            if those are the only definitions and references, the
-            method needs to be removed from the hash
-            AND the re-named method has to be added to the hash (if 
-            it does not already exist)
-            if theres already a method in the hash with that name
-            the re-named method must be added to its
-            definitions/references.
-            
             alternatively, a method rename = a method add. leaving the original
             in place.
             */

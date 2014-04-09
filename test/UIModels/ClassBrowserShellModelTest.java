@@ -49,6 +49,7 @@ public class ClassBrowserShellModelTest extends BaseTest{
         main = new MainApplication();
         try {
             project = main.setSelectedProejct(main.addProject(new ProjectModel(main,"A Project")));
+            assertEquals(project, main.getSelectedProject());
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -72,6 +73,7 @@ public class ClassBrowserShellModelTest extends BaseTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+        assertEquals(project, main.getSelectedProject());
         model = new ClassBrowserShellModel(main);
     }
     
@@ -215,6 +217,14 @@ public class ClassBrowserShellModelTest extends BaseTest{
     public void testInitialSelectedClass(){
         assertEquals(null, model.selectedClass());
         this.setUpModelWithClasses();
-        assertEquals("AClass", model.selectedClass().name());
+        assertEquals("NewClass", model.selectedClass().name());
+    }
+    
+    @Test
+    public void testSetSelectedClass(){
+        ClassModel aClass = new ClassModel(project.getDefaultPackage(), "AClass");
+        assertEquals(null, model.selectedClass());
+        model.setSelectedClass(aClass);
+        assertEquals(aClass, model.selectedClass());
     }
 }
