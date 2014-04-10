@@ -10,6 +10,7 @@ import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
+import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -331,5 +332,12 @@ public class ClassModelTest extends BaseTest{
     public void testAddClassTriggersUpdateShells(){
         fail("main should tell every shell except the caller"
                 + "to update itself with the new package, if appliable");
+    }
+    
+    @Test
+    public void testGetMain(){
+        MainApplication main = (MainApplication)this.getVariableFromClass(parentProject, "main");
+        main = new MainApplication();
+        assertEquals(main, testClass.getMain());
     }
 }

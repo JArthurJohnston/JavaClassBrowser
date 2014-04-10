@@ -9,6 +9,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
+import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.BaseUIModel;
@@ -225,5 +226,8 @@ public class ClassModel extends PackageModel{
         return this;
     }
     
-    
+    @Override
+    public MainApplication getMain(){
+        return parent.getMain();
+    }
 }

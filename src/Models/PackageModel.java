@@ -7,6 +7,7 @@ package Models;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
+import MainBase.MainApplication;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -74,6 +75,10 @@ public class PackageModel extends ProjectModel {
         this.parent = parent;
         this.name = name;
         this.setUpFields();
+    }
+    
+    protected MainApplication getMain(){
+        return project.getMain();
     }
     
     @Override

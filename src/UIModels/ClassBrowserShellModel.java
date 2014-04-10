@@ -51,7 +51,7 @@ public class ClassBrowserShellModel extends BaseUIModel{
     }
     
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
-        return this.getSelected().addClass(newClass);
+        return this.selectedClass().addClass(newClass);
     }
     public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         return this.getSelected().removeClass(aClass);

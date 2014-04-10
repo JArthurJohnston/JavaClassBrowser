@@ -92,11 +92,6 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Test
-    public void testSetDefaultPackage(){
-        fail("why am i not written?");
-    }
-    
-    @Test
     public void testAddPackage() {
         System.out.println("testAddPackage");
         PackageModel newPackage = null;
@@ -286,14 +281,6 @@ public class ProjectModelTest extends BaseTest{
         aMethod = this.addMethodToClass("newMethod", anotherClass);
         assertEquals(2, project.getMethodDefinitions(aMethod).size());
         assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
-    }
-    
-    @Test
-    public void testFindMethod(){
-        assertEquals(null, project.findMethod("aMethod"));
-        PackageModel aPackage = this.addPackageToProject("A Package", project);
-        ClassModel aClass = this.addClassToParent("AClass", aPackage);
-        MethodModel aMethod = this.addMethodToClass("newMethod", aClass);
     }
     
     @Test

@@ -160,13 +160,6 @@ public class ClassBrowserShellTest extends BaseShellTest{
     }
     
     @Test
-    public void testInitalMethodList(){
-        JList methods = (JList)this.getVariableFromClass(shell, "methodList");
-        assertEquals(0, methods.getModel().getSize());
-        fail("to make testing a lot easier, hows about I write the addStuff logic first");
-    }
-    
-    @Test
     @Override
     public void testCloseAndDispose(){
         model.close();

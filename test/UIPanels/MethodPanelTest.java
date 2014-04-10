@@ -11,10 +11,9 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
+import Types.ClassType;
 import UIModels.ClassBrowserShellModel;
 import UIShells.ClassBrowserShell;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,6 +53,7 @@ public class MethodPanelTest extends BaseTest{
             aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod"));
             aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
             main.setSelectedProejct(aProject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -78,14 +78,19 @@ public class MethodPanelTest extends BaseTest{
         assertEquals(MethodPanel.class, panel.getClass());
         JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
         assertEquals(model, this.getVariableFromClass(panel, "model"));
-        assertEquals(2, instList.getModel().getSize());
+        assertEquals(3, instList.getModel().getSize());
     }
     
     @Test
     public void testListSelectionSetsModel(){
         assertEquals(MethodPanel.class, panel.getClass());
+        MethodModel aMethod = model.selectedClass().getMethods().get(0);
+        MethodModel anotherMethod = model.selectedClass().getMethods().get(1);
         JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
         instList.setSelectedIndex(1);
-        fail("waiting on project.findMethod");
+        assertEquals(anotherMethod, model.getSelected());
+        instList.setSelectedIndex(0);
+        assertEquals(aMethod, model.getSelected());
     }
+    
 }

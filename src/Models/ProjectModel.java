@@ -21,7 +21,7 @@ import java.util.LinkedList;
  * @author Arthur
  */
 public class ProjectModel extends BaseModel {
-    //private variables
+    private MainApplication main;
     private HashMap <String, ClassModel> classes;
     private HashMap <String, LinkedList<MethodModel>> methods;
     private HashMap <String, PackageModel> packages;
@@ -50,6 +50,7 @@ public class ProjectModel extends BaseModel {
     }
     
     public ProjectModel(MainApplication main, String name){
+        this.main = main;
         this.userName = main.getUserName();
         this.name = name;
         this.setUpFields();
@@ -259,6 +260,8 @@ public class ProjectModel extends BaseModel {
         return methods.get(aMethod.name());
     }
     
+    
+    
     public MethodModel removeMethod(MethodModel aMethod) throws VeryVeryBadException{
         if(!methods.get(aMethod.name()).remove(aMethod))
             throw new VeryVeryBadException(this, aMethod);
@@ -270,39 +273,8 @@ public class ProjectModel extends BaseModel {
         */
     }
     
-    /**
-     * a wrapper class for containing a list of methods
-     * and their definitions and references.
-     */
-    private class MethodContainer{
-        private String name;
-        private LinkedList definitions;
-        private LinkedList references;
-        
-        public MethodContainer(MethodModel aMethod){
-            this.name = aMethod.name();
-            this.definitions = new LinkedList();
-            this.definitions.add(aMethod);
-            this.references = new LinkedList();
-            this.references.add(aMethod);
-        }
-        
-        public LinkedList<MethodModel> getReferences(){
-            return references;
-        }
-        
-        public LinkedList<MethodModel> getDefinitions(){
-            return definitions;
-        }
-        
-        public MethodModel addMethod(MethodModel newMethod){
-            definitions.add(newMethod);
-            references.add(newMethod);
-            return newMethod;
-        }
-            /*
-            alternatively, a method rename = a method add. leaving the original
-            in place.
-            */
+    protected MainApplication getMain(){
+        return main;
     }
+   
 }
