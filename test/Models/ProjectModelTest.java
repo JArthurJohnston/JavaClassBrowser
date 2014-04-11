@@ -299,4 +299,14 @@ public class ProjectModelTest extends BaseTest{
                 + "to update itself with the new package, if appliable");
     }
     
+    @Test
+    public void testGetMain(){
+        MainApplication main = new MainApplication();
+        try {
+            project = main.addProject(new ProjectModel(main, "aProject"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(main, project.getMain());
+    }
 }

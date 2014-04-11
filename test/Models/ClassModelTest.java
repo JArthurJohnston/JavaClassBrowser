@@ -336,8 +336,14 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testGetMain(){
-        MainApplication main = (MainApplication)this.getVariableFromClass(parentProject, "main");
-        main = new MainApplication();
+        MainApplication main = new MainApplication();
+        try {
+            ProjectModel aProject = main.addProject(new ProjectModel(main,"aProject"));
+            PackageModel aPackage = aProject.addPackage(new PackageModel(aProject, "a package"));
+            testClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(main, testClass.getMain());
     }
 }

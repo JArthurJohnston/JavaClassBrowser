@@ -4,6 +4,7 @@
  */
 package UIShells;
 
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.PackageModel;
 import UIModels.ClassBrowserShellModel;
@@ -235,4 +236,8 @@ public class ClassBrowserShell extends javax.swing.JFrame {
     private UIPanels.MethodPanel methodPresenter;
     private javax.swing.JList staticVarList;
     // End of variables declaration//GEN-END:variables
+
+    public void addClass(BaseModel newClass){
+        ((DefaultListModel)this.classList.getModel()).addElement(newClass);
+    }
 }

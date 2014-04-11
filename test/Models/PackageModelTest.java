@@ -41,7 +41,8 @@ public class PackageModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        parentProject = new ProjectModel("AProject");
+        main = new MainApplication();
+        parentProject = new ProjectModel(main, "AProject");
         testPackage = 
                 this.addPackageToProject("New Package", parentProject);
     }
@@ -50,6 +51,7 @@ public class PackageModelTest extends BaseTest{
     public void tearDown() {
         parentProject = null;
         testPackage = null;
+        main = null;
     }
 
     @Test
@@ -293,5 +295,10 @@ public class PackageModelTest extends BaseTest{
     public void testAddClassTriggersUpdateShells(){
         fail("main should tell every shell except the caller"
                 + "to update itself with the new package, if appliable");
+    }
+    
+    @Test
+    public void testGetMain(){
+        assertEquals(main, testPackage.getMain());
     }
 }

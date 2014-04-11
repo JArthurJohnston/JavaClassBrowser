@@ -7,10 +7,13 @@ package MainBase;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
+import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import UIModels.ProjectSelectionModel;
+import UIShells.ClassBrowserShell;
 import java.util.ArrayList;
+import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -184,11 +187,6 @@ public class MainApplicationTest extends BaseTest {
     }
     
     @Test
-    public void testSelectedPackage(){
-        fail();
-    }
-    
-    @Test
     public void testAddClassBrowser(){
         ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
         assertTrue(models.isEmpty());
@@ -199,5 +197,27 @@ public class MainApplicationTest extends BaseTest {
         assertEquals(2, models.size());
         assertEquals(ClassBrowserShellModel.class, models.get(1).getClass());
         assertFalse(models.get(0) == models.get(1));
+    }
+    
+    @Test
+    public void testAddClassUpdateShells(){
+        ClassBrowserShell aShell = main.openClassBrowser().openShell();
+        ClassBrowserShell anotherShell = main.openClassBrowser().openShell();
+        ClassModel newClass = new ClassModel("aClass");
+        main.addUpdateShells(newClass);
+        JList classList = (JList)this.getVariableFromClass(aShell, "classList");
+        JList anotherClassList = (JList)this.getVariableFromClass(aShell, "classList");
+        assertEquals(1, classList.getModel().getSize());
+        assertEquals(1, anotherClassList.getModel().getSize());
+    }
+    
+    @Test
+    public void testAddMethodUpdatesShells(){
+        fail();
+    }
+    
+    @Test
+    public void testAddVarUpdatesShells(){
+        fail();
     }
 }

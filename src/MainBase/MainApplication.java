@@ -158,4 +158,10 @@ public class MainApplication {
         openWindowModels.add(new ClassBrowserShellModel(this));
         return (ClassBrowserShellModel)openWindowModels.get(openWindowModels.size()-1);
     }
+    
+    public void addUpdateShells(BaseModel newModel){
+        for(BaseUIModel m : openWindowModels){
+            m.modelAdded(newModel);
+        }
+    }
 }

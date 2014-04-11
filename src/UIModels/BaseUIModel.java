@@ -5,6 +5,7 @@
 package UIModels;
 
 import MainBase.MainApplication;
+import Models.BaseModel;
 import UIShells.BaseUIShell;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -35,4 +36,8 @@ public class BaseUIModel {
             listModel.addElement(list.get(i));
         }
     }
+    
+    public void modelAdded(BaseModel newModel){}
+    public void modelChanged(BaseModel newModel){}
+    public void modelRemoved(BaseModel newModel){}
 }

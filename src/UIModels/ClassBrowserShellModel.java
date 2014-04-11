@@ -7,6 +7,7 @@ package UIModels;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
@@ -51,8 +52,14 @@ public class ClassBrowserShellModel extends BaseUIModel{
     }
     
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
-        return this.selectedClass().addClass(newClass);
+        PackageModel selectedObject;
+        if(this.selectedClass() == null)
+            selectedObject = this.getSelected();
+        else 
+            selectedObject = this.selectedClass;
+        return selectedObject.addClass(newClass);
     }
+    
     public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         return this.getSelected().removeClass(aClass);
     }
@@ -76,6 +83,7 @@ public class ClassBrowserShellModel extends BaseUIModel{
     public void close(){
         main.removeModel(this);
     }
+    
     public ClassBrowserShell openShell(){
         if(shell == null)
             shell = new ClassBrowserShell(this);
@@ -86,5 +94,11 @@ public class ClassBrowserShellModel extends BaseUIModel{
             shell.dispose();
             shell = null;
         }
+    }
+    
+    public void modelAdded(BaseModel newModel){
+        if(newModel.isClass())
+            this.openShell().addClass(newModel);
+        //if(newModel.isVar)
     }
 }
