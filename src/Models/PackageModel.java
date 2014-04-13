@@ -16,7 +16,7 @@ import java.util.LinkedList;
  * @author Arthur
  */
 public class PackageModel extends ProjectModel {
-    private ArrayList<PackageModel> packageList;
+    private LinkedList<PackageModel> packageList;
     protected ProjectModel project;
     protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
@@ -30,6 +30,9 @@ public class PackageModel extends ProjectModel {
      * Should not be called AT ALL!
      */
     public PackageModel(){}
+    public PackageModel(String name){
+        this.name = name;
+    }
     
     /**
      * Default Project Constructor
@@ -83,7 +86,7 @@ public class PackageModel extends ProjectModel {
     
     @Override
     protected void setUpFields(){
-        packageList = new ArrayList();
+        packageList = new LinkedList();
         classList = new ArrayList();
     }
     
@@ -174,7 +177,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    public ArrayList<PackageModel> getPackageList(){
+    public LinkedList<PackageModel> getPackageList(){
         return packageList;
     }
     public ProjectModel getProject(){
@@ -184,4 +187,8 @@ public class PackageModel extends ProjectModel {
         return parent;
     }
     
+    @Override
+    public boolean isPackage(){
+        return true;
+    }
 }

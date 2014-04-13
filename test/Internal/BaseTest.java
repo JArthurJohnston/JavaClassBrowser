@@ -9,7 +9,11 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;                   
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,6 +105,35 @@ public class BaseTest {
             fail(ex.getMessage());
         }
         return null;
+    }
+    
+    public Object callMethodFromClass(Object objectOfOrigin, String name){
+        Method aMethod = this.getMethodFromClass(objectOfOrigin, name);
+        Object returnValue = null;
+        try {
+            returnValue = aMethod.invoke(objectOfOrigin, null);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        aMethod.setAccessible(false);
+        return returnValue;
+    }
+    
+    public Method getMethodFromClass(Object objectOfOrigin, String methodName){
+        Method aMethod = null;
+        try {
+            aMethod =  objectOfOrigin.getClass().getDeclaredMethod(methodName, null);
+        } catch (NoSuchMethodException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SecurityException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        aMethod.setAccessible(true);
+        return aMethod;
     }
     
     /**

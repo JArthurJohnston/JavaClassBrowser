@@ -230,4 +230,9 @@ public class ClassModel extends PackageModel{
     public MainApplication getMain(){
         return parent.getMain();
     }
+    
+    @Override
+    public boolean isPackage(){
+        return false;
+    }
 }

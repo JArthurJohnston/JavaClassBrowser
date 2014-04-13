@@ -8,7 +8,6 @@ import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,10 +24,12 @@ public class ProjectModel extends BaseModel {
     private HashMap <String, ClassModel> classes;
     private HashMap <String, LinkedList<MethodModel>> methods;
     private HashMap <String, PackageModel> packages;
-    private ArrayList<PackageModel> packageList;
-    protected Date dateCreated;
+    private LinkedList<PackageModel> packageList;
     private String userName;
     
+    protected Date dateCreated;
+    
+    public static PackageModel allPackage = new PackageModel("All");
     public static String DELETE_WARNING = "You are about to delete this project\n"
             + "This operation cannot be undone.\n"
             + "Continue?";
@@ -65,7 +66,7 @@ public class ProjectModel extends BaseModel {
         dateCreated = new Date();
         classes = new HashMap();
         packages = new HashMap();
-        packageList = new ArrayList();
+        packageList = new LinkedList();
         PackageModel defaultPackage = new PackageModel(this);
         packages.put(defaultPackage.name(), defaultPackage);
         packageList.add(defaultPackage);
@@ -94,7 +95,8 @@ public class ProjectModel extends BaseModel {
     public HashMap<String, PackageModel> getPackages(){
         return packages;
     }
-    public ArrayList<PackageModel> getPackageList(){
+    public LinkedList<PackageModel> getPackageList(){
+        packageList.addFirst(allPackage);
         return packageList;
     }
     @Override
@@ -110,7 +112,7 @@ public class ProjectModel extends BaseModel {
     }
     public PackageModel getDefaultPackage(){
         if(!this.packageList.isEmpty())
-            return packageList.get(0);
+            return packageList.getFirst();
         return null;
     }
     
@@ -165,6 +167,7 @@ public class ProjectModel extends BaseModel {
             if(newPackage.getParent() == this) {
                 this.packageList.add(newPackage);
             }
+            this.main.addUpdateShells(newPackage);
             return newPackage;
         }else {
             throw new NameAlreadyExistsException(this, newPackage);

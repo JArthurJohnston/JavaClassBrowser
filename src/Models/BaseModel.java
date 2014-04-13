@@ -80,6 +80,10 @@ public abstract class BaseModel {
         return this.name;
     }
     
+    public boolean isPackage(){
+        return false;
+    }
+    
     //Abstract Methods
     abstract public String toSourceString();
     abstract protected void setUpFields();

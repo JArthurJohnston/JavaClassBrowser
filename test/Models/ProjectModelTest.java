@@ -309,4 +309,11 @@ public class ProjectModelTest extends BaseTest{
         }
         assertEquals(main, project.getMain());
     }
+    
+    @Test
+    public void testAllPackage(){
+        assertEquals(PackageModel.class, project.allPackage.getClass());
+        assertEquals("All", project.allPackage.name());
+        assertTrue(project.getPackageList().contains(project.allPackage));
+    }
 }

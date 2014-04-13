@@ -206,7 +206,7 @@ public class MainApplicationTest extends BaseTest {
         ClassModel newClass = new ClassModel("aClass");
         main.addUpdateShells(newClass);
         JList classList = (JList)this.getVariableFromClass(aShell, "classList");
-        JList anotherClassList = (JList)this.getVariableFromClass(aShell, "classList");
+        JList anotherClassList = (JList)this.getVariableFromClass(anotherShell, "classList");
         assertEquals(1, classList.getModel().getSize());
         assertEquals(1, anotherClassList.getModel().getSize());
     }

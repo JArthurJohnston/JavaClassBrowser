@@ -3,12 +3,10 @@ package MainBase;
 import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
-import UIModels.BaseUIModel;
-import UIModels.ClassBrowserShellModel;
-import UIModels.PackageSelectionShellModel;
-import UIModels.ProjectSelectionModel;
+import UIModels.*;
 import UIShells.AddNewProjectShell;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * MainApplication is the top-level model for the whole program
@@ -20,7 +18,7 @@ import java.util.ArrayList;
  */
 public class MainApplication {
     private ArrayList<ProjectModel> projects;
-    private ArrayList <BaseUIModel>openWindowModels;
+    private LinkedList <BaseUIModel>openWindowModels;
     private String userName;
     private ProjectModel selectedProject;
     private PackageModel selectedPackage;
@@ -28,8 +26,7 @@ public class MainApplication {
     public MainApplication(){
         userName = System.getProperty("user.name");
         projects = new ArrayList();
-        openWindowModels = new ArrayList();
-        //openWindowModels.add(shellModel);
+        openWindowModels = new LinkedList();
     }
     
     public ArrayList<ProjectModel> getProjects(){
@@ -163,5 +160,10 @@ public class MainApplication {
         for(BaseUIModel m : openWindowModels){
             m.modelAdded(newModel);
         }
+    }
+    
+    public SystemBrowserShellModel openSystemBrowser(){
+        openWindowModels.add(new SystemBrowserShellModel(this));
+        return (SystemBrowserShellModel)openWindowModels.getLast();
     }
 }
