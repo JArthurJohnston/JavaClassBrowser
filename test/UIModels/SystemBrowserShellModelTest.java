@@ -7,6 +7,7 @@ package UIModels;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIShells.SystemBrowserShell;
@@ -99,5 +100,20 @@ public class SystemBrowserShellModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertEquals(3, model.getPackages().size());
+    }
+    
+    @Test
+    public void testSelectedClass(){
+        ClassModel aClass = null;
+        assertEquals(null, model.getSelectedClass());
+        try {
+            PackageModel aPackage = 
+                    main.getSelectedProject().addPackage(
+                    new PackageModel(main.getSelectedProject(), "a package"));
+            aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(aClass, model.getSelectedClass());
     }
 }

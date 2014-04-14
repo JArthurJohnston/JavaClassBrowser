@@ -9,6 +9,7 @@ import Models.MethodModel;
 import Models.PackageModel;
 import Types.ClassType;
 import UIModels.ClassBrowserShellModel;
+import UIModels.SystemBrowserShellModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
@@ -19,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
  * @author Arthur
  */
 public class MethodPanel extends BasePanel {
-    private ClassBrowserShellModel model;
+    private SystemBrowserShellModel model;
 
     /**
      * Creates new form MethodPanel
@@ -28,11 +29,11 @@ public class MethodPanel extends BasePanel {
         initComponents();
     }
     
-    public void initializeWithModel(ClassBrowserShellModel model){
+    public void initializeWithModel(SystemBrowserShellModel model){
         this.model = model;
         this.setUpLists();
-        if(model.selectedClass() != null)
-            this.fillListsFromClass(model.selectedClass());
+        if(model.getSelectedClass() != null)
+            this.fillListsFromClass(model.getSelectedClass());
     }
     
     private void fillListsFromClass(ClassModel aClass){
@@ -85,6 +86,7 @@ public class MethodPanel extends BasePanel {
         setLayout(new java.awt.BorderLayout());
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(150, 250));
 
         jScrollPane1.setViewportView(instanceMethodList);
 

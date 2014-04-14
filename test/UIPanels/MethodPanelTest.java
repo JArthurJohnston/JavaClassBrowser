@@ -13,6 +13,7 @@ import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
 import UIModels.ClassBrowserShellModel;
+import UIModels.SystemBrowserShellModel;
 import UIShells.ClassBrowserShell;
 import javax.swing.JList;
 import org.junit.After;
@@ -28,9 +29,8 @@ import static org.junit.Assert.*;
  */
 public class MethodPanelTest extends BaseTest{
     private MethodPanel panel;
-    private ClassBrowserShell shell;
     private MainApplication main;
-    private ClassBrowserShellModel model;
+    private SystemBrowserShellModel model;
     
     public MethodPanelTest() {
     }
@@ -49,7 +49,7 @@ public class MethodPanelTest extends BaseTest{
         ClassModel aClass = null;
         try {
             ProjectModel aProject = main.addProject(new ProjectModel(main, "AProject"));
-            PackageModel aPackage = main.getProjects().get(0).getPackageList().get(0);
+            PackageModel aPackage = aProject.getPackageList().get(1);
             aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod"));
             aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
@@ -58,17 +58,14 @@ public class MethodPanelTest extends BaseTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        model = main.openClassBrowser();
-        shell = model.openShell();
-        panel = (MethodPanel)this.getVariableFromClass(shell, "methodPresenter");
+        model = main.openSystemBrowser();
+        panel  = new MethodPanel();
+        panel.initializeWithModel(model);
     }
     
     @After
     public void tearDown() {
-        model.close();
-        shell.dispose();
         panel = null;
-        shell = null;
         model = null;
         main = null;
     }
@@ -83,6 +80,7 @@ public class MethodPanelTest extends BaseTest{
     
     @Test
     public void testListSelectionSetsModel(){
+        /*
         assertEquals(MethodPanel.class, panel.getClass());
         MethodModel aMethod = model.selectedClass().getMethods().get(0);
         MethodModel anotherMethod = model.selectedClass().getMethods().get(1);
@@ -91,6 +89,14 @@ public class MethodPanelTest extends BaseTest{
         assertEquals(anotherMethod, model.getSelected());
         instList.setSelectedIndex(0);
         assertEquals(aMethod, model.getSelected());
+        */
+        fail("reWrite");
+    }
+    
+    @Test
+    public void testDefaultDimensions(){
+        assertEquals(150, panel.getWidth());
+        assertEquals(250, panel.getHeight());
     }
     
 }

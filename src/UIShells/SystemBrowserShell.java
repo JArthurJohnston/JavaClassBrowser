@@ -56,8 +56,14 @@ public class SystemBrowserShell extends BaseUIShell {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         packageList = new javax.swing.JList();
+        jLabel1 = new javax.swing.JLabel();
+        selectedClassPanel1 = new UIPanels.SelectedClassPanel();
+        modelEditPanel1 = new UIPanels.ModelEditPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         addPackageMenuItem = new javax.swing.JMenuItem();
@@ -65,7 +71,24 @@ public class SystemBrowserShell extends BaseUIShell {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
         jScrollPane1.setViewportView(packageList);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jLabel1.setText("Packages");
+        jPanel1.add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setRightComponent(selectedClassPanel1);
+
+        jSplitPane2.setTopComponent(jSplitPane1);
+        jSplitPane2.setRightComponent(modelEditPanel1);
+
+        getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
         jMenu1.setText("File");
 
@@ -79,22 +102,6 @@ public class SystemBrowserShell extends BaseUIShell {
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 591, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(185, Short.MAX_VALUE))
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -135,15 +142,21 @@ public class SystemBrowserShell extends BaseUIShell {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPackageMenuItem;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private UIPanels.ModelEditPanel modelEditPanel1;
     private javax.swing.JList packageList;
+    private UIPanels.SelectedClassPanel selectedClassPanel1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void modelAdded(BaseModel newModel){
+    
+    public void addModel(BaseModel newModel){
         if(newModel.isPackage())
             ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
     }
