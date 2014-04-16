@@ -18,18 +18,20 @@ public class MethodModel extends ClassModel{
     private String source;
     private ClassModel returnType;
     private ClassType type;
-    private ArrayList<VariableModel> parameters;
+    private LinkedList<VariableModel> parameters;
     private LinkedList references;
     
     //testing constructors
-    public MethodModel(){}
+    public MethodModel(){
+        this.initializeFields();
+    }
     public MethodModel(ClassModel parent, String name){
         this(parent, ScopeType.PRIVATE, ClassType.INSTANCE, 
-                JavaLang.getVoid(), name, new ArrayList(), new String());
+                JavaLang.getVoid(), name, new LinkedList(), new String());
     }
     public MethodModel(ClassModel parent, String name, ClassType type){
         this(parent, ScopeType.PRIVATE, type, JavaLang.getVoid(), 
-                name, new ArrayList(), new String());
+                name, new LinkedList(), new String());
     }
     
     /**
@@ -43,7 +45,7 @@ public class MethodModel extends ClassModel{
      * @param source 
      */
     public MethodModel(ClassModel parent, ScopeType scope, ClassType instanceOrStatic, 
-            ClassModel returnType, String name, ArrayList params, String source){
+            ClassModel returnType, String name, LinkedList params, String source){
         this.project = parent.getProject();
         this.parent = parent;
         this.type = instanceOrStatic;
@@ -61,7 +63,7 @@ public class MethodModel extends ClassModel{
      * @param params
      * @param source 
      */
-    public MethodModel(ClassModel parent, ScopeType scope, ArrayList params, String source){
+    public MethodModel(ClassModel parent, ScopeType scope, LinkedList params, String source){
         this.parent = parent;
         this.project = parent.getProject();
         this.name = parent.name();
@@ -74,7 +76,7 @@ public class MethodModel extends ClassModel{
     private void initializeFields(){
         this.type = ClassType.INSTANCE;
         this.scope = ScopeType.PUBLIC;
-        this.parameters = new ArrayList();
+        this.parameters = new LinkedList();
         this.references = new LinkedList();
     }
     
@@ -119,7 +121,7 @@ public class MethodModel extends ClassModel{
         */
         this.type = newType;
     }
-    public void setParameters(ArrayList params){
+    public void setParameters(LinkedList params){
         this.parameters = params;
     }
     
@@ -146,7 +148,7 @@ public class MethodModel extends ClassModel{
     public ScopeType scope(){
         return scope;
     }
-    public ArrayList<VariableModel> getParameters(){
+    public LinkedList<VariableModel> getParameters(){
         return parameters;
     }
     public LinkedList getReferences(){

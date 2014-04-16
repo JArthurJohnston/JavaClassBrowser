@@ -112,7 +112,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="UIPanels.SelectedClassPanel" name="selectedClassPanel1">
+            <Component class="UIPanels.SelectedClassPanel" name="classBrowserPanel">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                   <JSplitPaneConstraints position="right"/>
@@ -121,7 +121,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="UIPanels.ModelEditPanel" name="modelEditPanel1">
+        <Component class="UIPanels.ModelEditPanel" name="modelEditPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
               <JSplitPaneConstraints position="right"/>

@@ -20,6 +20,7 @@ public class SystemBrowserShell extends BaseUIShell {
      * Creates new form SystemBrowserShell
      */
     public SystemBrowserShell() {
+        super();
         initComponents();
     }
     public SystemBrowserShell(SystemBrowserShellModel model){
@@ -62,8 +63,8 @@ public class SystemBrowserShell extends BaseUIShell {
         jScrollPane1 = new javax.swing.JScrollPane();
         packageList = new javax.swing.JList();
         jLabel1 = new javax.swing.JLabel();
-        selectedClassPanel1 = new UIPanels.SelectedClassPanel();
-        modelEditPanel1 = new UIPanels.ModelEditPanel();
+        classBrowserPanel = new UIPanels.SelectedClassPanel();
+        modelEditPanel = new UIPanels.ModelEditPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         addPackageMenuItem = new javax.swing.JMenuItem();
@@ -83,10 +84,10 @@ public class SystemBrowserShell extends BaseUIShell {
         jPanel1.add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setLeftComponent(jPanel1);
-        jSplitPane1.setRightComponent(selectedClassPanel1);
+        jSplitPane1.setRightComponent(classBrowserPanel);
 
         jSplitPane2.setTopComponent(jSplitPane1);
-        jSplitPane2.setRightComponent(modelEditPanel1);
+        jSplitPane2.setRightComponent(modelEditPanel);
 
         getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
@@ -142,6 +143,7 @@ public class SystemBrowserShell extends BaseUIShell {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPackageMenuItem;
+    private UIPanels.SelectedClassPanel classBrowserPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -150,9 +152,8 @@ public class SystemBrowserShell extends BaseUIShell {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private UIPanels.ModelEditPanel modelEditPanel1;
+    private UIPanels.ModelEditPanel modelEditPanel;
     private javax.swing.JList packageList;
-    private UIPanels.SelectedClassPanel selectedClassPanel1;
     // End of variables declaration//GEN-END:variables
 
     

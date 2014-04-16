@@ -14,9 +14,9 @@ import javax.swing.event.DocumentListener;
  *
  * @author Arthur
  */
-public class ModelEditPanel extends javax.swing.JPanel {
+public class ModelEditPanel extends BasePanel{
     
-    private BaseModel model;
+    private BaseModel selectedModel;
     
     /**
      * Creates new form ModelEditPanel
@@ -28,7 +28,7 @@ public class ModelEditPanel extends javax.swing.JPanel {
     }
     
     public void setSelected(BaseModel aModel){
-        this.model = aModel;
+        this.selectedModel = aModel;
         this.modelEditTextArea.setText(aModel.toSourceString());
         this.commentTextArea.setText(aModel.getComment());
         if(!aModel.isMethod())
@@ -36,8 +36,8 @@ public class ModelEditPanel extends javax.swing.JPanel {
     }
     
     private void updateModel(){
-        if(model.isMethod())
-            ((MethodModel)model).setSource(this.modelEditTextArea.getText());
+        if(selectedModel.isMethod())
+            ((MethodModel)selectedModel).setSource(this.modelEditTextArea.getText());
     }
     
     private DocumentListener setUpDocListener(){

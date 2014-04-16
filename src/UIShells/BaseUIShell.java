@@ -9,6 +9,7 @@ package UIShells;
 import Models.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -19,9 +20,15 @@ import javax.swing.JOptionPane;
  */
 public class BaseUIShell extends javax.swing.JFrame {
     
+    protected LinkedList childPanels;
+    
     protected BaseUIShell(){
+        childPanels = new LinkedList();
+        this.addChildren();
         setUpClosedWindowListener();
     }
+    
+    protected void addChildren(){}
     
     private void setUpClosedWindowListener(){
         //this should also be pushed up.

@@ -8,7 +8,7 @@ package UIPanels;
  *
  * @author Arthur
  */
-public class SelectedClassPanel extends javax.swing.JPanel {
+public class SelectedClassPanel extends BasePanel {
 
     /**
      * Creates new form SelectedClassPanel

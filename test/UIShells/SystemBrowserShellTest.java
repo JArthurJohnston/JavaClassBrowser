@@ -10,11 +10,8 @@ import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.SystemBrowserShellModel;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.LinkedList;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -75,6 +72,16 @@ public class SystemBrowserShellTest extends BaseTest{
         assertTrue(shell.isVisible());
         JList projects = (JList)this.getVariableFromClass(shell, "packageList");
         assertEquals(2, projects.getModel().getSize());
+    }
+    
+    @Test
+    public void testChildren(){
+        LinkedList children = (LinkedList)this.getVariableFromClass(shell, "childPanels");
+        assertEquals(LinkedList.class, children.getClass());
+        assertEquals(3, children.size());
+        assertTrue(children.contains(this.getVariableFromClass(shell, "classBrowserPanel")));
+        assertTrue(children.contains(this.getVariableFromClass(shell, "packageList")));
+        assertTrue(children.contains(this.getVariableFromClass(shell, "modelEditPanel")));
     }
     
     @Test

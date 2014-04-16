@@ -54,7 +54,6 @@ public class SystemBrowserShellModelTest extends BaseTest{
     @After
     public void tearDown() {
         main = null;
-        model.close();
         model = null;
         
     }
