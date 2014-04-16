@@ -61,17 +61,17 @@ public abstract class BaseModel {
     public boolean isClass(){
         return false;
     }
-    protected boolean isProject(){
+    public boolean isProject(){
         return false;
     }
-    protected boolean isMethod(){
+    public boolean isMethod(){
         return false;
     }
-    protected boolean isVaribale(){
+    public boolean isVaribale(){
         return false;
     }
     
-    protected ClassType getType(){
+    public ClassType getType(){
         return null;
     }
     

@@ -4,17 +4,55 @@
  */
 package UIPanels;
 
+import Models.BaseModel;
+import Models.MethodModel;
+import UIModels.SystemBrowserShellModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 /**
  *
  * @author Arthur
  */
 public class ModelEditPanel extends javax.swing.JPanel {
-
+    
+    private BaseModel model;
+    
     /**
      * Creates new form ModelEditPanel
      */
     public ModelEditPanel() {
         initComponents();
+        this.modelEditTextArea.getDocument().addDocumentListener(this.setUpDocListener());
+        this.commentTextArea.getDocument().addDocumentListener(this.setUpDocListener());
+    }
+    
+    public void setSelected(BaseModel aModel){
+        this.model = aModel;
+        this.modelEditTextArea.setText(aModel.toSourceString());
+        this.commentTextArea.setText(aModel.getComment());
+        if(!aModel.isMethod())
+            this.modelEditTextArea.setEditable(false);
+    }
+    
+    private void updateModel(){
+        if(model.isMethod())
+            ((MethodModel)model).setSource(this.modelEditTextArea.getText());
+    }
+    
+    private DocumentListener setUpDocListener(){
+        return new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateModel();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateModel();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        };
     }
 
     /**
@@ -26,8 +64,11 @@ public class ModelEditPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         modelEditTextArea = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        commentTextArea = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -35,10 +76,21 @@ public class ModelEditPanel extends javax.swing.JPanel {
         modelEditTextArea.setRows(5);
         jScrollPane1.setViewportView(modelEditTextArea);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        jTabbedPane1.addTab("Source", jScrollPane1);
+
+        commentTextArea.setColumns(20);
+        commentTextArea.setRows(5);
+        jScrollPane2.setViewportView(commentTextArea);
+
+        jTabbedPane1.addTab("Comment", jScrollPane2);
+
+        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea commentTextArea;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea modelEditTextArea;
     // End of variables declaration//GEN-END:variables
 }
