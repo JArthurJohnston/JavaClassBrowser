@@ -6,11 +6,12 @@
 
 package Models;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import LanguageBase.JavaLang;
+import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -49,10 +50,16 @@ public class MethodModelTest extends BaseTest{
     }
     
     private ClassModel setUpParentClass(){
-        ProjectModel aProject = new ProjectModel("A Project");
-        PackageModel aPackage = 
-                this.addPackageToProject("a package", aProject);
-        return this.addClassToParent("ParentClass", aPackage);
+        ClassModel aClass = null;
+        try {
+            MainApplication main = new MainApplication();
+            ProjectModel aProject = main.addProject(new ProjectModel(main,"A Project"));
+            PackageModel aPackage = aProject.addPackage(new PackageModel(aProject, "a package"));
+            aClass = aPackage.addClass(new ClassModel(aPackage, "ParentClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        return aClass;
     }
 
     /**
@@ -98,7 +105,7 @@ public class MethodModelTest extends BaseTest{
         assertTrue(method.matchSignature(otherMethod));
         VariableModel intVar = new VariableModel(ScopeType.NONE, new ClassModel("Int"),"x");
         VariableModel charVar = new VariableModel(ScopeType.NONE, new ClassModel("Char"),"y");
-        ArrayList vars = new ArrayList();
+        LinkedList vars = new LinkedList();
         vars.add(intVar);
         vars.add(charVar);
         otherMethod.setParameters(vars);
@@ -109,7 +116,7 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testParameters(){
-        ArrayList params = (ArrayList)this.getVariableFromClass(method, "parameters");
+        LinkedList params = (LinkedList)this.getVariableFromClass(method, "parameters");
         assertEquals(0, params.size());
         fail("Write more of me!");
     }
@@ -172,23 +179,17 @@ public class MethodModelTest extends BaseTest{
     }
     
     @Test public void testDefinitions(){
-        ProjectModel parentProject = method.project;
-        PackageModel parentPackage = method.getParentPackage();
-        assertEquals(1, parentProject.getMethodDefinitions(method).size());
-        assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
-        ClassModel aClass = this.addClassToParent("anotherClass", parentPackage);
+        assertEquals(1, method.getDefinitions().size());
+        assertEquals(method, method.getDefinitions().getFirst());
+        ClassModel aClass = this.addClassToParent("anotherClass", (ClassModel)method.getParent());
         MethodModel anotherMethod = this.addMethodToClass("aMethod", aClass);
-        assertEquals(2, parentProject.getMethodDefinitions(method).size());
-        assertEquals(parentProject.getMethodDefinitions(method).getFirst(), method);
-        assertEquals(anotherMethod, parentProject.getMethodDefinitions(method).getLast());
+        assertEquals(2, method.getDefinitions().size());
+        assertEquals(method, method.getDefinitions().getFirst());
+        assertEquals(anotherMethod, method.getDefinitions().getLast());
     }
     
     @Test
     public void testGetParentPackage(){
-        ProjectModel aProject = new ProjectModel("aProject");
-        PackageModel aPackage = this.addPackageToProject("APackage", aProject);
-        ClassModel aClass = this.addClassToParent("AClass", aPackage);
-        method = this.addMethodToClass("aMethod", aClass);
-        assertEquals(aPackage, method.getParentPackage());
+        assertEquals("a package", method.getParentPackage().name());
     }
 }

@@ -59,6 +59,12 @@ public class SystemBrowserShellModelTest extends BaseTest{
     }
     
     @Test
+    public void testConstructors(){
+        model = new SystemBrowserShellModel(new MainApplication());
+        assertEquals(SystemBrowserShellModel.class, model.getClass());
+    }
+    
+    @Test
     public void testInit(){
         assertEquals(main, model.main);
         assertEquals(main.getSelectedProject(), 

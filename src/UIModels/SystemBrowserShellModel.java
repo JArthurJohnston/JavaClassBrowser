@@ -21,7 +21,7 @@ public class SystemBrowserShellModel extends BaseUIModel{
     private ClassModel selectedClass;
     
     public SystemBrowserShellModel(MainApplication main){
-        this.main = main;
+        super(main);
         this.selectedProject = main.getSelectedProject();
     }
     
@@ -56,7 +56,12 @@ public class SystemBrowserShellModel extends BaseUIModel{
     }
     
     public void setSelected(BaseModel aModel){
-        selectedModel = aModel;
+        if(aModel != null)
+            selectedModel = aModel;
+    }
+    
+    public BaseModel getSelected(){
+        return selectedModel;
     }
 
     @Override

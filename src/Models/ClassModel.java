@@ -116,6 +116,7 @@ public class ClassModel extends PackageModel{
         if(!this.okToAddMethod(newMethod.name()))
             throw new NameAlreadyExistsException(this, newMethod);
         methods.add(newMethod);
+        this.project.addMethodDefinition(newMethod);
         return newMethod;
     }
     

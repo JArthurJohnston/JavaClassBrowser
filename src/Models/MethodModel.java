@@ -7,7 +7,6 @@ package Models;
 import LanguageBase.JavaLang;
 import Types.ClassType;
 import Types.ScopeType;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -83,6 +82,10 @@ public class MethodModel extends ClassModel{
     @Override
     public boolean isMethod(){
         return true;
+    }
+    
+    public LinkedList getDefinitions(){
+        return project.getMethodDefinitions(this);
     }
     
     public boolean matchSignature(MethodModel otherMethod){
@@ -174,6 +177,11 @@ public class MethodModel extends ClassModel{
             signature += param.getType().name()+" "+param.name();
         }
         return signature + "){\n"+ this.getSource() + "\n}";
+    }
+    
+    @Override
+    public ProjectModel getProject(){
+        return this.project;
     }
     
     @Override

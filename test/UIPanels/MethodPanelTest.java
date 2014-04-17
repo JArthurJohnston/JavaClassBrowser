@@ -74,27 +74,39 @@ public class MethodPanelTest extends BaseTest{
     public void testInitialValues() {
         assertEquals(MethodPanel.class, panel.getClass());
         JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
         assertEquals(model, this.getVariableFromClass(panel, "model"));
-        assertEquals(3, instList.getModel().getSize());
+        assertEquals(2, instList.getModel().getSize());
+        assertEquals(1, statList.getModel().getSize());
     }
     
     @Test
     public void testListSelectionSetsModel(){
-        /*
-        assertEquals(MethodPanel.class, panel.getClass());
-        MethodModel aMethod = model.selectedClass().getMethods().get(0);
-        MethodModel anotherMethod = model.selectedClass().getMethods().get(1);
         JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
         instList.setSelectedIndex(1);
-        assertEquals(anotherMethod, model.getSelected());
+        assertEquals(MethodModel.class, model.getSelected().getClass());
+        assertEquals("anotherMethod", model.getSelected().name());
+        statList.setSelectedIndex(0);
+        assertEquals(MethodModel.class, model.getSelected().getClass());
+        assertEquals("yetAnotherMethod", model.getSelected().name());
+    }
+    
+    @Test
+    public void testSelectionClearsPreviousSelection(){
+        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
         instList.setSelectedIndex(0);
-        assertEquals(aMethod, model.getSelected());
-        */
-        fail("reWrite");
+        assertEquals("aMethod", model.getSelected().name());
+        statList.setSelectedIndex(0);
+        assertEquals("yetAnotherMethod", model.getSelected().name());
+        assertEquals(-1, instList.getSelectedIndex());
+        
     }
     
     @Test
     public void testDefaultDimensions(){
+        fail("this may not be necessary");
         assertEquals(150, panel.getWidth());
         assertEquals(250, panel.getHeight());
     }

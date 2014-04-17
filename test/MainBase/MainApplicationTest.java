@@ -11,8 +11,10 @@ import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import UIModels.ProjectSelectionModel;
+import UIModels.SystemBrowserShellModel;
 import UIShells.ClassBrowserShell;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -219,5 +221,11 @@ public class MainApplicationTest extends BaseTest {
     @Test
     public void testAddVarUpdatesShells(){
         fail();
+    }
+    
+    @Test
+    public void testOpenSystemBrowser(){
+        SystemBrowserShellModel model = main.openSystemBrowser();
+        assertTrue(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
     }
 }

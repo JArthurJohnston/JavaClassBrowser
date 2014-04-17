@@ -15,7 +15,7 @@ import javax.swing.DefaultListModel;
  * 
  * @author Arthur
  */
-public abstract class BaseUIModel {
+public class BaseUIModel {
     protected MainApplication main;
     
     public BaseUIModel(){}
@@ -37,7 +37,7 @@ public abstract class BaseUIModel {
         }
     }
     
-    abstract public void modelAdded(BaseModel newModel);
-    abstract public void modelChanged(BaseModel newModel);
-    abstract public void modelRemoved(BaseModel newModel);
+     public void modelAdded(BaseModel newModel){};
+     public void modelChanged(BaseModel newModel){};
+     public void modelRemoved(BaseModel newModel){};
 }

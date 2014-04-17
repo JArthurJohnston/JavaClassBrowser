@@ -14,7 +14,6 @@ import Types.ScopeType;
 public class VariableModel extends BaseModel{
     private ScopeType scope;
     private ClassModel type;
-    private Object value;
     private ClassType staticOrInstance;
     
     public VariableModel(ScopeType scope, ClassModel type, String name){

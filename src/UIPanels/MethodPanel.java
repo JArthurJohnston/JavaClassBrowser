@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionListener;
  */
 public class MethodPanel extends BasePanel {
     private SystemBrowserShellModel model;
+    private final int INITIAL_WIDTH = 150;
+    private final int INITIAL_HEIGHT = 250;
 
     /**
      * Creates new form MethodPanel
@@ -60,10 +62,18 @@ public class MethodPanel extends BasePanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if(!e.getValueIsAdjusting()){
-                    model.setSelected((PackageModel)aList.getSelectedValue());
+                    model.setSelected((MethodModel)aList.getSelectedValue());
+                    clearOtherLists(aList);
                 }
             }
         };
+    }
+    
+    private void clearOtherLists(JList aList){
+        if(this.staticMethodList != aList)
+            this.staticMethodList.clearSelection();
+        if(this.instanceMethodList != aList)
+            this.instanceMethodList.clearSelection();
     }
     
     
