@@ -6,7 +6,7 @@ package UIPanels;
 
 import Models.ClassModel;
 import Models.VariableModel;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 
@@ -15,8 +15,6 @@ import javax.swing.DefaultListModel;
  * @author Arthur
  */
 public class ClassFieldsPanel extends BasePanel {
-
-    private SystemBrowserShellModel model;
     
     /**
      * Creates new form ClassFieldsPanel
@@ -25,7 +23,7 @@ public class ClassFieldsPanel extends BasePanel {
         initComponents();
     }
     
-    public void setUpWithModel(SystemBrowserShellModel aModel){
+    public void setUpWithModel(BrowserUIModel aModel){
         this.model = aModel;
         this.setUpLists();
         this.fillListsFromClass(model.getSelectedClass());

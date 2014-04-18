@@ -25,11 +25,11 @@ import static org.junit.Assert.*;
  *
  * @author Arthur
  */
-public class SystemBrowserShellModelTest extends BaseTest{
+public class BrowserUIModelTest extends BaseTest{
     private MainApplication main;
-    private SystemBrowserShellModel model;
+    private BrowserUIModel model;
     
-    public SystemBrowserShellModelTest() {
+    public BrowserUIModelTest() {
     }
     
     @BeforeClass
@@ -60,8 +60,8 @@ public class SystemBrowserShellModelTest extends BaseTest{
     
     @Test
     public void testConstructors(){
-        model = new SystemBrowserShellModel(new MainApplication());
-        assertEquals(SystemBrowserShellModel.class, model.getClass());
+        model = new BrowserUIModel(new MainApplication());
+        assertEquals(BrowserUIModel.class, model.getClass());
     }
     
     @Test

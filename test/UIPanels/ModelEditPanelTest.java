@@ -5,12 +5,10 @@
 package UIPanels;
 
 import Internal.BaseTest;
-import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import Types.ScopeType;
-import UIModels.SystemBrowserShellModel;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;

@@ -14,13 +14,13 @@ import java.util.LinkedList;
  *
  * @author Arthur
  */
-public class SystemBrowserShellModel extends BaseUIModel{
+public class BrowserUIModel extends BaseUIModel{
     private SystemBrowserShell shell;
     private ProjectModel selectedProject;
     private BaseModel selectedModel;
     private ClassModel selectedClass;
     
-    public SystemBrowserShellModel(MainApplication main){
+    public BrowserUIModel(MainApplication main){
         super(main);
         this.selectedProject = main.getSelectedProject();
     }
@@ -55,6 +55,7 @@ public class SystemBrowserShellModel extends BaseUIModel{
         selectedProject.addPackage(aPackage);
     }
     
+    @Override
     public void setSelected(BaseModel aModel){
         if(aModel != null)
             selectedModel = aModel;

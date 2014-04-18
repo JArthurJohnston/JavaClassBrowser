@@ -12,7 +12,7 @@ import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class MethodPanelTest extends BaseTest{
     private MethodPanel panel;
     private MainApplication main;
-    private SystemBrowserShellModel model;
+    private BrowserUIModel model;
     
     public MethodPanelTest() {
     }

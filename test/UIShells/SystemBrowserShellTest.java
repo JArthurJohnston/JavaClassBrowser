@@ -9,7 +9,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
@@ -45,7 +45,7 @@ public class SystemBrowserShellTest extends BaseTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        SystemBrowserShellModel aModel = aMain.openSystemBrowser();
+        BrowserUIModel aModel = aMain.openSystemBrowser();
         shell = aModel.getShell();
     }
     
@@ -55,8 +55,8 @@ public class SystemBrowserShellTest extends BaseTest{
     private MainApplication main(){
         return ((MainApplication)this.getVariableFromClass(this.model(), "main"));
     }
-    private SystemBrowserShellModel model(){
-        return((SystemBrowserShellModel)this.getVariableFromClass(shell, "model"));
+    private BrowserUIModel model(){
+        return((BrowserUIModel)this.getVariableFromClass(shell, "model"));
     }
     
     @After

@@ -7,19 +7,16 @@ package UIPanels;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author Arthur
  */
 public class MethodPanel extends BasePanel {
-    private SystemBrowserShellModel model;
     private final int INITIAL_WIDTH = 150;
     private final int INITIAL_HEIGHT = 250;
 
@@ -30,7 +27,7 @@ public class MethodPanel extends BasePanel {
         initComponents();
     }
     
-    public void initializeWithModel(SystemBrowserShellModel model){
+    public void initializeWithModel(BrowserUIModel model){
         this.model = model;
         this.setUpLists();
         if(model.getSelectedClass() != null)
@@ -53,21 +50,6 @@ public class MethodPanel extends BasePanel {
         aLists.add(this.instanceMethodList);
         return aLists;
     }
-    
-    @Override
-    protected void updateModel(JList aList){
-        model.setSelected((MethodModel)aList.getSelectedValue());
-        clearOtherLists(aList);
-    }
-    
-    private void clearOtherLists(JList aList){
-        if(this.staticMethodList != aList)
-            this.staticMethodList.clearSelection();
-        if(this.instanceMethodList != aList)
-            this.instanceMethodList.clearSelection();
-    }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

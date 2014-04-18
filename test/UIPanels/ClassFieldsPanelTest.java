@@ -9,7 +9,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class ClassFieldsPanelTest extends BaseTest{
-    private SystemBrowserShellModel model;
+    private BrowserUIModel model;
     private ClassFieldsPanel panel;
     
     public ClassFieldsPanelTest() {
@@ -51,7 +51,7 @@ public class ClassFieldsPanelTest extends BaseTest{
         panel  = null;
     }
     
-    private SystemBrowserShellModel setUpModel(){
+    private BrowserUIModel setUpModel(){
         MainApplication main = new MainApplication();
         try {
             ProjectModel aProject = 

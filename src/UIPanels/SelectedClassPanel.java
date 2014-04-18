@@ -32,7 +32,7 @@ public class SelectedClassPanel extends BasePanel {
         methodPanel1 = new UIPanels.MethodPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        classList = new javax.swing.JList();
         jLabel2 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
@@ -44,7 +44,7 @@ public class SelectedClassPanel extends BasePanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(classList);
 
         jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -57,8 +57,8 @@ public class SelectedClassPanel extends BasePanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private UIPanels.ClassFieldsPanel classFieldsPanel1;
+    private javax.swing.JList classList;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;

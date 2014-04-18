@@ -11,7 +11,7 @@ import Models.ClassModel;
 import Models.ProjectModel;
 import UIModels.ClassBrowserShellModel;
 import UIModels.ProjectSelectionModel;
-import UIModels.SystemBrowserShellModel;
+import UIModels.BrowserUIModel;
 import UIShells.ClassBrowserShell;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -225,7 +225,7 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testOpenSystemBrowser(){
-        SystemBrowserShellModel model = main.openSystemBrowser();
+        BrowserUIModel model = main.openSystemBrowser();
         assertTrue(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
     }
 }

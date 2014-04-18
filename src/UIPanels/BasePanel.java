@@ -5,8 +5,7 @@
 package UIPanels;
 
 import Models.BaseModel;
-import Models.MethodModel;
-import UIModels.BaseUIModel;
+import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -20,9 +19,9 @@ import javax.swing.event.ListSelectionListener;
  */
 public class BasePanel extends javax.swing.JPanel{
     
-    protected BaseUIModel model;
+    protected BrowserUIModel model;
     
-    public void setModel(BaseUIModel aModel){
+    public void setModel(BrowserUIModel aModel){
         this.model = aModel;
     }
     
@@ -55,8 +54,14 @@ public class BasePanel extends javax.swing.JPanel{
     }
     
     protected void updateModel(JList aList){
-        if(aList.getSelectedValue() != null)
-            this.model.setSelected((BaseModel)aList.getSelectedValue());
+        model.setSelected((BaseModel)aList.getSelectedValue());
+        clearOtherLists(aList);
+    }
+    
+    protected void clearOtherLists(JList aList){
+        for(JList jl : this.myLists())
+            if(jl != aList)
+                jl.clearSelection();
     }
     
     protected LinkedList<JList> myLists(){

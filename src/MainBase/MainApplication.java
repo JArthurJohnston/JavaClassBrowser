@@ -162,8 +162,8 @@ public class MainApplication {
         }
     }
     
-    public SystemBrowserShellModel openSystemBrowser(){
-        openWindowModels.add(new SystemBrowserShellModel(this));
-        return (SystemBrowserShellModel)openWindowModels.getLast();
+    public BrowserUIModel openSystemBrowser(){
+        openWindowModels.add(new BrowserUIModel(this));
+        return (BrowserUIModel)openWindowModels.getLast();
     }
 }
