@@ -37,7 +37,8 @@ public class BaseUIModel {
         }
     }
     
-     public void modelAdded(BaseModel newModel){};
-     public void modelChanged(BaseModel newModel){};
-     public void modelRemoved(BaseModel newModel){};
+     public void modelAdded(BaseModel newModel){}
+     public void modelChanged(BaseModel newModel){}
+     public void modelRemoved(BaseModel newModel){}
+     public void setSelected(BaseModel aModel){}
 }

@@ -12,9 +12,7 @@ import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import UIModels.ClassBrowserShellModel;
 import UIModels.SystemBrowserShellModel;
-import UIShells.ClassBrowserShell;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,11 +44,10 @@ public class MethodPanelTest extends BaseTest{
     @Before
     public void setUp() {
         main = new MainApplication();
-        ClassModel aClass = null;
         try {
             ProjectModel aProject = main.addProject(new ProjectModel(main, "AProject"));
             PackageModel aPackage = aProject.getPackageList().get(1);
-            aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+            ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod"));
             aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
             aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
@@ -101,7 +98,6 @@ public class MethodPanelTest extends BaseTest{
         statList.setSelectedIndex(0);
         assertEquals("yetAnotherMethod", model.getSelected().name());
         assertEquals(-1, instList.getSelectedIndex());
-        
     }
     
     @Test

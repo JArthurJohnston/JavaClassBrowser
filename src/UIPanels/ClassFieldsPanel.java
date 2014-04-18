@@ -4,17 +4,49 @@
  */
 package UIPanels;
 
+import Models.ClassModel;
+import Models.VariableModel;
+import UIModels.SystemBrowserShellModel;
+import java.util.LinkedList;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author Arthur
  */
 public class ClassFieldsPanel extends BasePanel {
 
+    private SystemBrowserShellModel model;
+    
     /**
      * Creates new form ClassFieldsPanel
      */
     public ClassFieldsPanel() {
         initComponents();
+    }
+    
+    public void setUpWithModel(SystemBrowserShellModel aModel){
+        this.model = aModel;
+        this.setUpLists();
+        this.fillListsFromClass(model.getSelectedClass());
+    }
+    
+    public void fillListsFromClass(ClassModel aClass){
+        if(aClass == null)
+            return;
+        for(VariableModel v : aClass.getInstanceVars())
+            ((DefaultListModel)this.instanceVarList.getModel()).addElement(v);
+        for(VariableModel v : aClass.getStaticVars())
+            ((DefaultListModel)this.staticVarList.getModel()).addElement(v);
+    }
+    
+    @Override
+    protected LinkedList myLists(){
+        LinkedList aList = new LinkedList();
+        aList.add(this.imporList);
+        aList.add(this.instanceVarList);
+        aList.add(this.staticVarList);
+        return aList;
     }
 
     /**

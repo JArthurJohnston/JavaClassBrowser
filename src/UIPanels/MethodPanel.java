@@ -6,10 +6,9 @@ package UIPanels;
 
 import Models.ClassModel;
 import Models.MethodModel;
-import Models.PackageModel;
 import Types.ClassType;
-import UIModels.ClassBrowserShellModel;
 import UIModels.SystemBrowserShellModel;
+import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
@@ -47,26 +46,18 @@ public class MethodPanel extends BasePanel {
         }
     }
     
-    private void setUpLists(){
-        this.setUpJList(staticMethodList);
-        this.setUpJList(instanceMethodList);
+    @Override
+    protected LinkedList<JList> myLists(){
+        LinkedList aLists = new LinkedList();
+        aLists.add(this.staticMethodList);
+        aLists.add(this.instanceMethodList);
+        return aLists;
     }
     
-    private void setUpJList(JList aList){
-        aList.setModel(new DefaultListModel());
-        aList.getSelectionModel().addListSelectionListener(this.setUpListener(aList));
-    }
-    
-    private ListSelectionListener setUpListener(final JList aList){
-        return new ListSelectionListener(){
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting()){
-                    model.setSelected((MethodModel)aList.getSelectedValue());
-                    clearOtherLists(aList);
-                }
-            }
-        };
+    @Override
+    protected void updateModel(JList aList){
+        model.setSelected((MethodModel)aList.getSelectedValue());
+        clearOtherLists(aList);
     }
     
     private void clearOtherLists(JList aList){
