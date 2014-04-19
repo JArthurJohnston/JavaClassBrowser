@@ -27,7 +27,8 @@ public class MethodPanel extends BasePanel {
         initComponents();
     }
     
-    public void initializeWithModel(BrowserUIModel model){
+    @Override
+    public void setModel(BrowserUIModel model){
         this.model = model;
         this.setUpLists();
         if(model.getSelectedClass() != null)

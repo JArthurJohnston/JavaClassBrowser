@@ -42,7 +42,7 @@ public class ClassFieldsPanelTest extends BaseTest{
     public void setUp() {
         model = this.setUpModel();
         panel = new ClassFieldsPanel();
-        panel.setUpWithModel(model);
+        panel.setModel(model);
     }
     
     @After

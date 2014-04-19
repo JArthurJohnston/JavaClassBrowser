@@ -4,6 +4,11 @@
  */
 package UIPanels;
 
+import UIModels.BrowserUIModel;
+import java.util.LinkedList;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+
 /**
  *
  * @author Arthur
@@ -15,6 +20,33 @@ public class SelectedClassPanel extends BasePanel {
      */
     public SelectedClassPanel() {
         initComponents();
+    }
+    
+    @Override
+    public void setModel(BrowserUIModel aModel){
+        super.setModel(aModel);
+        this.fillClassList();
+        for(BasePanel b : this.myPanels())
+            b.setModel(aModel);
+    }
+    
+    private LinkedList<BasePanel> myPanels(){
+        LinkedList panels = new LinkedList();
+        panels.add(this.classFieldsPresenter);
+        panels.add(this.methodPresenter);
+        return panels;
+    }
+    
+    private void fillClassList(){
+        this.fillListModel(model.getSelectedProject().getClassList(), 
+                (DefaultListModel)this.classList.getModel());
+    }
+    
+    @Override
+    protected LinkedList<JList> myLists(){
+        LinkedList aList = new LinkedList();
+        aList.add(this.classList);
+        return aList;
     }
 
     /**
@@ -28,8 +60,8 @@ public class SelectedClassPanel extends BasePanel {
 
         jSplitPane2 = new javax.swing.JSplitPane();
         jSplitPane1 = new javax.swing.JSplitPane();
-        classFieldsPanel1 = new UIPanels.ClassFieldsPanel();
-        methodPanel1 = new UIPanels.MethodPanel();
+        classFieldsPresenter = new UIPanels.ClassFieldsPanel();
+        methodPresenter = new UIPanels.MethodPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         classList = new javax.swing.JList();
@@ -37,8 +69,8 @@ public class SelectedClassPanel extends BasePanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        jSplitPane1.setLeftComponent(classFieldsPanel1);
-        jSplitPane1.setRightComponent(methodPanel1);
+        jSplitPane1.setLeftComponent(classFieldsPresenter);
+        jSplitPane1.setRightComponent(methodPresenter);
 
         jSplitPane2.setRightComponent(jSplitPane1);
 
@@ -56,13 +88,13 @@ public class SelectedClassPanel extends BasePanel {
         add(jSplitPane2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private UIPanels.ClassFieldsPanel classFieldsPanel1;
+    private UIPanels.ClassFieldsPanel classFieldsPresenter;
     private javax.swing.JList classList;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private UIPanels.MethodPanel methodPanel1;
+    private UIPanels.MethodPanel methodPresenter;
     // End of variables declaration//GEN-END:variables
 }

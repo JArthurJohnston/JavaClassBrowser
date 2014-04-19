@@ -23,6 +23,7 @@ public class BasePanel extends javax.swing.JPanel{
     
     public void setModel(BrowserUIModel aModel){
         this.model = aModel;
+        this.setUpLists();
     }
     
     public void fillListModel(List list, DefaultListModel listModel){

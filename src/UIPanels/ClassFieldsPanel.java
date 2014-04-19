@@ -23,7 +23,8 @@ public class ClassFieldsPanel extends BasePanel {
         initComponents();
     }
     
-    public void setUpWithModel(BrowserUIModel aModel){
+    @Override
+    public void setModel(BrowserUIModel aModel){
         this.model = aModel;
         this.setUpLists();
         this.fillListsFromClass(model.getSelectedClass());

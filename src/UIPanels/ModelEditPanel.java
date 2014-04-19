@@ -6,7 +6,6 @@ package UIPanels;
 
 import Models.BaseModel;
 import Models.MethodModel;
-import UIModels.BrowserUIModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 

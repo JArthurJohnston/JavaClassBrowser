@@ -34,14 +34,14 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
           <SubComponents>
-            <Component class="UIPanels.ClassFieldsPanel" name="classFieldsPanel1">
+            <Component class="UIPanels.ClassFieldsPanel" name="classFieldsPresenter">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                   <JSplitPaneConstraints position="left"/>
                 </Constraint>
               </Constraints>
             </Component>
-            <Component class="UIPanels.MethodPanel" name="methodPanel1">
+            <Component class="UIPanels.MethodPanel" name="methodPresenter">
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                   <JSplitPaneConstraints position="right"/>

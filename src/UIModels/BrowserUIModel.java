@@ -40,6 +40,10 @@ public class BrowserUIModel extends BaseUIModel{
         this.selectedClass = aClass;
     }
     
+    public ProjectModel getSelectedProject(){
+        return selectedProject;
+    }
+    
     public ClassModel getSelectedClass(){
         if(selectedClass == null)
             if(!selectedProject.getClassList().isEmpty())

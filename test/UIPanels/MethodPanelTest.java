@@ -57,7 +57,7 @@ public class MethodPanelTest extends BaseTest{
         }
         model = main.openSystemBrowser();
         panel  = new MethodPanel();
-        panel.initializeWithModel(model);
+        panel.setModel(model);
     }
     
     @After
