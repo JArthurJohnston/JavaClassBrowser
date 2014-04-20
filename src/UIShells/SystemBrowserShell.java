@@ -6,6 +6,8 @@ package UIShells;
 
 import Models.BaseModel;
 import UIModels.BrowserUIModel;
+import UIPanels.BasePanel;
+import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -23,11 +25,24 @@ public class SystemBrowserShell extends BaseUIShell {
         super();
         initComponents();
     }
+    
     public SystemBrowserShell(BrowserUIModel model){
         this();
         this.model = model;
         this.fillLists();
         this.setVisible(true);
+    }
+    
+    private void setPanelModels(BrowserUIModel aModel){
+        for(BasePanel bp : this.myPanels())
+            bp.setModel(aModel);
+    }
+    
+    private LinkedList<BasePanel> myPanels(){
+        LinkedList aList = new LinkedList();
+        aList.add(classBrowserPanel);
+        aList.add(modelEditPanel);
+        return aList;
     }
     
     private void fillLists(){
@@ -46,6 +61,11 @@ public class SystemBrowserShell extends BaseUIShell {
             public void valueChanged(ListSelectionEvent e) {
             }
         };
+    }
+    
+    public void addModel(BaseModel newModel){
+        if(newModel.isPackage())
+            ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
     }
 
     /**
@@ -141,6 +161,7 @@ public class SystemBrowserShell extends BaseUIShell {
             }
         });
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPackageMenuItem;
     private UIPanels.SelectedClassPanel classBrowserPanel;
@@ -157,8 +178,4 @@ public class SystemBrowserShell extends BaseUIShell {
     // End of variables declaration//GEN-END:variables
 
     
-    public void addModel(BaseModel newModel){
-        if(newModel.isPackage())
-            ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
-    }
 }

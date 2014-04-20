@@ -4,11 +4,17 @@
  */
 package UIPanels;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
+import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.BrowserUIModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,6 +29,7 @@ import static org.junit.Assert.*;
  */
 public class ModelEditPanelTest extends BaseTest{
     private ModelEditPanel panel;
+    private BrowserUIModel model;
     
     public ModelEditPanelTest() {
     }
@@ -37,46 +44,48 @@ public class ModelEditPanelTest extends BaseTest{
     
     @Before
     public void setUp() {
+        MainApplication main = new MainApplication();
+        try {
+            ProjectModel aProject = 
+                    main.setSelectedProejct(main.addProject(
+                    new ProjectModel(main, "a project")));
+            ClassModel aClass = 
+                    aProject.getDefaultPackage().addClass(
+                    new ClassModel(aProject.getDefaultPackage(), "AClass"));
+            MethodModel aMethod = aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
+            model = new BrowserUIModel(main);
+            model.setSelected(aMethod);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         panel = new ModelEditPanel();
+        panel.setModel(model);
     }
     
     @After
     public void tearDown() {
         panel = null;
+        model = null;
     }
     
-    private MethodModel setUpMethod(){
-        MethodModel aMethod = new MethodModel();
-        aMethod.setName("aMethodForTesting");
-        aMethod.setReturnType(new ClassModel("ReturnedObject"));
-        aMethod.setType(ClassType.INSTANCE);
-        aMethod.setScope(ScopeType.PRIVATE);
-        aMethod.setSource("return null;");
-        return aMethod;
-    }
-
     @Test
-    public void testModelEditArea() {
-        fail();
-        /*
-         * 
-         */
+    public void testInit(){
+        assertEquals(model, this.getVariableFromClass(panel, "model"));
+        JTextArea editSource = (JTextArea)this.getVariableFromClass(panel, "modelEditTextArea");
+        assertTrue(this.compareStrings("private void aMethod(){\n" +
+"\n" +
+"}", editSource.getText()));
+        assertTrue(editSource.isEditable());
     }
+    
     @Test
-    public void testEditModelUpdatesOtherShells(){
+    public void testSaveToModel(){
         fail();
     }
     
     @Test
-    public void testSetMethod(){
-        MethodModel aMethod = this.setUpMethod();
-        JTextArea source = (JTextArea)this.getVariableFromClass(panel, "modelEditTextArea");
-        JTextArea comment = (JTextArea)this.getVariableFromClass(panel, "commentTextArea");
-        assertTrue(this.compareStrings("", source.getText()));
-        assertTrue(this.compareStrings("", comment.getText()));
-        panel.setSelected(aMethod);
-        assertTrue(this.compareStrings(aMethod.toSourceString() , source.getText()));
-        assertTrue(this.compareStrings(aMethod.getComment() , comment.getText()));
-        
+    public void testCantSaveInvalidMethod(){
+        //need to write an isValid() method
+        fail();
     }
 }

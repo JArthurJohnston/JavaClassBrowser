@@ -6,6 +6,7 @@ package UIPanels;
 
 import Models.BaseModel;
 import Models.MethodModel;
+import UIModels.BrowserUIModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -26,11 +27,19 @@ public class ModelEditPanel extends BasePanel{
         this.commentTextArea.getDocument().addDocumentListener(this.setUpDocListener());
     }
     
+    
+    
+    @Override
+    public void setModel(BrowserUIModel aModel){
+        this.model = aModel;
+        this.setSelected(aModel.getSelected());
+    }
+    
     public void setSelected(BaseModel aModel){
         this.selectedModel = aModel;
-        this.modelEditTextArea.setText(aModel.toSourceString());
-        this.commentTextArea.setText(aModel.getComment());
-        if(!aModel.isMethod())
+        this.modelEditTextArea.setText(selectedModel.toSourceString());
+        this.commentTextArea.setText(selectedModel.getComment());
+        if(!selectedModel.isMethod())
             this.modelEditTextArea.setEditable(false);
     }
     

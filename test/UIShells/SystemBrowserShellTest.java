@@ -94,4 +94,10 @@ public class SystemBrowserShellTest extends BaseTest{
         JList projects = (JList)this.getVariableFromClass(shell, "packageList");
         assertEquals(3, projects.getModel().getSize());
     }
+    
+    @Test
+    public void testPanelsHaveModel(){
+        fail();
+        //make sure each panel has it this model
+    }
 }
