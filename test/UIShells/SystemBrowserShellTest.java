@@ -10,6 +10,7 @@ import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.BrowserUIModel;
+import UIPanels.BasePanel;
 import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
@@ -75,16 +76,6 @@ public class SystemBrowserShellTest extends BaseTest{
     }
     
     @Test
-    public void testChildren(){
-        LinkedList children = (LinkedList)this.getVariableFromClass(shell, "childPanels");
-        assertEquals(LinkedList.class, children.getClass());
-        assertEquals(3, children.size());
-        assertTrue(children.contains(this.getVariableFromClass(shell, "classBrowserPanel")));
-        assertTrue(children.contains(this.getVariableFromClass(shell, "packageList")));
-        assertTrue(children.contains(this.getVariableFromClass(shell, "modelEditPanel")));
-    }
-    
-    @Test
     public void testAddPackage(){
         try {
             this.model().addPackage(new PackageModel(this.main().getSelectedProject(), "a Package"));
@@ -97,7 +88,10 @@ public class SystemBrowserShellTest extends BaseTest{
     
     @Test
     public void testPanelsHaveModel(){
-        fail();
-        //make sure each panel has it this model
+        BasePanel aPanel = (BasePanel)this.getVariableFromClass(shell, "modelEditPanel");
+        BasePanel bPanel = (BasePanel)this.getVariableFromClass(shell, "classBrowserPanel");
+        assertEquals(this.model(), this.getVariableFromClass(shell, "model"));
+        assertEquals(this.model(), this.getVariableFromClass(bPanel, "model"));
+        assertEquals(this.model(), this.getVariableFromClass(aPanel, "model"));
     }
 }

@@ -30,6 +30,7 @@ public class SystemBrowserShell extends BaseUIShell {
         this();
         this.model = model;
         this.fillLists();
+        this.setPanelModels(model);
         this.setVisible(true);
     }
     

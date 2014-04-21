@@ -36,6 +36,8 @@ public class ModelEditPanel extends BasePanel{
     }
     
     public void setSelected(BaseModel aModel){
+        if(aModel == null)
+            return;
         this.selectedModel = aModel;
         this.modelEditTextArea.setText(selectedModel.toSourceString());
         this.commentTextArea.setText(selectedModel.getComment());
