@@ -10,7 +10,7 @@ import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,7 +56,7 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(project.getClasses().size(),  0);
         assertEquals(project.getClasses().getClass(),  HashMap.class);
         assertEquals(project.getPackages().getClass(),  HashMap.class);
-        assertEquals(project.getPackageList().getClass(),  ArrayList.class);
+        assertEquals(project.getPackageList().getClass(),  LinkedList.class);
         assertEquals("Test Project", project.name());
         assertEquals(1, project.getPackages().size());
         assertEquals(1, project.getPackageList().size());
@@ -66,7 +66,7 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(ProjectModel.class, project.getClass());
         assertEquals(project.getClasses().getClass(),  HashMap.class);
         assertEquals(project.getPackages().getClass(),  HashMap.class);
-        assertEquals(project.getPackageList().getClass(),  ArrayList.class);
+        assertEquals(project.getPackageList().getClass(),  LinkedList.class);
         assertEquals(project.getClasses().size(),  0);
         assertEquals(project.getPackages().size(), 1);
         assertEquals(project.getPackages().get("default package"), project.getPackageList().get(0));
@@ -315,5 +315,10 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(PackageModel.class, project.allPackage.getClass());
         assertEquals("All", project.allPackage.name());
         assertTrue(project.getPackageList().contains(project.allPackage));
+    }
+    
+    @Test
+    public void testGetDefaultPackage(){
+        assertTrue(this.compareStrings("default package", project.getDefaultPackage().name));
     }
 }

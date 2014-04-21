@@ -38,6 +38,7 @@ public class BrowserUIModel extends BaseUIModel{
     
     public void setSelectedClass(ClassModel aClass){
         this.selectedClass = aClass;
+        shell.selectionChanged(aClass);
     }
     
     public ProjectModel getSelectedProject(){

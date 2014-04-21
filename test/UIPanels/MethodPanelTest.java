@@ -11,8 +11,11 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
+import Models.VariableModel;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -60,11 +63,26 @@ public class MethodPanelTest extends BaseTest{
         panel.setModel(model);
     }
     
+    
+    
     @After
     public void tearDown() {
         panel = null;
         model = null;
         main = null;
+    }
+    
+    private ClassModel getTestClass(){
+        ClassModel aClass = new ClassModel(model.getSelectedProject().getDefaultPackage(), "AnotherClass");
+        System.out.println(model.getSelectedProject().getDefaultPackage().name());
+        try {
+            aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.CLASS));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        return aClass;
     }
 
     @Test
@@ -101,10 +119,13 @@ public class MethodPanelTest extends BaseTest{
     }
     
     @Test
-    public void testDefaultDimensions(){
-        fail("this may not be necessary");
-        assertEquals(150, panel.getWidth());
-        assertEquals(250, panel.getHeight());
+    public void testSelectionChangedWithClass(){
+        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
+        ClassModel aClass = this.getTestClass();
+        panel.selectionChanged(aClass);
+        assertEquals(1, instList.getModel().getSize());
+        assertEquals(2, statList.getModel().getSize());
     }
     
 }

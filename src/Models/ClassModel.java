@@ -12,7 +12,6 @@ import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
-import UIModels.BaseUIModel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 

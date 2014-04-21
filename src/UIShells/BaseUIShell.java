@@ -7,6 +7,7 @@
 package UIShells;
 
 import Models.*;
+import UIPanels.BasePanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
@@ -61,7 +62,18 @@ public class BaseUIShell extends javax.swing.JFrame {
                 , JOptionPane.YES_NO_OPTION);
     }
     
+    protected LinkedList<BasePanel> myPanels(){
+        return new LinkedList();
+    }
+    
     public void modelAdded(BaseModel newModel){}
     public void modelChanged(BaseModel newModel){}
     public void modelRemoved(BaseModel newModel){}
+    
+    
+    public void selectionChanged(PackageModel aClass){}
+    public void selectionChanged(ClassModel aClass){}
+    public void selectionChanged(MethodModel aClass){}
+    public void selectionChanged(VariableModel aClass){}
+    
 }

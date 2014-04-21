@@ -4,7 +4,7 @@
  */
 package UIPanels;
 
-import Models.BaseModel;
+import Models.*;
 import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,5 +70,11 @@ public class BasePanel extends javax.swing.JPanel{
     protected LinkedList<JList> myLists(){
         return new LinkedList();
     }
+    
+    
+    public void selectionChanged(PackageModel aClass){}
+    public void selectionChanged(ClassModel aClass){}
+    public void selectionChanged(MethodModel aClass){}
+    public void selectionChanged(VariableModel aClass){}
     
 }

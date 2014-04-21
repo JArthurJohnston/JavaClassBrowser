@@ -6,6 +6,9 @@
             <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIModels/ClassBrowserShellModel.java</file>
             <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIModels/ClassBrowserShellModelTest.java</file>
             <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIShells/ClassBrowserShell.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/MethodPanelTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/Models/MethodModel.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/MethodPanel.java</file>
             <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIShells/ClassBrowserShellTest.java</file>
         </group>
     </open-files>

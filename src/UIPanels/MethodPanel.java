@@ -17,8 +17,6 @@ import javax.swing.JList;
  * @author Arthur
  */
 public class MethodPanel extends BasePanel {
-    private final int INITIAL_WIDTH = 150;
-    private final int INITIAL_HEIGHT = 250;
 
     /**
      * Creates new form MethodPanel
@@ -38,10 +36,28 @@ public class MethodPanel extends BasePanel {
     private void fillListsFromClass(ClassModel aClass){
         for(MethodModel m : aClass.getMethods()){
             if(m.getType() == ClassType.CLASS)
-                ((DefaultListModel)staticMethodList.getModel()).addElement(m);
+                this.getListModel(staticMethodList).addElement(m);
             if(m.getType() == ClassType.INSTANCE)
-                ((DefaultListModel)instanceMethodList.getModel()).addElement(m);
+                this.getListModel(instanceMethodList).addElement(m);
         }
+    }
+    
+    private void clearLists(){
+        this.getListModel(staticMethodList).clear();
+        this.getListModel(instanceMethodList).clear();
+    }
+    
+    private DefaultListModel getListModel(JList aList){
+        return ((DefaultListModel)aList.getModel());
+        
+    }
+    
+    @Override
+    public void selectionChanged(ClassModel aClass){
+        this.clearLists();
+        if(aClass == null)
+            return;
+        this.fillListsFromClass(aClass);
     }
     
     @Override

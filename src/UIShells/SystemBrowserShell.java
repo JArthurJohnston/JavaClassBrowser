@@ -4,7 +4,7 @@
  */
 package UIShells;
 
-import Models.BaseModel;
+import Models.*;
 import UIModels.BrowserUIModel;
 import UIPanels.BasePanel;
 import java.util.LinkedList;
@@ -39,7 +39,8 @@ public class SystemBrowserShell extends BaseUIShell {
             bp.setModel(aModel);
     }
     
-    private LinkedList<BasePanel> myPanels(){
+    @Override
+    protected LinkedList<BasePanel> myPanels(){
         LinkedList aList = new LinkedList();
         aList.add(classBrowserPanel);
         aList.add(modelEditPanel);
@@ -67,6 +68,12 @@ public class SystemBrowserShell extends BaseUIShell {
     public void addModel(BaseModel newModel){
         if(newModel.isPackage())
             ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
+    }
+    
+    @Override
+    public void selectionChanged(ClassModel aClass){
+        for(BasePanel bp : this.myPanels())
+            bp.selectionChanged(aClass);
     }
 
     /**
