@@ -68,6 +68,21 @@ public class ClassFieldsPanelTest extends BaseTest{
         return model;
     }
     
+    
+    private ClassModel getTestClass(){
+        ClassModel aClass = null;
+        try {
+            aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
+                model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
+            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
+            aClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel("Object"), "aClassVar"));
+            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        return aClass;
+    }
+    
     @Test
     public void testSelectionSetsModel(){
         JList instVarList = (JList)this.getVariableFromClass(panel, "instanceVarList");
@@ -101,5 +116,15 @@ public class ClassFieldsPanelTest extends BaseTest{
     @Test
     public void testImportsList(){
         fail();
+    }
+    
+    @Test
+    public void testSelectionChangedWithClass(){
+        JList instList = (JList)this.getVariableFromClass(panel, "instanceVarList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticVarList");
+        ClassModel aClass = this.getTestClass();
+        panel.selectionChanged(aClass);
+        assertEquals(2, instList.getModel().getSize());
+        assertEquals(1, statList.getModel().getSize());
     }
 }

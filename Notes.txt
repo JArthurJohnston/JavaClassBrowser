@@ -3,3 +3,4 @@ uses valueAdded and valueChanged listeners.
 -ProjectModel should not allow the user to delete a package if that package is the only one left in its list.
 -when adding classes/packages/etc... the recieving object should set the parent of the newly added/edited object. 
 	thus I could just go new ClassModel("AName") instead of new ClassModel(parentPackage, "AName")
+-make a subckass of LinkedList which will return itself whenever you perform an operation on it. that way we can more easily chain method calls together, and further avoid assignment statements.

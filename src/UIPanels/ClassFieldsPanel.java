@@ -4,11 +4,13 @@
  */
 package UIPanels;
 
+import MainBase.UsefulList;
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.VariableModel;
 import UIModels.BrowserUIModel;
-import java.util.LinkedList;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 
 /**
  *
@@ -40,12 +42,19 @@ public class ClassFieldsPanel extends BasePanel {
     }
     
     @Override
-    protected LinkedList myLists(){
-        LinkedList aList = new LinkedList();
-        aList.add(this.imporList);
-        aList.add(this.instanceVarList);
-        aList.add(this.staticVarList);
-        return aList;
+    protected UsefulList<JList> myLists(){
+        return super.myLists()
+                .addElm(imporList)
+                .addElm(instanceVarList)
+                .addElm(staticVarList);
+    }
+    
+    @Override
+    public void selectionChanged(BaseModel aClass){
+        this.clearLists();
+        if(aClass == null || !aClass.isClass())
+            return;
+        this.fillListsFromClass((ClassModel)aClass);
     }
 
     /**

@@ -321,4 +321,16 @@ public class ProjectModelTest extends BaseTest{
     public void testGetDefaultPackage(){
         assertTrue(this.compareStrings("default package", project.getDefaultPackage().name));
     }
+    
+    @Test
+    public void testAddPackageToDefaultPackage(){
+        ClassModel aClass = null;
+        try {
+            aClass = project.getDefaultPackage().addClass(
+                    new ClassModel(project.getDefaultPackage(), "AClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals("default package", aClass.getParentPackage().name());
+    }
 }

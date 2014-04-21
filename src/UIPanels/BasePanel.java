@@ -4,9 +4,9 @@
  */
 package UIPanels;
 
+import MainBase.UsefulList;
 import Models.*;
 import UIModels.BrowserUIModel;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -32,6 +32,18 @@ public class BasePanel extends javax.swing.JPanel{
         }
     }
     
+    protected UsefulList<JList> myLists(){
+        return new UsefulList();
+    }
+    
+    protected DefaultListModel getListModel(JList aList){
+        return ((DefaultListModel)aList.getModel());
+    }
+    
+    protected void clearLists(){
+        for(JList l : this.myLists())
+            this.getListModel(l).clear();
+    }
     
     protected ListSelectionListener setUpListener(final JList aList){
         return new ListSelectionListener(){
@@ -64,11 +76,6 @@ public class BasePanel extends javax.swing.JPanel{
             if(jl != aList)
                 jl.clearSelection();
     }
-    
-    protected LinkedList<JList> myLists(){
-        return new LinkedList();
-    }
-    
     
     public void selectionChanged(BaseModel aModel){}
     

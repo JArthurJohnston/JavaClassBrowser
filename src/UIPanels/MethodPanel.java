@@ -4,6 +4,7 @@
  */
 package UIPanels;
 
+import MainBase.UsefulList;
 import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
@@ -43,14 +44,11 @@ public class MethodPanel extends BasePanel {
         }
     }
     
-    private void clearLists(){
-        this.getListModel(staticMethodList).clear();
-        this.getListModel(instanceMethodList).clear();
-    }
-    
-    private DefaultListModel getListModel(JList aList){
-        return ((DefaultListModel)aList.getModel());
-        
+    @Override
+    protected UsefulList<JList> myLists(){
+        return super.myLists()
+                .addElm(staticMethodList)
+                .addElm(instanceMethodList);
     }
     
     @Override
@@ -59,14 +57,6 @@ public class MethodPanel extends BasePanel {
         if(aClass == null || !aClass.isClass())
             return;
         this.fillListsFromClass((ClassModel)aClass);
-    }
-    
-    @Override
-    protected LinkedList<JList> myLists(){
-        LinkedList aLists = new LinkedList();
-        aLists.add(this.staticMethodList);
-        aLists.add(this.instanceMethodList);
-        return aLists;
     }
 
     /**

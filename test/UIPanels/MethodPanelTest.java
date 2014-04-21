@@ -11,11 +11,8 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import Models.VariableModel;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -63,8 +60,6 @@ public class MethodPanelTest extends BaseTest{
         panel.setModel(model);
     }
     
-    
-    
     @After
     public void tearDown() {
         panel = null;
@@ -73,9 +68,10 @@ public class MethodPanelTest extends BaseTest{
     }
     
     private ClassModel getTestClass(){
-        ClassModel aClass = new ClassModel(model.getSelectedProject().getDefaultPackage(), "AnotherClass");
-        System.out.println(model.getSelectedProject().getDefaultPackage().name());
+        ClassModel aClass = null;
         try {
+            aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
+                model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
             aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.CLASS));
             aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));

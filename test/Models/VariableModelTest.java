@@ -49,19 +49,18 @@ public class VariableModelTest extends BaseTest{
      */
     @Test
     public void testGetType() {
-        assertEquals(ClassModel.class, var.getType().getClass());
+        assertEquals(ClassModel.class, var.getObjectType().getClass());
     }
 
     /**
      * Test of setType method, of class VariableModel.
      */
     @Test
-    public void testSetType() {
+    public void testSetObjectType() {
         ClassModel newType = new ClassModel("NewType");
-        var.setType(newType);
-        assertEquals(newType, var.getType());
+        var.setObjectType(newType);
+        assertEquals(newType, var.getObjectType());
     }
-
 
     /**
      * Test of toSourceString method, of class VariableModel.
@@ -77,14 +76,19 @@ public class VariableModelTest extends BaseTest{
     
     @Test 
     public void testToSourceStringWithInitializedValue(){
-        //set var initial value
         String expected = "private Type x = new Type()";
-        assertEquals("private Type x = new Type()", var.toSourceString());
+        assertTrue(this.compareStrings(expected, var.toSourceString()));
     }
 
     @Test
     public void testGetPath() {
         fail("The test case is a prototype.");
     }
+    
+    @Test
+    public void testVarParser(){
+        String source = "private Type x = new Type()";
+    }
+    
     
 }

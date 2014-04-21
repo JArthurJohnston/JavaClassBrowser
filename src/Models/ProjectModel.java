@@ -96,8 +96,10 @@ public class ProjectModel extends BaseModel {
         return packages;
     }
     public LinkedList<PackageModel> getPackageList(){
-        packageList.addFirst(allPackage);
-        return packageList;
+        LinkedList aList = new LinkedList();
+        aList.add(allPackage);
+        aList.addAll(packageList);
+        return aList;
     }
     @Override
     public String getPath(){
@@ -167,7 +169,6 @@ public class ProjectModel extends BaseModel {
             if(newPackage.getParent() == this) {
                 this.packageList.add(newPackage);
             }
-            this.main.addUpdateShells(newPackage);
             return newPackage;
         }else {
             throw new NameAlreadyExistsException(this, newPackage);
