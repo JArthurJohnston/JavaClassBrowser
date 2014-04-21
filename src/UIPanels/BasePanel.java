@@ -10,8 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -72,9 +70,6 @@ public class BasePanel extends javax.swing.JPanel{
     }
     
     
-    public void selectionChanged(PackageModel aClass){}
-    public void selectionChanged(ClassModel aClass){}
-    public void selectionChanged(MethodModel aClass){}
-    public void selectionChanged(VariableModel aClass){}
+    public void selectionChanged(BaseModel aModel){}
     
 }

@@ -4,6 +4,7 @@
  */
 package UIPanels;
 
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
@@ -53,11 +54,11 @@ public class MethodPanel extends BasePanel {
     }
     
     @Override
-    public void selectionChanged(ClassModel aClass){
+    public void selectionChanged(BaseModel aClass){
         this.clearLists();
-        if(aClass == null)
+        if(aClass == null || !aClass.isClass())
             return;
-        this.fillListsFromClass(aClass);
+        this.fillListsFromClass((ClassModel)aClass);
     }
     
     @Override
