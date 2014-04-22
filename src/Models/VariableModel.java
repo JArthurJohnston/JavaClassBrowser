@@ -21,14 +21,12 @@ public class VariableModel extends BaseModel{
         this.scope = scope;
         this.type = type;
         this.name = name;
-        this.value = new String();
     }
     
     public VariableModel(ClassType staticOrInstance, ClassModel objectType, String name){
         this.staticOrInstance = staticOrInstance;
         this.type = objectType;
         this.name = name;
-        this.value = new String();
     }
     
     /*
@@ -56,6 +54,13 @@ public class VariableModel extends BaseModel{
         this.scope = scope;
     }
     
+    public String getValue(){
+        return value;
+    }
+    public void setValue(String aValue){
+        this.value = aValue;
+    }
+    
     /*
      * Overridden Methods
      */
@@ -78,14 +83,13 @@ public class VariableModel extends BaseModel{
     }
     
     public boolean parseDeclaration(String decl){
-        
+        return true;
     }
     
     public static VariableModel parseSource(String source){
-        VariableModel newVar = new VariableModel();
-        if(source.indexOf("=") == -1)
-            
+        return new VariableModel(ScopeType.PRIVATE, new ClassModel(source), source);
         /*
+        if(source.indexOf("=") == -1)
         parse through the string
         1. check to see if it contains the substring private or public, if not its NONE.
             set its type accordingly
@@ -98,7 +102,6 @@ public class VariableModel extends BaseModel{
         5. if theres an = sign, everything after it should be saved as the
             variables value.
         */
-        return false;
     }
     
     

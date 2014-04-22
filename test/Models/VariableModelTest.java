@@ -87,7 +87,9 @@ public class VariableModelTest extends BaseTest{
     
     @Test
     public void testVarParser(){
-        String source = "private Type x = new Type()";
+        String source = "private Type x = new Type();";
+        assertTrue(var.parseDeclaration(source));
+        assertEquals("new Type()", var.getValue());
     }
     
     
