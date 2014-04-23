@@ -17,6 +17,10 @@ public class VariableModel extends BaseModel{
     private ClassType staticOrInstance;
     private String value;
     
+    private VariableModel(){
+        //used only for returning a new VariableModel from parsed source code.
+    }
+    
     public VariableModel(ScopeType scope, ClassModel type, String name){
         this.scope = scope;
         this.type = type;
@@ -83,11 +87,33 @@ public class VariableModel extends BaseModel{
     }
     
     public boolean parseDeclaration(String decl){
+        String[] tokens = decl.split("\\s+");
+        int size = tokens.length;
+        //System.out.println(ScopeType.PRIVATE.toString().toLowerCase());
+        if(size < 2)
+            return false;
+        //need to check for duplicate names before setting name.
+        this.setName(tokens[size-1]);
+        //need to check the project for a class with this object type string
+        this.setObjectType(new ClassModel(tokens[size-2]));
+        if(size == 2)
+            return true;
         return true;
     }
     
     public static VariableModel parseSource(String source){
-        return new VariableModel(ScopeType.PRIVATE, new ClassModel(source), source);
+        VariableModel newVar = new VariableModel();
+        if(source.contains("=")){
+            String[] tokens = source.split("=");
+            for(String s : tokens)
+                System.out.println(s);
+            newVar.parseDeclaration(tokens[0]);
+            newVar.setValue(tokens[1]);
+        }
+        String[] tokens = source.split("\\s+");
+        for(String s : tokens){
+        }
+        return new VariableModel();
         /*
         if(source.indexOf("=") == -1)
         parse through the string

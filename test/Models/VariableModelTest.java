@@ -88,9 +88,40 @@ public class VariableModelTest extends BaseTest{
     @Test
     public void testVarParser(){
         String source = "private Type x = new Type();";
+        System.out.println("__Testing Parser__");
+        VariableModel newVar = VariableModel.parseSource(source);
+        
         assertTrue(var.parseDeclaration(source));
         assertEquals("new Type()", var.getValue());
     }
     
+    @Test
+    public void testParseDeclaration(){
+        String source = "Integer x;";
+        assertTrue(var.parseDeclaration(source));
+        source = "private Integer x;";
+        assertTrue(var.parseDeclaration(source));
+        source = "private static Integer x;";
+        assertTrue(var.parseDeclaration(source));
+        source = "private static Integer x;";
+        assertTrue(var.parseDeclaration(source));
+        source = "static private Integer x;";
+        assertTrue(var.parseDeclaration(source));
+    }
+    
+    @Test
+    public void testParseDeclarationWithFinalContainsValue(){
+        String source = "final Integer x = 4;";
+        assertTrue(var.parseDeclaration(source));
+        source = "final Integer x;";
+        assertFalse(var.parseDeclaration(source));
+        
+    }
+    
+    @Test
+    public void testFinalVar(){
+        fail();
+        //need to test/figure out the 'final' modifier
+    }
     
 }
