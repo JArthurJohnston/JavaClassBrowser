@@ -6,6 +6,8 @@ package Models;
 
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 /**
  *
@@ -16,6 +18,7 @@ public class VariableModel extends BaseModel{
     private ClassModel type;
     private ClassType staticOrInstance;
     private String value;
+    private boolean isFinal;
     
     private VariableModel(){
         //used only for returning a new VariableModel from parsed source code.
@@ -31,6 +34,10 @@ public class VariableModel extends BaseModel{
         this.staticOrInstance = staticOrInstance;
         this.type = objectType;
         this.name = name;
+    }
+    
+    public boolean isFinal(){
+        return this.isFinal;
     }
     
     /*
@@ -87,17 +94,24 @@ public class VariableModel extends BaseModel{
     }
     
     public boolean parseDeclaration(String decl){
-        String[] tokens = decl.split("\\s+");
-        int size = tokens.length;
-        //System.out.println(ScopeType.PRIVATE.toString().toLowerCase());
+        LinkedList<String> tokens = new LinkedList(Arrays.asList(decl.split("\\s+")));
+        int size = tokens.size();
         if(size < 2)
             return false;
         //need to check for duplicate names before setting name.
-        this.setName(tokens[size-1]);
+        this.setName(tokens.get(size-1));
         //need to check the project for a class with this object type string
-        this.setObjectType(new ClassModel(tokens[size-2]));
+        this.setObjectType(new ClassModel(tokens.get(size-2)));
         if(size == 2)
             return true;
+        for(ScopeType s : ScopeType.values())
+            if(tokens.contains(s.toString().toLowerCase()))
+                this.setScope(s);
+        for(ClassType c : ClassType.values())
+            if(tokens.contains(c))
+                this.setType(c);
+        if(tokens.contains("final"));
+            this.isFinal = true;
         return true;
     }
     
@@ -129,6 +143,5 @@ public class VariableModel extends BaseModel{
             variables value.
         */
     }
-    
     
 }
