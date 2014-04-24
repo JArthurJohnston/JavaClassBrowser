@@ -58,18 +58,31 @@ public class VariableModel extends BaseModel{
     /*
      * Setters
      */
+    @Override
+    public void setName(String aString){
+        this.name = this.removeSemicolon(aString);
+    }
     public void setObjectType(ClassModel type){
         this.type = type;
     }
     public void setScope(ScopeType scope){
         this.scope = scope;
     }
+    public ScopeType getScope(){
+        return scope;
+    }
     
     public String getValue(){
         return value;
     }
     public void setValue(String aValue){
-        this.value = aValue;
+        this.value = this.removeSemicolon(aValue);
+    }
+    
+    private String removeSemicolon(String aString){
+        if(aString.charAt(aString.length()-1) == ';')
+            return aString.substring(0, aString.length()-1);
+        return aString;
     }
     
     /*
@@ -82,12 +95,7 @@ public class VariableModel extends BaseModel{
             source = this.scope.toString().toLowerCase() + " ";
         return source+this.type.name()+" "+this.name()+";";
     }
-
-    @Override
-    protected void setUpFields() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    
     @Override
     public String getPath() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -95,27 +103,51 @@ public class VariableModel extends BaseModel{
     
     public boolean parseDeclaration(String decl){
         LinkedList<String> tokens = new LinkedList(Arrays.asList(decl.split("\\s+")));
-        int size = tokens.size();
-        if(size < 2)
+        if(tokens.size() < 2)
             return false;
         //need to check for duplicate names before setting name.
-        this.setName(tokens.get(size-1));
+        this.setName(tokens.getLast());
+        tokens.removeLast();
         //need to check the project for a class with this object type string
-        this.setObjectType(new ClassModel(tokens.get(size-2)));
-        if(size == 2)
+        this.setObjectType(new ClassModel(tokens.getLast()));
+        tokens.removeLast();
+        if(tokens.isEmpty())
             return true;
         for(ScopeType s : ScopeType.values())
-            if(tokens.contains(s.toString().toLowerCase()))
+            if(tokens.contains(s.toString().toLowerCase())){
                 this.setScope(s);
+                tokens.remove(s.toString().toLowerCase());
+                break;
+            }
+        
         for(ClassType c : ClassType.values())
-            if(tokens.contains(c))
+            if(tokens.contains(c.toString().toLowerCase())){
                 this.setType(c);
-        if(tokens.contains("final"));
+                tokens.remove(c.toString().toLowerCase());
+                break;
+            }
+        if(tokens.isEmpty())
+            return true;
+        
+        if(tokens.contains("final")){
             this.isFinal = true;
+            tokens.remove("final");
+        }
+        if(!tokens.isEmpty())
+            return false;
         return true;
     }
     
-    public static VariableModel parseSource(String source){
+    public boolean parseSource(String source){
+        if(source.contains("=")){
+            this.parseDeclaration(source.split("=")[0]);
+            this.setValue((source.split("=")[1]));
+            return true;
+        }
+        return this.parseDeclaration(source);
+    }
+    
+    public static VariableModel newFromSource(String source){
         VariableModel newVar = new VariableModel();
         if(source.contains("=")){
             String[] tokens = source.split("=");
@@ -142,6 +174,11 @@ public class VariableModel extends BaseModel{
         5. if theres an = sign, everything after it should be saved as the
             variables value.
         */
+    }
+
+    @Override
+    protected void setUpFields() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -7,6 +7,7 @@
 package Models;
 
 import Internal.BaseTest;
+import Types.ClassType;
 import Types.ScopeType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -88,8 +89,7 @@ public class VariableModelTest extends BaseTest{
     @Test
     public void testVarParser(){
         String source = "private Type x = new Type();";
-        System.out.println("__Testing Parser__");
-        VariableModel newVar = VariableModel.parseSource(source);
+        VariableModel newVar = VariableModel.newFromSource(source);
         
         assertTrue(var.parseDeclaration(source));
         assertEquals("new Type()", var.getValue());
@@ -110,18 +110,47 @@ public class VariableModelTest extends BaseTest{
     }
     
     @Test
+    public void testParseSource(){
+        String source = "public static int x = 5;";
+        assertTrue(var.parseSource(source));
+        assertEquals(ScopeType.PUBLIC, var.getScope());
+        assertEquals(ClassType.STATIC, var.getType());
+        assertEquals("int", var.getObjectType().name());
+        assertTrue(this.compareStrings(" 5", var.getValue()));
+    }
+    
+    @Test
     public void testParseDeclarationWithFinalContainsValue(){
         String source = "final Integer x = 4;";
-        assertTrue(var.parseDeclaration(source));
+        assertTrue(var.parseSource(source));
+        assertEquals(" 4", var.getValue());
+        assertTrue(var.isFinal());
+        assertEquals("Integer", var.getObjectType().name());
         source = "final Integer x;";
-        assertFalse(var.parseDeclaration(source));
-        
+        assertTrue(var.parseDeclaration(source));
+        assertTrue(var.isFinal());
+        assertEquals("Integer", var.getObjectType().name());
+        assertEquals("x", var.name());
+        assertFalse(var.parseDeclaration("final intever int x;"));
+    }
+    
+    @Test
+    public void testSetName(){
+        var.setName("aNameString;");
+        assertTrue(this.compareStrings("aNameString", var.name()));
+        var.setName("aNameString");
+        assertEquals("aNameString", var.name());
+    }
+    
+    @Test
+    public void testSetValue(){
+        var.setValue("5;");
+        assertEquals("5",var.getValue());
     }
     
     @Test
     public void testFinalVar(){
-        fail();
-        //need to test/figure out the 'final' modifier
+        fail("need to test/figure out the 'final' modifier");
     }
     
 }
