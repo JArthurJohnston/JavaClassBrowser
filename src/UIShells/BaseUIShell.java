@@ -6,11 +6,11 @@
 
 package UIShells;
 
+import MainBase.UsefulList;
 import Models.*;
 import UIPanels.BasePanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -21,15 +21,9 @@ import javax.swing.JOptionPane;
  */
 public class BaseUIShell extends javax.swing.JFrame {
     
-    protected LinkedList childPanels;
-    
     protected BaseUIShell(){
-        childPanels = new LinkedList();
-        this.addChildren();
         setUpClosedWindowListener();
     }
-    
-    protected void addChildren(){}
     
     private void setUpClosedWindowListener(){
         //this should also be pushed up.
@@ -62,8 +56,8 @@ public class BaseUIShell extends javax.swing.JFrame {
                 , JOptionPane.YES_NO_OPTION);
     }
     
-    protected LinkedList<BasePanel> myPanels(){
-        return new LinkedList();
+    protected UsefulList<BasePanel> myPanels(){
+        return new UsefulList();
     }
     
     public void modelAdded(BaseModel newModel){}

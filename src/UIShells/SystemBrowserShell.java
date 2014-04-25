@@ -4,10 +4,10 @@
  */
 package UIShells;
 
+import MainBase.UsefulList;
 import Models.*;
 import UIModels.BrowserUIModel;
 import UIPanels.BasePanel;
-import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -22,7 +22,6 @@ public class SystemBrowserShell extends BaseUIShell {
      * Creates new form SystemBrowserShell
      */
     public SystemBrowserShell() {
-        super();
         initComponents();
     }
     
@@ -40,11 +39,10 @@ public class SystemBrowserShell extends BaseUIShell {
     }
     
     @Override
-    protected LinkedList<BasePanel> myPanels(){
-        LinkedList aList = new LinkedList();
-        aList.add(classBrowserPanel);
-        aList.add(modelEditPanel);
-        return aList;
+    protected UsefulList<BasePanel> myPanels(){
+        return super.myPanels()
+                .addElm(modelEditPanel)
+                .addElm(classBrowserPanel);
     }
     
     private void fillLists(){

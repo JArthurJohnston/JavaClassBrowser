@@ -70,15 +70,6 @@ public class MainApplication {
         this.userName = newUserName;
     }
     
-    public ProjectSelectionModel openProjectSelection(){
-        ProjectSelectionModel model = null;
-        if(this.okToOpenShell(ProjectSelectionModel.class)){
-            model = new ProjectSelectionModel(this);
-            openWindowModels.add(model);
-        }
-        return model;
-    }
-    
     /**
      * boolean okToOpenShell.
      * used to check and see if certain shells are already open.
@@ -133,22 +124,6 @@ public class MainApplication {
         return selectedPackage;
     }
     
-    public ClassBrowserShellModel openAddClassBrowser(){
-        ClassBrowserShellModel newShellModel;
-        openWindowModels.add(newShellModel = new ClassBrowserShellModel(this));
-        return newShellModel;
-    }
-    
-    public PackageSelectionShellModel openPackageSelection(){
-        PackageSelectionShellModel shell;
-        openWindowModels.add(shell = new PackageSelectionShellModel(this));
-        return shell;
-    }
-    
-    public ClassBrowserShellModel openClassBrowser(){
-        openWindowModels.add(new ClassBrowserShellModel(this));
-        return (ClassBrowserShellModel)openWindowModels.get(openWindowModels.size()-1);
-    }
     
     public void addUpdateShells(BaseModel newModel){
         for(BaseUIModel m : openWindowModels){

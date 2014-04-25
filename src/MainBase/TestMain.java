@@ -45,9 +45,6 @@ public class TestMain {
         }
         BrowserUIModel aModel = main.openSystemBrowser();
         aModel.getShell().setVisible(true);
-        System.out.println(aModel.getSelectedClass().toString());
-        System.out.println(aModel.getSelectedClass().getInstanceMethods().size());
-        System.out.println(aModel.getSelectedClass().getStaticMethods().size());
     }
     
 }

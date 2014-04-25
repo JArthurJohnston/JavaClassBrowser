@@ -27,8 +27,6 @@ public class ModelEditPanel extends BasePanel{
         this.commentTextArea.getDocument().addDocumentListener(this.setUpDocListener());
     }
     
-    
-    
     @Override
     public void setModel(BrowserUIModel aModel){
         this.model = aModel;
