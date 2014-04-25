@@ -21,6 +21,10 @@ public class BasePanel extends javax.swing.JPanel{
     
     protected BrowserUIModel model;
     
+    public BasePanel(){
+        
+    }
+    
     public void setModel(BrowserUIModel aModel){
         this.model = aModel;
         this.setUpLists();
