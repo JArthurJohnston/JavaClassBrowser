@@ -163,7 +163,7 @@ public class ClassModel extends PackageModel{
     }
     
     public LinkedList getStaticMethods(){
-        return this.getModelsOfType(methods, ClassType.CLASS);
+        return this.getModelsOfType(methods, ClassType.STATIC);
     }
     public LinkedList<MethodModel> getInstanceMethods(){
         return this.getModelsOfType(methods, ClassType.INSTANCE);
@@ -182,7 +182,7 @@ public class ClassModel extends PackageModel{
         return variables;
     }
     public LinkedList<VariableModel> getStaticVars(){
-        return this.getModelsOfType(variables, ClassType.CLASS);
+        return this.getModelsOfType(variables, ClassType.STATIC);
     }
     
     public LinkedList<VariableModel> getInstanceVars(){

@@ -33,11 +33,11 @@ public class TestMain {
             aProject.getDefaultPackage().addClass(
                     new ClassModel(aProject.getDefaultPackage(), "YetAnotherClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.CLASS));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
+            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.STATIC));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
-            aClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel("Object"), "anotherVar"));
+            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             
             anotherClass.addMethod(new MethodModel(aClass, "someMethod", ClassType.INSTANCE));
         } catch (NameAlreadyExistsException ex) {

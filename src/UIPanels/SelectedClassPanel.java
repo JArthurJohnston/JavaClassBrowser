@@ -4,6 +4,7 @@
  */
 package UIPanels;
 
+import MainBase.UsefulList;
 import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import javax.swing.DefaultListModel;
@@ -43,10 +44,8 @@ public class SelectedClassPanel extends BasePanel {
     }
     
     @Override
-    protected LinkedList<JList> myLists(){
-        LinkedList aList = new LinkedList();
-        aList.add(this.classList);
-        return aList;
+    protected UsefulList<JList> myLists(){
+        return super.myLists().addElm(classList);
     }
 
     /**

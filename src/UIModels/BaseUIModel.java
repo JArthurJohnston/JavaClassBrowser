@@ -6,7 +6,6 @@ package UIModels;
 
 import MainBase.MainApplication;
 import Models.BaseModel;
-import UIShells.BaseUIShell;
 import java.util.List;
 import javax.swing.DefaultListModel;
 

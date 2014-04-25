@@ -10,8 +10,6 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
-import java.util.LinkedList;
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 /**
@@ -37,7 +35,7 @@ public class MethodPanel extends BasePanel {
     
     private void fillListsFromClass(ClassModel aClass){
         for(MethodModel m : aClass.getMethods()){
-            if(m.getType() == ClassType.CLASS)
+            if(m.getType() == ClassType.STATIC)
                 this.getListModel(staticMethodList).addElement(m);
             if(m.getType() == ClassType.INSTANCE)
                 this.getListModel(instanceMethodList).addElement(m);

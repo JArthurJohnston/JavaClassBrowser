@@ -4,7 +4,6 @@ import Exceptions.DoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Models.*;
 import UIModels.*;
-import UIShells.AddNewProjectShell;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -69,11 +68,6 @@ public class MainApplication {
     }
     public void setUserName(String newUserName){
         this.userName = newUserName;
-    }
-    
-    
-    public AddNewProjectShell openAddProjectShell(){
-        return AddNewProjectShell.getInstance(this);
     }
     
     public ProjectSelectionModel openProjectSelection(){
