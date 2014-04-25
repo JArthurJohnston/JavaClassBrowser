@@ -10,7 +10,6 @@ import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -59,7 +58,7 @@ public class ClassFieldsPanelTest extends BaseTest{
             PackageModel aPackage = aProject.getDefaultPackage();
             ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
-            aClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel("Object"), "anotherVar"));
+            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -75,7 +74,7 @@ public class ClassFieldsPanelTest extends BaseTest{
             aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
                 model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
-            aClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel("Object"), "aClassVar"));
+            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());

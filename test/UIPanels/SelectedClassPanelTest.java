@@ -9,11 +9,7 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
-import Types.ScopeType;
 import UIModels.BrowserUIModel;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -50,8 +46,8 @@ public class SelectedClassPanelTest extends BaseTest {
             ClassModel aClass = 
                     aProject.getDefaultPackage().addClass(new ClassModel(aProject.getDefaultPackage(), "AClass"));
             aClass.addMethod(new MethodModel(aClass, "anInstanceMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "aStaticMethod", ClassType.CLASS));
-            aClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel("Object"), "aClassVar"));
+            aClass.addMethod(new MethodModel(aClass, "aStaticMethod", ClassType.STATIC));
+            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());

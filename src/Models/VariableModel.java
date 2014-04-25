@@ -95,6 +95,10 @@ public class VariableModel extends BaseModel{
             source = this.scope.toString().toLowerCase() + " ";
         return source+this.type.name()+" "+this.name()+";";
     }
+    @Override
+    public boolean isVariable(){
+        return true;
+    }
     
     @Override
     public String getPath() {

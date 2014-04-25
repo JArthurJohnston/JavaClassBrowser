@@ -67,7 +67,7 @@ public abstract class BaseModel {
     public boolean isMethod(){
         return false;
     }
-    public boolean isVaribale(){
+    public boolean isVariable(){
         return false;
     }
     

@@ -50,7 +50,7 @@ public class MethodPanelTest extends BaseTest{
             ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod"));
             aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
             main.setSelectedProejct(aProject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -73,8 +73,8 @@ public class MethodPanelTest extends BaseTest{
             aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
                 model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
             aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.CLASS));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.CLASS));
+            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.STATIC));
+            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
