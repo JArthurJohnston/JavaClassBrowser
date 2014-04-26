@@ -7,9 +7,13 @@ package UIPanels;
 import MainBase.UsefulList;
 import Models.*;
 import UIModels.BrowserUIModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -77,6 +81,24 @@ public class BasePanel extends javax.swing.JPanel{
         for(JList jl : this.myLists())
             if(jl != aList)
                 jl.clearSelection();
+    }
+    
+    protected void setUpRightClick(final JComponent aComponent, final JPopupMenu aMenu){
+        aComponent.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+            }
+            @Override
+            public void mousePressed(MouseEvent e){
+                if(e.isPopupTrigger())
+                    aMenu.show(aComponent, e.getX(), e.getY());
+            }
+            @Override
+            public void mouseReleased(MouseEvent e){
+                if(e.isPopupTrigger())
+                    aMenu.show(aComponent, e.getX(), e.getY());
+            }
+        });
     }
     
     public void selectionChanged(BaseModel aModel){}

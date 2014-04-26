@@ -127,8 +127,8 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testInstanceOrStatic() {
         assertEquals(ClassType.INSTANCE, method.getType());
-        method.setType(ClassType.CLASS);
-        assertEquals(ClassType.CLASS, method.getType());
+        method.setType(ClassType.STATIC);
+        assertEquals(ClassType.STATIC, method.getType());
     }
     
 

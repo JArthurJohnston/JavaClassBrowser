@@ -23,6 +23,7 @@ public class ClassFieldsPanel extends BasePanel {
      */
     public ClassFieldsPanel() {
         initComponents();
+        this.setUpRightClickMenues();
     }
     
     @Override
@@ -56,6 +57,11 @@ public class ClassFieldsPanel extends BasePanel {
             return;
         this.fillListsFromClass((ClassModel)aClass);
     }
+    
+    public void setUpRightClickMenues(){
+        this.setUpRightClick(instanceVarList, varRightClickMenu);
+        this.setUpRightClick(staticVarList, varRightClickMenu);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,6 +72,8 @@ public class ClassFieldsPanel extends BasePanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        varRightClickMenu = new javax.swing.JPopupMenu();
+        addVarMenuItem = new javax.swing.JMenuItem();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         instanceVarList = new javax.swing.JList();
@@ -73,6 +81,14 @@ public class ClassFieldsPanel extends BasePanel {
         staticVarList = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
         imporList = new javax.swing.JList();
+
+        addVarMenuItem.setText("New Variable");
+        addVarMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addVarMenuItemActionPerformed(evt);
+            }
+        });
+        varRightClickMenu.add(addVarMenuItem);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -94,7 +110,13 @@ public class ClassFieldsPanel extends BasePanel {
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addVarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVarMenuItemActionPerformed
+        
+    }//GEN-LAST:event_addVarMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addVarMenuItem;
     private javax.swing.JList imporList;
     private javax.swing.JList instanceVarList;
     private javax.swing.JScrollPane jScrollPane1;
@@ -102,5 +124,6 @@ public class ClassFieldsPanel extends BasePanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList staticVarList;
+    private javax.swing.JPopupMenu varRightClickMenu;
     // End of variables declaration//GEN-END:variables
 }
