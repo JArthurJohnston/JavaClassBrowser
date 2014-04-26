@@ -8,6 +8,8 @@ package UIModels.Buffer;
 
 import MainBase.UsefulList;
 import Models.BaseModel;
+import Types.ClassType;
+import Types.ScopeType;
 
 /**
  * Created to hold changes and check their
@@ -17,9 +19,13 @@ import Models.BaseModel;
  */
 public class BaseModelBuffer {
     protected BaseModel entity;
-    protected String name;
     protected UsefulList fields;
     protected boolean isValid;
+    
+    protected String name;
+    protected ScopeType scope;
+    protected boolean isFinal;
+    protected ClassType type;
     
     public BaseModelBuffer(){
         this.isValid = true;
@@ -76,6 +82,23 @@ public class BaseModelBuffer {
     public void saveToModel(){
         if(this.isValid())
             this.getEntity().setName(name);
+    }
+    
+    public String getName(){
+        if(this.name == null)
+            this.name = new String();
+        return this.name;
+    }
+    public ScopeType getScope(){
+        if(this.scope == null)
+            this.scope = ScopeType.NONE;
+        return this.scope;
+    }
+    public ClassType getType(){
+        return this.type;
+    }
+    public boolean isFinal(){
+        return isFinal;
     }
     
 }

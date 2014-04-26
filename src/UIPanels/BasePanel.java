@@ -7,6 +7,7 @@ package UIPanels;
 import MainBase.UsefulList;
 import Models.*;
 import UIModels.BrowserUIModel;
+import UIShells.Dialogs.BaseDialogue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -100,6 +101,7 @@ public class BasePanel extends javax.swing.JPanel{
             }
         });
     }
+    
     
     public void selectionChanged(BaseModel aModel){}
     

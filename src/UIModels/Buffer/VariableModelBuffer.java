@@ -19,10 +19,7 @@ import java.util.LinkedList;
  * @author arthur
  */
 public  class VariableModelBuffer extends BaseModelBuffer{
-    private ClassType type;
     private ClassModel objectType;
-    private ScopeType scope;
-    private boolean isFinal;
     private String value;
     
     public VariableModelBuffer(VariableModel aVar){
@@ -115,6 +112,10 @@ public  class VariableModelBuffer extends BaseModelBuffer{
                 .setScope(scope)
                 .setValue(value)
                 .setFinal(isFinal);
+    }
+    
+    public ClassModel getObjectType(){
+        return objectType;
     }
     
 }

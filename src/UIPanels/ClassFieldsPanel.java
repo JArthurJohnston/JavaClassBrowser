@@ -8,6 +8,7 @@ import MainBase.UsefulList;
 import Models.BaseModel;
 import Models.ClassModel;
 import Models.VariableModel;
+import Types.ClassType;
 import UIModels.BrowserUIModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -74,7 +75,7 @@ public class ClassFieldsPanel extends BasePanel {
 
         varRightClickMenu = new javax.swing.JPopupMenu();
         addVarMenuItem = new javax.swing.JMenuItem();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabs = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         instanceVarList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -92,23 +93,23 @@ public class ClassFieldsPanel extends BasePanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-        jTabbedPane1.setToolTipText("");
-        jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tabs.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        tabs.setToolTipText("");
+        tabs.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jScrollPane1.setViewportView(instanceVarList);
 
-        jTabbedPane1.addTab("Instance Variables", jScrollPane1);
+        tabs.addTab("Instance Variables", jScrollPane1);
 
         jScrollPane2.setViewportView(staticVarList);
 
-        jTabbedPane1.addTab("Static Variables", jScrollPane2);
+        tabs.addTab("Static Variables", jScrollPane2);
 
         jScrollPane3.setViewportView(imporList);
 
-        jTabbedPane1.addTab("Imports", jScrollPane3);
+        tabs.addTab("Imports", jScrollPane3);
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(tabs, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void addVarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVarMenuItemActionPerformed
@@ -122,8 +123,26 @@ public class ClassFieldsPanel extends BasePanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList staticVarList;
+    private javax.swing.JTabbedPane tabs;
     private javax.swing.JPopupMenu varRightClickMenu;
     // End of variables declaration//GEN-END:variables
+
+    private void addMenuAction(){
+        /*
+        1: instance
+        2: static
+        3: import
+         */
+        switch(tabs.getSelectedIndex()){
+            case 0:
+                
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+        }
+    }
 }

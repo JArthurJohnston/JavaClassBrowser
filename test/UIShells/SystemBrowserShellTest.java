@@ -9,16 +9,18 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
+import Types.ClassType;
 import UIModels.BrowserUIModel;
 import UIPanels.BasePanel;
+import UIShells.Dialogs.AddVariableDialogue;
 import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -93,5 +95,13 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(this.model(), this.getVariableFromClass(shell, "model"));
         assertEquals(this.model(), this.getVariableFromClass(bPanel, "model"));
         assertEquals(this.model(), this.getVariableFromClass(aPanel, "model"));
+    }
+    
+    @Test
+    public void testAddVariableAction(){
+        AddVariableDialogue aDialogue =  
+                shell.addVariableAction(
+                        this.model().addVariableBuffer(ClassType.STATIC));
+        
     }
 }

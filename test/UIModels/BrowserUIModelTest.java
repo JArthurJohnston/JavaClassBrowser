@@ -121,4 +121,10 @@ public class BrowserUIModelTest extends BaseTest{
         }
         assertEquals(aClass, model.getSelectedClass());
     }
+    
+    @Test
+    public void testAddVariableAction(){
+        fail("needs to be tested manually");
+        //until I write a testing framework for MessageBoxes
+    }
 }

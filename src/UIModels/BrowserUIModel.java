@@ -7,6 +7,8 @@ package UIModels;
 import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;
 import Models.*;
+import Types.ClassType;
+import UIModels.Buffer.VariableModelBuffer;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
 
@@ -69,6 +71,15 @@ public class BrowserUIModel extends BaseUIModel{
     public BaseModel getSelected(){
         return selectedModel;
     }
+    
+    public VariableModelBuffer addVariableBuffer(ClassType aType){
+        return new VariableModelBuffer(
+                new VariableModel(
+                        aType, 
+                        ClassModel("Object"), 
+                        "newVariable").setParent(selectedClass)
+        );
+    }
 
     @Override
     public void modelAdded(BaseModel newModel) {
@@ -83,5 +94,9 @@ public class BrowserUIModel extends BaseUIModel{
     @Override
     public void modelRemoved(BaseModel newModel) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private ClassModel ClassModel(String object) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
