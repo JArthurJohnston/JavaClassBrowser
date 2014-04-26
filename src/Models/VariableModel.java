@@ -6,14 +6,13 @@ package Models;
 
 import Types.ClassType;
 import Types.ScopeType;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 /**
  *
  * @author Arthur
  */
 public class VariableModel extends BaseModel{
+    private ClassModel parent;
     private ScopeType scope;
     private ClassModel type;
     private ClassType staticOrInstance;
@@ -50,39 +49,52 @@ public class VariableModel extends BaseModel{
     public ClassType getType(){
         return staticOrInstance;
     }
-    
-    public void setType(ClassType aType){
-        staticOrInstance = aType;
+    public String getValue(){
+        return value;
     }
+    public ClassModel getParent(){
+        return parent;
+    }
+    public ScopeType getScope(){
+        return scope;
+    }
+    
     
     /*
      * Setters
      */
     @Override
     public void setName(String aString){
-        this.name = this.removeSemicolon(aString);
+        this.name = aString;
     }
-    public void setObjectType(ClassModel type){
+    public VariableModel setObjectType(ClassModel type){
         this.type = type;
+        return this;
     }
-    public void setScope(ScopeType scope){
-        this.scope = scope;
+    public VariableModel setScope(ScopeType scope){
+        if(scope == null)
+            this.scope = ScopeType.NONE;
+        else
+            this.scope = scope;
+        return this;
     }
-    public ScopeType getScope(){
-        return scope;
+    public VariableModel setType(ClassType aType){
+        staticOrInstance = aType;
+        return this;
+    }
+    public VariableModel setParent(ClassModel aClass){
+        if(this.parent != aClass)
+            this.parent = aClass;
+        return this;
     }
     
-    public String getValue(){
-        return value;
+    public VariableModel setValue(String aValue){
+        this.value = aValue;
+        return this;
     }
-    public void setValue(String aValue){
-        this.value = this.removeSemicolon(aValue);
-    }
-    
-    private String removeSemicolon(String aString){
-        if(aString.charAt(aString.length()-1) == ';')
-            return aString.substring(0, aString.length()-1);
-        return aString;
+    public VariableModel setFinal(boolean isFinal){
+        this.isFinal = isFinal;
+        return this;
     }
     
     /*
@@ -95,6 +107,7 @@ public class VariableModel extends BaseModel{
             source = this.scope.toString().toLowerCase() + " ";
         return source+this.type.name()+" "+this.name()+";";
     }
+    
     @Override
     public boolean isVariable(){
         return true;
@@ -103,81 +116,6 @@ public class VariableModel extends BaseModel{
     @Override
     public String getPath() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public boolean parseDeclaration(String decl){
-        LinkedList<String> tokens = new LinkedList(Arrays.asList(decl.split("\\s+")));
-        if(tokens.size() < 2)
-            return false;
-        //need to check for duplicate names before setting name.
-        this.setName(tokens.getLast());
-        tokens.removeLast();
-        //need to check the project for a class with this object type string
-        this.setObjectType(new ClassModel(tokens.getLast()));
-        tokens.removeLast();
-        if(tokens.isEmpty())
-            return true;
-        for(ScopeType s : ScopeType.values())
-            if(tokens.contains(s.toString().toLowerCase())){
-                this.setScope(s);
-                tokens.remove(s.toString().toLowerCase());
-                break;
-            }
-        
-        for(ClassType c : ClassType.values())
-            if(tokens.contains(c.toString().toLowerCase())){
-                this.setType(c);
-                tokens.remove(c.toString().toLowerCase());
-                break;
-            }
-        if(tokens.isEmpty())
-            return true;
-        
-        if(tokens.contains("final")){
-            this.isFinal = true;
-            tokens.remove("final");
-        }
-        if(!tokens.isEmpty())
-            return false;
-        return true;
-    }
-    
-    public boolean parseSource(String source){
-        if(source.contains("=")){
-            this.parseDeclaration(source.split("=")[0]);
-            this.setValue((source.split("=")[1]));
-            return true;
-        }
-        return this.parseDeclaration(source);
-    }
-    
-    public static VariableModel newFromSource(String source){
-        VariableModel newVar = new VariableModel();
-        if(source.contains("=")){
-            String[] tokens = source.split("=");
-            for(String s : tokens)
-                System.out.println(s);
-            newVar.parseDeclaration(tokens[0]);
-            newVar.setValue(tokens[1]);
-        }
-        String[] tokens = source.split("\\s+");
-        for(String s : tokens){
-        }
-        return new VariableModel();
-        /*
-        if(source.indexOf("=") == -1)
-        parse through the string
-        1. check to see if it contains the substring private or public, if not its NONE.
-            set its type accordingly
-        2. check to see if it contains 'static'
-            setits type accordingly
-        3. the next substring should be its Object type.
-            set its ObjectType as a new ClassModel with that string.
-        4. the next substring should be its name
-            set the name accordingly
-        5. if theres an = sign, everything after it should be saved as the
-            variables value.
-        */
     }
 
     @Override

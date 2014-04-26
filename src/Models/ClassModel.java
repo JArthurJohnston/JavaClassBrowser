@@ -54,7 +54,7 @@ public class ClassModel extends PackageModel{
         this.variables = new LinkedList();
     }
     
-    private boolean okToAddMethod(String newMethodName){
+    public boolean okToAddMethod(String newMethodName){
         for(MethodModel m : methods){
             if(m.name.compareTo(newMethodName) == 0) {
                 return false;
@@ -63,10 +63,10 @@ public class ClassModel extends PackageModel{
         return true;
     }
     
-    private boolean okToAddVariable(VariableModel newVar){
+    public boolean okToAddVariable(String newVarName){
         //check for redefining instanceVar
         for(VariableModel v: variables){
-            if(v.name().compareTo(newVar.name())==0) {
+            if(v.name().compareTo(newVarName)==0) {
                 return false;
             }
         }
@@ -96,8 +96,9 @@ public class ClassModel extends PackageModel{
     }
     
     public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
-        if(this.okToAddVariable(newVar)){
+        if(this.okToAddVariable(newVar.name())){
             variables.add(newVar);
+            newVar.setParent(this);
             return newVar;
         }else {
             throw new NameAlreadyExistsException(this, newVar);

@@ -187,6 +187,7 @@ public class ClassModelTest extends BaseTest{
             testClass.addVariable(var);
             fail("exception not thrown");
         } catch (NameAlreadyExistsException ex) {}
+        assertEquals(testClass, var.getParent());
     }
     
     @Test
@@ -254,7 +255,7 @@ public class ClassModelTest extends BaseTest{
         MethodModel aMethod = null;
         assertTrue(testClass.getStaticMethods().isEmpty());
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.CLASS));
+            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -278,7 +279,7 @@ public class ClassModelTest extends BaseTest{
         }
         assertTrue(testClass.getInstanceMethods().contains(aMethod));
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.CLASS));
+            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -290,7 +291,7 @@ public class ClassModelTest extends BaseTest{
         VariableModel aVar = null;
         assertTrue(testClass.getStaticVars().isEmpty());
         try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel(), "aVar"));
+            aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "aVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -315,7 +316,7 @@ public class ClassModelTest extends BaseTest{
         }
         assertTrue(testClass.getInstanceVars().contains(aVar));
         try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.CLASS, new ClassModel(), "anotherVar"));
+            aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "anotherVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

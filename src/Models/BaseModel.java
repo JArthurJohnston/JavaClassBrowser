@@ -4,7 +4,9 @@
  */
 package Models;
 
+import MainBase.UsefulList;
 import Types.ClassType;
+import java.util.LinkedList;
 
 /**
  *
@@ -18,10 +20,16 @@ public abstract class BaseModel {
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
     protected Boolean isDefault = false;
+    protected LinkedList<String> warnings;
     
     //getters
     public String name(){
         return name;
+    }
+    public LinkedList<String> getWarnings(){
+        if(warnings == null);
+            warnings = new LinkedList();
+        return warnings;
     }
     public boolean hasChange(){
         return hasChange;

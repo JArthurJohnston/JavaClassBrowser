@@ -87,54 +87,6 @@ public class VariableModelTest extends BaseTest{
     }
     
     @Test
-    public void testVarParser(){
-        String source = "private Type x = new Type();";
-        VariableModel newVar = VariableModel.newFromSource(source);
-        
-        assertTrue(var.parseDeclaration(source));
-        assertEquals("new Type()", var.getValue());
-    }
-    
-    @Test
-    public void testParseDeclaration(){
-        String source = "Integer x;";
-        assertTrue(var.parseDeclaration(source));
-        source = "private Integer x;";
-        assertTrue(var.parseDeclaration(source));
-        source = "private static Integer x;";
-        assertTrue(var.parseDeclaration(source));
-        source = "private static Integer x;";
-        assertTrue(var.parseDeclaration(source));
-        source = "static private Integer x;";
-        assertTrue(var.parseDeclaration(source));
-    }
-    
-    @Test
-    public void testParseSource(){
-        String source = "public static int x = 5;";
-        assertTrue(var.parseSource(source));
-        assertEquals(ScopeType.PUBLIC, var.getScope());
-        assertEquals(ClassType.STATIC, var.getType());
-        assertEquals("int", var.getObjectType().name());
-        assertTrue(this.compareStrings(" 5", var.getValue()));
-    }
-    
-    @Test
-    public void testParseDeclarationWithFinalContainsValue(){
-        String source = "final Integer x = 4;";
-        assertTrue(var.parseSource(source));
-        assertEquals(" 4", var.getValue());
-        assertTrue(var.isFinal());
-        assertEquals("Integer", var.getObjectType().name());
-        source = "final Integer x;";
-        assertTrue(var.parseDeclaration(source));
-        assertTrue(var.isFinal());
-        assertEquals("Integer", var.getObjectType().name());
-        assertEquals("x", var.name());
-        assertFalse(var.parseDeclaration("final intever int x;"));
-    }
-    
-    @Test
     public void testSetName(){
         var.setName("aNameString;");
         assertTrue(this.compareStrings("aNameString", var.name()));
