@@ -14,6 +14,7 @@ import Types.ClassType;
 import UIModels.Buffer.VariableModelBuffer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -73,11 +74,28 @@ public class AddVariableDialogueTest extends BaseTest{
     @Test
     public void testInitialFields() {
         UsefulList<JLabel> labels = this.getLabels();
-        assertEquals("newVariable",     labels.get(0).getText());
-        assertEquals("NONE",            labels.get(1).getText());
-        assertEquals("instance",        labels.get(2).getText());
-        assertEquals("No",        labels.get(3).getText());
-        assertEquals("int",  labels.get(4).getText());
+        assertEquals("newVariable", labels.get(0).getText());
+        assertEquals("NONE",        labels.get(1).getText());
+        assertEquals("instance",    labels.get(2).getText());
+        assertEquals("No",          labels.get(3).getText());
+        assertEquals("int",         labels.get(4).getText());
+    }
+    
+    @Test
+    public void testSetTextChangesLabels(){
+        JTextField varField = (JTextField)this.getVariableFromClass(dialogue, "newVarField");
+        UsefulList<JLabel> labels = this.getLabels();
+        varField.setText("private static char x;");
+        assertEquals("x",       labels.get(0).getText());
+        assertEquals("private", labels.get(1).getText());
+        assertEquals("static",  labels.get(2).getText());
+        assertEquals("No",      labels.get(3).getText());
+        assertEquals("char",    labels.get(4).getText());
+    }
+    
+    @Test
+    public void testSaveAndClose(){
+        fail("write me");
     }
     
 }

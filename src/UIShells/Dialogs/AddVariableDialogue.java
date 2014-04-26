@@ -29,15 +29,22 @@ public class AddVariableDialogue extends BaseDialogue {
         this.buffer = buffer;
         this.setTitle(new String("Add Variable"));
         this.setFields();
+        this.setUpListeners();
     }
     
     private void setUpListeners(){
-        
+        this.newVarField.getDocument().addDocumentListener(this.setUpDocListener());
+    }
+    
+    @Override
+    protected void onDocumentChanged(){
+        buffer.parseSource(newVarField.getText());
+        this.setFields();
     }
     
     private void setFields(){
-        this.nameLabel.setText(buffer.getName());
-        this.scopeLabel.setText(buffer.getScope().toString());
+        this.nameLabel.setText(buffer.getName().toLowerCase());
+        this.scopeLabel.setText(buffer.getScope().toString().toLowerCase());
         this.staticLabel.setText(buffer.getType().toString().toLowerCase());
         
         if(buffer.isFinal())
@@ -48,6 +55,14 @@ public class AddVariableDialogue extends BaseDialogue {
             this.typeLabel.setText(new String());
         else
             this.typeLabel.setText(buffer.getObjectType().name());
+    }
+    
+    public void saveAndClose(){
+        if(!buffer.isValid())
+            return;
+        buffer.saveToModel();
+        buffer = null;
+        this.dispose();
     }
     
     
@@ -62,7 +77,7 @@ public class AddVariableDialogue extends BaseDialogue {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        newNameField = new javax.swing.JTextField();
+        newVarField = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -114,7 +129,7 @@ public class AddVariableDialogue extends BaseDialogue {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(newNameField)
+                    .addComponent(newVarField)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -142,7 +157,7 @@ public class AddVariableDialogue extends BaseDialogue {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(newNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(newVarField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -232,7 +247,7 @@ public class AddVariableDialogue extends BaseDialogue {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel nameLabel;
-    private javax.swing.JTextField newNameField;
+    private javax.swing.JTextField newVarField;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel scopeLabel;
     private javax.swing.JLabel staticLabel;

@@ -24,16 +24,16 @@ public class BaseDialogue extends javax.swing.JDialog  {
         return new DocumentListener(){
             @Override
             public void insertUpdate(DocumentEvent e) {
-                refreshFields();
+                onDocumentChanged();
             }
             @Override
             public void removeUpdate(DocumentEvent e) {
-                refreshFields();
+                onDocumentChanged();
             }
             @Override
             public void changedUpdate(DocumentEvent e) {}
         };
     }
     
-    public void refreshFields(){}
+    protected void onDocumentChanged(){}
 }
