@@ -5,6 +5,7 @@
 package UIPanels;
 
 import MainBase.UsefulList;
+import Types.ClassType;
 import UIModels.BrowserUIModel;
 import java.util.LinkedList;
 import javax.swing.DefaultListModel;
@@ -46,6 +47,13 @@ public class SelectedClassPanel extends BasePanel {
     @Override
     protected UsefulList<JList> myLists(){
         return super.myLists().addElm(classList);
+    }
+    
+    public ClassType getSelectedVarType(){
+        return this.classFieldsPresenter.getSelectedVarType();
+    }
+    public ClassType getSelectedMethodType(){
+        return this.methodPresenter.getSelectedMethodType();
     }
 
     /**

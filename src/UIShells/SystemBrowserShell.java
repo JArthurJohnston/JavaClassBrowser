@@ -6,6 +6,7 @@ package UIShells;
 
 import MainBase.UsefulList;
 import Models.*;
+import Types.ClassType;
 import UIModels.BrowserUIModel;
 import UIPanels.BasePanel;
 import javax.swing.DefaultListModel;
@@ -74,6 +75,13 @@ public class SystemBrowserShell extends BaseUIShell {
             bp.selectionChanged(aClass);
     }
 
+    public ClassType getSelectedVarType(){
+        return this.classBrowserPanel.getSelectedVarType();
+    }
+    public ClassType getSelectedMethodType(){
+        return this.classBrowserPanel.getSelectedMethodType();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -183,5 +191,4 @@ public class SystemBrowserShell extends BaseUIShell {
     private javax.swing.JList packageList;
     // End of variables declaration//GEN-END:variables
 
-    
 }

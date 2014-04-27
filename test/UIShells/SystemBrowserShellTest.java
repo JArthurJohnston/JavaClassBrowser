@@ -97,11 +97,4 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(this.model(), this.getVariableFromClass(aPanel, "model"));
     }
     
-    @Test
-    public void testAddVariableAction(){
-        AddVariableDialogue aDialogue =  
-                shell.addVariableAction(
-                        this.model().addVariableBuffer(ClassType.STATIC));
-        
-    }
 }

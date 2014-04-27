@@ -9,6 +9,7 @@ import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
 import UIModels.Buffer.VariableModelBuffer;
+import UIShells.Dialogs.AddVariableDialogue;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
 
@@ -76,9 +77,13 @@ public class BrowserUIModel extends BaseUIModel{
         return new VariableModelBuffer(
                 new VariableModel(
                         aType, 
-                        ClassModel("Object"), 
+                        new ClassModel("Object"), 
                         "newVariable").setParent(selectedClass)
         );
+    }
+    
+    public AddVariableDialogue openAddVariable(){
+        return new AddVariableDialogue(shell, this.addVariableBuffer(shell.getSelectedVarType()));
     }
 
     @Override

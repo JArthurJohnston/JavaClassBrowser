@@ -63,6 +63,12 @@ public class ClassFieldsPanel extends BasePanel {
         this.setUpRightClick(instanceVarList, varRightClickMenu);
         this.setUpRightClick(staticVarList, varRightClickMenu);
     }
+    
+    public ClassType getSelectedVarType(){
+        if(tabs.getSelectedIndex() == 2)
+            return ClassType.STATIC;
+        return ClassType.INSTANCE;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -113,7 +119,7 @@ public class ClassFieldsPanel extends BasePanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addVarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVarMenuItemActionPerformed
-        
+        model.openAddVariable();
     }//GEN-LAST:event_addVarMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

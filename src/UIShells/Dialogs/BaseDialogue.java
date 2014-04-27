@@ -19,7 +19,6 @@ public class BaseDialogue extends javax.swing.JDialog  {
         super(parent, modal);
     }
     
-    
     protected DocumentListener setUpDocListener(){
         return new DocumentListener(){
             @Override

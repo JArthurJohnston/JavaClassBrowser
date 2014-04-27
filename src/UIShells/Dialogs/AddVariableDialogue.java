@@ -6,7 +6,10 @@
 
 package UIShells.Dialogs;
 
+import Exceptions.NameAlreadyExistsException;
 import UIModels.Buffer.VariableModelBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 /**
@@ -30,6 +33,7 @@ public class AddVariableDialogue extends BaseDialogue {
         this.setTitle(new String("Add Variable"));
         this.setFields();
         this.setUpListeners();
+        this.setVisible(true);
     }
     
     private void setUpListeners(){
@@ -60,13 +64,14 @@ public class AddVariableDialogue extends BaseDialogue {
     public void saveAndClose(){
         if(!buffer.isValid())
             return;
-        buffer.saveToModel();
+        try {
+            buffer.addModel();
+        } catch (NameAlreadyExistsException ex) {
+            Logger.getLogger(AddVariableDialogue.class.getName()).log(Level.SEVERE, null, ex);
+        }
         buffer = null;
         this.dispose();
     }
-    
-    
-    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -94,6 +99,11 @@ public class AddVariableDialogue extends BaseDialogue {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         okButton.setText("Apply");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -195,6 +205,11 @@ public class AddVariableDialogue extends BaseDialogue {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        this.saveAndClose();
+        //now i have to refresh the var lists.
+    }//GEN-LAST:event_okButtonActionPerformed
 
     /**
      * @param args the command line arguments

@@ -56,6 +56,12 @@ public class MethodPanel extends BasePanel {
             return;
         this.fillListsFromClass((ClassModel)aClass);
     }
+    
+    public ClassType getSelectedMethodType(){
+        if(tabs.getSelectedIndex() == 1)
+            return ClassType.STATIC;
+        return ClassType.INSTANCE;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -66,7 +72,7 @@ public class MethodPanel extends BasePanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabs = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         instanceMethodList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -74,24 +80,24 @@ public class MethodPanel extends BasePanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(150, 250));
+        tabs.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        tabs.setPreferredSize(new java.awt.Dimension(150, 250));
 
         jScrollPane1.setViewportView(instanceMethodList);
 
-        jTabbedPane1.addTab("Instance Methods", jScrollPane1);
+        tabs.addTab("Instance Methods", jScrollPane1);
 
         jScrollPane2.setViewportView(staticMethodList);
 
-        jTabbedPane1.addTab("Static Methods", jScrollPane2);
+        tabs.addTab("Static Methods", jScrollPane2);
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(tabs, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList instanceMethodList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList staticMethodList;
+    private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }
