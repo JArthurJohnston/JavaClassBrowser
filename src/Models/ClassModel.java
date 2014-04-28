@@ -10,9 +10,11 @@ import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
+import MainBase.UsefulList;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -26,6 +28,11 @@ public class ClassModel extends PackageModel{
     private LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
+    
+    private static HashMap <String, ClassModel> PRIMITIVE_TYPES
+            = new HashMap();
+    
+    
      
     //use these constructors for testing only
     public ClassModel(){}
@@ -45,6 +52,28 @@ public class ClassModel extends PackageModel{
         this.parent = parent;
         this.name = name;
         this.scope = ScopeType.PUBLIC;
+    }
+    
+    public static UsefulList<String> getPrimitiveTypes(){
+        return new UsefulList()
+                    .addElm("int")
+                    .addElm("long")
+                    .addElm("char")
+                    .addElm("float")
+                    .addElm("double")
+                    .addElm("void");
+    }
+    
+    public static ClassModel getPrimitive(String aString){
+        if(!getPrimitiveTypes().contains(aString))
+            return null;
+        if(!PRIMITIVE_TYPES.containsKey(aString))
+            PRIMITIVE_TYPES.put(aString, new ClassModel(aString));
+        return PRIMITIVE_TYPES.get(aString);
+    }
+    
+    public boolean isPrimitive(){
+        return ClassModel.getPrimitiveTypes().contains(this.name());
     }
     
     @Override

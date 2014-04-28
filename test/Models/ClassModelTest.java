@@ -347,4 +347,19 @@ public class ClassModelTest extends BaseTest{
         }
         assertEquals(main, testClass.getMain());
     }
+    
+    @Test
+    public void testIsPrimitive(){
+        assertFalse(testClass.isPrimitive());
+        testClass.setName("int");
+        assertTrue(testClass.isPrimitive());
+    }
+    
+    @Test
+    public void testGetPrimitiveType(){
+        ClassModel intModel = ClassModel.getPrimitive("int");
+        assertTrue(intModel.isPrimitive());
+        ClassModel anotherInt = ClassModel.getPrimitive("int");
+        assertEquals(anotherInt, intModel);
+    }
 }

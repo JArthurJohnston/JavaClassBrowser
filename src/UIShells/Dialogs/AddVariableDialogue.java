@@ -59,6 +59,7 @@ public class AddVariableDialogue extends BaseDialogue {
             this.typeLabel.setText(new String());
         else
             this.typeLabel.setText(buffer.getObjectType().name());
+        //this.newVarField.setText(buffer.getSourceString());
     }
     
     public void saveAndClose(){

@@ -60,8 +60,8 @@ public class ClassFieldsPanel extends BasePanel {
     }
     
     public void setUpRightClickMenues(){
-        this.setUpRightClick(instanceVarList, varRightClickMenu);
-        this.setUpRightClick(staticVarList, varRightClickMenu);
+        this.setUpRightClickListener(instanceVarList, varRightClickMenu);
+        this.setUpRightClickListener(staticVarList, varRightClickMenu);
     }
     
     public ClassType getSelectedVarType(){
@@ -134,21 +134,4 @@ public class ClassFieldsPanel extends BasePanel {
     private javax.swing.JPopupMenu varRightClickMenu;
     // End of variables declaration//GEN-END:variables
 
-    private void addMenuAction(){
-        /*
-        1: instance
-        2: static
-        3: import
-         */
-        switch(tabs.getSelectedIndex()){
-            case 0:
-                
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            default:
-        }
-    }
 }

@@ -7,7 +7,6 @@ package UIPanels;
 import MainBase.UsefulList;
 import Models.*;
 import UIModels.BrowserUIModel;
-import UIShells.Dialogs.BaseDialogue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -84,11 +83,8 @@ public class BasePanel extends javax.swing.JPanel{
                 jl.clearSelection();
     }
     
-    protected void setUpRightClick(final JComponent aComponent, final JPopupMenu aMenu){
+    protected void setUpRightClickListener(final JComponent aComponent, final JPopupMenu aMenu){
         aComponent.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-            }
             @Override
             public void mousePressed(MouseEvent e){
                 if(e.isPopupTrigger())
@@ -102,7 +98,8 @@ public class BasePanel extends javax.swing.JPanel{
         });
     }
     
-    
+    protected void showRightClickMenu(){}
+    protected void onRightClicked(MouseEvent e){}
     public void selectionChanged(BaseModel aModel){}
     
 }

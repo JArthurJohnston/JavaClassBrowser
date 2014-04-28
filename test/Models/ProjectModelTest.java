@@ -333,4 +333,9 @@ public class ProjectModelTest extends BaseTest{
         }
         assertEquals("default package", aClass.getParentPackage().name());
     }
+    
+    @Test
+    public void testReservedWords(){
+        assertEquals(16, ProjectModel.getReservedWords().size());
+    }
 }

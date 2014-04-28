@@ -8,6 +8,9 @@ import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
+import MainBase.UsefulList;
+import Types.ClassType;
+import Types.ScopeType;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,6 +38,7 @@ public class ProjectModel extends BaseModel {
             + "Continue?";
     
     
+    
     /*
      * Constructors
      */
@@ -55,6 +59,17 @@ public class ProjectModel extends BaseModel {
         this.userName = main.getUserName();
         this.name = name;
         this.setUpFields();
+    }
+    
+    public static UsefulList<String> getReservedWords(){
+        return new UsefulList()
+                    .addElm("void")
+                    .addElm("return")
+                    .addElm("enum")
+                    .addElm("final")
+                .addElements(ClassModel.getPrimitiveTypes())
+                .addElements(ScopeType.getStringValues())
+                .addElements(ClassType.getStringValues());
     }
     
     /*

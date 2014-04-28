@@ -7,6 +7,7 @@
 package MainBase;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * UsefulList, more dynamic list.
@@ -31,5 +32,16 @@ public class UsefulList<T> extends LinkedList<T>{
         return null;
     }
     
+    public UsefulList addElements(List<T> elements){
+        if(super.addAll(elements))
+            return this;
+        return null;
+    }
+    
+    public UsefulList addArray(T[] tArray){
+        for(T t : tArray)
+            this.addElm(t);
+        return this;
+    }
     
 }

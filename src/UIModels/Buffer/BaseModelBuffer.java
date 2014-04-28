@@ -100,5 +100,8 @@ public class BaseModelBuffer {
     public boolean isFinal(){
         return isFinal;
     }
+    public String getSourceString(){
+        return this.getEntity().toSourceString();
+    }
     
 }

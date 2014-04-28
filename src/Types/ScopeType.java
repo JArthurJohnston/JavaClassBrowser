@@ -4,7 +4,7 @@
  */
 package Types;
 
-import java.util.EnumSet;
+import java.util.LinkedList;
 
 /**
  *
@@ -13,7 +13,10 @@ import java.util.EnumSet;
 public enum ScopeType {
     NONE, PUBLIC, PRIVATE, PROTECTED;
     
-    public boolean contains(Object o){
-        return EnumSet.allOf(ScopeType.class).contains(o);
+    public static LinkedList<String> getStringValues(){
+        LinkedList<String> aList = new LinkedList();
+        for(ScopeType s : ScopeType.values())
+            aList.add(s.toString());
+        return aList;
     }
 }
