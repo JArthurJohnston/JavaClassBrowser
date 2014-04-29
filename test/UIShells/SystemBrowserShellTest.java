@@ -9,11 +9,8 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.PackageModel;
 import Models.ProjectModel;
-import Types.ClassType;
 import UIModels.BrowserUIModel;
 import UIPanels.BasePanel;
-import UIShells.Dialogs.AddVariableDialogue;
-import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -96,5 +93,6 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(this.model(), this.getVariableFromClass(bPanel, "model"));
         assertEquals(this.model(), this.getVariableFromClass(aPanel, "model"));
     }
+    
     
 }

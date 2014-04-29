@@ -8,6 +8,7 @@ package UIModels.Buffer;
 
 import MainBase.UsefulList;
 import Models.BaseModel;
+import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
 
@@ -66,10 +67,9 @@ public class BaseModelBuffer {
     
     public void setName(String aName){
         if(aName == null)
-            this.name = null;
-        else if(aName.isEmpty())
-            this.name = aName;
-        else
+            return;
+        if(!aName.isEmpty()
+                || !ProjectModel.getReservedWords().contains(aName))
             this.name = this.removeSemicolon(aName);
     }
     

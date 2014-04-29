@@ -62,6 +62,7 @@ public class SelectedClassPanelTest extends BaseTest {
         model = null;
         panel = null;
     }
+    
 
     /**
      * Test of setModel method, of class SelectedClassPanel.
@@ -81,5 +82,16 @@ public class SelectedClassPanelTest extends BaseTest {
         JList classList = (JList)this.getVariableFromClass(panel, "classList");
         classList.setSelectedIndex(0);
         assertEquals("AClass", model.getSelected().name());
+    }
+    
+    @Test
+    public void testSelectionChanged(){
+        fail();
+    }
+    
+    @Test
+    public void testClassAddedUpdatesPanel(){
+        JList classList = (JList)this.getVariableFromClass(panel, "classList");
+        fail();
     }
 }

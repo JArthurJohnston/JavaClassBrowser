@@ -42,6 +42,10 @@ public class BasePanel extends javax.swing.JPanel{
         return new UsefulList();
     }
     
+    protected UsefulList<BasePanel> myPanels(){
+        return new UsefulList();
+    }
+    
     protected DefaultListModel getListModel(JList aList){
         return ((DefaultListModel)aList.getModel());
     }
@@ -100,6 +104,10 @@ public class BasePanel extends javax.swing.JPanel{
     
     protected void showRightClickMenu(){}
     protected void onRightClicked(MouseEvent e){}
-    public void selectionChanged(BaseModel aModel){}
+    
+    public void selectionChanged(BaseModel aModel){
+        for(BasePanel bp: this.myPanels())
+            bp.selectionChanged(aModel);
+    }
     
 }

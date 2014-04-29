@@ -7,7 +7,6 @@ package UIPanels;
 import MainBase.UsefulList;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
-import java.util.LinkedList;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -22,6 +21,7 @@ public class SelectedClassPanel extends BasePanel {
      */
     public SelectedClassPanel() {
         initComponents();
+        this.setUpListener(classList);
     }
     
     @Override
@@ -32,11 +32,11 @@ public class SelectedClassPanel extends BasePanel {
             b.setModel(aModel);
     }
     
-    private LinkedList<BasePanel> myPanels(){
-        LinkedList panels = new LinkedList();
-        panels.add(this.classFieldsPresenter);
-        panels.add(this.methodPresenter);
-        return panels;
+    @Override
+    protected UsefulList<BasePanel> myPanels(){
+        return super.myPanels()
+                .addElm(classFieldsPresenter)
+                .addElm(methodPresenter);
     }
     
     private void fillClassList(){
