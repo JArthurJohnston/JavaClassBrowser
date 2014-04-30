@@ -181,7 +181,8 @@ public class ProjectModel extends BaseModel {
     public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
         if(this.okToAddPackage(newPackage.name())){
             this.packages.put(newPackage.name(), newPackage);
-            if(newPackage.getParent() == this) {
+            if(newPackage.getParent() == null) {
+                newPackage.setParent(this);
                 this.packageList.add(newPackage);
             }
             this.modelAdded(newPackage);
@@ -196,8 +197,9 @@ public class ProjectModel extends BaseModel {
      * then call super.addClass(ClassModel)
      * adds a class to the hash.
      * 
-     * @param ClassModel the class being added to the project
+     * @param newClass
      * @return ClassModel the class being added to the project
+     * @throws Exceptions.NameAlreadyExistsException
      */
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClass.name())){
@@ -236,10 +238,6 @@ public class ProjectModel extends BaseModel {
         return (ClassModel)classes.remove(aClass.name());
     }
     
-    //static methods
-    public static String getSelectionString(){
-        return "Project";
-    }
     
     /**
      * Generates and returns a LinkedList of every class
@@ -314,6 +312,10 @@ public class ProjectModel extends BaseModel {
     
     protected MainApplication getMain(){
         return main;
+    }
+    
+    public void setMain(MainApplication main){
+        this.main = main;
     }
    
 }

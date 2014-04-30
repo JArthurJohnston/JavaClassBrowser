@@ -51,6 +51,7 @@ public class MainApplication {
         else {
             throw new NameAlreadyExistsException(this, newProject);
         }
+        newProject.setMain(this);
         return newProject;
     }
     

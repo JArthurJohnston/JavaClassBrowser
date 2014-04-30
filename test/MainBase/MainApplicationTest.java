@@ -9,19 +9,17 @@ import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import Models.ClassModel;
 import Models.ProjectModel;
-import UIModels.ClassBrowserShellModel;
-import UIModels.ProjectSelectionModel;
 import UIModels.BrowserUIModel;
-import UIShells.ClassBrowserShell;
+import UIShells.SystemBrowserShell;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -112,15 +110,6 @@ public class MainApplicationTest extends BaseTest {
         } catch (NameAlreadyExistsException ex) {}
     }
     
-    @Test
-    public void testProjectSelectionShellConnections(){
-        ArrayList openModels = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
-        main.openProjectSelection();
-        assertEquals(1, openModels.size());
-        assertEquals(ProjectSelectionModel.class, openModels.get(0).getClass());
-        main.openProjectSelection();
-        assertEquals(1, openModels.size());
-    }
     
     @Test
     public void testRemoveProject(){
@@ -161,14 +150,14 @@ public class MainApplicationTest extends BaseTest {
     public void testOKToAddProject(){
         assertTrue(main.okToAdd("new project"));
         try {
-            main.addProject(new ProjectModel(main,"new project"));
+            main.addProject(new ProjectModel("new project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(main.okToAdd("new project"));
         assertTrue(main.okToAdd("another project"));
         try {
-            main.addProject(new ProjectModel(main,"another project"));
+            main.addProject(new ProjectModel("another project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -188,23 +177,11 @@ public class MainApplicationTest extends BaseTest {
         fail();
     }
     
-    @Test
-    public void testAddClassBrowser(){
-        ArrayList models = (ArrayList)this.getVariableFromClass(main, "openWindowModels");
-        assertTrue(models.isEmpty());
-        main.openAddClassBrowser();
-        assertEquals(1, models.size());
-        assertEquals(ClassBrowserShellModel.class, models.get(0).getClass());
-        main.openAddClassBrowser();
-        assertEquals(2, models.size());
-        assertEquals(ClassBrowserShellModel.class, models.get(1).getClass());
-        assertFalse(models.get(0) == models.get(1));
-    }
     
     @Test
     public void testAddClassUpdateShells(){
-        ClassBrowserShell aShell = main.openClassBrowser().openShell();
-        ClassBrowserShell anotherShell = main.openClassBrowser().openShell();
+        SystemBrowserShell aShell = main.openSystemBrowser().getShell();
+        SystemBrowserShell anotherShell = main.openSystemBrowser().getShell();
         ClassModel newClass = new ClassModel("aClass");
         main.addUpdateShells(newClass);
         JList classList = (JList)this.getVariableFromClass(aShell, "classList");

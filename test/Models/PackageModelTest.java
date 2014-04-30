@@ -127,7 +127,7 @@ public class PackageModelTest extends BaseTest{
         System.out.println("TestRemovePackage");
         PackageModel packageToBeRemoved = null;
         try {
-            packageToBeRemoved = testPackage.addPackage(new PackageModel(testPackage, "Packge to be Removed"));
+            packageToBeRemoved = testPackage.addPackage(new PackageModel("Packge to be Removed"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -218,8 +218,8 @@ public class PackageModelTest extends BaseTest{
         ClassModel aClass = null;
         PackageModel subPackage = null;
         try {
-            subPackage = testPackage.addPackage(new PackageModel(testPackage, "SubPackage"));
-            aClass = subPackage.addClass(new ClassModel(subPackage, "NewClass"));
+            subPackage = testPackage.addPackage(new PackageModel("SubPackage"));
+            aClass = subPackage.addClass(new ClassModel("NewClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -269,9 +269,9 @@ public class PackageModelTest extends BaseTest{
         ClassModel subClass = null;
         PackageModel anotherPackage = null;
         try {
-            parentClass = testPackage.addClass(new ClassModel(testPackage, "parent"));
-            subClass = parentClass.addClass(new ClassModel(parentClass, "sub"));
-            anotherPackage = parentProject.addPackage(new PackageModel(parentProject, "another package"));
+            parentClass = testPackage.addClass(new ClassModel("parent"));
+            subClass = parentClass.addClass(new ClassModel("sub"));
+            anotherPackage = parentProject.addPackage(new PackageModel("another package"));
             assertEquals(2, testPackage.getClassList().size());
             assertTrue(testPackage.getClassList().contains(parentClass));
             assertTrue(testPackage.getClassList().contains(subClass));

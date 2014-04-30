@@ -28,9 +28,12 @@ public class PackageModel extends ProjectModel {
      * Default constructor
      * Should not be called AT ALL!
      */
-    public PackageModel(){}
+    protected PackageModel(){}
+    
+    
     public PackageModel(String name){
         this.name = name;
+        this.setUpFields();
     }
     
     /**
@@ -42,7 +45,7 @@ public class PackageModel extends ProjectModel {
      * it cuts down on repitition. always make sure its called last in the constructor
      * unless absolutely necessary
      * 
-     * @param ProjectModel parent 
+     * @param parent 
      */
     public PackageModel(ProjectModel parent){
         this.parent = parent;
@@ -76,6 +79,7 @@ public class PackageModel extends ProjectModel {
         this.setUpFields();
     }
     
+    
     @Override
     protected MainApplication getMain(){
         return this.getProject().getMain();
@@ -104,7 +108,8 @@ public class PackageModel extends ProjectModel {
     
     @Override
     public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
-        if(newPackage.parent == this) {
+        if(newPackage.getParent() == null){
+            newPackage.setParent(this);
             this.packageList.add(newPackage);
         }
         return this.getProject().addPackage(newPackage);
@@ -115,6 +120,7 @@ public class PackageModel extends ProjectModel {
         this.getProject().addClass(newClass);
         if(newClass.parent == this)
             classList.add(newClass);
+            newClass.setParent(this);
         return newClass;
     }
     
@@ -189,6 +195,10 @@ public class PackageModel extends ProjectModel {
     }
     public ProjectModel getParent(){
         return parent;
+    }
+    
+    public void setParent(ProjectModel aProjectOrPackage){
+        this.parent = aProjectOrPackage;
     }
     
     @Override
