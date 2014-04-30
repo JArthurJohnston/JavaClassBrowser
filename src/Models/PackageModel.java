@@ -17,7 +17,6 @@ import java.util.LinkedList;
  */
 public class PackageModel extends ProjectModel {
     private LinkedList<PackageModel> packageList;
-    protected ProjectModel project;
     protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
     /*
@@ -47,7 +46,6 @@ public class PackageModel extends ProjectModel {
      */
     public PackageModel(ProjectModel parent){
         this.parent = parent;
-        this.project = parent;
         this.name = "default package";
         this.setUpFields();
     }
@@ -60,7 +58,6 @@ public class PackageModel extends ProjectModel {
      * @param name String
      */
     public PackageModel(ProjectModel parent, String name){
-        this.project = parent;
         this.parent = parent;
         this.name = name;
         this.setUpFields();
@@ -74,14 +71,14 @@ public class PackageModel extends ProjectModel {
      * @param name String
      */
     public PackageModel(PackageModel parent, String name){
-        this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
         this.setUpFields();
     }
     
+    @Override
     protected MainApplication getMain(){
-        return project.getMain();
+        return this.getProject().getMain();
     }
     
     @Override
@@ -92,17 +89,17 @@ public class PackageModel extends ProjectModel {
     
     @Override
     public boolean okToAddPackage(String newPackageName){
-        return project.okToAddPackage(this.name()+"."+newPackageName);
+        return this.getProject().okToAddPackage(this.name()+"."+newPackageName);
     }
     
     @Override
     protected boolean okToAddClass(String newClassName){
-        return project.okToAddClass(newClassName);
+        return this.getProject().okToAddClass(newClassName);
     }
     
     @Override
     protected boolean okToRemovePackage(PackageModel aPackage){
-        return project.okToRemovePackage(aPackage);
+        return this.getProject().okToRemovePackage(aPackage);
     }
     
     @Override
@@ -110,12 +107,12 @@ public class PackageModel extends ProjectModel {
         if(newPackage.parent == this) {
             this.packageList.add(newPackage);
         }
-        return project.addPackage(newPackage);
+        return this.getProject().addPackage(newPackage);
     }
     
     @Override
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
-        project.addClass(newClass);
+        this.getProject().addClass(newClass);
         if(newClass.parent == this)
             classList.add(newClass);
         return newClass;
@@ -138,7 +135,7 @@ public class PackageModel extends ProjectModel {
             if(!this.classList.remove(aClass))
                 throw new VeryVeryBadException(false, aClass);
         }
-        return project.removeClass(aClass);
+        return this.getProject().removeClass(aClass);
     }
     
     protected ClassModel classMoved(ClassModel aClass) throws VeryVeryBadException{
@@ -155,7 +152,7 @@ public class PackageModel extends ProjectModel {
             if(aPackage.getParent() == this){
                 this.packageList.remove(aPackage);
             }
-            return project.removePackage(aPackage);
+            return this.getProject().removePackage(aPackage);
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
         }
@@ -177,11 +174,18 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
+    protected void triggerModelChanged(){
+        this.getProject().modelChanged(this);
+    }
+    
+    
+    @Override
     public LinkedList<PackageModel> getPackageList(){
         return packageList;
     }
+    @Override
     public ProjectModel getProject(){
-        return project;
+        return parent.getProject();
     }
     public ProjectModel getParent(){
         return parent;

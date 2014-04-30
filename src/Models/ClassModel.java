@@ -41,14 +41,12 @@ public class ClassModel extends PackageModel{
     }
     
     public ClassModel(PackageModel parent, String name, ScopeType scope){
-        this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
         this.scope = scope;
     }
     
     public ClassModel(PackageModel parent, String name){
-        this.project = parent.getProject();
         this.parent = parent;
         this.name = name;
         this.scope = ScopeType.PUBLIC;
@@ -145,7 +143,7 @@ public class ClassModel extends PackageModel{
         if(!this.okToAddMethod(newMethod.name()))
             throw new NameAlreadyExistsException(this, newMethod);
         methods.add(newMethod);
-        this.project.addMethodDefinition(newMethod);
+        this.getProject().addMethodDefinition(newMethod);
         return newMethod;
     }
     

@@ -5,6 +5,7 @@
 package UIPanels;
 
 import MainBase.UsefulList;
+import Models.BaseModel;
 import Types.ClassType;
 import UIModels.BrowserUIModel;
 import javax.swing.DefaultListModel;
@@ -54,6 +55,13 @@ public class SelectedClassPanel extends BasePanel {
     }
     public ClassType getSelectedMethodType(){
         return this.methodPresenter.getSelectedMethodType();
+    }
+    
+    @Override
+    public void modelAdded(BaseModel aModel){
+        if(aModel.isClass())
+            this.getListModel(classList).addElement(aModel);
+        super.modelAdded(aModel);
     }
 
     /**

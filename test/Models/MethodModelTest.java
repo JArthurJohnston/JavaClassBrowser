@@ -79,8 +79,8 @@ public class MethodModelTest extends BaseTest{
     public void testInheritedFields(){
         assertEquals(ClassModel.class, method.getParent().getClass());
         assertEquals("ParentClass", method.getParent().name());
-        assertEquals(ProjectModel.class, method.project.getClass());
-        assertEquals("A Project", method.project.name());
+        assertEquals(ProjectModel.class, method.getProject().getClass());
+        assertEquals("A Project", method.getProject().name());
         assertEquals(PackageModel.class, method.getParentPackage().getClass());
         assertEquals(method.getParentPackage(), method.parent.getParentPackage());
         assertEquals("a package", method.getParentPackage().name());

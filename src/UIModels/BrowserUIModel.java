@@ -20,6 +20,7 @@ import java.util.LinkedList;
 public class BrowserUIModel extends BaseUIModel{
     private SystemBrowserShell shell;
     private ProjectModel selectedProject;
+    private PackageModel selectedPackage;
     private BaseModel selectedModel;
     private ClassModel selectedClass;
     
@@ -39,11 +40,6 @@ public class BrowserUIModel extends BaseUIModel{
         return shell;
     }
     
-    public void setSelectedClass(ClassModel aClass){
-        this.selectedClass = aClass;
-        shell.selectionChanged(aClass);
-    }
-    
     public ProjectModel getSelectedProject(){
         return selectedProject;
     }
@@ -53,6 +49,12 @@ public class BrowserUIModel extends BaseUIModel{
             if(!selectedProject.getClassList().isEmpty())
                 selectedClass = selectedProject.getClassList().getFirst();
         return this.selectedClass;
+    }
+    
+    public PackageModel getSelectedPackage(){
+        if(selectedPackage == null)
+            selectedPackage = selectedProject.getDefaultPackage();
+        return selectedPackage;
     }
     
     public LinkedList<PackageModel> getPackages(){
@@ -65,8 +67,14 @@ public class BrowserUIModel extends BaseUIModel{
     
     @Override
     public void setSelected(BaseModel aModel){
-        if(aModel != null)
-            selectedModel = aModel;
+        if(aModel == null)
+            return;
+        selectedModel = aModel;
+        if(aModel.isClass())
+            selectedClass = (ClassModel)aModel;
+        if(aModel.isPackage())
+            selectedPackage = (PackageModel)aModel;
+        shell.selectionChanged(aModel);
     }
     
     public BaseModel getSelected(){

@@ -102,12 +102,23 @@ public class BasePanel extends javax.swing.JPanel{
         });
     }
     
-    protected void showRightClickMenu(){}
-    protected void onRightClicked(MouseEvent e){}
     
     public void selectionChanged(BaseModel aModel){
         for(BasePanel bp: this.myPanels())
             bp.selectionChanged(aModel);
+    }
+    
+    public void modelAdded(BaseModel newModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelAdded(newModel);
+    }
+    public void modelChanged(BaseModel newModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelChanged(newModel);
+    }
+    public void modelRemoved(BaseModel newModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelChanged(newModel);
     }
     
 }

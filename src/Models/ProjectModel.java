@@ -184,6 +184,7 @@ public class ProjectModel extends BaseModel {
             if(newPackage.getParent() == this) {
                 this.packageList.add(newPackage);
             }
+            this.modelAdded(newPackage);
             return newPackage;
         }else {
             throw new NameAlreadyExistsException(this, newPackage);
@@ -201,6 +202,7 @@ public class ProjectModel extends BaseModel {
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         if(this.okToAddClass(newClass.name())){
             classes.put(newClass.name(), newClass);
+            this.modelAdded(newClass);
             return newClass;
         }else 
             throw new NameAlreadyExistsException(this, newClass);
@@ -220,6 +222,7 @@ public class ProjectModel extends BaseModel {
             if(aPackage.parent == this){
                 this.packageList.remove(aPackage);
             }
+            this.modelRemoved(aPackage);
             return aPackage;
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
@@ -229,6 +232,7 @@ public class ProjectModel extends BaseModel {
     public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         if(!classes.containsKey(aClass.name()))
             throw new VeryVeryBadException(this, aClass);
+        this.modelRemoved(aClass);
         return (ClassModel)classes.remove(aClass.name());
     }
     
@@ -279,17 +283,33 @@ public class ProjectModel extends BaseModel {
         return methods.get(aMethod.name());
     }
     
-    
+    protected void modelAdded(BaseModel aModel){
+        main.addUpdateShells(aModel);
+    }
+    protected void modelRemoved(BaseModel aModel){
+        main.removeUpdateShells(aModel);
+    }
+    protected void modelChanged(BaseModel aModel){
+        main.changeUpdateShells(aModel);
+    }
+    protected void triggerModelChanged(){
+        main.changeUpdateShells(this);
+    }
     
     public MethodModel removeMethod(MethodModel aMethod) throws VeryVeryBadException{
         if(!methods.get(aMethod.name()).remove(aMethod))
             throw new VeryVeryBadException(this, aMethod);
         if(methods.get(aMethod.name()).isEmpty())
             methods.remove(aMethod.name());
+        this.modelRemoved(aMethod);
         return aMethod;
         /*
         need to add logic to warn the user if theyre removing a method with references
         */
+    }
+    
+    protected ProjectModel getProject(){
+        return this;
     }
     
     protected MainApplication getMain(){

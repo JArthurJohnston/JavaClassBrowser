@@ -45,7 +45,6 @@ public class MethodModel extends ClassModel{
      */
     public MethodModel(ClassModel parent, ScopeType scope, ClassType instanceOrStatic, 
             ClassModel returnType, String name, LinkedList params, String source){
-        this.project = parent.getProject();
         this.parent = parent;
         this.type = instanceOrStatic;
         this.scope = scope;
@@ -64,7 +63,6 @@ public class MethodModel extends ClassModel{
      */
     public MethodModel(ClassModel parent, ScopeType scope, LinkedList params, String source){
         this.parent = parent;
-        this.project = parent.getProject();
         this.name = parent.name();
         this.returnType = parent;
         this.parameters = params;
@@ -85,7 +83,7 @@ public class MethodModel extends ClassModel{
     }
     
     public LinkedList getDefinitions(){
-        return project.getMethodDefinitions(this);
+        return this.getProject().getMethodDefinitions(this);
     }
     
     public boolean matchSignature(MethodModel otherMethod){
@@ -145,6 +143,7 @@ public class MethodModel extends ClassModel{
             return new String();
         return source;
     }
+    @Override
     public ClassType getType(){
         return type;
     }
@@ -177,11 +176,6 @@ public class MethodModel extends ClassModel{
             signature += param.getType().name()+" "+param.name();
         }
         return signature + "){\n"+ this.getSource() + "\n}";
-    }
-    
-    @Override
-    public ProjectModel getProject(){
-        return this.project;
     }
     
     @Override

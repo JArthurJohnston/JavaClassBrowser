@@ -130,6 +130,16 @@ public class MainApplication {
             m.modelAdded(newModel);
         }
     }
+    public void removeUpdateShells(BaseModel newModel){
+        for(BaseUIModel m : openWindowModels){
+            m.modelRemoved(newModel);
+        }
+    }
+    public void changeUpdateShells(BaseModel newModel){
+        for(BaseUIModel m : openWindowModels){
+            m.modelChanged(newModel);
+        }
+    }
     
     public BrowserUIModel openSystemBrowser(){
         openWindowModels.add(new BrowserUIModel(this));

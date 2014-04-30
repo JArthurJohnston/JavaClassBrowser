@@ -13,8 +13,6 @@ import Models.ProjectModel;
 import UIShells.Dialogs.AddVariableDialogue;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -131,5 +129,11 @@ public class BrowserUIModelTest extends BaseTest{
         //assertTrue(dialogue.isVisible());
         dialogue.dispose();
         model.close();
+    }
+    
+    @Test
+    public void testGetSelectedPackage(){
+        assertEquals(model.getSelectedPackage(), main.getSelectedProject().getDefaultPackage());
+                
     }
 }

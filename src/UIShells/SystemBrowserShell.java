@@ -70,9 +70,9 @@ public class SystemBrowserShell extends BaseUIShell {
     }
     
     @Override
-    public void selectionChanged(ClassModel aClass){
+    public void selectionChanged(BaseModel aModel){
         for(BasePanel bp : this.myPanels())
-            bp.selectionChanged(aClass);
+            bp.selectionChanged(aModel);
     }
 
     public ClassType getSelectedVarType(){

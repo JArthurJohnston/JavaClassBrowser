@@ -126,4 +126,13 @@ public class ClassFieldsPanelTest extends BaseTest{
         assertEquals(2, instList.getModel().getSize());
         assertEquals(1, statList.getModel().getSize());
     }
+    
+    @Test
+    public void testModelAdded(){
+        JList instList = (JList)this.getVariableFromClass(panel, "instanceVarList");
+        JList statList = (JList)this.getVariableFromClass(panel, "staticVarList");
+        assertEquals(2, instList.getModel().getSize());
+        assertEquals(1, statList.getModel().getSize());
+        
+    }
 }

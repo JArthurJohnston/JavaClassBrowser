@@ -92,6 +92,8 @@ public class SelectedClassPanelTest extends BaseTest {
     @Test
     public void testClassAddedUpdatesPanel(){
         JList classList = (JList)this.getVariableFromClass(panel, "classList");
-        fail();
+        assertEquals(1, classList.getModel().getSize());
+        panel.modelAdded(new ClassModel("NewClass"));
+        assertEquals(2, classList.getModel().getSize());
     }
 }

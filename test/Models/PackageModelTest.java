@@ -61,7 +61,7 @@ public class PackageModelTest extends BaseTest{
         assertEquals(parentProject, testPackage.getProject());
         assertEquals(LinkedList.class, testPackage.getClassList().getClass());
         assertEquals(0,testPackage.getClassList().size());
-        assertEquals(ArrayList.class, testPackage.getPackageList().getClass());
+        assertEquals(LinkedList.class, testPackage.getPackageList().getClass());
         assertEquals(0, testPackage.getPackageList().size());
         assertEquals(0, testPackage.getClassList().size());
     }
@@ -300,5 +300,10 @@ public class PackageModelTest extends BaseTest{
     @Test
     public void testGetMain(){
         assertEquals(main, testPackage.getMain());
+    }
+    
+    @Test
+    public void testParentIsProject(){
+        assertEquals(testPackage.getParent(), testPackage.getProject());
     }
 }

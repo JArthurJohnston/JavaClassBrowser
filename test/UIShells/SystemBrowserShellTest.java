@@ -75,13 +75,14 @@ public class SystemBrowserShellTest extends BaseTest{
     }
     
     @Test
-    public void testAddPackage(){
+    public void testAddPackageToProjectUpdatesShell(){
+        JList projects = (JList)this.getVariableFromClass(shell, "packageList");
+        assertEquals(2, projects.getModel().getSize());
         try {
             this.model().addPackage(new PackageModel(this.main().getSelectedProject(), "a Package"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        JList projects = (JList)this.getVariableFromClass(shell, "packageList");
         assertEquals(3, projects.getModel().getSize());
     }
     

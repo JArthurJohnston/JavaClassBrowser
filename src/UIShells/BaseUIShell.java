@@ -65,9 +65,6 @@ public class BaseUIShell extends javax.swing.JFrame {
     public void modelRemoved(BaseModel newModel){}
     
     
-    public void selectionChanged(PackageModel aClass){}
-    public void selectionChanged(ClassModel aClass){}
-    public void selectionChanged(MethodModel aClass){}
-    public void selectionChanged(VariableModel aClass){}
+    public void selectionChanged(BaseModel aClass){}
     
 }
