@@ -19,6 +19,8 @@ public class PackageModel extends ProjectModel {
     private LinkedList<PackageModel> packageList;
     protected ProjectModel parent;
     protected ArrayList<ClassModel> classList;
+    
+    private static final String DEFAULT_PACKAGE_NAME = "default package";
     /*
      * at this level the packageList variable is used to store
      * top-level classes only
@@ -28,12 +30,7 @@ public class PackageModel extends ProjectModel {
      * Default constructor
      * Should not be called AT ALL!
      */
-    protected PackageModel(){}
-    
-    
-    public PackageModel(String name){
-        this.name = name;
-        this.setUpFields();
+    public PackageModel(){
     }
     
     /**
@@ -48,48 +45,32 @@ public class PackageModel extends ProjectModel {
      * @param parent 
      */
     public PackageModel(ProjectModel parent){
+        initialize();
         this.parent = parent;
         this.name = "default package";
-        this.setUpFields();
-    }
-    
-    /**
-     * New Package Constructor
-     * Constructor used to add a top-level package to a project.
-     * It should only be called from a ProjectModel
-     * @param parent ProjectModel
-     * @param name String
-     */
-    public PackageModel(ProjectModel parent, String name){
-        this.parent = parent;
-        this.name = name;
-        this.setUpFields();
     }
     
     /**
      * New Sub Package Constructor
      * Used to add a PackageModel to an existing PackageModel
      * Should only be called from a PackageModel
-     * @param parent PackageModel
      * @param name String
      */
-    public PackageModel(PackageModel parent, String name){
-        this.parent = parent;
+    public PackageModel(String name){
+        initialize();
         this.name = name;
-        this.setUpFields();
     }
     
+    private void initialize(){
+        packageList = new LinkedList();
+        classList = new ArrayList();
+    }
     
     @Override
     protected MainApplication getMain(){
         return this.getProject().getMain();
     }
     
-    @Override
-    protected void setUpFields(){
-        packageList = new LinkedList();
-        classList = new ArrayList();
-    }
     
     @Override
     public boolean okToAddPackage(String newPackageName){
@@ -118,9 +99,10 @@ public class PackageModel extends ProjectModel {
     @Override
     public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
         this.getProject().addClass(newClass);
-        if(newClass.parent == this)
+        if(newClass.parent == null){
             classList.add(newClass);
             newClass.setParent(this);
+        }
         return newClass;
     }
     
@@ -131,6 +113,7 @@ public class PackageModel extends ProjectModel {
      * @return the class being moved
      */
     public ClassModel adoptClass(ClassModel aClass){
+        aClass.setParent(this);
         this.classList.add(aClass);
         return aClass;
     }
@@ -170,11 +153,11 @@ public class PackageModel extends ProjectModel {
     @Override
     public LinkedList getClassList(){
         LinkedList myClassList = new LinkedList();
-        for(ClassModel c : classList){
-            myClassList.addAll(c.getClassList());
-        }
         for(PackageModel p : this.packageList){
             myClassList.addAll(p.getClassList());
+        }
+        for(ClassModel c : classList){
+            myClassList.addAll(c.getClassList());
         }
         return myClassList;
     }
@@ -204,5 +187,9 @@ public class PackageModel extends ProjectModel {
     @Override
     public boolean isPackage(){
         return true;
+    }
+    
+    public boolean isDefault(){
+        return this.name.compareTo(DEFAULT_PACKAGE_NAME) == 0;
     }
 }

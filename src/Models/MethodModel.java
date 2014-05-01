@@ -20,22 +20,23 @@ public class MethodModel extends ClassModel{
     private LinkedList<VariableModel> parameters;
     private LinkedList references;
     
-    //testing constructors
     public MethodModel(){
-        this.initializeFields();
+        this.type = ClassType.INSTANCE;
+        this.scope = ScopeType.PUBLIC;
+        this.parameters = new LinkedList();
+        this.references = new LinkedList();
     }
-    public MethodModel(ClassModel parent, String name){
-        this(parent, ScopeType.PRIVATE, ClassType.INSTANCE, 
-                JavaLang.getVoid(), name, new LinkedList(), new String());
+    public MethodModel(String name){
+        this();
+        this.name = name;
     }
-    public MethodModel(ClassModel parent, String name, ClassType type){
-        this(parent, ScopeType.PRIVATE, type, JavaLang.getVoid(), 
-                name, new LinkedList(), new String());
+    public MethodModel(String name, ClassType type){
+        this(name);
+        this.type = type;
     }
     
     /**
      * this is THE constructor for non-constructor methods
-     * @param parent
      * @param scope
      * @param instanceOrStatic
      * @param returnType
@@ -43,9 +44,8 @@ public class MethodModel extends ClassModel{
      * @param params
      * @param source 
      */
-    public MethodModel(ClassModel parent, ScopeType scope, ClassType instanceOrStatic, 
+    public MethodModel(ScopeType scope, ClassType instanceOrStatic, 
             ClassModel returnType, String name, LinkedList params, String source){
-        this.parent = parent;
         this.type = instanceOrStatic;
         this.scope = scope;
         this.source = source;

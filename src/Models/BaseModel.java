@@ -4,7 +4,6 @@
  */
 package Models;
 
-import MainBase.UsefulList;
 import Types.ClassType;
 import java.util.LinkedList;
 
@@ -19,7 +18,6 @@ public abstract class BaseModel {
     protected String name;
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
-    protected Boolean isDefault = false;
     protected LinkedList<String> warnings;
     
     //getters
@@ -37,9 +35,6 @@ public abstract class BaseModel {
     public String defaultName(){
         return defaultName;
     }
-    public Boolean isDefault(){
-        return isDefault;
-    }
     public String getDescription(){
         return description;
     }
@@ -52,9 +47,6 @@ public abstract class BaseModel {
     }
     public void setPath(String path){
         this.path = path;
-    }
-    public void isDefault(Boolean isDefault){
-        this.isDefault = isDefault;
     }
     public void setComment(String comment){
         this.comment = comment;
@@ -94,26 +86,5 @@ public abstract class BaseModel {
     
     //Abstract Methods
     abstract public String toSourceString();
-    abstract protected void setUpFields();
     abstract public String getPath();
-    
-    
-    
-    /*
-     * 
-     */
-    private class Node{
-        private Node previous;
-        private Node next;
-        private BaseModel value;
-        
-        public Node(BaseModel value){
-            this.value = value;
-        }
-        public Node (BaseModel value, Node next, Node previous){
-            this.value = value;
-            this.next = next;
-            this.previous = previous;
-        }
-    }
 }

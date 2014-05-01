@@ -117,10 +117,4 @@ public class VariableModel extends BaseModel{
     public String getPath() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
-    @Override
-    protected void setUpFields() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

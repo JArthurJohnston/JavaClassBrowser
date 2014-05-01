@@ -24,6 +24,7 @@ import java.util.LinkedList;
 public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
+    protected PackageModel parentPackage;
     private LinkedList<MethodModel> methods;
     private LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
@@ -32,24 +33,26 @@ public class ClassModel extends PackageModel{
     private static HashMap <String, ClassModel> PRIMITIVE_TYPES
             = new HashMap();
     
-    
-     
     //use these constructors for testing only
-    public ClassModel(){}
-    public ClassModel(String name){
-        this.name = name;
+    public ClassModel(){
     }
     
-    public ClassModel(PackageModel parent, String name, ScopeType scope){
-        this.parent = parent;
-        this.name = name;
+    public ClassModel(String name, ScopeType scope){
+        this(name);
         this.scope = scope;
     }
     
-    public ClassModel(PackageModel parent, String name){
-        this.parent = parent;
+    public ClassModel(String name){
+        initialize();
         this.name = name;
+    }
+    
+    private void initialize(){
         this.scope = ScopeType.PUBLIC;
+        classList = new ArrayList();
+        this.classList = new ArrayList();
+        this.methods = new LinkedList();
+        this.variables = new LinkedList();
     }
     
     public static UsefulList<String> getPrimitiveTypes(){
@@ -72,13 +75,6 @@ public class ClassModel extends PackageModel{
     
     public boolean isPrimitive(){
         return ClassModel.getPrimitiveTypes().contains(this.name());
-    }
-    
-    @Override
-    protected void setUpFields(){
-        this.classList = new ArrayList();
-        this.methods = new LinkedList();
-        this.variables = new LinkedList();
     }
     
     public boolean okToAddMethod(String newMethodName){
@@ -129,6 +125,21 @@ public class ClassModel extends PackageModel{
             return newVar;
         }else {
             throw new NameAlreadyExistsException(this, newVar);
+        }
+    }
+    
+    /**
+     * sets the parent for a class to either a
+     * package or another class.
+     * @param packageOrClass 
+     */
+    public void setParent(PackageModel packageOrClass){
+        if(packageOrClass.isPackage())
+            this.parentPackage = packageOrClass;
+        if(packageOrClass.isClass()){
+            this.parent = packageOrClass;
+            if(this.parentPackage == null)
+                this.parentPackage = packageOrClass;
         }
     }
     
@@ -246,7 +257,8 @@ public class ClassModel extends PackageModel{
     public LinkedList getClassList(){
         LinkedList myClassList = new LinkedList();
         myClassList.add(this);
-        myClassList.addAll(this.classList);
+        for(ClassModel c : classList)
+            myClassList.addAll(c.getClassList());
         return myClassList;
     }
     

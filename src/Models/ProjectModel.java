@@ -38,27 +38,12 @@ public class ProjectModel extends BaseModel {
             + "Continue?";
     
     
-    
-    /*
-     * Constructors
-     */
-    
-    //default constructor is for testing purposes.
     public ProjectModel(){
-        this.name = defaultName;
-        isDefault = true;
-        this.setUpFields();
-    }
-    public ProjectModel(String name){
-        this.name = name;
-        this.setUpFields();
     }
     
-    public ProjectModel(MainApplication main, String name){
-        this.main = main;
-        this.userName = main.getUserName();
+    public ProjectModel(String name){
+        this.initialize();
         this.name = name;
-        this.setUpFields();
     }
     
     public static UsefulList<String> getReservedWords(){
@@ -72,12 +57,8 @@ public class ProjectModel extends BaseModel {
                 .addElements(ClassType.getStringValues());
     }
     
-    /*
-     * Abstract Methods
-     */
-    
-    @Override
-    protected void setUpFields(){
+    private void initialize(){
+        this.name = defaultName;
         dateCreated = new Date();
         classes = new HashMap();
         packages = new HashMap();
@@ -87,6 +68,11 @@ public class ProjectModel extends BaseModel {
         packageList.add(defaultPackage);
         methods = new HashMap();
     }
+    
+    /*
+     * Abstract Methods
+     */
+    
     @Override
     public String toSourceString() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -101,19 +87,11 @@ public class ProjectModel extends BaseModel {
         return null;
     }
     
-    /*
-     * Getters
-     */
-    public HashMap<String, ClassModel> getClasses(){
-        return classes;
-    }
-    public HashMap<String, PackageModel> getPackages(){
-        return packages;
-    }
     public LinkedList<PackageModel> getPackageList(){
         LinkedList aList = new LinkedList();
         aList.add(allPackage);
-        aList.addAll(packageList);
+        for(PackageModel p : packageList)
+            aList.addAll(p.getPackageList());
         return aList;
     }
     @Override
@@ -316,6 +294,15 @@ public class ProjectModel extends BaseModel {
     
     public void setMain(MainApplication main){
         this.main = main;
+        this.userName = main.getUserName();
+    }
+    
+    public ClassModel findClass(String aClassName){
+        return classes.get(aClassName);
+    }
+    
+    public PackageModel findPackage(String aPackageName){
+        return packages.get(aPackageName);
     }
    
 }
