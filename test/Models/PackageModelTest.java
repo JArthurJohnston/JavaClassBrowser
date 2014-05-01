@@ -10,6 +10,8 @@ import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -42,8 +44,11 @@ public class PackageModelTest extends BaseTest{
     public void setUp() {
         main = new MainApplication();
         parentProject = new ProjectModel("AProject");
-        testPackage = 
-                this.addPackageToProject("New Package", parentProject);
+        try {
+            testPackage = parentProject.addPackage(new PackageModel("New Package"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @After
@@ -91,10 +96,14 @@ public class PackageModelTest extends BaseTest{
         assertEquals(parentProject, testPackage.getParent());
         assertEquals(parentProject, testPackage.getProject());
         
-        ClassModel aClass = 
-                this.addClassToParent("AClass", testPackage);
-        ClassModel newClass = 
-                this.addClassToParent("NewSubClass", aClass);
+        ClassModel aClass = null;
+        ClassModel newClass = null;
+        try {
+            aClass = testPackage.addClass(new ClassModel("AClass"));
+            newClass = aClass.addClass(new ClassModel("NewSubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         
         assertEquals(newClass, parentProject.findClass("NewSubClass"));
         assertEquals(2, testPackage.getClassList().size());
@@ -130,14 +139,14 @@ public class PackageModelTest extends BaseTest{
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertTrue(parentProject.getPackages().containsValue(packageToBeRemoved));
-        assertTrue(testPackage.getPackageList().contains(packageToBeRemoved));
+        assertEquals(packageToBeRemoved, parentProject.findPackage("Packge to be Removed"));
+        assertTrue(parentProject.getPackageList().contains(packageToBeRemoved));
         try {
             testPackage.removePackage(packageToBeRemoved);
         } catch (PackageDoesNotExistException ex) {
             fail(ex.getMessage());
         }
-        assertFalse(parentProject.getPackages().containsValue(packageToBeRemoved));
+        assertEquals(null, parentProject.findPackage("Packge to be Removed"));
         assertFalse(testPackage.getPackageList().contains(packageToBeRemoved));
         try {
             testPackage.removePackage(packageToBeRemoved);

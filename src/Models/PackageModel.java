@@ -167,15 +167,20 @@ public class PackageModel extends ProjectModel {
         this.getProject().modelChanged(this);
     }
     
-    
     @Override
     public LinkedList<PackageModel> getPackageList(){
-        return packageList;
+        LinkedList aList = new LinkedList();
+        aList.add(this);
+        for(PackageModel p : packageList)
+            aList.addAll(p.getPackageList());
+        return aList;
     }
+    
     @Override
     public ProjectModel getProject(){
         return parent.getProject();
     }
+    
     public ProjectModel getParent(){
         return parent;
     }

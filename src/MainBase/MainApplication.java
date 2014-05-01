@@ -16,11 +16,10 @@ import java.util.LinkedList;
  * @author Arthur
  */
 public class MainApplication {
-    private ArrayList<ProjectModel> projects;
-    private LinkedList <BaseUIModel>openWindowModels;
+    private final ArrayList<ProjectModel> projects;
+    private final LinkedList <BaseUIModel>openWindowModels;
     private String userName;
     private ProjectModel selectedProject;
-    private PackageModel selectedPackage;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
@@ -109,33 +108,18 @@ public class MainApplication {
         openWindowModels.remove(model);
     }
     
-    public PackageModel selectedPackage(){
-        if(this.selectedProject == null)
-            return null;
-        if(this.selectedPackage == null){
-            if(selectedProject.getPackages().isEmpty())
-                return null;
-            selectedPackage = selectedProject.getPackageList().get(0);
-        }
-        return selectedPackage;
-    }
-    
-    public PackageModel setSelectedPackage(PackageModel aPackage){
-        selectedPackage = aPackage;
-        return selectedPackage;
-    }
-    
-    
     public void addUpdateShells(BaseModel newModel){
         for(BaseUIModel m : openWindowModels){
             m.modelAdded(newModel);
         }
     }
+    
     public void removeUpdateShells(BaseModel newModel){
         for(BaseUIModel m : openWindowModels){
             m.modelRemoved(newModel);
         }
     }
+    
     public void changeUpdateShells(BaseModel newModel){
         for(BaseUIModel m : openWindowModels){
             m.modelChanged(newModel);

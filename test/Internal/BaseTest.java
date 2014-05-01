@@ -5,6 +5,7 @@
 package Internal;
 
 import Exceptions.NameAlreadyExistsException;
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
@@ -18,6 +19,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -78,33 +81,6 @@ public class BaseTest {
             return false;
         }
         return true;
-    }
-    
-    public ClassModel addClassToParent(String newClassName, PackageModel parentObject){
-        try {
-            return parentObject.addClass(new ClassModel(parentObject, newClassName));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        return null;
-    }
-    
-    public PackageModel addPackageToProject(String newPackageName, ProjectModel parentObject){
-        try {
-            return parentObject.addPackage(new PackageModel(parentObject, newPackageName));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        return null;
-    }
-    
-    public MethodModel addMethodToClass(String newMethodName, ClassModel parentObject){
-        try {
-            return parentObject.addMethod(new MethodModel(parentObject, newMethodName));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        return null;
     }
     
     public Object callMethodFromClass(Object objectOfOrigin, String name){

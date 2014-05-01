@@ -189,12 +189,12 @@ public class ClassModel extends PackageModel{
     
     @Override
     protected PackageModel getParentPackage(){
-        if(parent.isClass()) {
-            return parent.getParentPackage();
-        }
-        else {
-            return (PackageModel)parent;
-        }
+        return parentPackage;
+    }
+    
+    @Override
+    public ProjectModel getProject(){
+        return parentPackage.getProject();
     }
     
     public LinkedList<MethodModel> getMethods(){

@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/Models/PackageModelTest.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/MethodModel.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/ProjectModel.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/PackageModel.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/ClassModel.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/Models/ProjectModelTest.java</file>
         </group>
     </open-files>
 </project-private>

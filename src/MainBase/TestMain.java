@@ -23,23 +23,23 @@ public class TestMain {
             ProjectModel aProject;
             ClassModel aClass;
             ClassModel anotherClass;
-            main.setSelectedProejct(aProject = main.addProject(new ProjectModel(main, "a project")));
+            main.setSelectedProejct(aProject = main.addProject(new ProjectModel("a project")));
             aProject.getDefaultPackage().addClass(
-                    aClass = new ClassModel(aProject.getDefaultPackage(), "AClass"));
+                    aClass = new ClassModel("AClass"));
             aProject.getDefaultPackage().addClass(
-                    new ClassModel(aProject.getDefaultPackage(), "AndAnotherClass"));
+                    new ClassModel("AndAnotherClass"));
             aProject.getDefaultPackage().addClass(
-                    anotherClass = new ClassModel(aProject.getDefaultPackage(), "AnotherClass"));
+                    anotherClass = new ClassModel("AnotherClass"));
             aProject.getDefaultPackage().addClass(
-                    new ClassModel(aProject.getDefaultPackage(), "YetAnotherClass"));
-            aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.STATIC));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
+                    new ClassModel("YetAnotherClass"));
+            aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
+            aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             
-            anotherClass.addMethod(new MethodModel(aClass, "someMethod", ClassType.INSTANCE));
+            anotherClass.addMethod(new MethodModel("someMethod", ClassType.INSTANCE));
         } catch (NameAlreadyExistsException ex) {
             Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -64,13 +64,11 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(project.findPackage("default package"), project.getPackageList().get(1));
         assertEquals("All", project.getPackageList().getFirst().name());
         
-        project = new ProjectModel();
+        project = new ProjectModel("A Project");
         assertEquals(ProjectModel.class, project.getClass());
-        assertEquals(project.getClassList().getClass(),  HashMap.class);
         assertEquals(project.getPackageList().getClass(),  LinkedList.class);
         assertEquals(project.getClassList().size(),  0);
         assertEquals(project.findPackage("default package"), project.getPackageList().get(1));
-        assertEquals("DefaultName", project.name());
     }
     
     @Test
@@ -94,7 +92,7 @@ public class ProjectModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertEquals(project, newPackage.getParent());
-        assertEquals(newPackage ,project.findPackage(newPackage.name()));
+        assertEquals(newPackage ,project.findPackage("New Package"));
         
         assertEquals(newPackage, project.getPackageList().getLast());
         assertTrue(project.getPackageList().size() == 3);
@@ -288,15 +286,20 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testGetMethodDefinitions(){
-        PackageModel aPackage = this.addPackageToProject("A Package", project);
-        ClassModel aClass = this.addClassToParent("AClass", aPackage);
-        MethodModel aMethod = this.addMethodToClass("newMethod", aClass);
-        assertEquals(aMethod, project.getMethodDefinitions(aMethod).getFirst());
-        assertEquals(1, project.getMethodDefinitions(aMethod).size());
-        ClassModel anotherClass = this.addClassToParent("AnotherClass", aPackage);
-        aMethod = this.addMethodToClass("newMethod", anotherClass);
-        assertEquals(2, project.getMethodDefinitions(aMethod).size());
-        assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
+        try {
+            PackageModel aPackage = project.addPackage(new PackageModel("A Package"));
+            ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
+            MethodModel aMethod = aClass.addMethod(new MethodModel("newMethod"));
+            ClassModel anotherClass = aPackage.addClass(new ClassModel("AnotherClass"));
+            
+            assertEquals(aMethod, project.getMethodDefinitions(aMethod).getFirst());
+            assertEquals(1, project.getMethodDefinitions(aMethod).size());
+            aMethod = anotherClass.addMethod(new MethodModel("newMethod"));
+            assertEquals(2, project.getMethodDefinitions(aMethod).size());
+            assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @Test
