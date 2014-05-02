@@ -6,6 +6,7 @@
 
 package MainBase;
 
+import Exceptions.VeryVeryBadException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,6 +43,16 @@ public class UsefulList<T> extends LinkedList<T>{
         for(T t : tArray)
             this.addElm(t);
         return this;
+    }
+    
+    public T onlyElement() throws VeryVeryBadException{
+        if(this.isEmpty())
+            throw new VeryVeryBadException(this, "Collection is empty");
+        if(this.size() == 1)
+            return this.getFirst();
+        
+        throw new VeryVeryBadException(this, "More than one element");
+        //replace me with a more reasonable exception please
     }
     
 }

@@ -13,6 +13,8 @@ import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,7 +43,11 @@ public class MethodModelTest extends BaseTest{
     @Before
     public void setUp() {
         ClassModel parentClass = this.setUpParentClass();
-        method = this.addMethodToClass("aMethod", parentClass);
+        try {
+            method = parentClass.addMethod(new MethodModel("aMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @After
@@ -53,9 +59,9 @@ public class MethodModelTest extends BaseTest{
         ClassModel aClass = null;
         try {
             MainApplication main = new MainApplication();
-            ProjectModel aProject = main.addProject(new ProjectModel(main,"A Project"));
-            PackageModel aPackage = aProject.addPackage(new PackageModel(aProject, "a package"));
-            aClass = aPackage.addClass(new ClassModel(aPackage, "ParentClass"));
+            ProjectModel aProject = main.addProject(new ProjectModel("A Project"));
+            PackageModel aPackage = aProject.addPackage(new PackageModel("a package"));
+            aClass = aPackage.addClass(new ClassModel("ParentClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -99,7 +105,12 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testMethodSignature(){
-        MethodModel otherMethod = new MethodModel(new ClassModel("AClass"),"anotherMethod");
+        MethodModel otherMethod = null;
+        try {
+            otherMethod = new ClassModel("AClass").addMethod(new MethodModel("anotherMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertFalse(method.matchSignature(otherMethod));
         otherMethod.setName("aMethod");
         assertTrue(method.matchSignature(otherMethod));
@@ -181,8 +192,15 @@ public class MethodModelTest extends BaseTest{
     @Test public void testDefinitions(){
         assertEquals(1, method.getDefinitions().size());
         assertEquals(method, method.getDefinitions().getFirst());
-        ClassModel aClass = this.addClassToParent("anotherClass", (ClassModel)method.getParent());
-        MethodModel anotherMethod = this.addMethodToClass("aMethod", aClass);
+        
+        MethodModel anotherMethod = null;
+        try {
+            ClassModel aClass = method.getParent().addClass(new ClassModel("AnotherClass"));
+            anotherMethod = aClass.addMethod(new MethodModel("aMethod"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        
         assertEquals(2, method.getDefinitions().size());
         assertEquals(method, method.getDefinitions().getFirst());
         assertEquals(anotherMethod, method.getDefinitions().getLast());

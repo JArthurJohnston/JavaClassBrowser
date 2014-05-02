@@ -68,7 +68,7 @@ public class MainApplicationTest extends BaseTest {
         ProjectModel newProject = null;
         assertEquals(0, main.getProjects().size());
         try {
-            newProject = main.addProject(new ProjectModel(main, "new project"));
+            newProject = main.addProject(new ProjectModel("new project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -84,9 +84,9 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testAddProject_projectModel(){
-        ProjectModel newProject = new ProjectModel(main, "new project");
+        ProjectModel newProject = null;
         try {
-            assertEquals(newProject, main.addProject(newProject));
+            newProject = main.addProject(new ProjectModel("new project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -98,14 +98,14 @@ public class MainApplicationTest extends BaseTest {
     public void testAddProject_stringProjectName(){
         ProjectModel newProject = null;
         try {
-            newProject = main.addProject(new ProjectModel(main,"new project"));
+            newProject = main.addProject(new ProjectModel("new project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
         assertEquals(newProject, main.getProjects().get(0));
         try {
-            main.addProject(new ProjectModel(main, "new project"));
+            main.addProject(new ProjectModel("new project"));
             fail("exception not thrown");
         } catch (NameAlreadyExistsException ex) {}
     }
@@ -113,14 +113,16 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testRemoveProject(){
-        ProjectModel aProject = new ProjectModel(main, "a project");
+        ProjectModel aProject = null;
         assertTrue(main.getProjects().isEmpty());
         try {
             main.removeProject(aProject);
             fail("exception not thrown");
-        } catch (DoesNotExistException ex) {}
+        } catch (DoesNotExistException ex) {
+            //asserting the exception is thrown
+        }
         try {
-            main.addProject(aProject);
+            main.addProject(new ProjectModel("a project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -136,10 +138,10 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testOKToDeleteProject(){
-        ProjectModel aProject = new ProjectModel(main, "a project");
+        ProjectModel aProject = null;
         assertFalse(main.okToDelete(aProject));
         try {
-            main.addProject(aProject);
+            aProject = main.addProject(new ProjectModel("a project"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

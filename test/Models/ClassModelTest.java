@@ -13,7 +13,6 @@ import Internal.BaseTest;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,14 +129,14 @@ public class ClassModelTest extends BaseTest{
     public void testAddMethod(){
         MethodModel newMethod = new MethodModel();
         try {
-            newMethod = testClass.addMethod(new MethodModel(testClass, "newMethod"));
+            newMethod = testClass.addMethod(new MethodModel("newMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail("Exception thrown when it shouldnt");
         }
         assertEquals(testClass, newMethod.getParent());
         assertEquals(1, testClass.getMethods().size());
         try {
-            testClass.addMethod(new MethodModel(testClass, "newMethod"));
+            testClass.addMethod(new MethodModel("newMethod"));
             fail("Exception not thrown");
         } catch (NameAlreadyExistsException ex) {
             assertEquals(NameAlreadyExistsException.class, ex.getClass());
@@ -147,7 +146,7 @@ public class ClassModelTest extends BaseTest{
     @Test
     public void testRemoveMethod(){
         try {
-            testClass.addMethod(new MethodModel(testClass, "aMethodForTesting"));
+            testClass.addMethod(new MethodModel("aMethodForTesting"));
             assertEquals(1, testClass.getMethods().size());
         } catch (NameAlreadyExistsException ex) {
         }
@@ -174,7 +173,12 @@ public class ClassModelTest extends BaseTest{
         assertTrue(anotherPackage.getClassList().contains(testClass));
         assertFalse(parentPackage.getClassList().contains(testClass));
         assertEquals(anotherPackage, testClass.getParentPackage());
-        ClassModel subClass = this.addClassToParent("SubClass", testClass);
+        ClassModel subClass = null;
+        try {
+            subClass = testClass.addClass(new ClassModel("SubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(anotherPackage, subClass.getParentPackage());
         assertTrue(anotherPackage.getClassList().contains(subClass));
         assertFalse(parentPackage.getClassList().contains(subClass));
@@ -267,13 +271,13 @@ public class ClassModelTest extends BaseTest{
         MethodModel aMethod = null;
         assertTrue(testClass.getStaticMethods().isEmpty());
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.STATIC));
+            aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getStaticMethods().contains(aMethod));
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.INSTANCE));
+            aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.INSTANCE));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -285,13 +289,13 @@ public class ClassModelTest extends BaseTest{
         MethodModel aMethod = null;
         assertTrue(testClass.getInstanceMethods().isEmpty());
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "aMethod", ClassType.INSTANCE));
+            aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getInstanceMethods().contains(aMethod));
         try {
-            aMethod = testClass.addMethod(new MethodModel(testClass, "anotherMethod", ClassType.STATIC));
+            aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

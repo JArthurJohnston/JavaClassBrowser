@@ -25,7 +25,6 @@ import org.junit.Test;
  */
 public class PackageModelTest extends BaseTest{
     
-    private MainApplication main;
     PackageModel testPackage;
     ProjectModel parentProject;
     
@@ -42,9 +41,8 @@ public class PackageModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        main = new MainApplication();
-        parentProject = new ProjectModel("AProject");
         try {
+            parentProject = new MainApplication().addProject(new ProjectModel("AProject"));
             testPackage = parentProject.addPackage(new PackageModel("New Package"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -55,7 +53,6 @@ public class PackageModelTest extends BaseTest{
     public void tearDown() {
         parentProject = null;
         testPackage = null;
-        main = null;
     }
 
     @Test
@@ -156,18 +153,32 @@ public class PackageModelTest extends BaseTest{
     
     @Test
     public void testGetClassList(){
-        LinkedList testClasses = new LinkedList();
         assertTrue(testPackage.getClassList().isEmpty());
-        ClassModel aClass = this.addClassToParent("AClass", testPackage);
-        ClassModel subClass = this.addClassToParent("Subclass", testPackage);
+        ClassModel aClass = null;
+        ClassModel subClass = null;
+        try {
+            aClass = testPackage.addClass(new ClassModel("AClass"));
+            subClass = testPackage.addClass(new ClassModel("SubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testPackage.getClassList().contains(aClass));
         assertTrue(testPackage.getClassList().contains(subClass));
-        testClasses.add(aClass);
-        testClasses.add(subClass);
-        assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
-        ClassModel anotherClass = this.addClassToParent("AnotherClass", testPackage);
-        testClasses.add(anotherClass);
-        assertTrue(this.compareLists(testClasses, testPackage.getClassList()));
-        PackageModel anotherPackage = this.addPackageToProject("Another Package", parentProject);
+        assertEquals(2, testPackage.getClassList().size());
+        ClassModel anotherClass = null;
+        try {
+            anotherClass = testPackage.addClass(new ClassModel("AnotherClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testPackage.getClassList().contains(anotherClass));
+        assertEquals(3, testPackage.getClassList().size());
+        PackageModel anotherPackage = null;
+        try {
+            anotherPackage = parentProject.addPackage(new PackageModel("Another Package"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(3, testPackage.getClassList().size());
         try {
             aClass.moveToPackage(anotherPackage);
@@ -183,8 +194,14 @@ public class PackageModelTest extends BaseTest{
         assertEquals(2, testPackage.getClassList().size());
         assertEquals(1, anotherPackage.getClassList().size());
         //test it gets the classes in sub-packages
-        PackageModel subPackage =  this.addPackageToProject("Sub Package", testPackage);
-        ClassModel subPackageClass = this.addClassToParent("NewSubClass", subPackage);
+        PackageModel subPackage = null;
+        ClassModel subPackageClass = null;
+        try {
+            subPackage = testPackage.addPackage(new PackageModel("Sub Package"));
+            subPackageClass = subPackage.addClass(new ClassModel("NewSubClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(1, subPackage.getClassList().size());
         /*
         for(Object c : testPackage.getClassList()){
@@ -303,11 +320,6 @@ public class PackageModelTest extends BaseTest{
     public void testAddClassTriggersUpdateShells(){
         fail("main should tell every shell except the caller"
                 + "to update itself with the new package, if appliable");
-    }
-    
-    @Test
-    public void testGetMain(){
-        assertEquals(main, testPackage.getMain());
     }
     
     @Test

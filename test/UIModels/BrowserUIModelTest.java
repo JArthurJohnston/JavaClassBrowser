@@ -43,7 +43,7 @@ public class BrowserUIModelTest extends BaseTest{
     public void setUp() {
         main =  new MainApplication();
         try {
-            main.setSelectedProejct(main.addProject(new ProjectModel(main, "a project")));
+            main.setSelectedProejct(main.addProject(new ProjectModel("a project")));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
