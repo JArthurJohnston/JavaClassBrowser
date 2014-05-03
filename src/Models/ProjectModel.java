@@ -4,6 +4,7 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -303,6 +304,15 @@ public class ProjectModel extends BaseModel {
     
     public PackageModel findPackage(String aPackageName){
         return packages.get(aPackageName);
+    }
+
+    @Override
+    public BaseModel remove() throws CannotBeDeletedException, VeryVeryBadException {
+        /*
+        prompt the user if theyre sure they want to delete everything
+        this is unrecoverable, etc...
+        */
+        return this;
     }
    
 }

@@ -4,6 +4,8 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
+import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import java.util.LinkedList;
 
@@ -87,4 +89,6 @@ public abstract class BaseModel {
     //Abstract Methods
     abstract public String toSourceString();
     abstract public String getPath();
+    abstract public BaseModel remove() throws CannotBeDeletedException,
+            VeryVeryBadException;
 }

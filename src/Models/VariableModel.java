@@ -4,6 +4,8 @@
  */
 package Models;
 
+import Exceptions.CannotBeDeletedException;
+import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import Types.ScopeType;
 
@@ -105,7 +107,23 @@ public class VariableModel extends BaseModel{
         String source = new String();
         if(this.scope != ScopeType.NONE)
             source = this.scope.toString().toLowerCase() + " ";
-        return source+this.type.name()+" "+this.name()+";";
+        if(this.isFinal)
+            source = source + "final ";
+        return source+this.type.name()+" "+this.name()+ this.getValueString() + ";";
+    }
+    
+    private String getValueString(){
+        if(value == null)
+            return new String();
+        return " = " + this.value;
+    }
+    
+    public boolean hasValue(){
+        return value != null;
+        /*
+        for use in a method parser
+        to tell if a final variable has already been set
+        */
     }
     
     @Override
@@ -116,5 +134,15 @@ public class VariableModel extends BaseModel{
     @Override
     public String getPath() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public BaseModel remove() throws CannotBeDeletedException, VeryVeryBadException {
+        /*
+        check for references in methods
+        if any exist, cant be removed. or warn the user that they will
+        no longer compile
+        */
+        return this;
     }
 }

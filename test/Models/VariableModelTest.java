@@ -77,7 +77,8 @@ public class VariableModelTest extends BaseTest{
     
     @Test 
     public void testToSourceStringWithInitializedValue(){
-        String expected = "private Type x = new Type()";
+        var.setValue("new Type()");
+        String expected = "private Type x = new Type();";
         assertTrue(this.compareStrings(expected, var.toSourceString()));
     }
 
@@ -88,7 +89,7 @@ public class VariableModelTest extends BaseTest{
     
     @Test
     public void testSetName(){
-        var.setName("aNameString;");
+        var.setName("aNameString");
         assertTrue(this.compareStrings("aNameString", var.name()));
         var.setName("aNameString");
         assertEquals("aNameString", var.name());
@@ -96,13 +97,14 @@ public class VariableModelTest extends BaseTest{
     
     @Test
     public void testSetValue(){
-        var.setValue("5;");
+        var.setValue("5");
         assertEquals("5",var.getValue());
     }
     
     @Test
     public void testFinalVar(){
-        fail("need to test/figure out the 'final' modifier");
+        var.setFinal(true);
+        assertTrue(this.compareStrings("private final Type x;", var.toSourceString()));
     }
     
 }

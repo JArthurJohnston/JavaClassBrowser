@@ -105,6 +105,7 @@ public class ClassModel extends PackageModel{
      * @throws CannotBeDeletedException
      * @throws VeryVeryBadException 
      */
+    @Override
     public ClassModel remove() throws CannotBeDeletedException, VeryVeryBadException{
         if(!this.classList.isEmpty())
             throw new CannotBeDeletedException(this, hasSubClassesError);
@@ -139,9 +140,10 @@ public class ClassModel extends PackageModel{
         if(packageOrClass.isClass()){
             this.parent = packageOrClass;
             if(this.parentPackage == null)
-                this.parentPackage = packageOrClass;
+                this.parentPackage = packageOrClass.getParentPackage();
         }
     }
+    
     
     /**
      * #test
@@ -155,6 +157,7 @@ public class ClassModel extends PackageModel{
             throw new NameAlreadyExistsException(this, newMethod);
         methods.add(newMethod);
         this.getProject().addMethodDefinition(newMethod);
+        newMethod.setParent(this);
         return newMethod;
     }
     
@@ -264,11 +267,6 @@ public class ClassModel extends PackageModel{
     
     public ClassModel getReturnType(){
         return this;
-    }
-    
-    @Override
-    public MainApplication getMain(){
-        return parent.getMain();
     }
     
     @Override

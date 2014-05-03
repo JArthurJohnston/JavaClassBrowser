@@ -61,10 +61,9 @@ public class ClassModelTest extends BaseTest{
     public void testInitialize(){
         assertEquals("InstanceClass", testClass.name());
         assertEquals(parentProject, testClass.getProject());
-        assertEquals(parentPackage, testClass.getParent());
+        assertEquals(parentPackage, testClass.getParentPackage());
         assertEquals(ClassModel.class, testClass.getClass());
         assertEquals(LinkedList.class, testClass.getClassList().getClass());
-                
     }
 
     /**
@@ -376,5 +375,17 @@ public class ClassModelTest extends BaseTest{
         assertTrue(intModel.isPrimitive());
         ClassModel anotherInt = ClassModel.getPrimitive("int");
         assertEquals(anotherInt, intModel);
+    }
+    
+    @Test
+    public void testGetParentPackage(){
+        try {
+            assertEquals(parentPackage, testClass.getParentPackage());
+            ClassModel subClass = testClass.addClass(new ClassModel("ASubClass"));
+            assertEquals(parentPackage, subClass.getParentPackage());
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        
     }
 }
