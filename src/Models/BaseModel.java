@@ -20,7 +20,7 @@ public abstract class BaseModel {
     protected String name;
     protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
-    protected LinkedList<String> warnings;
+    protected LinkedList<String> warnings; // this can be pushed down to ProjectModel
     
     //getters
     public String name(){
@@ -31,13 +31,13 @@ public abstract class BaseModel {
             warnings = new LinkedList();
         return warnings;
     }
-    public boolean hasChange(){
+    public boolean hasChange(){ // this may no longer be necessary b/c of the Buffers
         return hasChange;
     }
     public String defaultName(){
         return defaultName;
     }
-    public String getDescription(){
+    public String getDescription(){ //could probably just be combined with comment
         return description;
     }
     public String getComment(){
@@ -53,10 +53,10 @@ public abstract class BaseModel {
     public void setComment(String comment){
         this.comment = comment;
     }
-    public void setDescription(String description){
+    public void setDescription(String description){ //see above
         this.description = description;
     }
-    public void setChanged(boolean isChange){
+    public void setChanged(boolean isChange){ //see above
         this.hasChange = isChange;
     }
     
@@ -73,7 +73,7 @@ public abstract class BaseModel {
         return false;
     }
     
-    public ClassType getType(){
+    public ClassType getType(){ // can probably be pushed down to ClassModel
         return null;
     }
     

@@ -9,7 +9,7 @@ package LanguageBase;
 import Models.ClassModel;
 
 /**
- *
+ * This class may no longer be necessary
  * @author arthur
  */
 public class JavaLang {

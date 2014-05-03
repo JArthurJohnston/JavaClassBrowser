@@ -4,17 +4,10 @@
  */
 package Internal;
 
-import Exceptions.NameAlreadyExistsException;
-import Models.BaseModel;
-import Models.ClassModel;
-import Models.MethodModel;
-import Models.PackageModel;
-import Models.ProjectModel;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;                   
+import MainBase.MainApplication;                   
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +15,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * uses reflection to grab private stuff from objects for testing
@@ -30,6 +22,7 @@ import static org.junit.Assert.fail;
  * @author Arthur
  */
 public class BaseTest {
+    protected MainApplication main;
     
     /**
      * gets a private variable from a class.

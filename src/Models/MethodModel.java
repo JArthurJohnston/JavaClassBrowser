@@ -4,7 +4,6 @@
  */
 package Models;
 
-import LanguageBase.JavaLang;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
@@ -22,7 +21,6 @@ public class MethodModel extends ClassModel{
     
     public MethodModel(){
         this.type = ClassType.INSTANCE;
-        this.scope = ScopeType.PUBLIC;
         this.parameters = new LinkedList();
         this.references = new LinkedList();
     }
@@ -147,9 +145,19 @@ public class MethodModel extends ClassModel{
     public ClassType getType(){
         return type;
     }
-    public ScopeType scope(){
+    @Override
+    public ScopeType getScope(){
+        if(scope == null)
+            scope = ScopeType.NONE;
         return scope;
     }
+    
+    private String scopeString(){
+        if(this.getScope() == ScopeType.NONE)
+            return "";
+        return this.getScope().toString().toLowerCase() + " ";
+    }
+    
     public LinkedList<VariableModel> getParameters(){
         return parameters;
     }
@@ -167,7 +175,7 @@ public class MethodModel extends ClassModel{
     
     @Override
     public String toSourceString(){
-        String signature =  this.scope.toString().toLowerCase() + " " + 
+        String signature =  this.scopeString() + 
                             this.returnType.toString().toLowerCase() +" "+ 
                             this.name() + "(";
         for(VariableModel param: parameters){
@@ -181,5 +189,9 @@ public class MethodModel extends ClassModel{
     @Override
     public boolean isClass(){
         return false;
+    }
+    
+    public boolean isConstructor(){
+        return this.name().compareTo(this.getParent().name()) == 0;
     }
 }

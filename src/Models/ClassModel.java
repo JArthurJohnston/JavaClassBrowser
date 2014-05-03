@@ -66,10 +66,9 @@ public class ClassModel extends PackageModel{
     }
     
     public static ClassModel getPrimitive(String aString){
-        if(!getPrimitiveTypes().contains(aString))
-            return null;
-        if(!PRIMITIVE_TYPES.containsKey(aString))
-            PRIMITIVE_TYPES.put(aString, new ClassModel(aString));
+        if(getPrimitiveTypes().contains(aString))
+            if(!PRIMITIVE_TYPES.containsKey(aString))
+                PRIMITIVE_TYPES.put(aString, new ClassModel(aString));
         return PRIMITIVE_TYPES.get(aString);
     }
     

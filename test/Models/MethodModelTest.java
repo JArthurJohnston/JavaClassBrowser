@@ -13,6 +13,8 @@ import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,9 +42,10 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        ClassModel parentClass = this.setUpParentClass();
+        main = new MainApplication();
         try {
-            method = parentClass.addMethod(new MethodModel("aMethod"));
+            method = this.setUpClassWithName("ParentClass")
+                    .addMethod(new MethodModel("aMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -53,13 +56,12 @@ public class MethodModelTest extends BaseTest{
         method = null;
     }
     
-    private ClassModel setUpParentClass(){
+    private ClassModel setUpClassWithName(String className){
         ClassModel aClass = null;
         try {
-            MainApplication main = new MainApplication();
-            ProjectModel aProject = main.addProject(new ProjectModel("A Project"));
-            PackageModel aPackage = aProject.addPackage(new PackageModel("a package"));
-            aClass = aPackage.addClass(new ClassModel("ParentClass"));
+            ProjectModel aProject = main.addProject(new ProjectModel(className));
+            PackageModel aPackage = aProject.addPackage(new PackageModel(className));
+            aClass = aPackage.addClass(new ClassModel(className));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -76,7 +78,9 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testIsConstructor(){
-        fail("Write me!");
+        assertFalse(method.isConstructor());
+        method.setName("ParentClass");
+        assertTrue(method.isConstructor());
     }
     
     @Test
@@ -105,7 +109,7 @@ public class MethodModelTest extends BaseTest{
     public void testMethodSignature(){
         MethodModel otherMethod = null;
         try {
-            otherMethod = new ClassModel("AClass").addMethod(new MethodModel("anotherMethod"));
+            otherMethod = this.setUpClassWithName("AClass").addMethod(new MethodModel("anotherMethod"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -146,7 +150,9 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testScope() {
-        assertEquals(ScopeType.PRIVATE, method.scope());
+        assertEquals(ScopeType.NONE, method.getScope());
+        method.setScope(ScopeType.PRIVATE);
+        assertEquals(ScopeType.PRIVATE, method.getScope());
         method.setScope(ScopeType.PROTECTED);
         assertEquals(ScopeType.PROTECTED, method.getScope());
         method.setScope(ScopeType.PRIVATE);
@@ -154,11 +160,13 @@ public class MethodModelTest extends BaseTest{
     }
     
     @Test
-    public void testReturnType(){      
-        assertEquals(JavaLang.getVoid(), method.getReturnType());
+    public void testReturnType(){
+        assertEquals(null, method.getReturnType());
         ClassModel newReturn = new ClassModel("AClass");
         method.setReturnType(newReturn);
         assertEquals(newReturn, method.getReturnType());
+        method.setReturnType(ClassModel.getPrimitive("void"));
+        assertEquals(ClassModel.getPrimitive("void"), method.getReturnType());
     }
 
     /**
@@ -174,10 +182,19 @@ public class MethodModelTest extends BaseTest{
      */
     @Test
     public void testToSourceString() {
+        method.setReturnType(ClassModel.getPrimitive("void"));
+        method.setScope(ScopeType.PRIVATE);
         method.setSource("Some.testCode();");
         String expected = "private void aMethod(){\n"
                 + "Some.testCode();\n"
                 + "}";
+        assertTrue(this.compareStrings(expected, method.toSourceString()));
+    }
+    
+    @Test
+    public void testToSourceStringWithNoneScope(){
+        method.setReturnType(ClassModel.getPrimitive("void"));
+        String expected = "void aMethod(){"+ "\n\n"+ "}";
         assertTrue(this.compareStrings(expected, method.toSourceString()));
     }
     
