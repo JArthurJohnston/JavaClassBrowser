@@ -11,10 +11,7 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import Types.ScopeType;
 import UIModels.BrowserUIModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,11 +45,10 @@ public class ModelEditPanelTest extends BaseTest{
         try {
             ProjectModel aProject = 
                     main.setSelectedProejct(main.addProject(
-                    new ProjectModel(main, "a project")));
+                    new ProjectModel("a project")));
             ClassModel aClass = 
-                    aProject.getDefaultPackage().addClass(
-                    new ClassModel(aProject.getDefaultPackage(), "AClass"));
-            MethodModel aMethod = aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
+                    aProject.getDefaultPackage().addClass(new ClassModel("AClass"));
+            MethodModel aMethod = aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
             model = new BrowserUIModel(main);
             model.setSelected(aMethod);
         } catch (NameAlreadyExistsException ex) {
@@ -80,12 +76,6 @@ public class ModelEditPanelTest extends BaseTest{
     
     @Test
     public void testSaveToModel(){
-        fail();
-    }
-    
-    @Test
-    public void testCantSaveInvalidMethod(){
-        //need to write an isValid() method
         fail();
     }
 }

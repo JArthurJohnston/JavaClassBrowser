@@ -41,12 +41,12 @@ public class SelectedClassPanelTest extends BaseTest {
     public void setUp() {
         MainApplication main = new MainApplication();
         try {
-            ProjectModel aProject = main.addProject(new ProjectModel(main, "a project"));
+            ProjectModel aProject = main.addProject(new ProjectModel("a project"));
             main.setSelectedProejct(aProject);
             ClassModel aClass = 
-                    aProject.getDefaultPackage().addClass(new ClassModel(aProject.getDefaultPackage(), "AClass"));
-            aClass.addMethod(new MethodModel(aClass, "anInstanceMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "aStaticMethod", ClassType.STATIC));
+                    aProject.getDefaultPackage().addClass(new ClassModel("AClass"));
+            aClass.addMethod(new MethodModel("anInstanceMethod", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("aStaticMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
         } catch (NameAlreadyExistsException ex) {

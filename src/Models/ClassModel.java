@@ -9,7 +9,6 @@ import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.NameAlreadyExistsException;
 import Exceptions.VeryVeryBadException;
-import MainBase.MainApplication;
 import MainBase.UsefulList;
 import Types.ClassType;
 import Types.ScopeType;
@@ -160,6 +159,7 @@ public class ClassModel extends PackageModel{
         return newMethod;
     }
     
+    //clearly doesnt work yet...
     public MethodModel removeMethod(String methodName) throws MethodDoesNotExistException{
         for(MethodModel m : methods){
             if(m.name.compareTo(methodName) == 0) {
@@ -169,6 +169,7 @@ public class ClassModel extends PackageModel{
         throw new MethodDoesNotExistException(this, methodName);
     }
     
+    //clearly doesnt work yet...
     @Override
     public MethodModel removeMethod(MethodModel aMethod){
         if(methods.contains(aMethod)) 

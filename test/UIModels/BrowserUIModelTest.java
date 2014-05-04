@@ -13,6 +13,8 @@ import Models.ProjectModel;
 import UIShells.Dialogs.AddVariableDialogue;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -25,7 +27,6 @@ import org.junit.Test;
  * @author Arthur
  */
 public class BrowserUIModelTest extends BaseTest{
-    private MainApplication main;
     private BrowserUIModel model;
     
     public BrowserUIModelTest() {
@@ -54,11 +55,10 @@ public class BrowserUIModelTest extends BaseTest{
     public void tearDown() {
         main = null;
         model = null;
-        
     }
     
     @Test
-    public void testConstructors(){
+    public void testOpenFromMain(){
         model = new BrowserUIModel(new MainApplication());
         assertEquals(BrowserUIModel.class, model.getClass());
     }
@@ -99,11 +99,21 @@ public class BrowserUIModelTest extends BaseTest{
     @Test
     public void testAddPackage(){
         try {
-            model.addPackage(new PackageModel(main.getSelectedProject(), "a package"));
+            model.addPackage(new PackageModel("a package"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(3, model.getPackages().size());
+    }
+    
+    @Test
+    public void testAddClass(){
+        try {
+            model.addClass(new ClassModel("AClass"));
+            fail("exception not thrown");
+        } catch (Exception ex) {
+            assertTrue(this.compareStrings("", ex.getMessage()));
+        }
     }
     
     @Test
@@ -113,8 +123,8 @@ public class BrowserUIModelTest extends BaseTest{
         try {
             PackageModel aPackage = 
                     main.getSelectedProject().addPackage(
-                    new PackageModel(main.getSelectedProject(), "a package"));
-            aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+                    new PackageModel("a package"));
+            aClass = aPackage.addClass(new ClassModel("AClass"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -124,11 +134,12 @@ public class BrowserUIModelTest extends BaseTest{
     @Test
     public void testOpenAddVariable(){
         model.getShell();
-        AddVariableDialogue dialogue = model.openAddVariable();
-        assertEquals(AddVariableDialogue.class, dialogue.getClass());
+        //AddVariableDialogue dialogue = model.openAddVariable();
+        //assertEquals(AddVariableDialogue.class, dialogue.getClass());
         //assertTrue(dialogue.isVisible());
-        dialogue.dispose();
+        //dialogue.dispose();
         model.close();
+        fail();
     }
     
     @Test

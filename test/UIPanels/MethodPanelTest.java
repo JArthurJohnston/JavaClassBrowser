@@ -45,12 +45,12 @@ public class MethodPanelTest extends BaseTest{
     public void setUp() {
         main = new MainApplication();
         try {
-            ProjectModel aProject = main.addProject(new ProjectModel(main, "AProject"));
+            ProjectModel aProject = main.addProject(new ProjectModel("AProject"));
             PackageModel aPackage = aProject.getPackageList().get(1);
-            ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
-            aClass.addMethod(new MethodModel(aClass, "aMethod"));
-            aClass.addMethod(new MethodModel(aClass, "anotherMethod"));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
+            ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
+            aClass.addMethod(new MethodModel("aMethod"));
+            aClass.addMethod(new MethodModel("anotherMethod"));
+            aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
             main.setSelectedProejct(aProject);
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -70,11 +70,13 @@ public class MethodPanelTest extends BaseTest{
     private ClassModel getTestClass(){
         ClassModel aClass = null;
         try {
-            aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
-                model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
-            aClass.addMethod(new MethodModel(aClass, "aMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel(aClass, "anotherMethod", ClassType.STATIC));
-            aClass.addMethod(new MethodModel(aClass, "yetAnotherMethod", ClassType.STATIC));
+            aClass = model.getSelectedProject()
+                    .getPackageList()
+                        .get(1)
+                            .addClass(new ClassModel("AnotherClass"));
+            aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
+            aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }

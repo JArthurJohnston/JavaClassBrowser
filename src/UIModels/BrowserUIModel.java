@@ -27,6 +27,7 @@ public class BrowserUIModel extends BaseUIModel{
     public BrowserUIModel(MainApplication main){
         super(main);
         this.selectedProject = main.getSelectedProject();
+        this.getShell();
     }
     
     public void close(){
@@ -63,6 +64,18 @@ public class BrowserUIModel extends BaseUIModel{
     
     public void addPackage(PackageModel aPackage) throws NameAlreadyExistsException{
         selectedProject.addPackage(aPackage);
+    }
+    
+    public ClassModel addClass(ClassModel newClass) throws Exception{
+        if(this.getSelected().isProject() || 
+                this.getSelected().isMethod() ||
+                this.getSelected().isVariable())
+            throw new Exception("Class cannot be added to "+ this.getSelected().name());
+        if(this.getSelected().isPackage())
+            return ((PackageModel)this.getSelected()).addClass(newClass);
+        if(this.getSelected().isClass())
+            return ((ClassModel)this.getSelected()).addClass(newClass);
+        return null;
     }
     
     @Override

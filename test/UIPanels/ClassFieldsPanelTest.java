@@ -54,9 +54,9 @@ public class ClassFieldsPanelTest extends BaseTest{
         MainApplication main = new MainApplication();
         try {
             ProjectModel aProject = 
-                    main.setSelectedProejct(main.addProject(new ProjectModel(main, "a project")));
+                    main.setSelectedProejct(main.addProject(new ProjectModel("a project")));
             PackageModel aPackage = aProject.getDefaultPackage();
-            ClassModel aClass = aPackage.addClass(new ClassModel(aPackage, "AClass"));
+            ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
@@ -71,11 +71,15 @@ public class ClassFieldsPanelTest extends BaseTest{
     private ClassModel getTestClass(){
         ClassModel aClass = null;
         try {
-            aClass = model.getSelectedProject().getPackageList().get(1).addClass(new ClassModel(
-                model.getSelectedProject().getPackageList().get(1), "AnotherClass"));
-            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
-            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
-            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
+            aClass = model.getSelectedProject()
+                    .getPackageList().get(1)
+                        .addClass(new ClassModel( "AnotherClass"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
