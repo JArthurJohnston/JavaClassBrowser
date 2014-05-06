@@ -121,4 +121,9 @@ public class BasePanel extends javax.swing.JPanel{
             bp.modelChanged(newModel);
     }
     
+    protected void refresh(){
+        for(BasePanel p : myPanels())
+            p.refresh();
+    }
+    
 }

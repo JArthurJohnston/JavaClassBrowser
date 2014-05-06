@@ -7,9 +7,15 @@ package UIPanels;
 import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
+import MainBase.UsefulList;
 import Models.*;
 import Types.ClassType;
+import Types.ScopeType;
 import UIModels.BrowserUIModel;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -63,6 +69,45 @@ public class SelectedClassPanelTest extends BaseTest {
         panel = null;
     }
     
+    private LinkedList<ClassModel> setUpOtherClasses(){
+        LinkedList<ClassModel> aList = new LinkedList();
+        try {
+            ClassModel aClass = model.getSelectedPackage()
+                    .addClass(new ClassModel("SecondClass"));
+            aList.add(aClass);
+            aClass.addMethod(new MethodModel("secondClassMethodOne"));
+            aClass.addMethod(new MethodModel("secondClassMethodTwo"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "secondClassInstVar"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "secondClassStatVar"));
+            
+            aClass = model.getSelectedPackage()
+                    .addClass(new ClassModel("ThirdClass"));
+            aList.add(aClass);
+            aClass.addMethod(new MethodModel("thirdClassMethodOne"));
+            aClass.addMethod(new MethodModel("thirdClassMethodTwo"));
+            aClass.addMethod(new MethodModel("thirdClassMethodThree"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "thirdClassInstVarOne"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "thirdClassInstVarTwo"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "thirdClassInstVarThree"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarOne"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarTwo"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarThree"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals("SecondClass",aList.getFirst().name());
+        assertEquals("ThirdClass",aList.getFirst().name());
+        return aList;
+    }
+    
 
     /**
      * Test of setModel method, of class SelectedClassPanel.
@@ -85,8 +130,14 @@ public class SelectedClassPanelTest extends BaseTest {
     }
     
     @Test
-    public void testSelectionChanged(){
-        fail();
+    public void testClassSelectedUpdatesPanels(){
+        LinkedList<ClassModel> aList = this.setUpOtherClasses();
+        JList classes = (JList)this.getVariableFromClass(panel, "classList");
+        classes.setSelectedIndex(1);
+        ClassFieldsPanel classFields = (ClassFieldsPanel)panel.myPanels().getFirst();
+        MethodPanel methods = (MethodPanel)panel.myPanels().getLast();
+        assertEquals(aList.getFirst(), classes.getSelectedValue());
+        assertEquals(2, methods.myLists().getFirst().size());
     }
     
     @Test

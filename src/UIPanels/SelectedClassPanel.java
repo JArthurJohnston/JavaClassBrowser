@@ -63,6 +63,8 @@ public class SelectedClassPanel extends BasePanel {
             this.getListModel(classList).addElement(aModel);
         super.modelAdded(aModel);
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
