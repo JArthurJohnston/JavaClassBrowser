@@ -10,19 +10,15 @@ import MainBase.MainApplication;
 import MainBase.UsefulList;
 import Models.*;
 import Types.ClassType;
-import Types.ScopeType;
 import UIModels.BrowserUIModel;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -45,7 +41,7 @@ public class SelectedClassPanelTest extends BaseTest {
     
     @Before
     public void setUp() {
-        MainApplication main = new MainApplication();
+        main = new MainApplication();
         try {
             ProjectModel aProject = main.addProject(new ProjectModel("a project"));
             main.setSelectedProejct(aProject);
@@ -58,9 +54,9 @@ public class SelectedClassPanelTest extends BaseTest {
         } catch (NameAlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        model = new BrowserUIModel(main);
+        model = main.openSystemBrowser();
         panel = new SelectedClassPanel();
-        panel.setModel(model);
+        panel = (SelectedClassPanel)this.getVariableFromClass(model.getShell(), "classBrowserPanel");
     }
     
     @After
@@ -69,25 +65,35 @@ public class SelectedClassPanelTest extends BaseTest {
         panel = null;
     }
     
+    
     private LinkedList<ClassModel> setUpOtherClasses(){
         LinkedList<ClassModel> aList = new LinkedList();
         try {
             ClassModel aClass = model.getSelectedPackage()
                     .addClass(new ClassModel("SecondClass"));
             aList.add(aClass);
-            aClass.addMethod(new MethodModel("secondClassMethodOne"));
-            aClass.addMethod(new MethodModel("secondClassMethodTwo"));
+            aClass.addMethod(new MethodModel("secondClassInstMethodOne", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("secondClassInstMethodTwo", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("secondClassStatMethodOne", ClassType.STATIC));
+            aClass.addMethod(new MethodModel("secondClassStatMethodTwo", ClassType.STATIC));
             aClass.addVariable(new VariableModel(
-                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "secondClassInstVar"));
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "secondClassInstVarOne"));
             aClass.addVariable(new VariableModel(
-                    ClassType.STATIC, ClassModel.getPrimitive("void"), "secondClassStatVar"));
+                    ClassType.INSTANCE, ClassModel.getPrimitive("void"), "secondClassInstVarTwo"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "secondClassStatVarOne"));
+            aClass.addVariable(new VariableModel(
+                    ClassType.STATIC, ClassModel.getPrimitive("void"), "secondClassStatVarTwo"));
             
             aClass = model.getSelectedPackage()
                     .addClass(new ClassModel("ThirdClass"));
             aList.add(aClass);
-            aClass.addMethod(new MethodModel("thirdClassMethodOne"));
-            aClass.addMethod(new MethodModel("thirdClassMethodTwo"));
-            aClass.addMethod(new MethodModel("thirdClassMethodThree"));
+            aClass.addMethod(new MethodModel("secondClassInstMethodOne", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("secondClassInstMethodTwo", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("secondClassInstMethodThree", ClassType.INSTANCE));
+            aClass.addMethod(new MethodModel("secondClassStatMethodOne", ClassType.STATIC));
+            aClass.addMethod(new MethodModel("secondClassStatMethodTwo", ClassType.STATIC));
+            aClass.addMethod(new MethodModel("secondClassStatMethodThree", ClassType.STATIC));
             aClass.addVariable(new VariableModel(
                     ClassType.INSTANCE, ClassModel.getPrimitive("void"), "thirdClassInstVarOne"));
             aClass.addVariable(new VariableModel(
@@ -104,7 +110,7 @@ public class SelectedClassPanelTest extends BaseTest {
             fail(ex.getMessage());
         }
         assertEquals("SecondClass",aList.getFirst().name());
-        assertEquals("ThirdClass",aList.getFirst().name());
+        assertEquals("ThirdClass",aList.getLast().name());
         return aList;
     }
     
@@ -130,14 +136,47 @@ public class SelectedClassPanelTest extends BaseTest {
     }
     
     @Test
-    public void testClassSelectedUpdatesPanels(){
+    public void testClassSelectedUpdatesVariablePanel(){
+        ClassFieldsPanel classFields = (ClassFieldsPanel)panel.myPanels().getFirst();
+        JList instVarList = classFields.myLists().get(1);
+        JList statVarList = classFields.myLists().getLast();
         LinkedList<ClassModel> aList = this.setUpOtherClasses();
         JList classes = (JList)this.getVariableFromClass(panel, "classList");
+        assertEquals(3, classes.getModel().getSize());
+        
         classes.setSelectedIndex(1);
-        ClassFieldsPanel classFields = (ClassFieldsPanel)panel.myPanels().getFirst();
+        assertEquals(2, instVarList.getModel().getSize());
+        assertEquals(2, statVarList.getModel().getSize());
+        
+        classes.setSelectedIndex(2);
+        assertEquals(3, instVarList.getModel().getSize());
+        assertEquals(3, statVarList.getModel().getSize());
+        
+        classes.setSelectedIndex(1);
+        assertEquals(2, instVarList.getModel().getSize());
+        assertEquals(2, statVarList.getModel().getSize());
+    }
+    
+    @Test
+    public void testClassSelectedUpdatesMethodPanel(){
         MethodPanel methods = (MethodPanel)panel.myPanels().getLast();
-        assertEquals(aList.getFirst(), classes.getSelectedValue());
-        assertEquals(2, methods.myLists().getFirst().size());
+        JList instMethList = methods.myLists().getFirst();
+        JList statMethList = methods.myLists().getLast();
+        LinkedList<ClassModel> aList = this.setUpOtherClasses();
+        JList classes = (JList)this.getVariableFromClass(panel, "classList");
+        assertEquals(3, classes.getModel().getSize());
+        
+        classes.setSelectedIndex(1);
+        assertEquals(2, instMethList.getModel().getSize());
+        assertEquals(2, statMethList.getModel().getSize());
+        
+        classes.setSelectedIndex(2);
+        assertEquals(3, instMethList.getModel().getSize());
+        assertEquals(3, statMethList.getModel().getSize());
+        
+        classes.setSelectedIndex(1);
+        assertEquals(2, instMethList.getModel().getSize());
+        assertEquals(2, statMethList.getModel().getSize());
     }
     
     @Test

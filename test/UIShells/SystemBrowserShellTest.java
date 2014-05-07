@@ -75,6 +75,20 @@ public class SystemBrowserShellTest extends BaseTest{
         return (JList)this.getVariableFromClass(panel, "classList");
     }
     
+    private void setUpOtherPackages(){
+        try {
+            PackageModel aPackage = this.project().addPackage(new PackageModel("Second Package"));
+            aPackage.addClass(new ClassModel("SecondPackageClassOne"));
+            aPackage.addClass(new ClassModel("SecondPackageClassTwo"));
+            aPackage = this.project().addPackage(new PackageModel("Third Package"));
+            aPackage.addClass(new ClassModel("ThirdPackageClassOne"));
+            aPackage.addClass(new ClassModel("ThirdPackageClassTwo"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(4, this.project().getPackageList().size());
+    }
+    
     /**
      * Test of main method, of class SystemBrowserShell.
      */
@@ -120,7 +134,18 @@ public class SystemBrowserShellTest extends BaseTest{
     }
     
     @Test
-    public void testAddPackageUpdatesShell(){
+    public void testPackageSelectionUpdatesPanels(){
+        JList packages = (JList)this.getVariableFromClass(shell, "packageList");
+        JList classes = (JList)this.getVariableFromClass(shell.myPanels().getFirst(), "classList");
+        assertEquals(2, packages.getModel().getSize());
+        this.setUpOtherPackages();
+        assertEquals(4, packages.getModel().getSize());
         
+        packages.setSelectedIndex(2);
+        assertEquals(2, classes.getModel().getSize());
+        
+        
+        packages.setSelectedIndex(3);
+        assertEquals(3, classes.getModel().getSize());
     }
 }

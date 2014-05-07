@@ -42,8 +42,8 @@ public class SystemBrowserShell extends BaseUIShell {
     @Override
     protected UsefulList<BasePanel> myPanels(){
         return super.myPanels()
-                .addElm(modelEditPanel)
-                .addElm(classBrowserPanel);
+                .addElm(classBrowserPanel)
+                .addElm(modelEditPanel);
     }
     
     private void fillLists(){
@@ -64,9 +64,12 @@ public class SystemBrowserShell extends BaseUIShell {
         };
     }
     
-    public void addModel(BaseModel newModel){
+    @Override
+    public void modelAdded(BaseModel newModel){
         if(newModel.isPackage())
             ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
+        for(BasePanel bp : this.myPanels())
+            bp.modelAdded(newModel);
     }
     
     @Override

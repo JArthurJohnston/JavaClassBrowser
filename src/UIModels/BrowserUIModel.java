@@ -109,7 +109,7 @@ public class BrowserUIModel extends BaseUIModel{
 
     @Override
     public void modelAdded(BaseModel newModel) {
-        this.getShell().addModel(newModel);
+        this.getShell().modelAdded(newModel);
     }
 
     @Override
