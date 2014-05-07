@@ -49,6 +49,7 @@ public class SystemBrowserShell extends BaseUIShell {
     private void fillLists(){
         this.setUpPackageList();
         this.fillListModel(model.getPackages(), (DefaultListModel)this.packageList.getModel());
+        this.packageList.setSelectedIndex(0);
     }
     
     private void setUpPackageList(){

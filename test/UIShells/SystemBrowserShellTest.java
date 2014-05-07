@@ -125,6 +125,44 @@ public class SystemBrowserShellTest extends BaseTest{
     }
     
     @Test
+    public void testAddClassNoPackageSelected(){
+        JList classes = this.getClassList();
+        assertEquals(0, classes.getModel().getSize());
+        try {
+            this.model().getSelectedPackage().addClass(new ClassModel("SomeClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(0, classes.getModel().getSize());
+    }
+    
+    @Test
+    public void testAddClassToOtherPackageDoesNOTUpdatesShell(){
+        JList packages = (JList)this.getVariableFromClass(shell, "packageList");
+        JList classes = this.getClassList();
+        PackageModel aPackage = null;
+        try {
+            aPackage = this.model().getSelectedProject().addPackage(new PackageModel("Second Package"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        packages.setSelectedIndex(1);
+        assertEquals(this.project().getDefaultPackage(), packages.getSelectedValue());
+        assertEquals(0, classes.getModel().getSize());
+        try {
+            aPackage.addClass(new ClassModel("SomeClass"));
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(0, classes.getModel().getSize());
+    }
+    
+    @Test
+    public void testClassListWhenALLIsSelected(){
+        fail();
+    }
+    
+    @Test
     public void testPanelsHaveModel(){
         BasePanel aPanel = (BasePanel)this.getVariableFromClass(shell, "modelEditPanel");
         BasePanel bPanel = (BasePanel)this.getVariableFromClass(shell, "classBrowserPanel");
@@ -147,5 +185,12 @@ public class SystemBrowserShellTest extends BaseTest{
         
         packages.setSelectedIndex(3);
         assertEquals(3, classes.getModel().getSize());
+    }
+    
+    @Test
+    public void testDefaultSelections(){
+        JList packages = (JList)this.getVariableFromClass(shell, "packageList");
+        assertEquals(0, packages.getSelectedIndex());
+        assertEquals(ProjectModel.ALL_PACKAGE, packages.getSelectedValue());
     }
 }

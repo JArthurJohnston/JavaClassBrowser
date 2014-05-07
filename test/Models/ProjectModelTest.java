@@ -107,7 +107,7 @@ public class ProjectModelTest extends BaseTest{
     @Test
     public void testGetPackageList(){
         assertEquals(2, project.getPackageList().size());
-        assertEquals(ProjectModel.allPackage, project.getPackageList().getFirst());
+        assertEquals(ProjectModel.ALL_PACKAGE, project.getPackageList().getFirst());
         assertEquals("default package", project.getPackageList().getLast().name());
     }
     
@@ -331,9 +331,9 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testAllPackage(){
-        assertEquals(PackageModel.class, ProjectModel.allPackage.getClass());
-        assertEquals("All", ProjectModel.allPackage.name());
-        assertTrue(project.getPackageList().contains(ProjectModel.allPackage));
+        assertEquals(PackageModel.class, ProjectModel.ALL_PACKAGE.getClass());
+        assertEquals("All", ProjectModel.ALL_PACKAGE.name());
+        assertTrue(project.getPackageList().contains(ProjectModel.ALL_PACKAGE));
     }
     
     @Test

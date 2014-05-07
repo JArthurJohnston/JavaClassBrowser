@@ -33,7 +33,7 @@ public class ProjectModel extends BaseModel {
     
     protected Date dateCreated;
     
-    public static PackageModel allPackage = new PackageModel("All");
+    public static PackageModel ALL_PACKAGE = new PackageModel("All");
     public static String DELETE_WARNING = "You are about to delete this project\n"
             + "This operation cannot be undone.\n"
             + "Continue?";
@@ -90,7 +90,7 @@ public class ProjectModel extends BaseModel {
     
     public LinkedList<PackageModel> getPackageList(){
         LinkedList aList = new LinkedList();
-        aList.add(allPackage);
+        aList.add(ALL_PACKAGE);
         for(PackageModel p : packageList)
             aList.addAll(p.getPackageList());
         return aList;
