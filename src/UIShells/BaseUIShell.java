@@ -13,7 +13,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -33,6 +36,17 @@ public class BaseUIShell extends javax.swing.JFrame {
                 signalClosedAndDispose();
             }
         });
+    }
+    
+    
+    protected ListSelectionListener setUpListener(final JList aList){
+        return new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(!e.getValueIsAdjusting())
+                    selectionChanged((BaseModel)aList.getSelectedValue());
+            }
+        };
     }
     
     protected void signalClosedAndDispose(){ } // might just wanna get rid of this?

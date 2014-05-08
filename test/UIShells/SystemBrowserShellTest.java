@@ -180,6 +180,7 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(4, packages.getModel().getSize());
         
         packages.setSelectedIndex(2);
+        assertEquals(2, ((PackageModel)packages.getSelectedValue()).getClassList().size());
         assertEquals(2, classes.getModel().getSize());
         
         

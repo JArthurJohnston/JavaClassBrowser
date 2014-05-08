@@ -54,16 +54,10 @@ public class SystemBrowserShell extends BaseUIShell {
     
     private void setUpPackageList(){
         this.packageList.setModel(new DefaultListModel());
-        this.packageList.getSelectionModel().addListSelectionListener(this.setUpListener());
+        this.packageList.getSelectionModel()
+                .addListSelectionListener(this.setUpListener(packageList));
     }
     
-    private ListSelectionListener setUpListener(){
-        return new ListSelectionListener(){
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-            }
-        };
-    }
     
     @Override
     public void modelAdded(BaseModel newModel){

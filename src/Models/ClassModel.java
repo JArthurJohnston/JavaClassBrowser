@@ -191,7 +191,7 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    protected PackageModel getParentPackage(){
+    public PackageModel getParentPackage(){
         return parentPackage;
     }
     
