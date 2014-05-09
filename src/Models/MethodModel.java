@@ -152,7 +152,7 @@ public class MethodModel extends ClassModel{
         return scope;
     }
     
-    private String scopeString(){
+    public String scopeString(){
         if(this.getScope() == ScopeType.NONE)
             return "";
         return this.getScope().toString().toLowerCase() + " ";

@@ -7,6 +7,8 @@
 package UIPanels;
 
 import Models.BaseModel;
+import Models.ClassModel;
+import Models.MethodModel;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,12 +26,26 @@ public class ModelListPanel extends BasePanel {
         this.setUpTable();
     }
     
+    private DefaultTableModel tableModel(){
+        return(DefaultTableModel)this.modelTable.getModel();
+    }
+    
     private void setUpTable(){
         this.modelTable.setModel(new DefaultTableModel());
     }
     
-    private void addModelToTable(BaseModel aModel){
-        ((DefaultTableModel)modelTable.getModel()).addRow(null);
+    public void addClassToList(ClassModel aClass){
+        this.tableModel().addRow(
+                new String[] {aClass.getScope().toString().toLowerCase(), 
+                    aClass.name()});
+    }
+    
+    public void addMethodToList(MethodModel aMethod){
+        this.tableModel().addRow(
+                new String[] 
+                   {aMethod.scopeString(), 
+                    aMethod.getReturnType().name(),
+                    aMethod.getType().toString().toLowerCase()});
     }
     
     public void fillTable(){
