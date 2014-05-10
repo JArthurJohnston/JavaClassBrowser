@@ -24,13 +24,13 @@ public class ClassFieldsPanel extends BasePanel {
      */
     public ClassFieldsPanel() {
         initComponents();
+        this.setUpLists();
         this.setUpRightClickMenues();
     }
     
     @Override
     public void setModel(BrowserUIModel aModel){
         this.model = aModel;
-        this.setUpLists();
         this.fillListsFromClass(model.getSelectedClass());
     }
     

@@ -23,12 +23,12 @@ public class MethodPanel extends BasePanel {
      */
     public MethodPanel() {
         initComponents();
+        this.setUpLists();
     }
     
     @Override
     public void setModel(BrowserUIModel model){
         this.model = model;
-        this.setUpLists();
         if(model.getSelectedClass() != null)
             this.fillListsFromClass(model.getSelectedClass());
     }

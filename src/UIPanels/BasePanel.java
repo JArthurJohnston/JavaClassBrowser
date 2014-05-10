@@ -47,7 +47,7 @@ public class BasePanel extends javax.swing.JPanel{
     }
     
     protected DefaultListModel getListModel(JList aList){
-        return ((DefaultListModel)aList.getModel());
+        return (DefaultListModel)aList.getModel();
     }
     
     protected void clearLists(){

@@ -27,7 +27,7 @@ public class BrowserUIModel extends BaseUIModel{
     public BrowserUIModel(MainApplication main){
         super(main);
         this.selectedProject = main.getSelectedProject();
-        this.getShell();
+        shell = new SystemBrowserShell(this);
     }
     
     public void close(){
