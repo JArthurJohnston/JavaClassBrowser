@@ -6,7 +6,7 @@
 
 package Internal.Mocks;
 
-import Models.ClassModel;
+import Models.*;
 import UIModels.BrowserUIController;
 
 /**
@@ -15,6 +15,7 @@ import UIModels.BrowserUIController;
  */
 public class MockBrowserController extends BrowserUIController {
     ClassModel selectedClass;
+    BaseModel selected;
     
     public void setSelectedClass(ClassModel aClass){
         selectedClass = aClass;
@@ -23,6 +24,10 @@ public class MockBrowserController extends BrowserUIController {
     @Override
     public ClassModel getSelectedClass(){
         return selectedClass;
+    }
+    @Override
+    public void setSelected(BaseModel aModel){
+        this.selected = aModel;
     }
     
 }

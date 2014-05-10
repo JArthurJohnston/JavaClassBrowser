@@ -4,18 +4,14 @@
  */
 package UIPanels;
 
-import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Internal.Mocks.MockBrowserController;
-import MainBase.MainApplication;
+import Internal.Mocks.MockClassModel;
 import Models.ClassModel;
 import Models.MethodModel;
-import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.BrowserUIController;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.junit.After;
@@ -31,7 +27,6 @@ import org.junit.Test;
  */
 public class MethodlListPanelTest extends BaseTest{
     MethodlListPanel panel;
-    private BrowserUIController BrowserUIModel;
     
     public MethodlListPanelTest() {
     }
@@ -86,12 +81,8 @@ public class MethodlListPanelTest extends BaseTest{
         panel.addMethodToList(aMethod);
     }
     
-    private ClassModel classWithMethods(){
-        ClassModel aClass = null;
-        try {
-            aClass = this.project()
-                    .getDefaultPackage()
-                        .addClass(new ClassModel("AClass"));
+    private MockClassModel classWithMethods(){
+        MockClassModel aClass = new MockClassModel("AClass");
             MethodModel aMethod = null;
             aClass.addMethod(new MethodModel("oneMethod", ScopeType.PRIVATE));
             aClass.addMethod(new MethodModel("twoMethod", ScopeType.PRIVATE));
@@ -99,9 +90,6 @@ public class MethodlListPanelTest extends BaseTest{
             aMethod.setType(ClassType.STATIC);
             aMethod = aClass.addMethod(new MethodModel("fourMethod", ScopeType.PUBLIC));
             aMethod.setType(ClassType.STATIC);
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
         return aClass;
     }
     
@@ -126,6 +114,7 @@ public class MethodlListPanelTest extends BaseTest{
     @Test
     public void testRowSelection(){
         this.setUpTableMethods();
+        panel.setModel(new MockBrowserController());
         this.setListSelection(1);
         assertTrue(panel.getSelected().isMethod());
     }
@@ -135,6 +124,15 @@ public class MethodlListPanelTest extends BaseTest{
         panel.setSelectionType(ClassType.STATIC);
         panel.selectionChanged(this.classWithMethods());
         assertEquals(2, this.table().getRowCount());
+        //test selection changed to another class
+            //clear the list, then re-populate it
+        MockClassModel aClass = new MockClassModel("AnotherClass");
+        this.addMethodToClass(aClass, new MethodModel("aMethod", ClassType.STATIC));
+        this.addMethodToClass(aClass, new MethodModel("anotherMethod", ClassType.STATIC));
+        this.addMethodToClass(aClass, new MethodModel("yetAnotherMethod", ClassType.STATIC));
+        this.addMethodToClass(aClass, new MethodModel("andYetAnotherMethod", ClassType.INSTANCE));
+        panel.selectionChanged(aClass);
+        assertEquals(3, this.table().getRowCount());
     }
     
     @Test
@@ -147,11 +145,28 @@ public class MethodlListPanelTest extends BaseTest{
         
         panel.setSelectionType(ClassType.INSTANCE);
         panel.setModel(controller);
-        assertEquals(3, panel.getTableSize());
         
         panel.modelAdded(aMethod);
         assertEquals(4, panel.getTableSize());
         assertEquals(aMethod, panel.getValueAt(3));
+        
+        
+    }
+    
+    @Test
+    public void testSetModelWithNullClass(){
+        MockBrowserController controller = new MockBrowserController();
+        panel.setSelectionType(ClassType.STATIC);
+        panel.setModel(controller);
+        assertTrue(panel.isEmpty());
+        controller.setSelectedClass(this.classWithMethods());
+        
+        panel.setModel(controller);
+        assertEquals(2, panel.getTableSize());
+        
+        panel.setSelectionType(ClassType.INSTANCE);
+        panel.setModel(controller);
+        assertEquals(3, panel.getTableSize());
     }
     
     

@@ -24,8 +24,8 @@ public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
     protected PackageModel parentPackage;
-    private LinkedList<MethodModel> methods;
-    private LinkedList<VariableModel> variables;
+    public LinkedList<MethodModel> methods;
+    public LinkedList<VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
     
@@ -211,7 +211,7 @@ public class ClassModel extends PackageModel{
         return this.getModelsOfType(methods, ClassType.INSTANCE);
     }
     
-    private LinkedList getModelsOfType(LinkedList modelList, ClassType aType){
+    public LinkedList getModelsOfType(LinkedList modelList, ClassType aType){
         LinkedList aList = new LinkedList();
         for(Object m : modelList){
             if(((BaseModel)m).getType() == aType)

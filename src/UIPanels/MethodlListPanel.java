@@ -10,6 +10,7 @@ import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
+import UIModels.BrowserUIController;
 
 /**
  *
@@ -23,7 +24,14 @@ public class MethodlListPanel extends BaseListPanel {
      */
     public MethodlListPanel() {
         initComponents();
-        this.setVisible(true);
+        this.setUpTable();
+    }
+    
+    @Override
+    public void setModel(BrowserUIController controller){
+        this.controller = controller;
+        if(controller.getSelectedClass() != null)
+            this.fillListFromClass(controller.getSelectedClass());
     }
     
     private void setUpTable(){
@@ -41,10 +49,7 @@ public class MethodlListPanel extends BaseListPanel {
     
     @Override
     public BaseModel getSelected(){
-        return ((CellModel)modelTable.getModel()
-                .getValueAt(modelTable.getSelectedColumn(), 
-                            modelTable.getSelectedRow()))
-                                .getBase(); 
+        return this.getValueAt(modelTable.getSelectedRow());
     }
     
     public BaseModel getValueAt(int index){
@@ -58,9 +63,16 @@ public class MethodlListPanel extends BaseListPanel {
     }
     
     private void fillListFromClass(ClassModel aModel){
+        if(aModel == null)
+            return;
+        this.clear();
         for(MethodModel m : aModel.getStaticMethods())
             if(m.getType() == this.type)
                 this.addMethodToList(m);
+    }
+    
+    public void clear(){
+        this.tableModel(modelTable).setRowCount(0);
     }
     
     public void setSelectionType(ClassType aType){
@@ -73,6 +85,13 @@ public class MethodlListPanel extends BaseListPanel {
     
     public int getTableSize(){
         return modelTable.getRowCount();
+    }
+    
+    @Override
+    public void modelAdded(BaseModel aModel){
+        if(aModel.isMethod())
+            if(((MethodModel)aModel).getParent() == controller.getSelectedClass())
+                    this.addMethodToList((MethodModel)aModel);
     }
     
     
