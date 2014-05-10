@@ -7,48 +7,45 @@
 package UIPanels;
 
 import Models.BaseModel;
-import Models.ClassModel;
 import Models.MethodModel;
-import java.util.Vector;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author arthur
  */
-public class ModelListPanel extends BasePanel {
-
+public class MethodlListPanel extends BaseListPanel {
+    
     /**
      * Creates new form ModelListPanel
      */
-    public ModelListPanel() {
+    public MethodlListPanel() {
         initComponents();
-        this.setUpTable();
-    }
-    
-    private DefaultTableModel tableModel(){
-        return(DefaultTableModel)this.modelTable.getModel();
+        this.setVisible(true);
     }
     
     private void setUpTable(){
-        this.modelTable.setModel(new DefaultTableModel());
-    }
-    
-    public void addClassToList(ClassModel aClass){
-        this.tableModel().addRow(
-                new String[] {aClass.getScope().toString().toLowerCase(), 
-                    aClass.name()});
+        this.modelTable.getSelectionModel()
+                .addListSelectionListener(this.rowSelectionListener());
     }
     
     public void addMethodToList(MethodModel aMethod){
-        this.tableModel().addRow(
-                new String[] 
-                   {aMethod.scopeString(), 
-                    aMethod.getReturnType().name(),
-                    aMethod.getType().toString().toLowerCase()});
+        this.tableModel(modelTable).addRow(
+                new CellModel[] 
+                   {new CellModel(aMethod.scopeString(), aMethod), 
+                    new CellModel(aMethod.getReturnType().name(), aMethod),
+                    new CellModel(aMethod.getType().toString().toLowerCase(), aMethod)});
     }
     
-    public void fillTable(){
+    @Override
+    public BaseModel getSelected(){
+        return ((CellModel)modelTable.getModel()
+                .getValueAt(modelTable.getSelectedColumn(), 
+                            modelTable.getSelectedRow()))
+                                .getBase(); 
+    }
+    
+    @Override
+    public void selectionChanged(BaseModel aModel){
         
     }
 
@@ -68,13 +65,10 @@ public class ModelListPanel extends BasePanel {
 
         modelTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3"
+                "Scope", "Name", "Return Type"
             }
         ));
         jScrollPane1.setViewportView(modelTable);
@@ -89,12 +83,21 @@ public class ModelListPanel extends BasePanel {
     // End of variables declaration//GEN-END:variables
 
 
-    private class ModelVector<T> extends Vector<T>{
+    private class CellModel{
+        private final MethodModel base;
+        private final String label;
         
+        public CellModel(String label, MethodModel base){
+            this.label = label;
+            this.base = base;
+        }
         
-    }
-    
-    private enum ListType {
-        CLASS, METHOD;
+        @Override
+        public String toString(){
+            return label;
+        }
+        public MethodModel getBase(){
+            return base;
+        }
     }
 }

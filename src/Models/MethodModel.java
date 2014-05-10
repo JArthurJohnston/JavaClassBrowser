@@ -67,7 +67,6 @@ public class MethodModel extends ClassModel{
         this.source = source;
     }
     
-    
     private void initializeFields(){
         this.type = ClassType.INSTANCE;
         this.scope = ScopeType.PUBLIC;
