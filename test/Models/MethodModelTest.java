@@ -6,7 +6,7 @@
 
 package Models;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import LanguageBase.JavaLang;
 import MainBase.MainApplication;
@@ -46,7 +46,7 @@ public class MethodModelTest extends BaseTest{
         try {
             method = this.setUpClassWithName("ParentClass")
                     .addMethod(new MethodModel("aMethod"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
     }
@@ -62,7 +62,7 @@ public class MethodModelTest extends BaseTest{
             ProjectModel aProject = main.addProject(new ProjectModel(className));
             PackageModel aPackage = aProject.addPackage(new PackageModel(className));
             aClass = aPackage.addClass(new ClassModel(className));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         return aClass;
@@ -110,7 +110,7 @@ public class MethodModelTest extends BaseTest{
         MethodModel otherMethod = null;
         try {
             otherMethod = this.setUpClassWithName("AClass").addMethod(new MethodModel("anotherMethod"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(method.matchSignature(otherMethod));
@@ -212,7 +212,7 @@ public class MethodModelTest extends BaseTest{
         try {
             ClassModel aClass = method.getParent().addClass(new ClassModel("AnotherClass"));
             anotherMethod = aClass.addMethod(new MethodModel("aMethod"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         

@@ -7,18 +7,16 @@ package UIShells;
 import MainBase.UsefulList;
 import Models.*;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
 import javax.swing.DefaultListModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author Arthur
  */
 public class SystemBrowserShell extends BaseUIShell {
-    private BrowserUIModel model;
+    private BrowserUIController model;
     /**
      * Creates new form SystemBrowserShell
      */
@@ -26,7 +24,7 @@ public class SystemBrowserShell extends BaseUIShell {
         initComponents();
     }
     
-    public SystemBrowserShell(BrowserUIModel model){
+    public SystemBrowserShell(BrowserUIController model){
         this();
         this.model = model;
         this.fillLists();
@@ -34,7 +32,7 @@ public class SystemBrowserShell extends BaseUIShell {
         this.setVisible(true);
     }
     
-    private void setPanelModels(BrowserUIModel aModel){
+    private void setPanelModels(BrowserUIController aModel){
         for(BasePanel bp : this.myPanels())
             bp.setModel(aModel);
     }

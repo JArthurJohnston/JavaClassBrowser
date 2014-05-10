@@ -5,7 +5,7 @@
 package Models;
 
 import Exceptions.CannotBeDeletedException;
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
@@ -155,9 +155,9 @@ public class ProjectModel extends BaseModel {
      * 
      * @param newPackage the package the user wants to add to the project
      * @return PackageModel, the package being added to the project
-     * @throws NameAlreadyExistsException 
+     * @throws AlreadyExistsException 
      */
-    public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+    public PackageModel addPackage(PackageModel newPackage) throws AlreadyExistsException{
         if(this.okToAddPackage(newPackage.name())){
             this.packages.put(newPackage.name(), newPackage);
             if(newPackage.getParent() == null) {
@@ -167,7 +167,7 @@ public class ProjectModel extends BaseModel {
             this.modelAdded(newPackage);
             return newPackage;
         }else {
-            throw new NameAlreadyExistsException(this, newPackage);
+            throw new AlreadyExistsException(this, newPackage);
         }
     }
     /**
@@ -178,15 +178,15 @@ public class ProjectModel extends BaseModel {
      * 
      * @param newClass
      * @return ClassModel the class being added to the project
-     * @throws Exceptions.NameAlreadyExistsException
+     * @throws Exceptions.AlreadyExistsException
      */
-    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+    public ClassModel addClass(ClassModel newClass) throws AlreadyExistsException{
         if(this.okToAddClass(newClass.name())){
             classes.put(newClass.name(), newClass);
             this.modelAdded(newClass);
             return newClass;
         }else 
-            throw new NameAlreadyExistsException(this, newClass);
+            throw new AlreadyExistsException(this, newClass);
         
     }
     

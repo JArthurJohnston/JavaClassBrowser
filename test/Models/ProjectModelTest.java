@@ -5,7 +5,7 @@
 package Models;
 
 import Exceptions.DoesNotExistException;
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
@@ -44,7 +44,7 @@ public class ProjectModelTest extends BaseTest{
     public void setUp() {
         try {
             project = new MainApplication().addProject(new ProjectModel("Test Project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
     }
@@ -88,7 +88,7 @@ public class ProjectModelTest extends BaseTest{
         PackageModel newPackage = null;
         try {
             newPackage = project.addPackage(new PackageModel("New Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(project, newPackage.getParent());
@@ -99,7 +99,7 @@ public class ProjectModelTest extends BaseTest{
         try {
             project.addPackage(new PackageModel("New Package"));
             fail("NameAlreadyExistsException not thrown");
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
         }
         assertTrue(project.getPackageList().size() == 3);
     }
@@ -116,13 +116,13 @@ public class ProjectModelTest extends BaseTest{
         PackageModel testPackage = null;
         try {
             testPackage = project.addPackage(new PackageModel("Test Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         ClassModel newClass = null;
         try {
             newClass = testPackage.addClass(new ClassModel("NewClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, project.getClassList().size());
@@ -130,7 +130,7 @@ public class ProjectModelTest extends BaseTest{
         try {
             testPackage.addClass(new ClassModel("NewClass"));
             fail("Expected exception was not thrown");
-        } catch (NameAlreadyExistsException ex) {}
+        } catch (AlreadyExistsException ex) {}
     }
     
     @Test
@@ -138,7 +138,7 @@ public class ProjectModelTest extends BaseTest{
         PackageModel packageToBeRemoved = null;
         try {
             packageToBeRemoved = project.addPackage(new PackageModel("PackageToBeRemoved"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(packageToBeRemoved, project.findPackage("PackageToBeRemoved"));
@@ -177,7 +177,7 @@ public class ProjectModelTest extends BaseTest{
         testMain.setUserName("Barry Allen");
         try {
             project = testMain.addProject(new ProjectModel("New Project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         System.out.println("test user name");
@@ -206,34 +206,34 @@ public class ProjectModelTest extends BaseTest{
         try {
             aPackage = project.addPackage(new PackageModel("New Package"));
             aClass = aPackage.addClass(new ClassModel("AClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, project.getClassList().size());
         ClassModel anotherClass = null;
         try {
             anotherClass = aClass.addClass(new ClassModel("AnotherClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(2, project.getClassList().size());
         ClassModel yetAnotherClass = null;
         try {
             yetAnotherClass = anotherClass.addClass(new ClassModel("YetAnotherClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(3, project.getClassList().size());
         PackageModel anotherPackage = null;
         try {
             anotherPackage = project.addPackage(new PackageModel("Another Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         ClassModel classInAnotherPackage = null;
         try {
             classInAnotherPackage = anotherPackage.addClass(new ClassModel("AnotherClassInAnotherPackage"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(4, project.getClassList().size());
@@ -245,13 +245,13 @@ public class ProjectModelTest extends BaseTest{
         PackageModel subPackage = null;
         try {
             subPackage = aPackage.addPackage(new PackageModel("Sub Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             Logger.getLogger(ProjectModelTest.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             ClassModel subPackageClass =
                     subPackage.addClass(new ClassModel("SubPackageClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(5, project.getClassList().size());
@@ -264,7 +264,7 @@ public class ProjectModelTest extends BaseTest{
             PackageModel aPackage = project.addPackage(new PackageModel("A Pak"));
             ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
             aMethod = aClass.addMethod(new MethodModel("aMethod"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         return aMethod;
@@ -297,7 +297,7 @@ public class ProjectModelTest extends BaseTest{
             aMethod = anotherClass.addMethod(new MethodModel("newMethod"));
             assertEquals(2, project.getMethodDefinitions(aMethod).size());
             assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
     }
@@ -323,7 +323,7 @@ public class ProjectModelTest extends BaseTest{
         MainApplication main = new MainApplication();
         try {
             project = main.addProject(new ProjectModel("aProject"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(main, project.getMain());
@@ -347,7 +347,7 @@ public class ProjectModelTest extends BaseTest{
         try {
             aClass = project.getDefaultPackage().addClass(
                     new ClassModel("AClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals("default package", aClass.getParentPackage().name());

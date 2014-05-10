@@ -7,7 +7,7 @@ package Models;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.UsefulList;
 import Types.ClassType;
@@ -117,13 +117,13 @@ public class ClassModel extends PackageModel{
         return this.getParentPackage().removeClass(aClass);
     }
     
-    public VariableModel addVariable(VariableModel newVar) throws NameAlreadyExistsException{
+    public VariableModel addVariable(VariableModel newVar) throws AlreadyExistsException{
         if(this.okToAddVariable(newVar.name())){
             variables.add(newVar);
             newVar.setParent(this);
             return newVar;
         }else {
-            throw new NameAlreadyExistsException(this, newVar);
+            throw new AlreadyExistsException(this, newVar);
         }
     }
     
@@ -150,9 +150,9 @@ public class ClassModel extends PackageModel{
      * @param newMethod the method being added
      * @return the method being added
      */
-    public MethodModel addMethod(MethodModel newMethod) throws NameAlreadyExistsException{
+    public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException{
         if(!this.okToAddMethod(newMethod.name()))
-            throw new NameAlreadyExistsException(this, newMethod);
+            throw new AlreadyExistsException(this, newMethod);
         methods.add(newMethod);
         this.getProject().addMethodDefinition(newMethod);
         newMethod.setParent(this);
@@ -250,7 +250,7 @@ public class ClassModel extends PackageModel{
         return this.getParentPackage().getPath() + this.path;
     }
     
-    public void moveToPackage(PackageModel aPackage) throws NameAlreadyExistsException, VeryVeryBadException{
+    public void moveToPackage(PackageModel aPackage) throws AlreadyExistsException, VeryVeryBadException{
         this.getParentPackage().classMoved(this);
         this.parent = aPackage;
         aPackage.adoptClass(this);

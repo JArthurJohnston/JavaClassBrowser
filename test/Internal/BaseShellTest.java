@@ -7,7 +7,7 @@
 package Internal;
 
 import MainBase.MainApplication;
-import UIModels.BaseUIModel;
+import UIModels.BaseUIController;
 import java.util.ArrayList;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class BaseShellTest extends BaseTest{
         return this.getClass() == BaseShellTest.class;
     }
     
-    protected boolean mainContainsModel(BaseUIModel model){
+    protected boolean mainContainsModel(BaseUIController model){
         return((ArrayList)this.getVariableFromClass(main, "openWindowModels")).contains(model);
     }
     

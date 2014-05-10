@@ -4,13 +4,13 @@
  */
 package UIShells;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
 import UIPanels.SelectedClassPanel;
 import java.util.logging.Level;
@@ -43,26 +43,14 @@ public class SystemBrowserShellTest extends BaseTest{
     
     @Before
     public void setUp() {
-        MainApplication aMain = new MainApplication();
-        try {
-            aMain.setSelectedProejct(aMain.addProject(new ProjectModel("a project")));
-        } catch (NameAlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        BrowserUIModel aModel = aMain.openSystemBrowser();
+        this.setUpMain();
+        BrowserUIController aModel = main.openSystemBrowser();
         shell = aModel.getShell();
     }
     
-    private ProjectModel project(){
-        return this.main().getProjects().get(0);
+    private BrowserUIController model(){
+        return((BrowserUIController)this.getVariableFromClass(shell, "model"));
     }
-    private MainApplication main(){
-        return ((MainApplication)this.getVariableFromClass(this.model(), "main"));
-    }
-    private BrowserUIModel model(){
-        return((BrowserUIModel)this.getVariableFromClass(shell, "model"));
-    }
-    
     
     @After
     public void tearDown() {
@@ -83,7 +71,7 @@ public class SystemBrowserShellTest extends BaseTest{
             aPackage = this.project().addPackage(new PackageModel("Third Package"));
             aPackage.addClass(new ClassModel("ThirdPackageClassOne"));
             aPackage.addClass(new ClassModel("ThirdPackageClassTwo"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(4, this.project().getPackageList().size());
@@ -105,7 +93,7 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(2, packages.getModel().getSize());
         try {
             this.model().getSelectedProject().addPackage(new PackageModel("a Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(3, packages.getModel().getSize());
@@ -118,7 +106,7 @@ public class SystemBrowserShellTest extends BaseTest{
         this.model().setSelected(model().getSelectedPackage());
         try {
             this.model().getSelectedPackage().addClass(new ClassModel("SomeClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, classes.getModel().getSize());
@@ -130,7 +118,7 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(0, classes.getModel().getSize());
         try {
             this.model().getSelectedPackage().addClass(new ClassModel("SomeClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(0, classes.getModel().getSize());
@@ -143,7 +131,7 @@ public class SystemBrowserShellTest extends BaseTest{
         PackageModel aPackage = null;
         try {
             aPackage = this.model().getSelectedProject().addPackage(new PackageModel("Second Package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         packages.setSelectedIndex(1);
@@ -151,7 +139,7 @@ public class SystemBrowserShellTest extends BaseTest{
         assertEquals(0, classes.getModel().getSize());
         try {
             aPackage.addClass(new ClassModel("SomeClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(0, classes.getModel().getSize());

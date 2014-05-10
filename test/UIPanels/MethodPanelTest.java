@@ -4,7 +4,7 @@
  */
 package UIPanels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
@@ -12,7 +12,7 @@ import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 public class MethodPanelTest extends BaseTest{
     private MethodPanel panel;
     private MainApplication main;
-    private BrowserUIModel model;
+    private BrowserUIController model;
     
     public MethodPanelTest() {
     }
@@ -52,7 +52,7 @@ public class MethodPanelTest extends BaseTest{
             aClass.addMethod(new MethodModel("anotherMethod"));
             aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
             main.setSelectedProejct(aProject);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         model = main.openSystemBrowser();
@@ -77,7 +77,7 @@ public class MethodPanelTest extends BaseTest{
             aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
             aClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
             aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         return aClass;

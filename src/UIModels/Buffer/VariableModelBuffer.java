@@ -6,7 +6,7 @@
 
 package UIModels.Buffer;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import MainBase.UsefulList;
 import Models.ClassModel;
 import Models.VariableModel;
@@ -115,7 +115,7 @@ public  class VariableModelBuffer extends BaseModelBuffer{
                 .setFinal(isFinal);
     }
     
-    public void addModel() throws NameAlreadyExistsException{
+    public void addModel() throws AlreadyExistsException{
         this.saveToModel();
         this.getEntity().getParent().addVariable(this.getEntity());
     }

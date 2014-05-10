@@ -4,7 +4,7 @@
  */
 package UIModels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
@@ -26,10 +26,10 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class BrowserUIModelTest extends BaseTest{
-    private BrowserUIModel model;
+public class BrowserUIControllerTest extends BaseTest{
+    private BrowserUIController model;
     
-    public BrowserUIModelTest() {
+    public BrowserUIControllerTest() {
     }
     
     @BeforeClass
@@ -45,7 +45,7 @@ public class BrowserUIModelTest extends BaseTest{
         main =  new MainApplication();
         try {
             main.setSelectedProejct(main.addProject(new ProjectModel("a project")));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         model = main.openSystemBrowser();
@@ -59,8 +59,8 @@ public class BrowserUIModelTest extends BaseTest{
     
     @Test
     public void testOpenFromMain(){
-        model = new BrowserUIModel(new MainApplication());
-        assertEquals(BrowserUIModel.class, model.getClass());
+        model = new BrowserUIController(new MainApplication());
+        assertEquals(BrowserUIController.class, model.getClass());
     }
     
     @Test
@@ -100,7 +100,7 @@ public class BrowserUIModelTest extends BaseTest{
     public void testAddPackage(){
         try {
             model.addPackage(new PackageModel("a package"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(3, model.getPackages().size());
@@ -125,7 +125,7 @@ public class BrowserUIModelTest extends BaseTest{
                     main.getSelectedProject().addPackage(
                     new PackageModel("a package"));
             aClass = aPackage.addClass(new ClassModel("AClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(aClass, model.getSelectedClass());

@@ -4,14 +4,14 @@
  */
 package UIPanels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  */
 public class ModelEditPanelTest extends BaseTest{
     private ModelEditPanel panel;
-    private BrowserUIModel model;
+    private BrowserUIController model;
     
     public ModelEditPanelTest() {
     }
@@ -49,9 +49,9 @@ public class ModelEditPanelTest extends BaseTest{
             ClassModel aClass = 
                     aProject.getDefaultPackage().addClass(new ClassModel("AClass"));
             MethodModel aMethod = aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
-            model = new BrowserUIModel(main);
+            model = new BrowserUIController(main);
             model.setSelected(aMethod);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         panel = new ModelEditPanel();

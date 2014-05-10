@@ -6,6 +6,7 @@ package UIModels;
 
 import MainBase.MainApplication;
 import Models.BaseModel;
+import Models.ProjectModel;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -14,12 +15,29 @@ import javax.swing.DefaultListModel;
  * 
  * @author Arthur
  */
-public class BaseUIModel {
+public class BaseUIController {
     protected MainApplication main;
+    protected ProjectModel selectedProject;
     
-    public BaseUIModel(){}
-    public BaseUIModel(MainApplication main){
+    public BaseUIController(){}
+    
+    public BaseUIController(MainApplication main){
         this.main = main;
+        this.selectedProject = main.getSelectedProject();
+    }
+    
+    /**
+     * for testing purposes only.
+     * @param main
+     * @return 
+     */
+    protected BaseUIController setMain(MainApplication main){
+        this.main = main;
+        return this;
+    }
+    
+    public ProjectModel getSelectedProject(){
+        return selectedProject;
     }
     
     /**

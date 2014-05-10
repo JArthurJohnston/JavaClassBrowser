@@ -4,7 +4,7 @@
  */
 package UIModels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
@@ -17,18 +17,22 @@ import java.util.LinkedList;
  *
  * @author Arthur
  */
-public class BrowserUIModel extends BaseUIModel{
+public class BrowserUIController extends BaseUIController{
     private SystemBrowserShell shell;
-    private ProjectModel selectedProject;
     private PackageModel selectedPackage;
     private BaseModel selectedModel;
     private ClassModel selectedClass;
     
-    public BrowserUIModel(MainApplication main){
+    /**
+     * Constructor for testing only
+     */
+    public BrowserUIController(){}
+    
+    public BrowserUIController(MainApplication main){
         super(main);
-        this.selectedProject = main.getSelectedProject();
         shell = new SystemBrowserShell(this);
     }
+    
     
     public void close(){
         //shell.dispose();
@@ -41,11 +45,8 @@ public class BrowserUIModel extends BaseUIModel{
         return shell;
     }
     
-    public ProjectModel getSelectedProject(){
-        return selectedProject;
-    }
-    
     public ClassModel getSelectedClass(){
+        //needs to be refactored. just ask the shell for its selected class
         if(selectedClass == null)
             if(!selectedProject.getClassList().isEmpty())
                 selectedClass = selectedProject.getClassList().getFirst();
@@ -62,7 +63,7 @@ public class BrowserUIModel extends BaseUIModel{
         return selectedProject.getPackageList();
     }
     
-    public void addPackage(PackageModel aPackage) throws NameAlreadyExistsException{
+    public void addPackage(PackageModel aPackage) throws AlreadyExistsException{
         selectedProject.addPackage(aPackage);
     }
     

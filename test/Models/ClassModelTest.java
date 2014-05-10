@@ -7,15 +7,13 @@ package Models;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -44,7 +42,7 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Before
-    public void setUp() throws NameAlreadyExistsException {
+    public void setUp() throws AlreadyExistsException {
         parentProject = new MainApplication().addProject(new ProjectModel("Parent Project"));
         parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
         testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
@@ -74,7 +72,7 @@ public class ClassModelTest extends BaseTest{
         ClassModel newSubClass = null;
         try {
             newSubClass = testClass.addClass(new ClassModel("NewSubClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(parentProject, newSubClass.getProject());
@@ -91,8 +89,8 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addClass(new ClassModel("NewSubClass"));
             fail("Expected exception not thrown");
-        } catch (NameAlreadyExistsException ex) {
-            assertEquals(NameAlreadyExistsException.class, ex.getClass());
+        } catch (AlreadyExistsException ex) {
+            assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
     
@@ -101,7 +99,7 @@ public class ClassModelTest extends BaseTest{
         ClassModel classToBeRemoved = null;
         try {
             classToBeRemoved = parentPackage.addClass(new ClassModel("ClassToBeRemoved"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(2, parentProject.getClassList().size());
@@ -118,7 +116,7 @@ public class ClassModelTest extends BaseTest{
             classToBeRemoved = testClass.addClass(new ClassModel("classToBeRemoved"));
             testClass.remove();
             fail("exception not thrown");
-        } catch (CannotBeDeletedException | VeryVeryBadException | NameAlreadyExistsException ex) {
+        } catch (CannotBeDeletedException | VeryVeryBadException | AlreadyExistsException ex) {
             assertEquals(CannotBeDeletedException.class, ex.getClass());
         }
         assertTrue(testClass.getClassList().contains(classToBeRemoved));
@@ -129,7 +127,7 @@ public class ClassModelTest extends BaseTest{
         MethodModel newMethod = new MethodModel();
         try {
             newMethod = testClass.addMethod(new MethodModel("newMethod"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail("Exception thrown when it shouldnt");
         }
         assertEquals(testClass, newMethod.getParent());
@@ -137,8 +135,8 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addMethod(new MethodModel("newMethod"));
             fail("Exception not thrown");
-        } catch (NameAlreadyExistsException ex) {
-            assertEquals(NameAlreadyExistsException.class, ex.getClass());
+        } catch (AlreadyExistsException ex) {
+            assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
     
@@ -147,7 +145,7 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addMethod(new MethodModel("aMethodForTesting"));
             assertEquals(1, testClass.getMethods().size());
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
         }
         try {
             testClass.removeMethod("aMethodForTesting");
@@ -166,7 +164,7 @@ public class ClassModelTest extends BaseTest{
         PackageModel anotherPackage = new PackageModel("AnotherPackage");
         try {
             testClass.moveToPackage(anotherPackage);
-        } catch (NameAlreadyExistsException | VeryVeryBadException ex) {
+        } catch (AlreadyExistsException | VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
         assertTrue(anotherPackage.getClassList().contains(testClass));
@@ -175,7 +173,7 @@ public class ClassModelTest extends BaseTest{
         ClassModel subClass = null;
         try {
             subClass = testClass.addClass(new ClassModel("SubClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(anotherPackage, subClass.getParentPackage());
@@ -189,14 +187,14 @@ public class ClassModelTest extends BaseTest{
         LinkedList varList = (LinkedList)this.getVariableFromClass(testClass, "variables");
         try {
             testClass.addVariable(var);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, varList.size());
         try {
             testClass.addVariable(var);
             fail("exception not thrown");
-        } catch (NameAlreadyExistsException ex) {}
+        } catch (AlreadyExistsException ex) {}
         assertEquals(testClass, var.getParent());
     }
     
@@ -206,7 +204,7 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
             testClass.addVariable(new VariableModel(ScopeType.PUBLIC, testClass, "anotherVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(2, testClass.getVariables().size());
@@ -227,7 +225,7 @@ public class ClassModelTest extends BaseTest{
         VariableModel aVar = null;
         try {
             aVar = testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         try {
@@ -249,7 +247,7 @@ public class ClassModelTest extends BaseTest{
         ClassModel newClass = null;
         try {
             newClass = testClass.addClass(new ClassModel("NewClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(newClass, testClass.getClassList().getLast());
@@ -271,13 +269,13 @@ public class ClassModelTest extends BaseTest{
         assertTrue(testClass.getStaticMethods().isEmpty());
         try {
             aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.STATIC));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getStaticMethods().contains(aMethod));
         try {
             aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.INSTANCE));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getStaticMethods().contains(aMethod));
@@ -289,13 +287,13 @@ public class ClassModelTest extends BaseTest{
         assertTrue(testClass.getInstanceMethods().isEmpty());
         try {
             aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getInstanceMethods().contains(aMethod));
         try {
             aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getInstanceMethods().contains(aMethod));
@@ -307,14 +305,14 @@ public class ClassModelTest extends BaseTest{
         assertTrue(testClass.getStaticVars().isEmpty());
         try {
             aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "aVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getVariables().contains(aVar));
         assertTrue(testClass.getStaticVars().contains(aVar));
         try {
             aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "anotherVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getStaticVars().contains(aVar));
@@ -326,13 +324,13 @@ public class ClassModelTest extends BaseTest{
         assertTrue(testClass.getStaticVars().isEmpty());
         try {
             aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "aVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getInstanceVars().contains(aVar));
         try {
             aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "anotherVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getInstanceVars().contains(aVar));
@@ -356,7 +354,7 @@ public class ClassModelTest extends BaseTest{
             ProjectModel aProject = main.addProject(new ProjectModel("aProject"));
             PackageModel aPackage = aProject.addPackage(new PackageModel("a package"));
             testClass = aPackage.addClass(new ClassModel("AClass"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(main, testClass.getMain());
@@ -383,7 +381,7 @@ public class ClassModelTest extends BaseTest{
             assertEquals(parentPackage, testClass.getParentPackage());
             ClassModel subClass = testClass.addClass(new ClassModel("ASubClass"));
             assertEquals(parentPackage, subClass.getParentPackage());
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         

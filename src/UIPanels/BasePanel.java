@@ -6,7 +6,7 @@ package UIPanels;
 
 import MainBase.UsefulList;
 import Models.*;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -23,12 +23,12 @@ import javax.swing.event.ListSelectionListener;
  */
 public class BasePanel extends javax.swing.JPanel{
     
-    protected BrowserUIModel model;
+    protected BrowserUIController controller;
     
     public BasePanel(){}
     
-    public void setModel(BrowserUIModel aModel){
-        this.model = aModel;
+    public void setModel(BrowserUIController aController){
+        this.controller = aController;
         this.setUpLists();
     }
     
@@ -77,7 +77,7 @@ public class BasePanel extends javax.swing.JPanel{
     }
     
     protected void updateModel(JList aList){
-        model.setSelected((BaseModel)aList.getSelectedValue());
+        controller.setSelected((BaseModel)aList.getSelectedValue());
         clearOtherLists(aList);
     }
     

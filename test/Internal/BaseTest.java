@@ -4,8 +4,10 @@
  */
 package Internal;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import MainBase.MainApplication;                   
+import Models.ClassModel;
+import Models.MethodModel;
 import Models.ProjectModel;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -30,7 +32,7 @@ public class BaseTest {
         try {
             ProjectModel aProject = main.addProject(new ProjectModel("a project"));
             main.setSelectedProejct(aProject);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
     }
@@ -153,6 +155,21 @@ public class BaseTest {
     
     protected void denyListHasClass(List aList, Object aClass){
         assertFalse(this.listHasClass(aList, aClass));
+    }
+    
+    /**
+     * addMethodToClass.
+     * Created so I could add methods without having to surround each
+     * add in a try-catch
+     * @param aClass
+     * @param aMethod 
+     */
+    protected void addMethodToClass(ClassModel aClass, MethodModel aMethod){
+        try {
+            aClass.addMethod(aMethod);
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
 }

@@ -6,7 +6,7 @@
 
 package UIShells.Dialogs;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import UIModels.Buffer.VariableModelBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,7 +67,7 @@ public class AddVariableDialogue extends BaseDialogue {
             return;
         try {
             buffer.addModel();
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             Logger.getLogger(AddVariableDialogue.class.getName()).log(Level.SEVERE, null, ex);
         }
         buffer = null;

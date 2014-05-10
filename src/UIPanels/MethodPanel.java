@@ -9,7 +9,7 @@ import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.JList;
 
 /**
@@ -27,8 +27,8 @@ public class MethodPanel extends BasePanel {
     }
     
     @Override
-    public void setModel(BrowserUIModel model){
-        this.model = model;
+    public void setModel(BrowserUIController model){
+        this.controller = model;
         if(model.getSelectedClass() != null)
             this.fillListsFromClass(model.getSelectedClass());
     }

@@ -4,13 +4,13 @@
  */
 package UIPanels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import MainBase.UsefulList;
 import Models.*;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import java.util.LinkedList;
 import javax.swing.JList;
 import org.junit.After;
@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author Arthur
  */
 public class SelectedClassPanelTest extends BaseTest {
-    private BrowserUIModel model;
+    private BrowserUIController model;
     private SelectedClassPanel panel;
     
     public SelectedClassPanelTest() {
@@ -51,7 +51,7 @@ public class SelectedClassPanelTest extends BaseTest {
             aClass.addMethod(new MethodModel("aStaticMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         model = main.openSystemBrowser();
@@ -106,7 +106,7 @@ public class SelectedClassPanelTest extends BaseTest {
                     ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarTwo"));
             aClass.addVariable(new VariableModel(
                     ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarThree"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals("SecondClass",aList.getFirst().name());

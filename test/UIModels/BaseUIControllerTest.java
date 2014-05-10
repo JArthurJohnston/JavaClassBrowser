@@ -20,13 +20,13 @@ import static org.junit.Assert.*;
  *
  * @author Arthur
  */
-public class BaseUIModelTest extends BaseTest{
+public class BaseUIControllerTest extends BaseTest{
     protected MainApplication main;
-    protected BaseUIModel model;
+    protected BaseUIController model;
     private ArrayList testModels;
     private DefaultListModel testList;
     
-    public BaseUIModelTest() {
+    public BaseUIControllerTest() {
     }
     
     @BeforeClass
@@ -40,7 +40,7 @@ public class BaseUIModelTest extends BaseTest{
     @Before
     public void setUp() {
         main = new MainApplication();
-        model = new BaseUIModel(main);
+        model = new BaseUIController(main);
     }
     
     @After
@@ -50,7 +50,7 @@ public class BaseUIModelTest extends BaseTest{
     }
 
     /**
-     * Test of fillListModel method, of class BaseUIModel.
+     * Test of fillListModel method, of class BaseUIController.
      */
     @Test
     public void testFillListModel() {

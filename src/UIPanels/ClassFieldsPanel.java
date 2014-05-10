@@ -9,7 +9,7 @@ import Models.BaseModel;
 import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -29,9 +29,9 @@ public class ClassFieldsPanel extends BasePanel {
     }
     
     @Override
-    public void setModel(BrowserUIModel aModel){
-        this.model = aModel;
-        this.fillListsFromClass(model.getSelectedClass());
+    public void setModel(BrowserUIController aModel){
+        this.controller = aModel;
+        this.fillListsFromClass(controller.getSelectedClass());
     }
     
     public void fillListsFromClass(ClassModel aClass){
@@ -119,7 +119,7 @@ public class ClassFieldsPanel extends BasePanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addVarMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVarMenuItemActionPerformed
-        model.openAddVariable();
+        controller.openAddVariable();
     }//GEN-LAST:event_addVarMenuItemActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

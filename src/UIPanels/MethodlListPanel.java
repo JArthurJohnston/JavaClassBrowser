@@ -47,6 +47,10 @@ public class MethodlListPanel extends BaseListPanel {
                                 .getBase(); 
     }
     
+    public BaseModel getValueAt(int index){
+        return ((CellModel)this.tableModel(modelTable).getValueAt(index, 0)).getBase();
+    }
+    
     @Override
     public void selectionChanged(BaseModel aModel){
         if(aModel.isClass())
@@ -62,6 +66,16 @@ public class MethodlListPanel extends BaseListPanel {
     public void setSelectionType(ClassType aType){
         this.type = aType;
     }
+    
+    public boolean isEmpty(){
+        return this.getTableSize() == 0;
+    }
+    
+    public int getTableSize(){
+        return modelTable.getRowCount();
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

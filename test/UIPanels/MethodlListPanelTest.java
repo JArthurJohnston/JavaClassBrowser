@@ -4,14 +4,16 @@
  */
 package UIPanels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
+import Internal.Mocks.MockBrowserController;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.BrowserUIController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
@@ -27,8 +29,9 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class MethodlListPanelTest  extends BaseTest{
+public class MethodlListPanelTest extends BaseTest{
     MethodlListPanel panel;
+    private BrowserUIController BrowserUIModel;
     
     public MethodlListPanelTest() {
     }
@@ -96,7 +99,7 @@ public class MethodlListPanelTest  extends BaseTest{
             aMethod.setType(ClassType.STATIC);
             aMethod = aClass.addMethod(new MethodModel("fourMethod", ScopeType.PUBLIC));
             aMethod.setType(ClassType.STATIC);
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         return aClass;
@@ -109,6 +112,7 @@ public class MethodlListPanelTest  extends BaseTest{
                         .getModel().getClass());
         assertEquals(3, this.tableModel().getColumnCount());
         assertEquals(0, this.tableModel().getRowCount());
+        assertTrue(panel.isEmpty());
         //assertEquals(-1, panel.getSelected());
             //throws an error if you call getSelected when there are no elements in the table.
     }
@@ -135,10 +139,21 @@ public class MethodlListPanelTest  extends BaseTest{
     
     @Test
     public void testMethodAdded(){
-        fail();
-        panel.modelAdded(new MethodModel());
-        //assert new model is in the list so long as its the same parent class as the list
+        MockBrowserController controller = new MockBrowserController();
+        ClassModel aClass = this.classWithMethods();
+        controller.setSelectedClass(aClass);
+        MethodModel aMethod = new MethodModel("aMethod");
+        this.addMethodToClass(aClass, aMethod);
+        
+        panel.setSelectionType(ClassType.INSTANCE);
+        panel.setModel(controller);
+        assertEquals(3, panel.getTableSize());
+        
+        panel.modelAdded(aMethod);
+        assertEquals(4, panel.getTableSize());
+        assertEquals(aMethod, panel.getValueAt(3));
     }
+    
     
     @Test
     public void testMethodRemoved(){

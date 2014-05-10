@@ -4,12 +4,12 @@
  */
 package UIPanels;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * @author Arthur
  */
 public class ClassFieldsPanelTest extends BaseTest{
-    private BrowserUIModel model;
+    private BrowserUIController model;
     private ClassFieldsPanel panel;
     
     public ClassFieldsPanelTest() {
@@ -50,7 +50,7 @@ public class ClassFieldsPanelTest extends BaseTest{
         panel  = null;
     }
     
-    private BrowserUIModel setUpModel(){
+    private BrowserUIController setUpModel(){
         MainApplication main = new MainApplication();
         try {
             ProjectModel aProject = 
@@ -60,7 +60,7 @@ public class ClassFieldsPanelTest extends BaseTest{
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         model = main.openSystemBrowser();
@@ -80,7 +80,7 @@ public class ClassFieldsPanelTest extends BaseTest{
                     ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(
                     ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         return aClass;

@@ -6,7 +6,7 @@
 
 package UIModels.Buffer;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Models.ClassModel;
 import Models.VariableModel;
@@ -87,7 +87,7 @@ public class VariableModelBufferTest extends BaseTest{
         //cant have duplicate variables in a class
         try {
             parentClass.addVariable(new VariableModel(ScopeType.PRIVATE, new ClassModel("int"), "aVar"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         buffer.setName("aVar");

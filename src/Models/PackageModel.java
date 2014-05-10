@@ -4,7 +4,7 @@
  */
 package Models;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
@@ -88,7 +88,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    public PackageModel addPackage(PackageModel newPackage) throws NameAlreadyExistsException{
+    public PackageModel addPackage(PackageModel newPackage) throws AlreadyExistsException{
         if(newPackage.getParent() == null){
             newPackage.setParent(this);
             this.packageList.add(newPackage);
@@ -97,7 +97,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    public ClassModel addClass(ClassModel newClass) throws NameAlreadyExistsException{
+    public ClassModel addClass(ClassModel newClass) throws AlreadyExistsException{
         this.getProject().addClass(newClass);
         if(newClass.parent == null){
             classList.add(newClass);

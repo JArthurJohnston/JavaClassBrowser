@@ -4,10 +4,10 @@
  */
 package MainBase;
 
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Models.*;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,10 +40,10 @@ public class TestMain {
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
             
             anotherClass.addMethod(new MethodModel("someMethod", ClassType.INSTANCE));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BrowserUIModel aModel = main.openSystemBrowser();
+        BrowserUIController aModel = main.openSystemBrowser();
         aModel.getShell().setVisible(true);
     }
     

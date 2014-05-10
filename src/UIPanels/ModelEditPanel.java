@@ -6,7 +6,7 @@ package UIPanels;
 
 import Models.BaseModel;
 import Models.MethodModel;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -28,8 +28,8 @@ public class ModelEditPanel extends BasePanel{
     }
     
     @Override
-    public void setModel(BrowserUIModel aModel){
-        this.model = aModel;
+    public void setModel(BrowserUIController aModel){
+        this.controller = aModel;
         this.setSelected(aModel.getSelected());
     }
     

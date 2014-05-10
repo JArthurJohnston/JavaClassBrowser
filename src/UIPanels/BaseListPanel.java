@@ -7,7 +7,7 @@
 package UIPanels;
 
 import Models.BaseModel;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -17,11 +17,11 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author arthur
  */
-public class BaseListPanel extends BasePanel{
+public class BaseListPanel extends BasePanel {
     
     @Override
-    public void setModel(BrowserUIModel aModel){
-        this.model = aModel;
+    public void setModel(BrowserUIController aController){
+        this.controller = aController;
     }
     
     protected DefaultTableModel tableModel(JTable aTable){
@@ -40,7 +40,7 @@ public class BaseListPanel extends BasePanel{
     }
     
     protected void updateModel(){
-        this.model.setSelected(this.getSelected());
+        this.controller.setSelected(this.getSelected());
     }
     
     protected BaseModel getSelected(){

@@ -5,11 +5,11 @@
 package MainBase;
 
 import Exceptions.DoesNotExistException;
-import Exceptions.NameAlreadyExistsException;
+import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Models.ClassModel;
 import Models.ProjectModel;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import UIShells.SystemBrowserShell;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -69,7 +69,7 @@ public class MainApplicationTest extends BaseTest {
         assertEquals(0, main.getProjects().size());
         try {
             newProject = main.addProject(new ProjectModel("new project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
@@ -87,7 +87,7 @@ public class MainApplicationTest extends BaseTest {
         ProjectModel newProject = null;
         try {
             newProject = main.addProject(new ProjectModel("new project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
@@ -99,7 +99,7 @@ public class MainApplicationTest extends BaseTest {
         ProjectModel newProject = null;
         try {
             newProject = main.addProject(new ProjectModel("new project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
@@ -107,7 +107,7 @@ public class MainApplicationTest extends BaseTest {
         try {
             main.addProject(new ProjectModel("new project"));
             fail("exception not thrown");
-        } catch (NameAlreadyExistsException ex) {}
+        } catch (AlreadyExistsException ex) {}
     }
     
     
@@ -123,7 +123,7 @@ public class MainApplicationTest extends BaseTest {
         }
         try {
             main.addProject(new ProjectModel("a project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(1, main.getProjects().size());
@@ -142,7 +142,7 @@ public class MainApplicationTest extends BaseTest {
         assertFalse(main.okToDelete(aProject));
         try {
             aProject = main.addProject(new ProjectModel("a project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(main.okToDelete(aProject));
@@ -153,14 +153,14 @@ public class MainApplicationTest extends BaseTest {
         assertTrue(main.okToAdd("new project"));
         try {
             main.addProject(new ProjectModel("new project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(main.okToAdd("new project"));
         assertTrue(main.okToAdd("another project"));
         try {
             main.addProject(new ProjectModel("another project"));
-        } catch (NameAlreadyExistsException ex) {
+        } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertFalse(main.okToAdd("another project"));
@@ -204,7 +204,7 @@ public class MainApplicationTest extends BaseTest {
     
     @Test
     public void testOpenSystemBrowser(){
-        BrowserUIModel model = main.openSystemBrowser();
+        BrowserUIController model = main.openSystemBrowser();
         assertTrue(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
     }
 }

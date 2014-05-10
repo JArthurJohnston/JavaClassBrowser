@@ -7,7 +7,7 @@ package UIPanels;
 import MainBase.UsefulList;
 import Models.BaseModel;
 import Types.ClassType;
-import UIModels.BrowserUIModel;
+import UIModels.BrowserUIController;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -26,7 +26,7 @@ public class SelectedClassPanel extends BasePanel {
     }
     
     @Override
-    public void setModel(BrowserUIModel aModel){
+    public void setModel(BrowserUIController aModel){
         super.setModel(aModel);
         this.fillClassList();
         for(BasePanel b : this.myPanels())
@@ -41,7 +41,7 @@ public class SelectedClassPanel extends BasePanel {
     }
     
     private void fillClassList(){
-        this.fillListModel(model.getSelectedProject().getClassList(), 
+        this.fillListModel(controller.getSelectedProject().getClassList(), 
                 (DefaultListModel)this.classList.getModel());
     }
     
