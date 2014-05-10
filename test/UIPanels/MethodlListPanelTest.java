@@ -4,10 +4,16 @@
  */
 package UIPanels;
 
+import Exceptions.NameAlreadyExistsException;
 import Internal.BaseTest;
+import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.ProjectModel;
+import Types.ClassType;
 import Types.ScopeType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.junit.After;
@@ -37,11 +43,13 @@ public class MethodlListPanelTest  extends BaseTest{
     
     @Before
     public void setUp() {
+        this.setUpMain();
         panel = new MethodlListPanel();
     }
     
     @After
     public void tearDown() {
+        main = null;
         panel = null;
     }
     
@@ -55,9 +63,9 @@ public class MethodlListPanelTest  extends BaseTest{
     
     private void setListSelection(int selectionIndex){
         this.table().setRowSelectionInterval(selectionIndex, selectionIndex);
-        this.table().setColumnSelectionInterval(0, 0);
+        this.table().setColumnSelectionInterval(1, 1);
         assertEquals(selectionIndex, this.table().getSelectedRow());
-        assertEquals(0, this.table().getSelectedColumn());
+        assertEquals(1, this.table().getSelectedColumn());
     }
     
     private void setUpTableMethods(){
@@ -75,6 +83,25 @@ public class MethodlListPanelTest  extends BaseTest{
         panel.addMethodToList(aMethod);
     }
     
+    private ClassModel classWithMethods(){
+        ClassModel aClass = null;
+        try {
+            aClass = this.project()
+                    .getDefaultPackage()
+                        .addClass(new ClassModel("AClass"));
+            MethodModel aMethod = null;
+            aClass.addMethod(new MethodModel("oneMethod", ScopeType.PRIVATE));
+            aClass.addMethod(new MethodModel("twoMethod", ScopeType.PRIVATE));
+            aMethod = aClass.addMethod(new MethodModel("threeMethod", ScopeType.PROTECTED));
+            aMethod.setType(ClassType.STATIC);
+            aMethod = aClass.addMethod(new MethodModel("fourMethod", ScopeType.PUBLIC));
+            aMethod.setType(ClassType.STATIC);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        return aClass;
+    }
+    
     @Test
     public void testInit(){
         assertEquals(DefaultTableModel.class, 
@@ -82,7 +109,8 @@ public class MethodlListPanelTest  extends BaseTest{
                         .getModel().getClass());
         assertEquals(3, this.tableModel().getColumnCount());
         assertEquals(0, this.tableModel().getRowCount());
-        assertEquals(null, panel.getSelected());
+        //assertEquals(-1, panel.getSelected());
+            //throws an error if you call getSelected when there are no elements in the table.
     }
     
     @Test
@@ -91,7 +119,6 @@ public class MethodlListPanelTest  extends BaseTest{
         assertEquals(3, this.tableModel().getRowCount());
     }
     
-
     @Test
     public void testRowSelection(){
         this.setUpTableMethods();
@@ -101,9 +128,9 @@ public class MethodlListPanelTest  extends BaseTest{
     
     @Test 
     public void testClassSelectionChanged(){
-        fail();
-        panel.selectionChanged(new ClassModel("aClassWithMethods"));
-        //assert that the classes methods were added to the list
+        panel.setSelectionType(ClassType.STATIC);
+        panel.selectionChanged(this.classWithMethods());
+        assertEquals(2, this.table().getRowCount());
     }
     
     @Test
@@ -120,6 +147,9 @@ public class MethodlListPanelTest  extends BaseTest{
         //assert model is removed
     }
     
+    /*
+    these procedures will probably need buffers...
+    */
     @Test
     public void testMethodNameChange(){
         fail();

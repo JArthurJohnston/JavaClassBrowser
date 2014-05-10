@@ -32,6 +32,10 @@ public class MethodModel extends ClassModel{
         this(name);
         this.type = type;
     }
+    public MethodModel(String name, ScopeType type){
+        this(name);
+        this.scope = type;
+    }
     
     /**
      * this is THE constructor for non-constructor methods
@@ -125,6 +129,8 @@ public class MethodModel extends ClassModel{
     
     @Override
     public ClassModel getReturnType(){
+        if(returnType == null)
+            returnType = ClassModel.getPrimitive("void");
         return returnType;
     }
     

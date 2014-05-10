@@ -7,13 +7,16 @@
 package UIPanels;
 
 import Models.BaseModel;
+import Models.ClassModel;
 import Models.MethodModel;
+import Types.ClassType;
 
 /**
  *
  * @author arthur
  */
 public class MethodlListPanel extends BaseListPanel {
+    private ClassType type;
     
     /**
      * Creates new form ModelListPanel
@@ -46,7 +49,18 @@ public class MethodlListPanel extends BaseListPanel {
     
     @Override
     public void selectionChanged(BaseModel aModel){
-        
+        if(aModel.isClass())
+            this.fillListFromClass((ClassModel)aModel);
+    }
+    
+    private void fillListFromClass(ClassModel aModel){
+        for(MethodModel m : aModel.getStaticMethods())
+            if(m.getType() == this.type)
+                this.addMethodToList(m);
+    }
+    
+    public void setSelectionType(ClassType aType){
+        this.type = aType;
     }
 
     /**
@@ -83,21 +97,4 @@ public class MethodlListPanel extends BaseListPanel {
     // End of variables declaration//GEN-END:variables
 
 
-    private class CellModel{
-        private final MethodModel base;
-        private final String label;
-        
-        public CellModel(String label, MethodModel base){
-            this.label = label;
-            this.base = base;
-        }
-        
-        @Override
-        public String toString(){
-            return label;
-        }
-        public MethodModel getBase(){
-            return base;
-        }
-    }
 }

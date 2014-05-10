@@ -4,6 +4,7 @@
  */
 package Internal;
 
+import Exceptions.NameAlreadyExistsException;
 import MainBase.MainApplication;                   
 import Models.ProjectModel;
 import java.lang.reflect.Field;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * uses reflection to grab private stuff from objects for testing
@@ -23,7 +25,17 @@ import static org.junit.Assert.assertTrue;
 public class BaseTest {
     protected MainApplication main;
     
-    private ProjectModel project(){
+    public void setUpMain(){
+        this.main = new MainApplication();
+        try {
+            ProjectModel aProject = main.addProject(new ProjectModel("a project"));
+            main.setSelectedProejct(aProject);
+        } catch (NameAlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    protected ProjectModel project(){
         return main.getSelectedProject();
     }
     

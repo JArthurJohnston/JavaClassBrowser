@@ -47,4 +47,29 @@ public class BaseListPanel extends BasePanel{
         return null;
     }
     
+    
+    
+    /**
+     * acts as a wrapper. 
+     * so that a table's cell can contain both the string it needs to
+     * display to the user, and the object to which that string belongs
+     */
+    protected class CellModel{
+        private final BaseModel base;
+        private final String label;
+        
+        public CellModel(String label, BaseModel base){
+            this.label = label;
+            this.base = base;
+        }
+        
+        @Override
+        public String toString(){
+            return label;
+        }
+        public BaseModel getBase(){
+            return base;
+        }
+    }
+    
 }

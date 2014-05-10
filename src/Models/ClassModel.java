@@ -204,7 +204,7 @@ public class ClassModel extends PackageModel{
         return methods;
     }
     
-    public LinkedList getStaticMethods(){
+    public LinkedList<MethodModel> getStaticMethods(){
         return this.getModelsOfType(methods, ClassType.STATIC);
     }
     public LinkedList<MethodModel> getInstanceMethods(){
