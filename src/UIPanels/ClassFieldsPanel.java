@@ -5,13 +5,7 @@
 package UIPanels;
 
 import MainBase.SortedList;
-import Models.BaseModel;
-import Models.ClassModel;
-import Models.VariableModel;
 import Types.ClassType;
-import UIModels.BrowserUIController;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 
 /**
  *
@@ -24,44 +18,20 @@ public class ClassFieldsPanel extends BasePanel {
      */
     public ClassFieldsPanel() {
         initComponents();
-        this.setUpLists();
         this.setUpRightClickMenues();
     }
     
     @Override
-    public void setModel(BrowserUIController aModel){
-        this.controller = aModel;
-        this.fillListsFromClass(controller.getSelectedClass());
+    public SortedList<BasePanel> myPanels(){
+        return new SortedList()
+                .addElm(instVarList)
+                .addElm(statVarList)
+                .addElm(importList);
     }
     
-    public void fillListsFromClass(ClassModel aClass){
-        if(aClass == null)
-            return;
-        for(VariableModel v : aClass.getInstanceVars())
-            ((DefaultListModel)this.instanceVarList.getModel()).addElement(v);
-        for(VariableModel v : aClass.getStaticVars())
-            ((DefaultListModel)this.staticVarList.getModel()).addElement(v);
-    }
-    
-    @Override
-    protected SortedList<JList> myLists(){
-        return super.myLists()
-                .addElm(imporList)
-                .addElm(instanceVarList)
-                .addElm(staticVarList);
-    }
-    
-    @Override
-    public void selectionChanged(BaseModel aClass){
-        this.clearLists();
-        if(aClass == null || !aClass.isClass())
-            return;
-        this.fillListsFromClass((ClassModel)aClass);
-    }
-    
-    public void setUpRightClickMenues(){
-        this.setUpRightClickListener(instanceVarList, varRightClickMenu);
-        this.setUpRightClickListener(staticVarList, varRightClickMenu);
+    private void setUpRightClickMenues(){
+        this.setUpRightClickListener(instVarList, varRightClickMenu);
+        this.setUpRightClickListener(statVarList, varRightClickMenu);
     }
     
     public ClassType getSelectedVarType(){
@@ -82,12 +52,9 @@ public class ClassFieldsPanel extends BasePanel {
         varRightClickMenu = new javax.swing.JPopupMenu();
         addVarMenuItem = new javax.swing.JMenuItem();
         tabs = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        instanceVarList = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        staticVarList = new javax.swing.JList();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        imporList = new javax.swing.JList();
+        instVarList = new UIPanels.VariableListPanel();
+        statVarList = new UIPanels.VariableListPanel();
+        importList = new UIPanels.ImportListPanel();
 
         addVarMenuItem.setText("New Variable");
         addVarMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -102,18 +69,9 @@ public class ClassFieldsPanel extends BasePanel {
         tabs.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         tabs.setToolTipText("");
         tabs.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        jScrollPane1.setViewportView(instanceVarList);
-
-        tabs.addTab("Instance Variables", jScrollPane1);
-
-        jScrollPane2.setViewportView(staticVarList);
-
-        tabs.addTab("Static Variables", jScrollPane2);
-
-        jScrollPane3.setViewportView(imporList);
-
-        tabs.addTab("Imports", jScrollPane3);
+        tabs.addTab("Instance", instVarList);
+        tabs.addTab("Static", statVarList);
+        tabs.addTab("Imports", importList);
 
         add(tabs, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -124,12 +82,9 @@ public class ClassFieldsPanel extends BasePanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addVarMenuItem;
-    private javax.swing.JList imporList;
-    private javax.swing.JList instanceVarList;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList staticVarList;
+    private UIPanels.ImportListPanel importList;
+    private UIPanels.VariableListPanel instVarList;
+    private UIPanels.VariableListPanel statVarList;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JPopupMenu varRightClickMenu;
     // End of variables declaration//GEN-END:variables

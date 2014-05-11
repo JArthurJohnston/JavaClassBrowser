@@ -78,9 +78,12 @@ public class BaseListPanel extends BasePanel {
     
     @Override
     public void modelRemoved(BaseModel aModel){
-        if(!aModel.isMethod())
-            return;
-        this.removeModelRow(this.indexOf(aModel));
+        if(this.checkModel(aModel))
+            this.removeModelRow(this.indexOf(aModel));
+    }
+    
+    protected boolean checkModel(BaseModel aModel){
+        return aModel != null;
     }
     
     private void removeModelRow(int index){
@@ -97,6 +100,10 @@ public class BaseListPanel extends BasePanel {
             if(this.getValueAt(i) == aModel)
                 return i;
         return -1;
+    }
+    
+    public void setSelectedIndex(int index){
+        this.table().setRowSelectionInterval(index, index);
     }
     
     

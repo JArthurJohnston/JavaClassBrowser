@@ -31,6 +31,7 @@ public class ClassModel extends PackageModel{
     
     private static HashMap <String, ClassModel> PRIMITIVE_TYPES
             = new HashMap();
+    private static ClassModel OBJECT_CLASS;
     
     //use these constructors for testing only
     public ClassModel(){
@@ -69,6 +70,12 @@ public class ClassModel extends PackageModel{
             if(!PRIMITIVE_TYPES.containsKey(aString))
                 PRIMITIVE_TYPES.put(aString, new ClassModel(aString));
         return PRIMITIVE_TYPES.get(aString);
+    }
+    
+    public static ClassModel getObjectClass(){
+        if(OBJECT_CLASS == null)
+            OBJECT_CLASS = new ClassModel("Object");
+        return OBJECT_CLASS;
     }
     
     public boolean isPrimitive(){

@@ -24,6 +24,10 @@ public class VariableModel extends BaseModel{
     private VariableModel(){
         //used only for returning a new VariableModel from parsed source code.
     }
+    public VariableModel(String name, ClassType instanceOrStatic){
+        this.staticOrInstance = instanceOrStatic;
+        this.name = name;
+    }
     
     public VariableModel(ScopeType scope, ClassModel type, String name){
         this.scope = scope;
@@ -45,6 +49,8 @@ public class VariableModel extends BaseModel{
      * Getters
      */
     public ClassModel getObjectType(){
+        if(type == null)
+            type = ClassModel.getObjectClass();
         return type;
     }
     @Override
@@ -58,6 +64,8 @@ public class VariableModel extends BaseModel{
         return parent;
     }
     public ScopeType getScope(){
+        if(scope == null)
+            scope = ScopeType.NONE;
         return scope;
     }
     
@@ -99,14 +107,18 @@ public class VariableModel extends BaseModel{
         return this;
     }
     
+    public String scopeString(){
+        if(this.getScope() == ScopeType.NONE)
+            return "";
+        return this.getScope().toString().toLowerCase() + " ";
+    }
+    
     /*
      * Overridden Methods
      */
     @Override
     public String toSourceString() {
-        String source = new String();
-        if(this.scope != ScopeType.NONE)
-            source = this.scope.toString().toLowerCase() + " ";
+        String source = this.scopeString();
         if(this.isFinal)
             source = source + "final ";
         return source+this.type.name()+" "+this.name()+ this.getValueString() + ";";

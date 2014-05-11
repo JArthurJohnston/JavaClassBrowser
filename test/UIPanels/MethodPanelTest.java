@@ -118,6 +118,31 @@ public class MethodPanelTest extends BaseTest{
     }
     
     @Test
+    public void testOtherClassMethodRemoved(){
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
+        ClassModel aClass = this.getTestClass();
+        panel.selectionChanged(aClass);
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
+        
+        MockClassModel anotherClass = new MockClassModel("SomeOtherClass");
+        
+        MethodModel instMethod = 
+                anotherClass.addMethod(new MethodModel("someMethod"));
+        instMethod.setType(ClassType.INSTANCE);
+        MethodModel statMethod = 
+                anotherClass.addMethod(new MethodModel("someOtherMethod"));
+        instMethod.setType(ClassType.STATIC);
+        
+        panel.modelRemoved(instMethod);
+        panel.modelRemoved(statMethod);
+        
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
+    }
+    
+    @Test
     public void testMethodAdded(){
         MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
         MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
@@ -139,5 +164,31 @@ public class MethodPanelTest extends BaseTest{
         
         assertEquals(2, instList.getTableSize());
         assertEquals(3, statList.getTableSize());
+    }
+    
+    @Test
+    public void testOtherClassMethodAdded(){
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
+        MockClassModel aClass = (MockClassModel)this.getTestClass();
+        controller.setSelectedClass(aClass);
+        panel.selectionChanged(aClass);
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
+        
+        MockClassModel anotherClass = new MockClassModel("SomeOtherClass");
+        
+        MethodModel instMethod = 
+                anotherClass.addMethod(new MethodModel("someMethod"));
+        instMethod.setType(ClassType.INSTANCE);
+        MethodModel statMethod = 
+                anotherClass.addMethod(new MethodModel("someOtherMethod"));
+        instMethod.setType(ClassType.STATIC);
+        
+        panel.modelAdded(instMethod);
+        panel.modelAdded(statMethod);
+        
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
     }
 }

@@ -5,16 +5,12 @@
 package UIPanels;
 
 import MainBase.SortedList;
-import Models.*;
+import Models.BaseModel;
 import UIModels.BrowserUIController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
-import javax.swing.JList;
 import javax.swing.JPopupMenu;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -36,10 +32,6 @@ public class BasePanel extends javax.swing.JPanel{
         return new SortedList();
     }
     
-    protected DefaultListModel getListModel(JList aList){
-        return (DefaultListModel)aList.getModel();
-    }
-    
     protected void clearPanels(){
         for(BasePanel bp : this.myPanels())
             bp.clear();
@@ -47,26 +39,6 @@ public class BasePanel extends javax.swing.JPanel{
     
     protected void clear(){
         //subclass responsibility
-    }
-    
-    protected ListSelectionListener setUpListener(final JList aList){
-        return new ListSelectionListener(){
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if(!e.getValueIsAdjusting()){
-                    updateModel(aList);
-                }
-            }
-        };
-    }
-    
-    protected void setUpJList(JList aList){
-        aList.setModel(new DefaultListModel());
-        aList.getSelectionModel().addListSelectionListener(this.setUpListener(aList));
-    }
-    
-    protected void updateModel(JList aList){
-        controller.setSelected((BaseModel)aList.getSelectedValue());
     }
     
     public BaseModel getSelected(){
