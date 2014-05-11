@@ -4,7 +4,7 @@
  */
 package UIShells;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIController;
@@ -38,7 +38,7 @@ public class SystemBrowserShell extends BaseUIShell {
     }
     
     @Override
-    protected UsefulList<BasePanel> myPanels(){
+    protected SortedList<BasePanel> myPanels(){
         return super.myPanels()
                 .addElm(classBrowserPanel)
                 .addElm(modelEditPanel);

@@ -4,7 +4,7 @@
  */
 package UIPanels;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.BaseModel;
 import Models.ClassModel;
 import Models.VariableModel;
@@ -44,7 +44,7 @@ public class ClassFieldsPanel extends BasePanel {
     }
     
     @Override
-    protected UsefulList<JList> myLists(){
+    protected SortedList<JList> myLists(){
         return super.myLists()
                 .addElm(imporList)
                 .addElm(instanceVarList)

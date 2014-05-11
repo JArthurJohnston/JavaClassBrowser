@@ -11,35 +11,35 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * UsefulList, more dynamic list.
- * UsefulList will return itself when added to or removed from.
- * allowing the user to chain such calls together.
- * it will also implement methods to add objects in alphabetic order.
+ * SortedList, more dynamic list.
+ * SortedList will return itself when added to or removed from.
+ allowing the user to chain such calls together.
+ it will also implement methods to add objects in alphabetic order.
  * 
  * @author arthur
  * @param <T>
  */
-public class UsefulList<T> extends LinkedList<T>{
+public class SortedList<T> extends LinkedList<T>{
     
     /**
      * allows one to chain addElm() calls together.
      * 
      * @param elm
-     * @return UsefulList this
+     * @return SortedList this
      */
-    public UsefulList addElm(T elm){
+    public SortedList addElm(T elm){
         if(super.add(elm))
             return this;
         return null;
     }
     
-    public UsefulList addElements(List<T> elements){
+    public SortedList addElements(List<T> elements){
         if(super.addAll(elements))
             return this;
         return null;
     }
     
-    public UsefulList addArray(T[] tArray){
+    public SortedList addArray(T[] tArray){
         for(T t : tArray)
             this.addElm(t);
         return this;

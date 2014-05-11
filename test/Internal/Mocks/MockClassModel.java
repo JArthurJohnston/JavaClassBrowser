@@ -8,6 +8,7 @@ package Internal.Mocks;
 
 import Models.ClassModel;
 import Models.MethodModel;
+import java.util.LinkedList;
 
 /**
  *
@@ -17,12 +18,14 @@ public class MockClassModel extends ClassModel{
     
     public MockClassModel(String name){
         super(name);
+        methods = new LinkedList();
     }
     
     @Override
     public MethodModel addMethod(MethodModel aMethod){
-        if(this.okToAddMethod(aMethod.name()));
+        if(this.okToAddMethod(aMethod.name()))
             methods.add(aMethod);
+        aMethod.setParent(this);
         return aMethod;
     }
     

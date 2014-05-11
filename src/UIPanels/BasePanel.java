@@ -4,12 +4,11 @@
  */
 package UIPanels;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.*;
 import UIModels.BrowserUIController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JList;
@@ -29,30 +28,25 @@ public class BasePanel extends javax.swing.JPanel{
     
     public void setModel(BrowserUIController aController){
         this.controller = aController;
-        this.setUpLists();
+        for(BasePanel bp : this.myPanels())
+            bp.setModel(aController);
     }
     
-    public void fillListModel(List list, DefaultListModel listModel){
-        for(int i=0; i < list.size(); i++){
-            listModel.addElement(list.get(i));
-        }
-    }
-    
-    protected UsefulList<JList> myLists(){
-        return new UsefulList();
-    }
-    
-    protected UsefulList<BasePanel> myPanels(){
-        return new UsefulList();
+    protected SortedList<BasePanel> myPanels(){
+        return new SortedList();
     }
     
     protected DefaultListModel getListModel(JList aList){
         return (DefaultListModel)aList.getModel();
     }
     
-    protected void clearLists(){
-        for(JList l : this.myLists())
-            this.getListModel(l).clear();
+    protected void clearPanels(){
+        for(BasePanel bp : this.myPanels())
+            bp.clear();
+    }
+    
+    protected void clear(){
+        //subclass responsibility
     }
     
     protected ListSelectionListener setUpListener(final JList aList){
@@ -66,11 +60,6 @@ public class BasePanel extends javax.swing.JPanel{
         };
     }
     
-    protected void setUpLists(){
-        for(JList jl : this.myLists())
-            this.setUpJList(jl);
-    }
-    
     protected void setUpJList(JList aList){
         aList.setModel(new DefaultListModel());
         aList.getSelectionModel().addListSelectionListener(this.setUpListener(aList));
@@ -78,13 +67,16 @@ public class BasePanel extends javax.swing.JPanel{
     
     protected void updateModel(JList aList){
         controller.setSelected((BaseModel)aList.getSelectedValue());
-        clearOtherLists(aList);
     }
     
-    protected void clearOtherLists(JList aList){
-        for(JList jl : this.myLists())
-            if(jl != aList)
-                jl.clearSelection();
+    public BaseModel getSelected(){
+        return null;
+    }
+    
+    protected void clearOtherPanels(BasePanel aPanel){
+        for(BasePanel bp : this.myPanels())
+            if(bp != aPanel)
+                bp.clear();
     }
     
     protected void setUpRightClickListener(final JComponent aComponent, final JPopupMenu aMenu){
@@ -104,6 +96,8 @@ public class BasePanel extends javax.swing.JPanel{
     
     
     public void selectionChanged(BaseModel aModel){
+        if(aModel == null)
+            return;
         for(BasePanel bp: this.myPanels())
             bp.selectionChanged(aModel);
     }
@@ -118,7 +112,7 @@ public class BasePanel extends javax.swing.JPanel{
     }
     public void modelRemoved(BaseModel newModel){
         for(BasePanel bp : this.myPanels())
-            bp.modelChanged(newModel);
+            bp.modelRemoved(newModel);
     }
     
     protected void refresh(){

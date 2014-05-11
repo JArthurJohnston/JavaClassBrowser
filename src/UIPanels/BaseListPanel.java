@@ -28,7 +28,7 @@ public class BaseListPanel extends BasePanel {
         return(DefaultTableModel)aTable.getModel();
     }
     
-    protected ListSelectionListener rowSelectionListener(){
+    private ListSelectionListener rowSelectionListener(){
         return new ListSelectionListener(){
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -39,12 +39,64 @@ public class BaseListPanel extends BasePanel {
         };
     }
     
+    protected void setUpTable(){
+        this.table().getSelectionModel()
+                .addListSelectionListener(this.rowSelectionListener());
+    }
+    
     protected void updateModel(){
         this.controller.setSelected(this.getSelected());
     }
     
-    protected BaseModel getSelected(){
+    
+    protected JTable table(){
         return null;
+    }
+    
+    
+    public boolean isEmpty(){
+        return this.getTableSize() == 0;
+    }
+    
+    public int getTableSize(){
+        return this.table().getRowCount();
+    }
+    
+    public BaseModel getValueAt(int index){
+        return ((CellModel)this.tableModel(this.table()).getValueAt(index, 0)).getBase();
+    }
+    
+    @Override
+    public BaseModel getSelected(){
+        return this.getValueAt(this.table().getSelectedRow());
+    }
+    
+    @Override
+    public void clear(){
+        this.tableModel(this.table()).setRowCount(0);
+    }
+    
+    @Override
+    public void modelRemoved(BaseModel aModel){
+        if(!aModel.isMethod())
+            return;
+        this.removeModelRow(this.indexOf(aModel));
+    }
+    
+    private void removeModelRow(int index){
+        if(index >= 0)
+            this.tableModel(this.table()).removeRow(index);
+    }
+    
+    public boolean contains(BaseModel aModel){
+        return this.indexOf(aModel) >= 0;
+    }
+    
+    public int indexOf(BaseModel aModel){
+        for(int i = 0; i< this.getTableSize(); i++)
+            if(this.getValueAt(i) == aModel)
+                return i;
+        return -1;
     }
     
     

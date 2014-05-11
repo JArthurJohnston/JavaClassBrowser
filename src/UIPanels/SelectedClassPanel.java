@@ -4,7 +4,7 @@
  */
 package UIPanels;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.BaseModel;
 import Types.ClassType;
 import UIModels.BrowserUIController;
@@ -34,7 +34,7 @@ public class SelectedClassPanel extends BasePanel {
     }
     
     @Override
-    protected UsefulList<BasePanel> myPanels(){
+    protected SortedList<BasePanel> myPanels(){
         return super.myPanels()
                 .addElm(classFieldsPresenter)
                 .addElm(methodPresenter);
@@ -46,7 +46,7 @@ public class SelectedClassPanel extends BasePanel {
     }
     
     @Override
-    protected UsefulList<JList> myLists(){
+    protected SortedList<JList> myLists(){
         return super.myLists().addElm(classList);
     }
     

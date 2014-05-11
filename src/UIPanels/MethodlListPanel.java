@@ -11,6 +11,8 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import UIModels.BrowserUIController;
+import java.util.LinkedList;
+import javax.swing.JTable;
 
 /**
  *
@@ -29,14 +31,17 @@ public class MethodlListPanel extends BaseListPanel {
     
     @Override
     public void setModel(BrowserUIController controller){
-        this.controller = controller;
+        super.setModel(controller);
         if(controller.getSelectedClass() != null)
             this.fillListFromClass(controller.getSelectedClass());
     }
     
-    private void setUpTable(){
-        this.modelTable.getSelectionModel()
-                .addListSelectionListener(this.rowSelectionListener());
+    public void setSelectedIndex(int index){
+        this.table().setRowSelectionInterval(index, index);
+    }
+    
+    public void setSelectionType(ClassType aType){
+        this.type = aType;
     }
     
     public void addMethodToList(MethodModel aMethod){
@@ -48,12 +53,8 @@ public class MethodlListPanel extends BaseListPanel {
     }
     
     @Override
-    public BaseModel getSelected(){
-        return this.getValueAt(modelTable.getSelectedRow());
-    }
-    
-    public BaseModel getValueAt(int index){
-        return ((CellModel)this.tableModel(modelTable).getValueAt(index, 0)).getBase();
+    protected JTable table(){
+        return modelTable;
     }
     
     @Override
@@ -66,34 +67,25 @@ public class MethodlListPanel extends BaseListPanel {
         if(aModel == null)
             return;
         this.clear();
-        for(MethodModel m : aModel.getStaticMethods())
+        if(this.type == ClassType.INSTANCE)
+            this.fillListFromList(aModel.getInstanceMethods());
+        if(this.type == ClassType.STATIC)
+            this.fillListFromList(aModel.getStaticMethods());
+    }
+    
+    private void fillListFromList(LinkedList<MethodModel> aList){
+        for(MethodModel m : aList)
             if(m.getType() == this.type)
                 this.addMethodToList(m);
-    }
-    
-    public void clear(){
-        this.tableModel(modelTable).setRowCount(0);
-    }
-    
-    public void setSelectionType(ClassType aType){
-        this.type = aType;
-    }
-    
-    public boolean isEmpty(){
-        return this.getTableSize() == 0;
-    }
-    
-    public int getTableSize(){
-        return modelTable.getRowCount();
     }
     
     @Override
     public void modelAdded(BaseModel aModel){
         if(aModel.isMethod())
-            if(((MethodModel)aModel).getParent() == controller.getSelectedClass())
+            if(((MethodModel)aModel).getType() == this.type)
+                if(((MethodModel)aModel).getParent() == controller.getSelectedClass())
                     this.addMethodToList((MethodModel)aModel);
     }
-    
     
 
     /**
@@ -110,6 +102,7 @@ public class MethodlListPanel extends BaseListPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        modelTable.setAutoCreateRowSorter(true);
         modelTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -120,7 +113,7 @@ public class MethodlListPanel extends BaseListPanel {
         ));
         jScrollPane1.setViewportView(modelTable);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        add(jScrollPane1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
 

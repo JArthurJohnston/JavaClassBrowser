@@ -4,13 +4,9 @@
  */
 package UIPanels;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.BaseModel;
-import Models.ClassModel;
-import Models.MethodModel;
 import Types.ClassType;
-import UIModels.BrowserUIController;
-import javax.swing.JList;
 
 /**
  *
@@ -23,38 +19,23 @@ public class MethodPanel extends BasePanel {
      */
     public MethodPanel() {
         initComponents();
-        this.setUpLists();
+        this.instanceMethodList.setSelectionType(ClassType.INSTANCE);
+        this.staticMethodList.setSelectionType(ClassType.STATIC);
     }
     
     @Override
-    public void setModel(BrowserUIController model){
-        this.controller = model;
-        if(model.getSelectedClass() != null)
-            this.fillListsFromClass(model.getSelectedClass());
-    }
-    
-    private void fillListsFromClass(ClassModel aClass){
-        for(MethodModel m : aClass.getMethods()){
-            if(m.getType() == ClassType.STATIC)
-                this.getListModel(staticMethodList).addElement(m);
-            if(m.getType() == ClassType.INSTANCE)
-                this.getListModel(instanceMethodList).addElement(m);
-        }
-    }
-    
-    @Override
-    protected UsefulList<JList> myLists(){
-        return super.myLists()
-                .addElm(staticMethodList)
-                .addElm(instanceMethodList);
+    public SortedList myPanels(){
+        return new SortedList()
+                .addElm(instanceMethodList)
+                .addElm(staticMethodList);
     }
     
     @Override
     public void selectionChanged(BaseModel aClass){
-        this.clearLists();
-        if(aClass == null || !aClass.isClass())
+        if(!aClass.isClass())
             return;
-        this.fillListsFromClass((ClassModel)aClass);
+        this.clearPanels();
+        super.selectionChanged(aClass);
     }
     
     public ClassType getSelectedMethodType(){
@@ -73,31 +54,21 @@ public class MethodPanel extends BasePanel {
     private void initComponents() {
 
         tabs = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        instanceMethodList = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        staticMethodList = new javax.swing.JList();
+        instanceMethodList = new UIPanels.MethodlListPanel();
+        staticMethodList = new UIPanels.MethodlListPanel();
 
         setLayout(new java.awt.BorderLayout());
 
         tabs.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         tabs.setPreferredSize(new java.awt.Dimension(150, 250));
-
-        jScrollPane1.setViewportView(instanceMethodList);
-
-        tabs.addTab("Instance Methods", jScrollPane1);
-
-        jScrollPane2.setViewportView(staticMethodList);
-
-        tabs.addTab("Static Methods", jScrollPane2);
+        tabs.addTab("Instance", instanceMethodList);
+        tabs.addTab("Static", staticMethodList);
 
         add(tabs, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList instanceMethodList;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList staticMethodList;
+    private UIPanels.MethodlListPanel instanceMethodList;
+    private UIPanels.MethodlListPanel staticMethodList;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }

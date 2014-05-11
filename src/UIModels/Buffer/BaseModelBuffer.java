@@ -6,7 +6,7 @@
 
 package UIModels.Buffer;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.BaseModel;
 import Models.ProjectModel;
 import Types.ClassType;
@@ -20,7 +20,7 @@ import Types.ScopeType;
  */
 public class BaseModelBuffer {
     protected BaseModel entity;
-    protected UsefulList fields;
+    protected SortedList fields;
     protected boolean isValid;
     
     protected String name;
@@ -42,8 +42,8 @@ public class BaseModelBuffer {
         return this;
     } 
     
-    protected UsefulList testFields(){
-        return new UsefulList().addElm(name);
+    protected SortedList testFields(){
+        return new SortedList().addElm(name);
     }
     
     public boolean isValid(){

@@ -9,7 +9,7 @@ import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
 import Exceptions.AlreadyExistsException;
 import Exceptions.VeryVeryBadException;
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.ArrayList;
@@ -54,8 +54,8 @@ public class ClassModel extends PackageModel{
         this.variables = new LinkedList();
     }
     
-    public static UsefulList<String> getPrimitiveTypes(){
-        return new UsefulList()
+    public static SortedList<String> getPrimitiveTypes(){
+        return new SortedList()
                     .addElm("int")
                     .addElm("long")
                     .addElm("char")

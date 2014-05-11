@@ -9,7 +9,7 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.Date;
@@ -47,8 +47,8 @@ public class ProjectModel extends BaseModel {
         this.name = name;
     }
     
-    public static UsefulList<String> getReservedWords(){
-        return new UsefulList()
+    public static SortedList<String> getReservedWords(){
+        return new SortedList()
                     .addElm("void")
                     .addElm("return")
                     .addElm("enum")

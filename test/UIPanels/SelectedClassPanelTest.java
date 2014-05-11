@@ -7,7 +7,7 @@ package UIPanels;
 import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIController;

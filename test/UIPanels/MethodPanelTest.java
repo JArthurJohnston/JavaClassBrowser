@@ -4,22 +4,18 @@
  */
 package UIPanels;
 
-import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
-import MainBase.MainApplication;
+import Internal.Mocks.MockBrowserController;
+import Internal.Mocks.MockClassModel;
 import Models.ClassModel;
 import Models.MethodModel;
-import Models.PackageModel;
-import Models.ProjectModel;
 import Types.ClassType;
-import UIModels.BrowserUIController;
-import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -27,8 +23,7 @@ import static org.junit.Assert.*;
  */
 public class MethodPanelTest extends BaseTest{
     private MethodPanel panel;
-    private MainApplication main;
-    private BrowserUIController model;
+    private MockBrowserController controller;
     
     public MethodPanelTest() {
     }
@@ -43,87 +38,106 @@ public class MethodPanelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        main = new MainApplication();
-        try {
-            ProjectModel aProject = main.addProject(new ProjectModel("AProject"));
-            PackageModel aPackage = aProject.getPackageList().get(1);
-            ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
+        this.setUpMain();
+        MockClassModel aClass = new MockClassModel("AClass");
             aClass.addMethod(new MethodModel("aMethod"));
             aClass.addMethod(new MethodModel("anotherMethod"));
             aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
-            main.setSelectedProejct(aProject);
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        model = main.openSystemBrowser();
+        controller = new MockBrowserController();
+        controller.setSelectedClass(aClass);
         panel  = new MethodPanel();
-        panel.setModel(model);
+        panel.setModel(controller);
     }
     
     @After
     public void tearDown() {
         panel = null;
-        model = null;
+        controller = null;
         main = null;
     }
     
-    private ClassModel getTestClass(){
-        ClassModel aClass = null;
-        try {
-            aClass = model.getSelectedProject()
-                    .getPackageList()
-                        .get(1)
-                            .addClass(new ClassModel("AnotherClass"));
+    private MockClassModel getTestClass(){
+        MockClassModel aClass = new MockClassModel("AnotherClass");
             aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
             aClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
             aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
         return aClass;
     }
 
     @Test
     public void testInitialValues() {
         assertEquals(MethodPanel.class, panel.getClass());
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
-        assertEquals(model, this.getVariableFromClass(panel, "model"));
-        assertEquals(2, instList.getModel().getSize());
-        assertEquals(1, statList.getModel().getSize());
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
+        assertEquals(controller, this.getVariableFromClass(panel, "controller"));
+        assertEquals(controller, this.getVariableFromClass(instList, "controller"));
+        assertEquals(controller, this.getVariableFromClass(statList, "controller"));
+        assertEquals(2, instList.getTableSize());
+        assertEquals(1, statList.getTableSize());
     }
     
     @Test
     public void testListSelectionSetsModel(){
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
         instList.setSelectedIndex(1);
-        assertEquals(MethodModel.class, model.getSelected().getClass());
-        assertEquals("anotherMethod", model.getSelected().name());
+        assertEquals(MethodModel.class, controller.getSelected().getClass());
+        assertEquals("anotherMethod", controller.getSelected().name());
         statList.setSelectedIndex(0);
-        assertEquals(MethodModel.class, model.getSelected().getClass());
-        assertEquals("yetAnotherMethod", model.getSelected().name());
-    }
-    
-    @Test
-    public void testSelectionClearsPreviousSelection(){
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
-        instList.setSelectedIndex(0);
-        assertEquals("aMethod", model.getSelected().name());
-        statList.setSelectedIndex(0);
-        assertEquals("yetAnotherMethod", model.getSelected().name());
-        assertEquals(-1, instList.getSelectedIndex());
+        assertEquals(MethodModel.class, controller.getSelected().getClass());
+        assertEquals("yetAnotherMethod", controller.getSelected().name());
     }
     
     @Test
     public void testSelectionChangedWithClass(){
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceMethodList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticMethodList");
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
         ClassModel aClass = this.getTestClass();
         panel.selectionChanged(aClass);
-        assertEquals(1, instList.getModel().getSize());
-        assertEquals(2, statList.getModel().getSize());
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
     }
     
+    @Test
+    public void testMethodRemoved(){
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
+        ClassModel aClass = this.getTestClass();
+        panel.selectionChanged(aClass);
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
+        
+        MethodModel instMethod = aClass.getInstanceMethods().getFirst();
+        MethodModel statMethod = aClass.getStaticMethods().getFirst();
+        
+        panel.modelRemoved(instMethod);
+        panel.modelRemoved(statMethod);
+        
+        assertTrue(instList.isEmpty());
+        assertEquals(1, statList.getTableSize());
+    }
+    
+    @Test
+    public void testMethodAdded(){
+        MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
+        MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
+        MockClassModel aClass = (MockClassModel)this.getTestClass();
+        controller.setSelectedClass(aClass);
+        panel.selectionChanged(aClass);
+        assertEquals(1, instList.getTableSize());
+        assertEquals(2, statList.getTableSize());
+        
+        MethodModel instMethod = 
+                aClass.addMethod(new MethodModel("someMethod"));
+        instMethod.setType(ClassType.INSTANCE);
+        MethodModel statMethod = 
+                aClass.addMethod(new MethodModel("someOtherMethod"));
+        instMethod.setType(ClassType.STATIC);
+        
+        panel.modelAdded(instMethod);
+        panel.modelAdded(statMethod);
+        
+        assertEquals(2, instList.getTableSize());
+        assertEquals(3, statList.getTableSize());
+    }
 }

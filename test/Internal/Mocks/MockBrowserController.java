@@ -16,6 +16,7 @@ import UIModels.BrowserUIController;
 public class MockBrowserController extends BrowserUIController {
     ClassModel selectedClass;
     BaseModel selected;
+   
     
     public void setSelectedClass(ClassModel aClass){
         selectedClass = aClass;
@@ -28,6 +29,11 @@ public class MockBrowserController extends BrowserUIController {
     @Override
     public void setSelected(BaseModel aModel){
         this.selected = aModel;
+    }
+    
+    @Override
+    public BaseModel getSelected(){
+        return selected;
     }
     
 }

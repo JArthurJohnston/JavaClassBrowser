@@ -6,7 +6,7 @@
 
 package UIShells;
 
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.*;
 import UIPanels.BasePanel;
 import java.awt.event.WindowAdapter;
@@ -70,8 +70,8 @@ public class BaseUIShell extends javax.swing.JFrame {
                 , JOptionPane.YES_NO_OPTION);
     }
     
-    protected UsefulList<BasePanel> myPanels(){
-        return new UsefulList();
+    protected SortedList<BasePanel> myPanels(){
+        return new SortedList();
     }
     
     public void modelAdded(BaseModel newModel){}

@@ -7,7 +7,7 @@
 package UIShells.Dialogs;
 
 import Internal.BaseTest;
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
@@ -61,10 +61,10 @@ public class AddVariableDialogueTest extends BaseTest{
      * 4: final
      * 5: type
      * 
-     * @return a UsefulList with the dialogues labels
+     * @return a SortedList with the dialogues labels
      */
-    private UsefulList<JLabel> getLabels(){
-        return new UsefulList().addElm((JLabel)this.getVariableFromClass(dialogue, "nameLabel"))
+    private SortedList<JLabel> getLabels(){
+        return new SortedList().addElm((JLabel)this.getVariableFromClass(dialogue, "nameLabel"))
                 .addElm((JLabel)this.getVariableFromClass(dialogue, "scopeLabel"))
                 .addElm((JLabel)this.getVariableFromClass(dialogue, "staticLabel"))
                 .addElm((JLabel)this.getVariableFromClass(dialogue, "finalLabel"))
@@ -73,7 +73,7 @@ public class AddVariableDialogueTest extends BaseTest{
 
     @Test
     public void testInitialFields() {
-        UsefulList<JLabel> labels = this.getLabels();
+        SortedList<JLabel> labels = this.getLabels();
         assertEquals("newVariable", labels.get(0).getText());
         assertEquals("NONE",        labels.get(1).getText());
         assertEquals("instance",    labels.get(2).getText());
@@ -84,7 +84,7 @@ public class AddVariableDialogueTest extends BaseTest{
     @Test
     public void testSetTextChangesLabels(){
         JTextField varField = (JTextField)this.getVariableFromClass(dialogue, "newVarField");
-        UsefulList<JLabel> labels = this.getLabels();
+        SortedList<JLabel> labels = this.getLabels();
         varField.setText("private static char x;");
         assertEquals("x",       labels.get(0).getText());
         assertEquals("private", labels.get(1).getText());

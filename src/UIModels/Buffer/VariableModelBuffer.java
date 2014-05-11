@@ -7,7 +7,7 @@
 package UIModels.Buffer;
 
 import Exceptions.AlreadyExistsException;
-import MainBase.UsefulList;
+import MainBase.SortedList;
 import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
@@ -38,7 +38,7 @@ public  class VariableModelBuffer extends BaseModelBuffer{
     }
     
     @Override
-    protected UsefulList testFields(){
+    protected SortedList testFields(){
         return super.testFields()
                 .addElm(type)
                 .addElm(scope)
