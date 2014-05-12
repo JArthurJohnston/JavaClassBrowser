@@ -15,8 +15,6 @@ import Types.ScopeType;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 
 /**
  * ProjectModel keeps a hash of all classes and packages that have been added
@@ -39,7 +37,6 @@ public class ProjectModel extends BaseModel {
             + "This operation cannot be undone.\n"
             + "Continue?";
     
-    private DefaultMutableTreeNode allPackage;
     
     
     public ProjectModel(){
@@ -50,10 +47,6 @@ public class ProjectModel extends BaseModel {
         this.name = name;
     }
     
-    public DefaultMutableTreeNode getAllPackage(){
-        if(allPackage == null)
-            
-    }
     
     public static SortedList<String> getReservedWords(){
         return new SortedList()

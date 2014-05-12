@@ -4,24 +4,42 @@
  * and open the template in the editor.
  */
 
-package UIPanels;
+package Internal;
 
+import Internal.Mocks.MockClassModel;
+import Internal.Mocks.MockPackageModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.Nodes.PackageNode;
 
 /**
  *
  * @author arthur
  */
 public class PanelTester extends javax.swing.JFrame {
+    
+    PackageNode rootNode;
 
     /**
      * Creates new form PanelTester
      */
     public PanelTester() {
         initComponents();
+        this.setUpPanel();
+    }
+    
+    private MockPackageModel getPackage(){
+        MockPackageModel aPackage = new MockPackageModel("aPackage");
+        aPackage.addClass(new MockClassModel("someClass"));
+        aPackage.addClass(new MockClassModel("someClass"));
+        aPackage.addClass(new MockClassModel("someClass"));
+        return aPackage;
+    }
+    
+    private void setUpPanel(){
+        rootNode = new PackageNode(this.getPackage());
     }
 
     /**
@@ -33,8 +51,8 @@ public class PanelTester extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        testPanel = new UIPanels.MethodlListPanel();
         jButton1 = new javax.swing.JButton();
+        testPanel = new UIPanels.ClassTreePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,17 +70,15 @@ public class PanelTester extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                    .addComponent(testPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(testPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -117,6 +133,6 @@ public class PanelTester extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private UIPanels.MethodlListPanel testPanel;
+    private UIPanels.ClassTreePanel testPanel;
     // End of variables declaration//GEN-END:variables
 }

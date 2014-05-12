@@ -5,12 +5,11 @@
 package UIPanels;
 
 import Models.BaseModel;
+import UIModels.BrowserUIController;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -18,14 +17,17 @@ import javax.swing.tree.TreeSelectionModel;
  * @author Arthur
  */
 public class BaseTreePanel extends BasePanel {
+    protected DefaultMutableTreeNode rootNode;
     
     protected JTree tree(){
         return null;
     }
     
-    protected void setUpTreeModel(BaseModel aModel){
-        this.tree().setModel(DefaultTreeModel(new DefaultMutableTreeNode(aModel)));
-        
+    
+    
+    public DefaultMutableTreeNode setRootNode(BaseModel aModel){
+        rootNode = new DefaultMutableTreeNode(aModel);
+        return rootNode;
     }
     
     protected void setUpListener(){
@@ -34,7 +36,9 @@ public class BaseTreePanel extends BasePanel {
         this.tree().addTreeSelectionListener(new TreeSelectionListener(){
             @Override
             public void valueChanged(TreeSelectionEvent e) {
-                throw new UnsupportedOperationException("Not supported yet.");
+                controller.setSelected(
+                        ((ModelNode)tree()
+                                .getLastSelectedPathComponent()).getModel());
             }
             
         });
@@ -47,5 +51,9 @@ public class BaseTreePanel extends BasePanel {
     protected void setTreeModel(){
         
     }
+    
+    
+    
+    
     
 }

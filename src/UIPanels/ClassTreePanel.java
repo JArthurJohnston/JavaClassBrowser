@@ -4,6 +4,9 @@
  */
 package UIPanels;
 
+import Models.ClassModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+
 /**
  *
  * @author Arthur
@@ -16,7 +19,6 @@ public class ClassTreePanel extends BaseTreePanel {
     public ClassTreePanel() {
         initComponents();
     }
-    
     
 
     /**
@@ -47,4 +49,6 @@ public class ClassTreePanel extends BaseTreePanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    
 }

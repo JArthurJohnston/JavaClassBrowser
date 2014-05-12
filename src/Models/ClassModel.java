@@ -12,7 +12,6 @@ import Exceptions.VeryVeryBadException;
 import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -49,8 +48,7 @@ public class ClassModel extends PackageModel{
     
     private void initialize(){
         this.scope = ScopeType.PUBLIC;
-        classList = new ArrayList();
-        this.classList = new ArrayList();
+        classList = new LinkedList();
         this.methods = new LinkedList();
         this.variables = new LinkedList();
     }
@@ -264,7 +262,7 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    public LinkedList getClassList(){
+    public LinkedList<ClassModel> getClassList(){
         LinkedList myClassList = new LinkedList();
         myClassList.add(this);
         for(ClassModel c : classList)

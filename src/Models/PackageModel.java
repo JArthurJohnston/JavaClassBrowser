@@ -8,7 +8,6 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -18,7 +17,7 @@ import java.util.LinkedList;
 public class PackageModel extends ProjectModel {
     private LinkedList<PackageModel> packageList;
     protected ProjectModel parent;
-    protected ArrayList<ClassModel> classList;
+    protected LinkedList<ClassModel> classList;
     
     private static final String DEFAULT_PACKAGE_NAME = "default package";
     /*
@@ -63,7 +62,7 @@ public class PackageModel extends ProjectModel {
     
     private void initialize(){
         packageList = new LinkedList();
-        classList = new ArrayList();
+        classList = new LinkedList();
     }
     
     @Override
@@ -151,7 +150,7 @@ public class PackageModel extends ProjectModel {
      * Getters
      */
     @Override
-    public LinkedList getClassList(){
+    public LinkedList<ClassModel> getClassList(){
         LinkedList myClassList = new LinkedList();
         for(PackageModel p : this.packageList){
             myClassList.addAll(p.getClassList());
