@@ -86,6 +86,9 @@ public class SelectedClassPanel extends BasePanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        jSplitPane2.setDividerLocation(150);
+
+        jSplitPane1.setDividerLocation(225);
         jSplitPane1.setLeftComponent(classFieldsPresenter);
         jSplitPane1.setRightComponent(methodPresenter);
 

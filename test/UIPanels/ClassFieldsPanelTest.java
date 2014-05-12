@@ -6,6 +6,8 @@ package UIPanels;
 
 import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
+import Internal.Mocks.MockBrowserController;
+import Internal.Mocks.MockClassModel;
 import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
@@ -39,8 +41,8 @@ public class ClassFieldsPanelTest extends BaseTest{
     
     @Before
     public void setUp() {
+        panel =  new ClassFieldsPanel();
         model = this.setUpModel();
-        panel = new ClassFieldsPanel();
         panel.setModel(model);
     }
     
@@ -50,46 +52,35 @@ public class ClassFieldsPanelTest extends BaseTest{
         panel  = null;
     }
     
-    private BrowserUIController setUpModel(){
-        MainApplication main = new MainApplication();
-        try {
-            ProjectModel aProject = 
-                    main.setSelectedProejct(main.addProject(new ProjectModel("a project")));
-            PackageModel aPackage = aProject.getDefaultPackage();
-            ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
-            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
-            aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "anotherVar"));
-            aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "yetAnotherVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        model = main.openSystemBrowser();
-        return model;
+    private MockBrowserController setUpModel(){
+        MockBrowserController controller = new MockBrowserController();
+            MockClassModel aClass = new MockClassModel("AClass");
+            aClass.addVariable(new VariableModel(ClassType.INSTANCE, 
+                    ClassModel.getObjectClass(), "aVar"));
+            aClass.addVariable(new VariableModel(ClassType.STATIC, 
+                    ClassModel.getObjectClass(), "anotherVar"));
+            aClass.addVariable(new VariableModel(ClassType.INSTANCE, 
+                    ClassModel.getObjectClass(), "yetAnotherVar"));
+        controller.setSelectedClass(aClass);
+        return controller;
     }
     
     
-    private ClassModel getTestClass(){
-        ClassModel aClass = null;
-        try {
-            aClass = model.getSelectedProject()
-                    .getPackageList().get(1)
-                        .addClass(new ClassModel( "AnotherClass"));
+    private MockClassModel getTestClass(){
+        MockClassModel aClass = new MockClassModel("AnotherClass");
             aClass.addVariable(new VariableModel(
                     ClassType.INSTANCE, new ClassModel("Object"), "aVar"));
             aClass.addVariable(new VariableModel(
                     ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(
                     ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
         return aClass;
     }
     
     @Test
     public void testSelectionSetsModel(){
-        JList instVarList = (JList)this.getVariableFromClass(panel, "instanceVarList");
-        JList statVarList = (JList)this.getVariableFromClass(panel, "staticVarList");
+        VariableListPanel instVarList = (VariableListPanel)panel.myPanels().getFirst();
+        VariableListPanel statVarList = (VariableListPanel)panel.myPanels().getFirst();
         instVarList.setSelectedIndex(0);
         assertEquals(VariableModel.class, model.getSelected().getClass());
         assertEquals("aVar", model.getSelected().name());
@@ -98,14 +89,6 @@ public class ClassFieldsPanelTest extends BaseTest{
         assertEquals("anotherVar", model.getSelected().name());
     }
     
-    @Test
-    public void testSelectionClearsLists(){
-        JList instVarList = (JList)this.getVariableFromClass(panel, "instanceVarList");
-        JList statVarList = (JList)this.getVariableFromClass(panel, "staticVarList");
-        instVarList.setSelectedIndex(0);
-        statVarList.setSelectedIndex(0);
-        assertEquals(-1, instVarList.getSelectedIndex());
-    }
 
     @Test
     public void testInitialPanel() {
@@ -123,20 +106,20 @@ public class ClassFieldsPanelTest extends BaseTest{
     
     @Test
     public void testSelectionChangedWithClass(){
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceVarList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticVarList");
+        VariableListPanel instVarList = (VariableListPanel)panel.myPanels().getFirst();
+        VariableListPanel statVarList = (VariableListPanel)panel.myPanels().getFirst();
         ClassModel aClass = this.getTestClass();
         panel.selectionChanged(aClass);
-        assertEquals(2, instList.getModel().getSize());
-        assertEquals(1, statList.getModel().getSize());
+        assertEquals(2, instVarList.getTableSize());
+        assertEquals(1, statVarList.getTableSize());
     }
     
     @Test
     public void testModelAdded(){
-        JList instList = (JList)this.getVariableFromClass(panel, "instanceVarList");
-        JList statList = (JList)this.getVariableFromClass(panel, "staticVarList");
-        assertEquals(2, instList.getModel().getSize());
-        assertEquals(1, statList.getModel().getSize());
+        VariableListPanel instVarList = (VariableListPanel)panel.myPanels().getFirst();
+        VariableListPanel statVarList = (VariableListPanel)panel.myPanels().getFirst();
+        assertEquals(2, instVarList.getTableSize());
+        assertEquals(1, statVarList.getTableSize());
         
     }
 }

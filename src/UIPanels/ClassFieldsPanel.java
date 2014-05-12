@@ -18,6 +18,8 @@ public class ClassFieldsPanel extends BasePanel {
      */
     public ClassFieldsPanel() {
         initComponents();
+        instVarList.setSelectionType(ClassType.INSTANCE);
+        statVarList.setSelectionType(ClassType.STATIC);
         this.setUpRightClickMenues();
     }
     

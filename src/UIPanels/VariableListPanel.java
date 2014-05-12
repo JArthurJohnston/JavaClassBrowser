@@ -54,8 +54,6 @@ public class VariableListPanel extends BaseListPanel {
     }
     
     private void fillListFromClass(ClassModel aModel){
-        if(aModel == null)
-            return;
         this.clear();
         if(this.type == ClassType.INSTANCE)
             this.fillListFromList(aModel.getInstanceVars());
