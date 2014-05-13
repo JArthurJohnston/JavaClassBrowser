@@ -6,17 +6,15 @@
 
 package Internal;
 
+import Internal.Mocks.MockBrowserController;
 import Internal.Mocks.MockClassModel;
 import Internal.Mocks.MockPackageModel;
-import UIPanels.TreePanels.Nodes.PackageNode;
 
 /**
  *
  * @author arthur
  */
 public class PanelTester extends javax.swing.JFrame {
-    
-    PackageNode rootNode;
 
     /**
      * Creates new form PanelTester
@@ -24,7 +22,7 @@ public class PanelTester extends javax.swing.JFrame {
     public PanelTester() {
         initComponents();
         this.testPanel.addPackageClasses(this.getPackage());
-        
+        testPanel.setModel(new MockBrowserController());
     }
     
     private MockPackageModel getPackage(){
@@ -87,7 +85,7 @@ public class PanelTester extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         MockClassModel aClass = new MockClassModel("AddedClass");
-        this.testPanel.addClassToSelected(aClass);
+        this.testPanel.addToSelected(aClass);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 

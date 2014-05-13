@@ -4,3 +4,9 @@ uses valueAdded and valueChanged listeners.
 -when adding classes/packages/etc... the recieving object should set the parent of the newly added/edited object. 
 	thus I could just go new ClassModel("AName") instead of new ClassModel(parentPackage, "AName")
 -make a subckass of LinkedList which will return itself whenever you perform an operation on it. that way we can more easily chain method calls together, and further avoid assignment statements.
+-refactor the updateModel stuff to use fired events and listeners...
+	-wont have to propogat signals (modelAdded, modelRemoved, etc...)
+		-well, Ill still need those methods on the UI, but not on the models, or main.
+	-main wont have to hold a list of its open windows. each shellModel will be responsible for
+		itself
+	-wont have to use mocks anymore :D

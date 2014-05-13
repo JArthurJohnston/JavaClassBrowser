@@ -9,6 +9,7 @@ import Models.PackageModel;
 import UIPanels.TreePanels.Nodes.ClassNode;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -22,7 +23,7 @@ public class ClassTreePanel extends BaseTreePanel {
      */
     public ClassTreePanel() {
         initComponents();
-        this.setRootNode();
+        this.setUpTree();
     }
     
     @Override
@@ -30,10 +31,11 @@ public class ClassTreePanel extends BaseTreePanel {
         return this.classTree;
     }
     
-    private void setRootNode(){
-        top = new ClassNode(ClassModel.getObjectClass());
-        this.classTree.setModel(
-                new DefaultTreeModel(top));
+    @Override
+    protected ClassNode getRootNode(){
+        if(top == null)
+            top = new ClassNode(ClassModel.getObjectClass());
+        return top;
     }
     
     public void addPackageClasses(PackageModel aPackage){
@@ -51,11 +53,6 @@ public class ClassTreePanel extends BaseTreePanel {
         if(this.getSelectedNode() != null)
             return this.getSelectedNode().getModel();
         return null;
-    }
-    
-    public void addClassToSelected(ClassModel aClass){
-        if(this.getSelectedNode() != null)
-            this.getSelectedNode().add(new ClassNode(aClass));
     }
 
     /**

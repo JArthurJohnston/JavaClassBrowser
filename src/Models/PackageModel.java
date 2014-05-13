@@ -161,6 +161,10 @@ public class PackageModel extends ProjectModel {
         return myClassList;
     }
     
+    public LinkedList<ClassModel> getTopLevelClasses(){
+        return classList;
+    } 
+    
     @Override
     protected void triggerModelChanged(){
         this.getProject().modelChanged(this);

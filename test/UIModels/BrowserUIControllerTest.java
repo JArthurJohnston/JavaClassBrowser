@@ -10,7 +10,7 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import UIShells.Dialogs.AddVariableDialogue;
+import UIPanels.TreePanels.Nodes.*;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ import org.junit.Test;
  * @author Arthur
  */
 public class BrowserUIControllerTest extends BaseTest{
-    private BrowserUIController model;
+    private BrowserUIController controller;
     
     public BrowserUIControllerTest() {
     }
@@ -42,74 +42,87 @@ public class BrowserUIControllerTest extends BaseTest{
     
     @Before
     public void setUp() {
-        main =  new MainApplication();
-        try {
-            main.setSelectedProejct(main.addProject(new ProjectModel("a project")));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        model = main.openSystemBrowser();
+        this.setUpMain();
+        main.setSelectedProejct(this.getProject());
+        controller = new BrowserUIController(main);
     }
     
     @After
     public void tearDown() {
         main = null;
-        model = null;
+        controller = null;
+    }
+    
+    private ProjectModel getProject(){
+        ProjectModel aProject = new ProjectModel("a project");
+        aProject.setMain(main);
+        try {
+            ClassModel aClass = aProject.addClass(new ClassModel("AClass1"));
+            aClass.addClass(new ClassModel("ASubClass1"));
+            aClass.addClass(new ClassModel("ASubClass2"));
+            aClass.addClass(new ClassModel("ASubClass3"));
+            aClass.addClass(new ClassModel("ASubClass4"));
+            aProject.addClass(new ClassModel("AClass2"));
+            aProject.addClass(new ClassModel("AClass3"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        return aProject;
     }
     
     @Test
     public void testOpenFromMain(){
-        model = new BrowserUIController(new MainApplication());
-        assertEquals(BrowserUIController.class, model.getClass());
+        controller = new BrowserUIController(new MainApplication());
+        assertEquals(BrowserUIController.class, controller.getClass());
     }
     
     @Test
     public void testInit(){
-        assertEquals(main, model.main);
+        assertEquals(main, controller.main);
         assertEquals(main.getSelectedProject(), 
-                (ProjectModel)this.getVariableFromClass(model, "selectedProject"));
+                (ProjectModel)this.getVariableFromClass(controller, "selectedProject"));
     }
 
     @Test
     public void testClose() {
-        SystemBrowserShell aShell = model.getShell();
-        model.close();
+        SystemBrowserShell aShell = controller.getShell();
+        controller.close();
         assertFalse(aShell.isVisible());
-        assertFalse(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
+        assertFalse(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(controller));
     }
     
     @Test
     public void testGetShell(){
-        SystemBrowserShell aShell = model.getShell();
-        assertEquals(SystemBrowserShell.class, model.getShell().getClass());
-        assertEquals(aShell, model.getShell());
-        assertTrue(model.getShell().isVisible());
+        SystemBrowserShell aShell = controller.getShell();
+        assertEquals(SystemBrowserShell.class, controller.getShell().getClass());
+        assertEquals(aShell, controller.getShell());
+        assertTrue(controller.getShell().isVisible());
     }
     
     @Test
     public void testSelectedProject(){
-        assertEquals("a project", ((ProjectModel)this.getVariableFromClass(model, "selectedProject")).name());
+        assertEquals("a project", ((ProjectModel)this.getVariableFromClass(controller, "selectedProject")).name());
     }
     
     @Test
     public void testPackageList(){
-        assertEquals(2, model.getPackages().size());
+        assertEquals(2, controller.getPackages().size());
     }
     
     @Test
     public void testAddPackage(){
         try {
-            model.addPackage(new PackageModel("a package"));
+            controller.addPackage(new PackageModel("a package"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(3, model.getPackages().size());
+        assertEquals(3, controller.getPackages().size());
     }
     
     @Test
     public void testAddClass(){
         try {
-            model.addClass(new ClassModel("AClass"));
+            controller.addClass(new ClassModel("AClass"));
             fail("exception not thrown");
         } catch (Exception ex) {
             assertTrue(this.compareStrings("", ex.getMessage()));
@@ -119,7 +132,7 @@ public class BrowserUIControllerTest extends BaseTest{
     @Test
     public void testSelectedClass(){
         ClassModel aClass = null;
-        assertEquals(null, model.getSelectedClass());
+        assertEquals(null, controller.getSelectedClass());
         try {
             PackageModel aPackage = 
                     main.getSelectedProject().addPackage(
@@ -128,23 +141,30 @@ public class BrowserUIControllerTest extends BaseTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(aClass, model.getSelectedClass());
+        assertEquals(aClass, controller.getSelectedClass());
     }
     
     @Test
     public void testOpenAddVariable(){
-        model.getShell();
-        //AddVariableDialogue dialogue = model.openAddVariable();
+        controller.getShell();
+        //AddVariableDialogue dialogue = controller.openAddVariable();
         //assertEquals(AddVariableDialogue.class, dialogue.getClass());
         //assertTrue(dialogue.isVisible());
         //dialogue.dispose();
-        model.close();
+        controller.close();
         fail();
     }
     
     @Test
     public void testGetSelectedPackage(){
-        assertEquals(model.getSelectedPackage(), main.getSelectedProject().getDefaultPackage());
+        assertEquals(controller.getSelectedPackage(), main.getSelectedProject().getDefaultPackage());
                 
+    }
+    
+    
+    @Test
+    public void testGetAllClasses(){
+        ClassNode allClasses = controller.getAllClasses();
+        
     }
 }

@@ -13,25 +13,20 @@ import Models.ClassModel;
  * @author arthur
  */
 public class ClassNode extends ModelNode{
-    ClassModel baseClass;
+    
+    public static ClassNode getDefaultRoot(){
+        return new ClassNode(ClassModel.getObjectClass());
+    }
         
-        public ClassNode(ClassModel aClass){
-            super(aClass);
-            this.generateTreeFromClass();
-        }
+    public ClassNode(ClassModel aClass){
+        super(aClass);
+        this.generateTreeFromClass();
+    }
         
-        private void generateTreeFromClass(){
-            for(ClassModel c : this.baseClass().getSubClasses())
-                this.add(new ClassNode(c));
-        }
-        
-        public void regenerateTreeFromClass(){
-            
-        }
-        
-        private ClassModel baseClass(){
-            return (ClassModel)this.getUserObject();
-        }
+    private void generateTreeFromClass(){
+        for(ClassModel c : this.getModel().getSubClasses())
+            this.add(new ClassNode(c));
+    }
         
     @Override
     public ClassModel getModel(){

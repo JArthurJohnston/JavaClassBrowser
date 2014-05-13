@@ -9,6 +9,7 @@ import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
 import UIModels.Buffer.VariableModelBuffer;
+import UIPanels.TreePanels.Nodes.*;
 import UIShells.Dialogs.AddVariableDialogue;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
@@ -22,6 +23,8 @@ public class BrowserUIController extends BaseUIController{
     private PackageModel selectedPackage;
     private BaseModel selectedModel;
     private ClassModel selectedClass;
+    private ClassNode allClassNode;
+    private PackageNode allPackageNode;
     
     /**
      * Constructor for testing only
@@ -31,6 +34,18 @@ public class BrowserUIController extends BaseUIController{
     public BrowserUIController(MainApplication main){
         super(main);
         shell = new SystemBrowserShell(this);
+    }
+    
+    public ClassNode getAllClasses(){
+        if(allClassNode == null)
+            this.initializeClassNode();
+        return allClassNode;
+    }
+    
+    private void initializeClassNode(){
+        allClassNode = new ClassNode(ClassModel.getObjectClass());
+        for(ClassModel c : selectedProject.getClassList())
+            allClassNode.add(new ClassNode(c));
     }
     
     
