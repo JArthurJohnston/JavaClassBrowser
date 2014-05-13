@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-package UIPanels;
+package UIPanels.ListPanels;
 
 import Models.BaseModel;
 import Models.ClassModel;
-import Models.VariableModel;
+import Models.MethodModel;
 import Types.ClassType;
 import UIModels.BrowserUIController;
 import java.util.LinkedList;
@@ -18,13 +18,13 @@ import javax.swing.JTable;
  *
  * @author arthur
  */
-public class VariableListPanel extends BaseListPanel {
+public class MethodlListPanel extends BaseListPanel {
     private ClassType type;
-
+    
     /**
-     * Creates new form VariableListPanel
+     * Creates new form ModelListPanel
      */
-    public VariableListPanel() {
+    public MethodlListPanel() {
         initComponents();
         this.setUpTable();
     }
@@ -33,20 +33,20 @@ public class VariableListPanel extends BaseListPanel {
         this.type = aType;
     }
     
-    @Override
-    public JTable table(){
-        return variableTable;
-    }
-    
-    public void addVariableToList(VariableModel aVar){
-        this.tableModel(variableTable).addRow(
+    public void addMethodToList(MethodModel aMethod){
+        this.tableModel(modelTable).addRow(
                 new CellModel[] 
-                   {new CellModel(aVar.scopeString(), aVar), 
-                    new CellModel(aVar.getObjectType().name(), aVar),
-                    new CellModel(aVar.getType().toString().toLowerCase(), aVar)});
+                   {new CellModel(aMethod.scopeString(), aMethod), 
+                    new CellModel(aMethod.getReturnType().name(), aMethod),
+                    new CellModel(aMethod.getType().toString().toLowerCase(), aMethod)});
     }
     
-     @Override
+    @Override
+    protected JTable table(){
+        return modelTable;
+    }
+    
+    @Override
     public void setModel(BrowserUIController controller){
         super.setModel(controller);
         if(controller.getSelectedClass() != null)
@@ -54,17 +54,19 @@ public class VariableListPanel extends BaseListPanel {
     }
     
     private void fillListFromClass(ClassModel aModel){
+        if(aModel == null)
+            return;
         this.clear();
         if(this.type == ClassType.INSTANCE)
-            this.fillListFromList(aModel.getInstanceVars());
+            this.fillListFromList(aModel.getInstanceMethods());
         if(this.type == ClassType.STATIC)
-            this.fillListFromList(aModel.getStaticVars());
+            this.fillListFromList(aModel.getStaticMethods());
     }
     
-    private void fillListFromList(LinkedList<VariableModel> aList){
-        for(VariableModel m : aList)
+    private void fillListFromList(LinkedList<MethodModel> aList){
+        for(MethodModel m : aList)
             if(m.getType() == this.type)
-                this.addVariableToList(m);
+                this.addMethodToList(m);
     }
     
     @Override
@@ -76,17 +78,20 @@ public class VariableListPanel extends BaseListPanel {
     @Override
     public void modelAdded(BaseModel aModel){
         if(this.checkModel(aModel))
-            this.addVariableToList((VariableModel)aModel);
+            this.addMethodToList((MethodModel)aModel);
     }
+    
     @Override
     protected boolean checkModel(BaseModel aModel){
         if(super.checkModel(aModel)) 
-            if(aModel.isVariable())
-                if(((VariableModel)aModel).getType() == this.type)
-                    if(((VariableModel)aModel).getParent() == controller.getSelectedClass())
+            if(aModel.isMethod())
+                if(((MethodModel)aModel).getType() == this.type)
+                    if(((MethodModel)aModel).getParent() == controller.getSelectedClass())
                         return true;
         return false;
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -98,26 +103,29 @@ public class VariableListPanel extends BaseListPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        variableTable = new javax.swing.JTable();
+        modelTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
-        variableTable.setModel(new javax.swing.table.DefaultTableModel(
+        modelTable.setAutoCreateRowSorter(true);
+        modelTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Scope", "Name", "Type"
+                "Scope", "Name", "Return Type"
             }
         ));
-        jScrollPane1.setViewportView(variableTable);
+        jScrollPane1.setViewportView(modelTable);
 
-        add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        add(jScrollPane1, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable variableTable;
+    private javax.swing.JTable modelTable;
     // End of variables declaration//GEN-END:variables
+
+
 }

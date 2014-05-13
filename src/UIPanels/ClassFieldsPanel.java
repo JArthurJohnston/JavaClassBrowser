@@ -54,9 +54,9 @@ public class ClassFieldsPanel extends BasePanel {
         varRightClickMenu = new javax.swing.JPopupMenu();
         addVarMenuItem = new javax.swing.JMenuItem();
         tabs = new javax.swing.JTabbedPane();
-        instVarList = new UIPanels.VariableListPanel();
-        statVarList = new UIPanels.VariableListPanel();
-        importList = new UIPanels.ImportListPanel();
+        instVarList = new UIPanels.ListPanels.VariableListPanel();
+        statVarList = new UIPanels.ListPanels.VariableListPanel();
+        importList = new UIPanels.ListPanels.ImportListPanel();
 
         addVarMenuItem.setText("New Variable");
         addVarMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -84,9 +84,9 @@ public class ClassFieldsPanel extends BasePanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addVarMenuItem;
-    private UIPanels.ImportListPanel importList;
-    private UIPanels.VariableListPanel instVarList;
-    private UIPanels.VariableListPanel statVarList;
+    private UIPanels.ListPanels.ImportListPanel importList;
+    private UIPanels.ListPanels.VariableListPanel instVarList;
+    private UIPanels.ListPanels.VariableListPanel statVarList;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JPopupMenu varRightClickMenu;
     // End of variables declaration//GEN-END:variables

@@ -270,6 +270,13 @@ public class ClassModel extends PackageModel{
         return myClassList;
     }
     
+    public LinkedList<ClassModel> getSubClasses(){
+        if(classList == null)
+            return new LinkedList();
+        return classList;
+    }
+    
+    
     public ClassModel getReturnType(){
         return this;
     }

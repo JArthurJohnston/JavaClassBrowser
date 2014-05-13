@@ -18,6 +18,7 @@ public class MockPackageModel extends PackageModel{
     
     public MockPackageModel(String aName){
         classList = new LinkedList();
+        packageList = new LinkedList();
         name = aName;
     }
     

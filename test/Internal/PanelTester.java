@@ -8,11 +8,7 @@ package Internal;
 
 import Internal.Mocks.MockClassModel;
 import Internal.Mocks.MockPackageModel;
-import Models.ClassModel;
-import Models.MethodModel;
-import Types.ClassType;
-import Types.ScopeType;
-import UIModels.Nodes.PackageNode;
+import UIPanels.TreePanels.Nodes.PackageNode;
 
 /**
  *
@@ -27,20 +23,22 @@ public class PanelTester extends javax.swing.JFrame {
      */
     public PanelTester() {
         initComponents();
-        this.setUpPanel();
+        this.testPanel.addPackageClasses(this.getPackage());
+        
     }
     
     private MockPackageModel getPackage(){
         MockPackageModel aPackage = new MockPackageModel("aPackage");
         aPackage.addClass(new MockClassModel("someClass"));
-        aPackage.addClass(new MockClassModel("someClass"));
+        MockClassModel aClass = (MockClassModel)aPackage
+                .addClass(new MockClassModel("someClass"));
+            aClass.addClass(new MockClassModel("ASubClass"));
+            aClass.addClass(new MockClassModel("ASubClass"));
+            aClass.addClass(new MockClassModel("ASubClass"));
         aPackage.addClass(new MockClassModel("someClass"));
         return aPackage;
     }
     
-    private void setUpPanel(){
-        rootNode = new PackageNode(this.getPackage());
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,7 +50,7 @@ public class PanelTester extends javax.swing.JFrame {
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
-        testPanel = new UIPanels.ClassTreePanel();
+        testPanel = new UIPanels.TreePanels.ClassTreePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,11 +86,9 @@ public class PanelTester extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        MethodModel aMethod = new MethodModel("aMethod");
-        aMethod.setType(ClassType.STATIC);
-        aMethod.setReturnType(ClassModel.getPrimitive("void"));
-        aMethod.setScope(ScopeType.PRIVATE);
-        this.testPanel.addMethodToList(aMethod);
+        MockClassModel aClass = new MockClassModel("AddedClass");
+        this.testPanel.addClassToSelected(aClass);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -133,6 +129,6 @@ public class PanelTester extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private UIPanels.ClassTreePanel testPanel;
+    private UIPanels.TreePanels.ClassTreePanel testPanel;
     // End of variables declaration//GEN-END:variables
 }

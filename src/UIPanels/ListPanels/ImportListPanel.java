@@ -1,25 +1,31 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UIPanels;
 
-import Models.ClassModel;
-import javax.swing.tree.DefaultMutableTreeNode;
+package UIPanels.ListPanels;
+
+import UIPanels.ListPanels.BaseListPanel;
+import javax.swing.JTable;
 
 /**
  *
- * @author Arthur
+ * @author arthur
  */
-public class ClassTreePanel extends BaseTreePanel {
+public class ImportListPanel extends BaseListPanel {
 
     /**
-     * Creates new form ClassTreePanel
+     * Creates new form PackageListPanel
      */
-    public ClassTreePanel() {
+    public ImportListPanel() {
         initComponents();
     }
     
+    @Override
+    protected JTable table(){
+        return importTable;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,25 +36,27 @@ public class ClassTreePanel extends BaseTreePanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        ClassTree = new javax.swing.JTree();
+        importTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("Classes");
-        add(jLabel1, java.awt.BorderLayout.NORTH);
-        jLabel1.getAccessibleContext().setAccessibleDescription("");
+        importTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jScrollPane1.setViewportView(ClassTree);
+            },
+            new String [] {
+                "Imports"
+            }
+        ));
+        jScrollPane1.setViewportView(importTable);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTree ClassTree;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTable importTable;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-
-    
 }

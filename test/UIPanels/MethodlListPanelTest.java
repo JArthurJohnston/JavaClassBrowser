@@ -4,6 +4,7 @@
  */
 package UIPanels;
 
+import UIPanels.ListPanels.MethodlListPanel;
 import Internal.BaseTest;
 import Internal.Mocks.MockBrowserController;
 import Internal.Mocks.MockClassModel;

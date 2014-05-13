@@ -4,6 +4,7 @@
  */
 package UIPanels;
 
+import UIPanels.ListPanels.VariableListPanel;
 import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Internal.Mocks.MockBrowserController;

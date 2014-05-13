@@ -54,7 +54,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
       </Events>
     </Component>
-    <Component class="UIPanels.ClassTreePanel" name="testPanel">
+    <Component class="UIPanels.TreePanels.ClassTreePanel" name="testPanel">
     </Component>
   </SubComponents>
 </Form>

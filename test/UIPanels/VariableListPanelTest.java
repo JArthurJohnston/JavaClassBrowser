@@ -6,6 +6,7 @@
 
 package UIPanels;
 
+import UIPanels.ListPanels.VariableListPanel;
 import Internal.Mocks.MockBrowserController;
 import Internal.Mocks.MockClassModel;
 import Models.VariableModel;

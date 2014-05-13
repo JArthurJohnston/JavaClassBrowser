@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * @author Arthur
  */
 public class PackageModel extends ProjectModel {
-    private LinkedList<PackageModel> packageList;
+    protected LinkedList<PackageModel> packageList;
     protected ProjectModel parent;
     protected LinkedList<ClassModel> classList;
     

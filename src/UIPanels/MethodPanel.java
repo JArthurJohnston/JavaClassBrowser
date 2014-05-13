@@ -54,8 +54,8 @@ public class MethodPanel extends BasePanel {
     private void initComponents() {
 
         tabs = new javax.swing.JTabbedPane();
-        instanceMethodList = new UIPanels.MethodlListPanel();
-        staticMethodList = new UIPanels.MethodlListPanel();
+        instanceMethodList = new UIPanels.ListPanels.MethodlListPanel();
+        staticMethodList = new UIPanels.ListPanels.MethodlListPanel();
         jLabel1 = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
@@ -71,9 +71,9 @@ public class MethodPanel extends BasePanel {
         add(jLabel1, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private UIPanels.MethodlListPanel instanceMethodList;
+    private UIPanels.ListPanels.MethodlListPanel instanceMethodList;
     private javax.swing.JLabel jLabel1;
-    private UIPanels.MethodlListPanel staticMethodList;
+    private UIPanels.ListPanels.MethodlListPanel staticMethodList;
     private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }

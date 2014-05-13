@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package UIModels.Nodes;
+package UIPanels.TreePanels.Nodes;
 
 import Models.ClassModel;
 import Models.PackageModel;

@@ -21,6 +21,7 @@ public class MockClassModel extends ClassModel{
         super(name);
         methods = new LinkedList();
         variables = new LinkedList();
+        classList = new LinkedList();
     }
     /*
     Overidden for testing 
@@ -42,4 +43,9 @@ public class MockClassModel extends ClassModel{
         return aVar;
     }
     
+    @Override
+    public ClassModel addClass(ClassModel aClass){
+        classList.add(aClass);
+        return aClass;
+    }
 }

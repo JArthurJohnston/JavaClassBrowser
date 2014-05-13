@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package UIModels.Nodes;
+package UIPanels.TreePanels.Nodes;
 
 import Models.ClassModel;
 
@@ -13,6 +13,7 @@ import Models.ClassModel;
  * @author arthur
  */
 public class ClassNode extends ModelNode{
+    ClassModel baseClass;
         
         public ClassNode(ClassModel aClass){
             super(aClass);
@@ -20,7 +21,7 @@ public class ClassNode extends ModelNode{
         }
         
         private void generateTreeFromClass(){
-            for(ClassModel c : this.baseClass().getClassList())
+            for(ClassModel c : this.baseClass().getSubClasses())
                 this.add(new ClassNode(c));
         }
         
@@ -31,6 +32,10 @@ public class ClassNode extends ModelNode{
         private ClassModel baseClass(){
             return (ClassModel)this.getUserObject();
         }
-    
+        
+    @Override
+    public ClassModel getModel(){
+        return (ClassModel)super.getModel();
+    }
     
 }

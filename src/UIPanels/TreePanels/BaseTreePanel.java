@@ -2,10 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package UIPanels;
+package UIPanels.TreePanels;
 
 import Models.BaseModel;
-import UIModels.BrowserUIController;
+import UIPanels.TreePanels.Nodes.ModelNode;
+import UIPanels.BasePanel;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -23,13 +24,6 @@ public class BaseTreePanel extends BasePanel {
         return null;
     }
     
-    
-    
-    public DefaultMutableTreeNode setRootNode(BaseModel aModel){
-        rootNode = new DefaultMutableTreeNode(aModel);
-        return rootNode;
-    }
-    
     protected void setUpListener(){
         this.tree().getSelectionModel()
                 .setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -44,16 +38,8 @@ public class BaseTreePanel extends BasePanel {
         });
     }
     
-    public void addModelToTree(BaseModel aModel){
-        
+    public ModelNode getSelectedNode(){
+        return (ModelNode)this.tree().getLastSelectedPathComponent();
     }
-    
-    protected void setTreeModel(){
-        
-    }
-    
-    
-    
-    
     
 }

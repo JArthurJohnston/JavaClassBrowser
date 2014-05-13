@@ -31,7 +31,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Component class="UIPanels.MethodlListPanel" name="instanceMethodList">
+        <Component class="UIPanels.ListPanels.MethodlListPanel" name="instanceMethodList">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Instance">
@@ -40,7 +40,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="UIPanels.MethodlListPanel" name="staticMethodList">
+        <Component class="UIPanels.ListPanels.MethodlListPanel" name="staticMethodList">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Static">

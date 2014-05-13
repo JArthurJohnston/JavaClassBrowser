@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-package UIPanels;
+package UIPanels.ListPanels;
 
 import Models.BaseModel;
 import UIModels.BrowserUIController;
+import UIPanels.BasePanel;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
