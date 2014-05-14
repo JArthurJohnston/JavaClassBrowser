@@ -4,16 +4,21 @@
  */
 package Models;
 
+import Exceptions.AlreadyExistsException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
-import Exceptions.AlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
+import MainBase.EventTester;
+import MainBase.Events.BaseModelUpdatedEvent;
+import MainBase.Events.ModelAddedEvent;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -384,6 +389,20 @@ public class ClassModelTest extends BaseTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        
+    }
+    
+    @Test
+    public void testAddClassTriggersEvent(){
+        EventTester listener = new EventTester();
+        try {
+            ClassModel newClass = testClass.addClass(new ClassModel("SomeNewClass"));
+            assertTrue(listener.eventTriggered());
+            BaseModelUpdatedEvent e = listener.getEvent();
+            assertEquals(ModelAddedEvent.class, e.getClass());
+            assertEquals(e.getSource(), testClass);
+            assertEquals(e.getModel(), newClass);
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
 }

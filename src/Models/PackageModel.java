@@ -7,6 +7,7 @@ package Models;
 import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
+import MainBase.Events.ModelAddedEvent;
 import MainBase.MainApplication;
 import java.util.LinkedList;
 
@@ -102,6 +103,7 @@ public class PackageModel extends ProjectModel {
             classList.add(newClass);
             newClass.setParent(this);
         }
+        new ModelAddedEvent(this, newClass);
         return newClass;
     }
     

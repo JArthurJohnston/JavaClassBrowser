@@ -7,6 +7,7 @@ package UIPanels.TreePanels;
 import Models.*;
 import UIPanels.BasePanel;
 import UIPanels.TreePanels.Nodes.*;
+import java.util.HashMap;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -21,12 +22,14 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class BaseTreePanel extends BasePanel {
     protected DefaultMutableTreeNode rootNode;
+    protected TreeMap treeMap;
     
     protected JTree tree(){
         return new JTree();
     }
     
     protected ModelNode getRootNode(){
+        treeMap = new TreeMap();
         return null;
     }
     
@@ -61,23 +64,33 @@ public class BaseTreePanel extends BasePanel {
         return (ModelNode)this.tree().getLastSelectedPathComponent();
     }
     
-    public void addToSelected(BaseModel aModel){
-        TreePath selection = this.getSelectedPath();
-        if(selection != null){
-            ModelNode newNode;
-            ((ModelNode)selection.getLastPathComponent())
-                    .add(newNode = this.getNodeFromModel(aModel));
-            this.treeModel().nodeStructureChanged(
-                (ModelNode)selection.getLastPathComponent());
-            this.tree().scrollPathToVisible(new TreePath(newNode.getPath()));
-        }
-    }
-    
     protected ModelNode getNodeFromModel(BaseModel aModel){
         if(aModel.isPackage())
             return new PackageNode((PackageModel)aModel);
         if(aModel.isClass())
             return new ClassNode((ClassModel)aModel);
         return new ModelNode(aModel);
+    }
+    
+    protected class TreeMap {
+        private final HashMap <BaseModel, ModelNode> treeHash;
+        
+        public TreeMap(){
+            treeHash = new HashMap();
+        }
+        
+        public ModelNode getNodeForModel(BaseModel aModel){
+            return treeHash.get(aModel);
+        }
+        
+        public ModelNode addModel(BaseModel aModel){
+            ModelNode newNode = new ModelNode(aModel);
+            treeHash.put(aModel, new ModelNode(aModel));
+            return newNode;
+        }
+        
+        public void removeModel(BaseModel aModel){
+            treeHash.get(aModel).removeFromParent();
+        }
     }
 }

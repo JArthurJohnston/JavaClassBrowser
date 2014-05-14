@@ -1,11 +1,13 @@
 package MainBase;
 
-import Exceptions.DoesNotExistException;
 import Exceptions.AlreadyExistsException;
+import Exceptions.DoesNotExistException;
+import MainBase.Events.ModelEventListener;
 import Models.*;
 import UIModels.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * MainApplication is the top-level model for the whole program
@@ -20,11 +22,18 @@ public class MainApplication {
     private final LinkedList <BaseUIController>openWindowModels;
     private String userName;
     private ProjectModel selectedProject;
+    private Vector<ModelEventListener> listeners;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
         projects = new ArrayList();
         openWindowModels = new LinkedList();
+    }
+    
+    synchronized public void addModelListener(ModelEventListener l){
+        if(listeners == null)
+            listeners = new Vector();
+        listeners.add(l);
     }
     
     public ArrayList<ProjectModel> getProjects(){

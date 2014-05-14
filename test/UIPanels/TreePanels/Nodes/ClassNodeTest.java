@@ -68,4 +68,19 @@ public class ClassNodeTest {
         assertEquals(aClass, node.getModel());
         assertEquals(5, node.size());
     }
+    
+    @Test
+    public void testAddClassToNode(){
+        node.add(new ClassNode(new ClassModel("SomeClass")));
+        assertEquals(2, node.size());
+    }
+    
+    @Test
+    public void testRemoveClassFromNode(){
+        ClassNode nodeToBeRemoved = new ClassNode(new ClassModel("RemovedClass"));
+        node.add(nodeToBeRemoved);
+        assertEquals(2, node.size());
+        nodeToBeRemoved.removeFromParent();
+        assertEquals(1, node.size());
+    }
 }
