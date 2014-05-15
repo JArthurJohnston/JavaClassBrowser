@@ -7,6 +7,7 @@ package UIPanels.TreePanels;
 import Models.*;
 import UIPanels.BasePanel;
 import UIPanels.TreePanels.Nodes.*;
+import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -72,6 +73,14 @@ public class BaseTreePanel extends BasePanel {
         return new ModelNode(aModel);
     }
     
+    public int getTreeSize(){
+        return treeMap.getNodes().size();
+    }
+    
+    
+    /**
+     * for fast access to every node in the tree
+     */
     protected class TreeMap {
         private final HashMap <BaseModel, ModelNode> treeHash;
         
@@ -91,6 +100,10 @@ public class BaseTreePanel extends BasePanel {
         
         public void removeModel(BaseModel aModel){
             treeHash.get(aModel).removeFromParent();
+        }
+        
+        public Collection<ModelNode> getNodes(){
+            return treeHash.values();
         }
     }
 }

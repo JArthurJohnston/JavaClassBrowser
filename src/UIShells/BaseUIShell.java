@@ -8,6 +8,7 @@ package UIShells;
 
 import MainBase.SortedList;
 import Models.*;
+import UIModels.BaseUIController;
 import UIPanels.BasePanel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -24,6 +25,8 @@ import javax.swing.event.ListSelectionListener;
  */
 public class BaseUIShell extends javax.swing.JFrame {
     
+    protected BaseUIController controller;
+    
     protected BaseUIShell(){
         setUpClosedWindowListener();
     }
@@ -38,6 +41,9 @@ public class BaseUIShell extends javax.swing.JFrame {
         });
     }
     
+    protected BaseUIController controller(){
+        return controller;
+    }
     
     protected ListSelectionListener setUpListener(final JList aList){
         return new ListSelectionListener(){
@@ -49,7 +55,9 @@ public class BaseUIShell extends javax.swing.JFrame {
         };
     }
     
-    protected void signalClosedAndDispose(){ } // might just wanna get rid of this?
+    protected void signalClosedAndDispose(){
+        
+    } // might just wanna get rid of this?
         
     /**
      * a method for filling list models.
@@ -73,12 +81,20 @@ public class BaseUIShell extends javax.swing.JFrame {
     protected SortedList<BasePanel> myPanels(){
         return new SortedList();
     }
-    
-    public void modelAdded(BaseModel newModel){}
-    public void modelChanged(BaseModel newModel){}
-    public void modelRemoved(BaseModel newModel){}
-    
-    
-    public void selectionChanged(BaseModel aClass){}
-    
+    public void modelAdded(BaseModel newModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelAdded(newModel);
+    }
+    public void modelChanged(BaseModel aModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelChanged(aModel);
+    }
+    public void modelRemoved(BaseModel aModel){
+        for(BasePanel bp : this.myPanels())
+            bp.modelRemoved(aModel);
+    }
+    public void selectionChanged(BaseModel aModel){
+        for(BasePanel bp : this.myPanels())
+            bp.selectionChanged(aModel);
+    }
 }

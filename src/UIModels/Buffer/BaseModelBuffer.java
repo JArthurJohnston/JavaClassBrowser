@@ -38,10 +38,6 @@ public class BaseModelBuffer {
         this.name = aModel.name();
     }
     
-    public BaseModelBuffer newFrom(BaseModel aModel){
-        return this;
-    } 
-    
     protected SortedList testFields(){
         return new SortedList().addElm(name);
     }

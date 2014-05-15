@@ -36,6 +36,11 @@ public class BrowserUIController extends BaseUIController{
         shell = new SystemBrowserShell(this);
     }
     
+    @Override
+    protected SystemBrowserShell shell(){
+        return shell;
+    }
+    
     public ClassNode getAllClasses(){
         if(allClassNode == null)
             this.initializeClassNode();
@@ -46,12 +51,6 @@ public class BrowserUIController extends BaseUIController{
         allClassNode = new ClassNode(ClassModel.getObjectClass());
         for(ClassModel c : selectedProject.getClassList())
             allClassNode.add(new ClassNode(c));
-    }
-    
-    
-    public void close(){
-        //shell.dispose();
-        main.removeModel(this);
     }
     
     public SystemBrowserShell getShell(){
@@ -121,24 +120,5 @@ public class BrowserUIController extends BaseUIController{
     
     public AddVariableDialogue openAddVariable(){
         return new AddVariableDialogue(shell, this.addVariableBuffer(shell.getSelectedVarType()));
-    }
-
-    @Override
-    public void modelAdded(BaseModel newModel) {
-        this.getShell().modelAdded(newModel);
-    }
-
-    @Override
-    public void modelChanged(BaseModel newModel) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void modelRemoved(BaseModel newModel) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private ClassModel ClassModel(String object) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

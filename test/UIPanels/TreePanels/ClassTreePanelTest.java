@@ -6,8 +6,11 @@
 
 package UIPanels.TreePanels;
 
-import Internal.Mocks.MockBrowserController;
-import Internal.Mocks.MockClassModel;
+import Exceptions.AlreadyExistsException;
+import Models.ClassModel;
+import Models.PackageModel;
+import Models.ProjectModel;
+import UIModels.BrowserUIController;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -26,40 +29,51 @@ public class ClassTreePanelTest {
     @Before
     public void setUp() {
         panel = new ClassTreePanel();
+        panel.setModel(this.controller());
     }
     
     @After
     public void tearDown() {
         panel = null;
     }
-
-    private MockBrowserController getController(){
-        MockBrowserController controller = new MockBrowserController();
-        MockClassModel aClass = new MockClassModel("AClass");
-        aClass.addClass(new MockClassModel("aSubClass1"));
-        aClass.addClass(new MockClassModel("aSubClass2"));
-        MockClassModel aSubClass = (MockClassModel)aClass
-                .addClass(new MockClassModel("aSubClass3"));
-        aSubClass.addClass(new MockClassModel("aSubSubClass1"));
-        aSubClass.addClass(new MockClassModel("aSubSubClass2"));
-        controller.setSelectedClass(aClass);
-        return controller;
+    
+    private BrowserUIController controller(){
+        BrowserUIController c = new BrowserUIController();
+        ProjectModel aProject = new ProjectModel();
+        c.setProject(aProject);
+        ClassModel aClass = new ClassModel("AClass");
+        try {
+            PackageModel aPackage = aProject.addPackage(new PackageModel());
+            aPackage.addClass(aClass);
+            aClass.addClass(new ClassModel("ASubClass"));
+            aClass.addClass(new ClassModel("AnotherSubClass"));
+            aClass.addClass(new ClassModel("YetAnotherSubClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        c.setSelected(aClass);
+        assertEquals(aClass, c.getSelectedClass());
+        return c;
     }
     
     @Test
     public void testInit(){
+        assertEquals(4, panel.getTreeSize());
     }
     
     @Test
     public void testAddPackageClasses() {
+        fail();
     }
 
     @Test
     public void testGetSelected() {
+        fail();
     }
 
     @Test
-    public void testAddClassToSelected() {
+    public void testModelAdded() {
+        fail();
     }
     
 }

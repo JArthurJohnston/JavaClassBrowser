@@ -9,14 +9,12 @@ import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
-import javax.swing.DefaultListModel;
 
 /**
  *
  * @author Arthur
  */
 public class SystemBrowserShell extends BaseUIShell {
-    private BrowserUIController model;
     /**
      * Creates new form SystemBrowserShell
      */
@@ -26,15 +24,19 @@ public class SystemBrowserShell extends BaseUIShell {
     
     public SystemBrowserShell(BrowserUIController model){
         this();
-        this.model = model;
-        this.fillLists();
-        this.setPanelModels(model);
+        this.setModel(model);
         this.setVisible(true);
     }
     
-    private void setPanelModels(BrowserUIController aModel){
+    @Override
+    protected BrowserUIController controller(){
+        return (BrowserUIController) controller;
+    }
+    
+    private void setModel(BrowserUIController aController){
+        controller = aController;
         for(BasePanel bp : this.myPanels())
-            bp.setModel(aModel);
+            bp.setModel(aController);
     }
     
     @Override
@@ -44,31 +46,27 @@ public class SystemBrowserShell extends BaseUIShell {
                 .addElm(modelEditPanel);
     }
     
-    private void fillLists(){
-        this.setUpPackageList();
-        this.fillListModel(model.getPackages(), (DefaultListModel)this.packageList.getModel());
-        this.packageList.setSelectedIndex(0);
+    private boolean checkModelProject(BaseModel aModel){
+        return aModel.getProject() == this.controller().getSelectedProject();
     }
-    
-    private void setUpPackageList(){
-        this.packageList.setModel(new DefaultListModel());
-        this.packageList.getSelectionModel()
-                .addListSelectionListener(this.setUpListener(packageList));
-    }
-    
     
     @Override
     public void modelAdded(BaseModel newModel){
-        if(newModel.isPackage())
-            ((DefaultListModel)this.packageList.getModel()).addElement(newModel);
-        for(BasePanel bp : this.myPanels())
-            bp.modelAdded(newModel);
+        if(!this.checkModelProject(newModel))
+            return;
+        super.modelAdded(newModel);
     }
-    
     @Override
-    public void selectionChanged(BaseModel aModel){
-        for(BasePanel bp : this.myPanels())
-            bp.selectionChanged(aModel);
+    public void modelRemoved(BaseModel aModel){
+        if(!this.checkModelProject(aModel))
+            return;
+        super.modelRemoved(aModel);
+    }
+    @Override
+    public void modelChanged(BaseModel aModel){
+        if(!this.checkModelProject(aModel))
+            return;
+        super.modelChanged(aModel);
     }
 
     public ClassType getSelectedVarType(){

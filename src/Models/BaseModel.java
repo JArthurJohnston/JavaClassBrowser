@@ -9,6 +9,7 @@ import Exceptions.CannotBeDeletedException;
 import Exceptions.VeryVeryBadException;
 import MainBase.Events.*;
 import Types.ClassType;
+import UIModels.Buffer.BaseModelBuffer;
 import java.util.LinkedList;
 
 /**
@@ -40,6 +41,9 @@ public abstract class BaseModel {
     }
     public String getComment(){
         return comment;
+    }
+    public ProjectModel getProject(){
+        return null;
     }
     //setters
 
@@ -84,6 +88,10 @@ public abstract class BaseModel {
     
     public boolean isPackage(){
         return false;
+    }
+    
+    public BaseModelBuffer getBuffer(){
+        return new BaseModelBuffer(this);
     }
     
     //Abstract Methods

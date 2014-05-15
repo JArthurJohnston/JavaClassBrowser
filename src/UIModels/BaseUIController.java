@@ -4,9 +4,15 @@
  */
 package UIModels;
 
+import MainBase.Events.ModelAddedEvent;
+import MainBase.Events.ModelChangedEvent;
+import MainBase.Events.ModelEventHandler;
+import MainBase.Events.ModelEventListener;
+import MainBase.Events.ModelRemovedEvent;
 import MainBase.MainApplication;
 import Models.BaseModel;
 import Models.ProjectModel;
+import UIShells.BaseUIShell;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -15,7 +21,7 @@ import javax.swing.DefaultListModel;
  * 
  * @author Arthur
  */
-public class BaseUIController {
+public class BaseUIController implements ModelEventListener{
     protected MainApplication main;
     protected ProjectModel selectedProject;
     
@@ -24,6 +30,19 @@ public class BaseUIController {
     public BaseUIController(MainApplication main){
         this.main = main;
         this.selectedProject = main.getSelectedProject();
+        ModelEventHandler.addModelListener(this); //
+    }
+    
+    public void setProject(ProjectModel aProject){
+        selectedProject = aProject;
+    }
+    
+    protected BaseUIShell shell(){
+        return null;
+    }
+    
+    public void close(){
+        ModelEventHandler.removeModelListener(this);
     }
     
     /**
@@ -53,9 +72,22 @@ public class BaseUIController {
             listModel.addElement(list.get(i));
         }
     }
-    
-     public void modelAdded(BaseModel newModel){}
-     public void modelChanged(BaseModel newModel){}
-     public void modelRemoved(BaseModel newModel){}
-     public void setSelected(BaseModel aModel){}
+    public void setSelected(BaseModel aModel){
+        this.shell().selectionChanged(aModel);
+    }
+
+    @Override
+    public void modelAdded(ModelAddedEvent e) {
+        this.shell().modelAdded(e.getModel());
+    }
+
+    @Override
+    public void modelRemoved(ModelRemovedEvent e) {
+        this.shell().modelRemoved(e.getModel());
+    }
+
+    @Override
+    public void modelChanged(ModelChangedEvent e) {
+        this.shell().modelChanged(e.getModel());
+    }
 }

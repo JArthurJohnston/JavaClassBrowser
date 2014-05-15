@@ -271,7 +271,8 @@ public class ProjectModel extends BaseModel {
         */
     }
     
-    protected ProjectModel getProject(){
+    @Override
+    public ProjectModel getProject(){
         return this;
     }
     
