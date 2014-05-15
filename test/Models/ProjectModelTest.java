@@ -4,11 +4,12 @@
  */
 package Models;
 
-import Exceptions.DoesNotExistException;
 import Exceptions.AlreadyExistsException;
+import Exceptions.DoesNotExistException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
+import MainBase.EventTester;
 import MainBase.MainApplication;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,15 +61,14 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(project.getClassList().getClass(),  LinkedList.class);
         assertEquals(project.getPackageList().getClass(),  LinkedList.class);
         assertEquals("Test Project", project.name());
-        assertEquals(2, project.getPackageList().size());
-        assertEquals(project.findPackage("default package"), project.getPackageList().get(1));
-        assertEquals("All", project.getPackageList().getFirst().name());
+        assertEquals(1, project.getPackageList().size());
+        assertEquals(project.findPackage("default package"), project.getPackageList().getFirst());
         
         project = new ProjectModel("A Project");
         assertEquals(ProjectModel.class, project.getClass());
         assertEquals(project.getPackageList().getClass(),  LinkedList.class);
         assertEquals(project.getClassList().size(),  0);
-        assertEquals(project.findPackage("default package"), project.getPackageList().get(1));
+        assertEquals(project.findPackage("default package"), project.getPackageList().getFirst());
     }
     
     @Test
@@ -95,20 +95,19 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(newPackage ,project.findPackage("New Package"));
         
         assertEquals(newPackage, project.getPackageList().getLast());
-        assertTrue(project.getPackageList().size() == 3);
+        assertTrue(project.getPackageList().size() == 2);
         try {
             project.addPackage(new PackageModel("New Package"));
             fail("NameAlreadyExistsException not thrown");
         } catch (AlreadyExistsException ex) {
         }
-        assertTrue(project.getPackageList().size() == 3);
+        assertTrue(project.getPackageList().size() == 2);
     }
     
     @Test
     public void testGetPackageList(){
-        assertEquals(2, project.getPackageList().size());
-        assertEquals(ProjectModel.ALL_PACKAGE, project.getPackageList().getFirst());
-        assertEquals("default package", project.getPackageList().getLast().name());
+        assertEquals(1, project.getPackageList().size());
+        assertEquals("default package", project.getPackageList().getFirst().name());
     }
     
     @Test
@@ -308,17 +307,6 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Test
-    public void testAddPackageTriggersUpdateShells(){
-        fail("main should tell every shell except the caller"
-                + "to update itself with the new package, if appliable");
-    }
-    @Test
-    public void testAddClassTriggersUpdateShells(){
-        fail("main should tell every shell except the caller"
-                + "to update itself with the new package, if appliable");
-    }
-    
-    @Test
     public void testGetMain(){
         MainApplication main = new MainApplication();
         try {
@@ -327,13 +315,6 @@ public class ProjectModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertEquals(main, project.getMain());
-    }
-    
-    @Test
-    public void testAllPackage(){
-        assertEquals(PackageModel.class, ProjectModel.ALL_PACKAGE.getClass());
-        assertEquals("All", ProjectModel.ALL_PACKAGE.name());
-        assertTrue(project.getPackageList().contains(ProjectModel.ALL_PACKAGE));
     }
     
     @Test
@@ -355,6 +336,44 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testReservedWords(){
-        assertEquals(16, ProjectModel.getReservedWords().size());
+        assertEquals(17, ProjectModel.getReservedWords().size());
     }
+    
+    @Test
+    public void testAddPackageTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        try {
+            project.addPackage(new PackageModel("SomePackage"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(listener.getEvent().isAdd());
+        assertEquals(project, listener.getEvent().getSource());
+        assertEquals("SomePackage", listener.getEvent().getModel().name());
+    }
+    
+    @Test
+    public void testRemovePackageTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        PackageModel aPackage = null;
+        try {
+            aPackage = project.addPackage(new PackageModel("TO Be Removed"));
+            project.removePackage(aPackage);
+        } catch (AlreadyExistsException | PackageDoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(listener.getEvent().isRemove());
+        assertEquals(project, listener.getEvent().getSource());
+        assertEquals(aPackage, listener.getEvent().getModel());
+    }
+    
+    @Test
+    public void testNameChangedTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        project.setName("NewProjectName");
+        assertTrue(listener.getEvent().isChange());
+        assertEquals(project, listener.getEvent().getSource());
+    }
+    
+    
 }

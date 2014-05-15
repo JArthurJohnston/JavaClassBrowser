@@ -112,6 +112,7 @@ public class ClassModel extends PackageModel{
     public ClassModel remove() throws CannotBeDeletedException, VeryVeryBadException{
         if(!this.classList.isEmpty())
             throw new CannotBeDeletedException(this, hasSubClassesError);
+        fireRemoved(parent, this);
         return parent.removeClass(this);
     }
     
@@ -119,6 +120,7 @@ public class ClassModel extends PackageModel{
     public ClassModel removeClass(ClassModel aClass) throws VeryVeryBadException{
         if(!this.classList.remove(aClass))
             throw new VeryVeryBadException(this, aClass);
+        fireRemoved(this, aClass);
         return this.getParentPackage().removeClass(aClass);
     }
     
@@ -126,6 +128,7 @@ public class ClassModel extends PackageModel{
         if(this.okToAddVariable(newVar.name())){
             variables.add(newVar);
             newVar.setParent(this);
+            fireAdded(this, newVar);
             return newVar;
         }else {
             throw new AlreadyExistsException(this, newVar);
@@ -154,6 +157,7 @@ public class ClassModel extends PackageModel{
      * use the long one in production
      * @param newMethod the method being added
      * @return the method being added
+     * @throws Exceptions.AlreadyExistsException
      */
     public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException{
         if(!this.okToAddMethod(newMethod.name()))
@@ -212,11 +216,12 @@ public class ClassModel extends PackageModel{
     public LinkedList<MethodModel> getStaticMethods(){
         return this.getModelsOfType(methods, ClassType.STATIC);
     }
+    
     public LinkedList<MethodModel> getInstanceMethods(){
         return this.getModelsOfType(methods, ClassType.INSTANCE);
     }
     
-    public LinkedList getModelsOfType(LinkedList modelList, ClassType aType){
+    private LinkedList getModelsOfType(LinkedList modelList, ClassType aType){
         LinkedList aList = new LinkedList();
         for(Object m : modelList){
             if(((BaseModel)m).getType() == aType)
@@ -245,6 +250,7 @@ public class ClassModel extends PackageModel{
      */
     public void setScope(ScopeType newScope){
         this.scope = newScope;
+        fireChanged(this);
     }
     
     /*
@@ -275,7 +281,6 @@ public class ClassModel extends PackageModel{
             return new LinkedList();
         return classList;
     }
-    
     
     public ClassModel getReturnType(){
         return this;

@@ -15,6 +15,10 @@ import java.util.EventObject;
  */
 public class BaseModelUpdatedEvent extends EventObject{
     BaseModel updatedModel;
+    
+    protected BaseModelUpdatedEvent(BaseModel source){
+        super(source);
+    }
 
     public BaseModelUpdatedEvent(BaseModel source, BaseModel updatedModel){
         super(source);

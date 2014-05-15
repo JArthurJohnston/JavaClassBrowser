@@ -4,8 +4,10 @@
  */
 package Models;
 
+import Exceptions.AlreadyExistsException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.VeryVeryBadException;
+import MainBase.Events.*;
 import Types.ClassType;
 import java.util.LinkedList;
 
@@ -18,7 +20,6 @@ public abstract class BaseModel {
     protected String path;
     protected String comment;
     protected String name;
-    protected Boolean hasChange;
     protected final String defaultName = "DefaultName";
     protected LinkedList<String> warnings; // this can be pushed down to ProjectModel
     
@@ -31,9 +32,6 @@ public abstract class BaseModel {
             warnings = new LinkedList();
         return warnings;
     }
-    public boolean hasChange(){ // this may no longer be necessary b/c of the Buffers
-        return hasChange;
-    }
     public String defaultName(){
         return defaultName;
     }
@@ -44,20 +42,23 @@ public abstract class BaseModel {
         return comment;
     }
     //setters
+
     public void setName(String name){
         this.name = name;
+        fireChanged(this);
     }
     public void setPath(String path){
         this.path = path;
+        fireChanged(this);
     }
     public void setComment(String comment){
         this.comment = comment;
+        fireChanged(this);
+        
     }
     public void setDescription(String description){ //see above
         this.description = description;
-    }
-    public void setChanged(boolean isChange){ //see above
-        this.hasChange = isChange;
+        fireChanged(this);
     }
     
     public boolean isClass(){
@@ -72,7 +73,6 @@ public abstract class BaseModel {
     public boolean isVariable(){
         return false;
     }
-    
     public ClassType getType(){ // can probably be pushed down to ClassModel
         return null;
     }
@@ -91,4 +91,14 @@ public abstract class BaseModel {
     abstract public String getPath();
     abstract public BaseModel remove() throws CannotBeDeletedException,
             VeryVeryBadException;
+    
+    public void fireAdded(BaseModel source, BaseModel target){
+        ModelEventHandler.fireEvent(new ModelAddedEvent(source, target));
+    }
+    public void fireRemoved(BaseModel source, BaseModel target){
+        ModelEventHandler.fireEvent(new ModelRemovedEvent(source, target));
+    }
+    public void fireChanged(BaseModel source){
+        ModelEventHandler.fireEvent(new ModelChangedEvent(source));
+    }
 }

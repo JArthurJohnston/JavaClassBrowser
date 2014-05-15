@@ -13,12 +13,11 @@ import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.Events.BaseModelUpdatedEvent;
 import MainBase.Events.ModelAddedEvent;
+import MainBase.Events.ModelEventHandler;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -58,6 +57,17 @@ public class ClassModelTest extends BaseTest{
         testClass = null;
         parentPackage = null;
         parentProject = null;
+    }
+    
+    private void setUpSubClasses(){
+        try {
+            testClass.addClass(new ClassModel("ASubClasss1"));
+            ClassModel subClass = testClass.addClass(new ClassModel("ASubClasss2"));
+            testClass.addClass(new ClassModel("ASubClasss3"));
+            subClass.addClass(new ClassModel("ASubSubClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @Test
@@ -347,12 +357,6 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Test
-    public void testAddClassTriggersUpdateShells(){
-        fail("main should tell every shell except the caller"
-                + "to update itself with the new package, if appliable");
-    }
-    
-    @Test
     public void testGetMain(){
         MainApplication main = new MainApplication();
         try {
@@ -392,8 +396,41 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Test
+    public void testRemove(){
+        fail();
+        //assert that this works
+        try {
+            testClass.remove();
+        } catch (CannotBeDeletedException | VeryVeryBadException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void testNameChange(){
+        try {
+            parentPackage.addClass(new ClassModel("OneName"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            testClass.rename("OneName");
+            fail("exception Not Thrown");
+        } catch (AlreadyExistsException ex) {}
+        assertEquals("InstanceClass", testClass.name());
+        //assert other instances of the class have been renamed
+        /*
+        oh fuck. each class would have to have its own listener...
+        OR
+        each class can store a listof its references, and just iterate through 
+        that. fireing changedEvents as it goes.
+        */
+    }
+    
+    
+    @Test
     public void testAddClassTriggersEvent(){
-        EventTester listener = new EventTester();
+        EventTester listener = this.getTestListener();
         try {
             ClassModel newClass = testClass.addClass(new ClassModel("SomeNewClass"));
             assertTrue(listener.eventTriggered());
@@ -404,5 +441,32 @@ public class ClassModelTest extends BaseTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+    }
+    
+    @Test
+    public void testRemoveClassTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        this.setUpSubClasses();
+        ClassModel subClass = testClass.getSubClasses().getLast();
+        try {
+            testClass.removeClass(subClass);
+        } catch (VeryVeryBadException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(listener.eventTriggered());
+        BaseModelUpdatedEvent e = listener.getEvent();
+        assertTrue(e.isRemove());
+        assertEquals(testClass, e.getSource());
+        assertEquals(subClass, e.getModel());
+    }
+    
+    @Test
+    public void testClassNameChangedTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        testClass.setName("NewClassName");
+        assertTrue(listener.eventTriggered());
+        BaseModelUpdatedEvent e = listener.getEvent();
+        assertTrue(e.isChange());
+        assertEquals(testClass, e.getSource());
     }
 }

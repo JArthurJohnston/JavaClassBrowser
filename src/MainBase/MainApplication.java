@@ -2,12 +2,8 @@ package MainBase;
 
 import Exceptions.AlreadyExistsException;
 import Exceptions.DoesNotExistException;
-import MainBase.Events.ModelEventListener;
 import Models.*;
-import UIModels.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Vector;
 
 /**
  * MainApplication is the top-level model for the whole program
@@ -19,21 +15,12 @@ import java.util.Vector;
  */
 public class MainApplication {
     private final ArrayList<ProjectModel> projects;
-    private final LinkedList <BaseUIController>openWindowModels;
     private String userName;
     private ProjectModel selectedProject;
-    private Vector<ModelEventListener> listeners;
     
     public MainApplication(){
         userName = System.getProperty("user.name");
         projects = new ArrayList();
-        openWindowModels = new LinkedList();
-    }
-    
-    synchronized public void addModelListener(ModelEventListener l){
-        if(listeners == null)
-            listeners = new Vector();
-        listeners.add(l);
     }
     
     public ArrayList<ProjectModel> getProjects(){
@@ -87,18 +74,7 @@ public class MainApplication {
      * shill will have a corresponding model. and since Main should only
      * be communicating with that model, not the actual shell.
      * 
-     * @param modelClass
-     * @return 
      */
-    private boolean okToOpenShell(Object modelClass){
-        if(openWindowModels.isEmpty())
-            return true;
-        for(BaseUIController model : openWindowModels){
-            if(model.getClass() == modelClass)
-                return false;
-        }
-        return true;
-    }
     
     public ProjectModel setSelectedProejct(ProjectModel aProject){
         this.selectedProject = aProject;
@@ -106,37 +82,5 @@ public class MainApplication {
     }
     public ProjectModel getSelectedProject(){
         return selectedProject;
-    }
-    
-    public BaseUIController addModel(BaseUIController model){
-        openWindowModels.add(model);
-        return model;
-    }
-    
-    public void removeModel(BaseUIController model){
-        openWindowModels.remove(model);
-    }
-    
-    public void addUpdateShells(BaseModel newModel){
-        for(BaseUIController m : openWindowModels){
-            m.modelAdded(newModel);
-        }
-    }
-    
-    public void removeUpdateShells(BaseModel newModel){
-        for(BaseUIController m : openWindowModels){
-            m.modelRemoved(newModel);
-        }
-    }
-    
-    public void changeUpdateShells(BaseModel newModel){
-        for(BaseUIController m : openWindowModels){
-            m.modelChanged(newModel);
-        }
-    }
-    
-    public BrowserUIController openSystemBrowser(){
-        openWindowModels.add(new BrowserUIController(this));
-        return (BrowserUIController)openWindowModels.getLast();
     }
 }

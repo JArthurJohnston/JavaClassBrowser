@@ -54,4 +54,11 @@ public class ModelEventHandler {
     public static boolean isEmpty(){
         return size() == 0;
     }
+    
+    public static boolean contains(ModelEventListener listener){
+        for(ModelEventListener l : getList().getListeners(ModelEventListener.class))
+            if(l == listener)
+                return true;
+        return false;
+    }
 }

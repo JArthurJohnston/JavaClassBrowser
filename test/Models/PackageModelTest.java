@@ -8,10 +8,12 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
+import MainBase.EventTester;
 import MainBase.MainApplication;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import junit.framework.TestListener;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -312,14 +314,46 @@ public class PackageModelTest extends BaseTest{
     }
     
     @Test
-    public void testAddPackageTriggersUpdateShells(){
-        fail("main should tell every shell except the caller"
-                + "to update itself with the new package, if appliable");
+    public void testAddPackageTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        PackageModel aPackage = null;
+        try {
+            aPackage = testPackage.addPackage(new PackageModel("new package"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(listener.getEvent().isAdd());
+        assertEquals(testPackage, listener.getEvent().getSource());
+        assertEquals(aPackage, listener.getEvent().getModel());
     }
+    
     @Test
-    public void testAddClassTriggersUpdateShells(){
-        fail("main should tell every shell except the caller"
-                + "to update itself with the new package, if appliable");
+    public void testAddClassTriggersEvent(){
+        EventTester listener = this.getTestListener();
+        ClassModel aClass = null;
+        try {
+            aClass = testPackage.addClass(new ClassModel("NewClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(listener.getEvent().isAdd());
+        assertEquals(testPackage, listener.getEvent().getSource());
+        assertEquals(aClass, listener.getEvent().getModel());
+    }
+    
+    @Test
+    public void testRemovePackageTriggersEvent(){
+        fail();
+    }
+    
+    @Test
+    public void testRemoveClassTriggersEvent(){
+        fail();
+    }
+    
+    @Test
+    public void testChangedEvents(){
+        fail("test the other changed events");
     }
     
     @Test

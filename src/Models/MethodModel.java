@@ -104,6 +104,7 @@ public class MethodModel extends ClassModel{
     
     public MethodModel addDefinition(MethodModel newDef){
         this.references.add(newDef);
+        fireChanged(this);
         return newDef;
     }
     
@@ -112,6 +113,7 @@ public class MethodModel extends ClassModel{
      */
     public void setSource(String source){
         this.source = source;
+        fireChanged(this);
     }
     public void setType(ClassType newType){
         /*
@@ -122,9 +124,11 @@ public class MethodModel extends ClassModel{
         throw a lot of red underlines to denote syntax/compile errors.
         */
         this.type = newType;
+        fireChanged(this);
     }
     public void setParameters(LinkedList params){
         this.parameters = params;
+        fireChanged(this);
     }
     
     @Override
@@ -136,6 +140,7 @@ public class MethodModel extends ClassModel{
     
     public void setReturnType(ClassModel aClassValue){
         this.returnType = aClassValue;
+        fireChanged(this);
     }
     
     /*

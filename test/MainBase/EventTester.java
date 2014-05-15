@@ -14,6 +14,10 @@ import MainBase.Events.*;
  */
 public class EventTester implements ModelEventListener{
     private BaseModelUpdatedEvent event;
+    
+    public EventTester(){
+        ModelEventHandler.addModelListener(this);
+    }
 
     @Override
     public void modelAdded(ModelAddedEvent e) {
@@ -31,9 +35,7 @@ public class EventTester implements ModelEventListener{
     }
     
     public BaseModelUpdatedEvent getEvent(){
-        BaseModelUpdatedEvent returnedEvent = event;
-        this.clearEvent();
-        return returnedEvent;
+        return event;
     }
     
     public void clearEvent(){

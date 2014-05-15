@@ -76,9 +76,11 @@ public class VariableModel extends BaseModel{
     @Override
     public void setName(String aString){
         this.name = aString;
+        fireChanged(this);
     }
     public VariableModel setObjectType(ClassModel type){
         this.type = type;
+        fireChanged(this);
         return this;
     }
     public VariableModel setScope(ScopeType scope){
@@ -86,10 +88,12 @@ public class VariableModel extends BaseModel{
             this.scope = ScopeType.NONE;
         else
             this.scope = scope;
+        fireChanged(this);
         return this;
     }
     public VariableModel setType(ClassType aType){
         staticOrInstance = aType;
+        fireChanged(this);
         return this;
     }
     public VariableModel setParent(ClassModel aClass){
@@ -100,10 +104,12 @@ public class VariableModel extends BaseModel{
     
     public VariableModel setValue(String aValue){
         this.value = aValue;
+        fireChanged(this);
         return this;
     }
     public VariableModel setFinal(boolean isFinal){
         this.isFinal = isFinal;
+        fireChanged(this);
         return this;
     }
     

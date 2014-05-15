@@ -7,7 +7,6 @@ package Models;
 import Exceptions.AlreadyExistsException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
-import MainBase.Events.ModelAddedEvent;
 import MainBase.MainApplication;
 import java.util.LinkedList;
 
@@ -93,6 +92,7 @@ public class PackageModel extends ProjectModel {
             newPackage.setParent(this);
             this.packageList.add(newPackage);
         }
+        this.fireAdded(this, newPackage);
         return this.getProject().addPackage(newPackage);
     }
     
@@ -103,8 +103,12 @@ public class PackageModel extends ProjectModel {
             classList.add(newClass);
             newClass.setParent(this);
         }
-        new ModelAddedEvent(this, newClass);
+        this.fireAdded(this, newClass);
         return newClass;
+    }
+    
+    public void rename(String newName) throws AlreadyExistsException{
+        //write me
     }
     
     /**
@@ -116,6 +120,7 @@ public class PackageModel extends ProjectModel {
     public ClassModel adoptClass(ClassModel aClass){
         aClass.setParent(this);
         this.classList.add(aClass);
+        fireAdded(this, aClass);
         return aClass;
     }
     
@@ -124,6 +129,7 @@ public class PackageModel extends ProjectModel {
         if(aClass.parent == this){
             if(!this.classList.remove(aClass))
                 throw new VeryVeryBadException(false, aClass);
+            fireRemoved(this, aClass);
         }
         return this.getProject().removeClass(aClass);
     }
@@ -131,6 +137,7 @@ public class PackageModel extends ProjectModel {
     protected ClassModel classMoved(ClassModel aClass) throws VeryVeryBadException{
         if(this.classList.remove(aClass)){
             //need to add aClass's subClasses, and ONLT its subclasses DAMMIT!!!
+            fireRemoved(this, aClass);
             return aClass;
         }else
             throw new VeryVeryBadException(this, aClass);
@@ -142,6 +149,7 @@ public class PackageModel extends ProjectModel {
             if(aPackage.getParent() == this){
                 this.packageList.remove(aPackage);
             }
+            fireRemoved(this, aPackage);
             return this.getProject().removePackage(aPackage);
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
@@ -168,11 +176,6 @@ public class PackageModel extends ProjectModel {
     } 
     
     @Override
-    protected void triggerModelChanged(){
-        this.getProject().modelChanged(this);
-    }
-    
-    @Override
     public LinkedList<PackageModel> getPackageList(){
         LinkedList aList = new LinkedList();
         aList.add(this);
@@ -192,6 +195,7 @@ public class PackageModel extends ProjectModel {
     
     public void setParent(ProjectModel aProjectOrPackage){
         this.parent = aProjectOrPackage;
+        fireChanged(this);
     }
     
     @Override

@@ -43,7 +43,7 @@ public class TestMain {
         } catch (AlreadyExistsException ex) {
             Logger.getLogger(TestMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BrowserUIController aModel = main.openSystemBrowser();
+        BrowserUIController aModel = new BrowserUIController(main);
         aModel.getShell().setVisible(true);
     }
     

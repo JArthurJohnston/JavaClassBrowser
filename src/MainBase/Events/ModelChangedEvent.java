@@ -14,8 +14,8 @@ import Models.BaseModel;
  */
 public class ModelChangedEvent extends BaseModelUpdatedEvent{
 
-    public ModelChangedEvent(BaseModel source, BaseModel updatedModel) {
-        super(source, updatedModel);
+    public ModelChangedEvent(BaseModel source) {
+        super(source);
     }
     
     @Override
