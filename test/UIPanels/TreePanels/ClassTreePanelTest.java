@@ -7,10 +7,15 @@
 package UIPanels.TreePanels;
 
 import Exceptions.AlreadyExistsException;
+import Internal.BaseTest;
+import Internal.Mocks.MockBrowserController;
+import Internal.Mocks.MockClassModel;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.BrowserUIController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -20,7 +25,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class ClassTreePanelTest {
+public class ClassTreePanelTest extends BaseTest{
     private ClassTreePanel panel;
     
     public ClassTreePanelTest() {
@@ -29,7 +34,6 @@ public class ClassTreePanelTest {
     @Before
     public void setUp() {
         panel = new ClassTreePanel();
-        panel.setModel(this.controller());
     }
     
     @After
@@ -38,16 +42,18 @@ public class ClassTreePanelTest {
     }
     
     private BrowserUIController controller(){
-        BrowserUIController c = new BrowserUIController();
-        ProjectModel aProject = new ProjectModel();
-        c.setProject(aProject);
+        MockBrowserController c = new MockBrowserController();
         ClassModel aClass = new ClassModel("AClass");
+        c.setSelected(aClass);
         try {
-            PackageModel aPackage = aProject.addPackage(new PackageModel());
+            PackageModel aPackage = new ProjectModel("a project")
+                    .addPackage(new PackageModel("SomePackage"));
+            
             aPackage.addClass(aClass);
             aClass.addClass(new ClassModel("ASubClass"));
             aClass.addClass(new ClassModel("AnotherSubClass"));
             aClass.addClass(new ClassModel("YetAnotherSubClass"));
+            aPackage.addClass(new ClassModel("AnotherClass"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -56,19 +62,37 @@ public class ClassTreePanelTest {
         return c;
     }
     
-    @Test
-    public void testInit(){
-        assertEquals(4, panel.getTreeSize());
+    private void verifyTreeSize(int expected){
+        assertEquals(expected, panel.getTreeSize()); //nodes in the tree
+        assertEquals(expected, panel.getHashSize()); //nodes in the hash
     }
     
     @Test
-    public void testAddPackageClasses() {
-        fail();
+    public void testSetControllerWithSelectedClass(){
+        panel = new ClassTreePanel();
+        assertTrue(panel.isEmpty());
+        panel.setModel(this.controller());
+        this.verifyTreeSize(4);
+    }
+    
+    @Test 
+    public void testSetControllerWithSelectedPackage(){
+        panel = new ClassTreePanel();
+        BrowserUIController controller = this.controller();
+        PackageModel aPackage = controller.getSelectedClass().getParentPackage();
+        controller.setSelected(aPackage);
+        
+        panel.setModel(controller);
+        //this.showPanel(panel);
+        this.verifyTreeSize(5);
     }
 
     @Test
     public void testGetSelected() {
-        fail();
+        BrowserUIController controller = this.controller();
+        panel.setModel(controller);
+        panel.setSelectedIndex(0);
+        assertEquals("AnotherSubClass", controller.getSelected().name());
     }
 
     @Test

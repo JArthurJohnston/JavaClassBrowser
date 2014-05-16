@@ -5,9 +5,11 @@
 package UIPanels.TreePanels;
 
 import Models.*;
+import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
 import UIPanels.TreePanels.Nodes.*;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -22,15 +24,28 @@ import javax.swing.tree.TreeSelectionModel;
  * @author Arthur
  */
 public class BaseTreePanel extends BasePanel {
-    protected DefaultMutableTreeNode rootNode;
-    protected TreeMap treeMap;
+    protected ModelNode rootNode;
+    protected HashMap<BaseModel, ModelNode> treeMap;
+    
+    public BaseTreePanel(){
+        treeMap = new HashMap();
+    }
+    
+    
+    /**
+     *
+     * @param aController
+     */
+    @Override
+    public void setModel(BrowserUIController aController){
+        this.controller = aController;
+    }
     
     protected JTree tree(){
         return new JTree();
     }
     
     protected ModelNode getRootNode(){
-        treeMap = new TreeMap();
         return null;
     }
     
@@ -66,44 +81,39 @@ public class BaseTreePanel extends BasePanel {
     }
     
     protected ModelNode getNodeFromModel(BaseModel aModel){
-        if(aModel.isPackage())
-            return new PackageNode((PackageModel)aModel);
-        if(aModel.isClass())
-            return new ClassNode((ClassModel)aModel);
-        return new ModelNode(aModel);
+        return treeMap.get(aModel);
     }
     
-    public int getTreeSize(){
-        return treeMap.getNodes().size();
+    @Override
+    public void selectionChanged(BaseModel aModel){
+        rootNode = null;
     }
-    
     
     /**
-     * for fast access to every node in the tree
+     * Returns the number of nodes in the tree.
+     * Not counting the root node.
+     * this is for testing only.
+     * @return 
      */
-    protected class TreeMap {
-        private final HashMap <BaseModel, ModelNode> treeHash;
-        
-        public TreeMap(){
-            treeHash = new HashMap();
+    public int getTreeSize(){
+        int i=-1; //ignoring the root node
+        Enumeration e = this.getRootNode().breadthFirstEnumeration();
+        while(e.hasMoreElements()){
+            i++;
+            e.nextElement();
         }
-        
-        public ModelNode getNodeForModel(BaseModel aModel){
-            return treeHash.get(aModel);
-        }
-        
-        public ModelNode addModel(BaseModel aModel){
-            ModelNode newNode = new ModelNode(aModel);
-            treeHash.put(aModel, new ModelNode(aModel));
-            return newNode;
-        }
-        
-        public void removeModel(BaseModel aModel){
-            treeHash.get(aModel).removeFromParent();
-        }
-        
-        public Collection<ModelNode> getNodes(){
-            return treeHash.values();
-        }
+        return i;
+    }
+    
+    public void setSelectedIndex(int x){
+        this.tree().setSelectionPath(this.tree().getPathForRow(x));
+    }
+    
+    public int getHashSize(){
+        return treeMap.values().size();
+    }
+    
+    public boolean isEmpty(){
+        return this.getTreeSize() == 0;
     }
 }

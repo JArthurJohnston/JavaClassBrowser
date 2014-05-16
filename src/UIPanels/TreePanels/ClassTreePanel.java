@@ -4,12 +4,12 @@
  */
 package UIPanels.TreePanels;
 
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.PackageModel;
+import UIModels.BrowserUIController;
 import UIPanels.TreePanels.Nodes.ClassNode;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -22,8 +22,30 @@ public class ClassTreePanel extends BaseTreePanel {
      * Creates new form ClassTreePanel
      */
     public ClassTreePanel() {
+        super();
         initComponents();
         this.setUpTree();
+    }
+    
+    @Override
+    public void setModel(BrowserUIController controller){
+        super.setModel(controller);
+        if(controller.getSelectedClass() != null){
+            this.fillFromClass(controller.getSelectedClass());
+            return;
+        }
+        if(controller.getSelectedPackage() != null)
+            this.fillFromPackage(controller.getSelectedPackage());
+    }
+    
+    private void fillFromPackage(PackageModel aPackage){
+        for(ClassModel c : aPackage.getTopLevelClasses())
+            this.getRootNode().add(new ClassNode(c, treeMap));
+    }
+    
+    private void fillFromClass(ClassModel aClass){
+        this.getRootNode().add(new ClassNode(aClass, treeMap));
+        this.tree().se
     }
     
     @Override
@@ -34,13 +56,13 @@ public class ClassTreePanel extends BaseTreePanel {
     @Override
     protected ClassNode getRootNode(){
         if(top == null)
-            top = new ClassNode(ClassModel.getObjectClass());
+            top = ClassNode.getDefaultRoot();
         return top;
     }
     
     public void addPackageClasses(PackageModel aPackage){
         for(ClassModel c : aPackage.getClassList())
-            top.add(new ClassNode(c));
+            top.add(new ClassNode(c, treeMap));
     }
     
     @Override
@@ -53,6 +75,15 @@ public class ClassTreePanel extends BaseTreePanel {
         if(this.getSelectedNode() != null)
             return this.getSelectedNode().getModel();
         return null;
+    }
+    
+    @Override
+    public void selectionChanged(BaseModel aModel){
+        if(!aModel.isPackage())
+            return;
+        super.selectionChanged(aModel);
+        if(aModel.isPackage())
+            this.fillFromPackage((PackageModel)aModel);
     }
 
     /**

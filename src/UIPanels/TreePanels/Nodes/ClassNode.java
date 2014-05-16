@@ -7,6 +7,7 @@
 package UIPanels.TreePanels.Nodes;
 
 import Models.ClassModel;
+import java.util.HashMap;
 
 /**
  *
@@ -18,14 +19,19 @@ public class ClassNode extends ModelNode{
         return new ClassNode(ClassModel.getObjectClass());
     }
         
-    public ClassNode(ClassModel aClass){
+    private ClassNode(ClassModel aClass){
         super(aClass);
-        this.generateTreeFromClass();
+    }
+    
+    public ClassNode(ClassModel aClass, HashMap aMap){
+        super(aClass);
+        aMap.put(aClass, this);
+        this.generateTreeFromClass(aMap);
     }
         
-    private void generateTreeFromClass(){
+    private void generateTreeFromClass(HashMap aMap){
         for(ClassModel c : this.getModel().getSubClasses())
-            this.add(new ClassNode(c));
+            this.add(new ClassNode(c, aMap));
     }
         
     @Override

@@ -14,18 +14,15 @@ import UIModels.BrowserUIController;
  * @author arthur
  */
 public class MockBrowserController extends BrowserUIController {
-    ClassModel selectedClass;
     BaseModel selected;
-   
-    
-    public void setSelectedClass(ClassModel aClass){
-        selectedClass = aClass;
-    }
     
     @Override
     public ClassModel getSelectedClass(){
-        return selectedClass;
+        if(selected.isClass())
+            return (ClassModel)selected;
+        return null;
     }
+    
     @Override
     public void setSelected(BaseModel aModel){
         this.selected = aModel;
@@ -34,6 +31,13 @@ public class MockBrowserController extends BrowserUIController {
     @Override
     public BaseModel getSelected(){
         return selected;
+    }
+    
+    @Override
+    public PackageModel getSelectedPackage(){
+        if(selected.isPackage())
+            return (PackageModel)selected;
+        return null;
     }
     
 }

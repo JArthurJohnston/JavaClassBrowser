@@ -11,12 +11,16 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.ProjectModel;
+import java.awt.BorderLayout;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -179,5 +183,14 @@ public class BaseTest {
         assertFalse(ModelEventHandler.isEmpty());
         assertTrue(ModelEventHandler.contains(listener));
         return listener;
+    }
+    
+    public void showPanel(JPanel aPanel){
+        JFrame aFrame = new JFrame();
+        aFrame.setSize(200,400);
+        aFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        aFrame.setLayout(new BorderLayout());
+        aFrame.getContentPane().add(aPanel, BorderLayout.CENTER);
+        aFrame.setVisible(true);
     }
 }

@@ -7,6 +7,8 @@
 package UIPanels.TreePanels.Nodes;
 
 import Models.BaseModel;
+import java.util.Enumeration;
+import java.util.HashMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -19,6 +21,11 @@ public class ModelNode extends DefaultMutableTreeNode{
     public ModelNode(BaseModel aModel){
         super(aModel);
     }
+    
+    public ModelNode(BaseModel aModel, HashMap aMap){
+        this(aModel);
+        aMap.put(aModel, this);
+    }
         
     public BaseModel getModel(){
         return (BaseModel)this.getUserObject();
@@ -30,12 +37,13 @@ public class ModelNode extends DefaultMutableTreeNode{
      * @return  the total number of child nodes and their children
      */
     public int size(){
-        int s = 1;
-        if(children != null)
-            for (Object c : children) {
-                s += ((ModelNode)c).size();
+        int i=0;
+        Enumeration e = this.breadthFirstEnumeration();
+        while(e.hasMoreElements()){
+            i++;
+            e.nextElement();
         }
-        return s;
+        return i;
     }
     
 }
