@@ -4,10 +4,11 @@
  */
 package Models;
 
+import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
-import Exceptions.AlreadyExistsException;
 import Exceptions.VeryVeryBadException;
 import MainBase.SortedList;
 import Types.ClassType;
@@ -34,6 +35,10 @@ public class ClassModel extends PackageModel{
     
     //use these constructors for testing only
     public ClassModel(){
+        this.scope = ScopeType.PUBLIC;
+        classList = new LinkedList();
+        this.methods = new LinkedList();
+        this.variables = new LinkedList();
     }
     
     public ClassModel(String name, ScopeType scope){
@@ -42,15 +47,8 @@ public class ClassModel extends PackageModel{
     }
     
     public ClassModel(String name){
-        initialize();
+        this();
         this.name = name;
-    }
-    
-    private void initialize(){
-        this.scope = ScopeType.PUBLIC;
-        classList = new LinkedList();
-        this.methods = new LinkedList();
-        this.variables = new LinkedList();
     }
     
     public static SortedList<String> getPrimitiveTypes(){
@@ -159,7 +157,7 @@ public class ClassModel extends PackageModel{
      * @return the method being added
      * @throws Exceptions.AlreadyExistsException
      */
-    public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException{
+    public MethodModel addMethod(MethodModel newMethod) throws BaseException{
         if(!this.okToAddMethod(newMethod.name()))
             throw new AlreadyExistsException(this, newMethod);
         methods.add(newMethod);

@@ -8,13 +8,11 @@ import Models.*;
 import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
 import UIPanels.TreePanels.Nodes.*;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -31,11 +29,27 @@ public class BaseTreePanel extends BasePanel {
         treeMap = new HashMap();
     }
     
+    protected ModelNode nodeFromModel(BaseModel aModel){
+        return new ModelNode(aModel, treeMap);
+    }
     
-    /**
-     *
-     * @param aController
-     */
+    public ModelNode addModelToNode(ModelNode parent, BaseModel aModel){
+        return this.expandToNode(
+                parent.addNode(
+                        this.nodeFromModel(aModel)));
+    }
+    
+    public ModelNode addModelToRoot(BaseModel aModel){
+        return this.expandToNode(
+                this.addModelToNode(
+                        this.getRootNode(), aModel));
+    }
+    
+    protected ModelNode expandToNode(ModelNode aNode){
+        this.tree().expandPath(new TreePath(aNode.getPath()));
+        return aNode;
+    }
+    
     @Override
     public void setModel(BrowserUIController aController){
         this.controller = aController;
@@ -64,7 +78,6 @@ public class BaseTreePanel extends BasePanel {
                         ((ModelNode)tree()
                                 .getLastSelectedPathComponent()).getModel());
             }
-            
         });
     }
     

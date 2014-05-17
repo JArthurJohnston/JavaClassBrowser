@@ -4,8 +4,8 @@
  */
 package Models;
 
-import Exceptions.CannotBeDeletedException;
 import Exceptions.AlreadyExistsException;
+import Exceptions.CannotBeDeletedException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
@@ -50,11 +50,13 @@ public class ProjectModel extends BaseModel {
     
     public static SortedList<String> getReservedWords(){
         return new SortedList()
-                    .addElm("void")
                     .addElm("return")
                     .addElm("enum")
                     .addElm("final")
                     .addElm("synchronized")
+                    .addElm("extends")
+                    .addElm("implements")
+                    .addElm("static")
                 .addElements(ClassModel.getPrimitiveTypes())
                 .addElements(ScopeType.getStringValues())
                 .addElements(ClassType.getStringValues());

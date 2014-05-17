@@ -28,6 +28,11 @@ public class ClassTreePanel extends BaseTreePanel {
     }
     
     @Override
+    protected ClassNode nodeFromModel(BaseModel aClass){
+        return new ClassNode((ClassModel)aClass, treeMap);
+    }
+    
+    @Override
     public void setModel(BrowserUIController controller){
         super.setModel(controller);
         if(controller.getSelectedClass() != null){
@@ -40,12 +45,12 @@ public class ClassTreePanel extends BaseTreePanel {
     
     private void fillFromPackage(PackageModel aPackage){
         for(ClassModel c : aPackage.getTopLevelClasses())
-            this.getRootNode().add(new ClassNode(c, treeMap));
+            this.addModelToRoot(c);
     }
     
     private void fillFromClass(ClassModel aClass){
-        this.getRootNode().add(new ClassNode(aClass, treeMap));
-        this.tree().se
+        this.addModelToRoot(aClass);
+        //extend tree
     }
     
     @Override

@@ -7,7 +7,9 @@
 package UIPanels.TreePanels.Nodes;
 
 import Internal.Mocks.MockClassModel;
+import Models.BaseModel;
 import Models.ClassModel;
+import java.util.HashMap;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -18,6 +20,7 @@ import org.junit.Test;
  * @author arthur
  */
 public class ClassNodeTest {
+    private HashMap<BaseModel, ModelNode> treeHash;
     private ClassNode node;
     
     public ClassNodeTest() {
@@ -25,6 +28,7 @@ public class ClassNodeTest {
     
     @Before
     public void setUp() {
+        treeHash = new HashMap();
         node = ClassNode.getDefaultRoot();
     }
     
@@ -35,10 +39,15 @@ public class ClassNodeTest {
     
     private MockClassModel getTestClass(){
         MockClassModel m = new MockClassModel("AClass");
-        m.addClass(new MockClassModel("aSubClass"));
-        m.addClass(new MockClassModel("aSubClass"));
-        m.addClass(new MockClassModel("aSubClass"));
+        m.addClass(new MockClassModel("aSubClass1"));
+        m.addClass(new MockClassModel("aSubClass2"));
+        m.addClass(new MockClassModel("aSubClass3"));
         return m;
+    }
+    
+    private void verifyNodeSize(int x){
+        assertEquals(x, node.size());//minus one for the root node
+        assertEquals(x, treeHash.size());
     }
 
     /**
@@ -48,14 +57,15 @@ public class ClassNodeTest {
     public void testDefaultRoot() {
         assertEquals(ClassModel.getObjectClass(), node.getModel());
         assertEquals(1, node.size());
+        assertEquals(0, treeHash.size());
     }
     
     @Test
     public void testNodeFromClass(){
         MockClassModel aClass = this.getTestClass();
-        node = new ClassNode(aClass);
+        node = new ClassNode(aClass, treeHash);
         assertEquals(aClass, node.getModel());
-        assertEquals(4, node.size());
+        this.verifyNodeSize(4);
     }
     
     @Test
@@ -64,23 +74,27 @@ public class ClassNodeTest {
         ((MockClassModel)aClass.getSubClasses().get(1))
                 .addClass(new MockClassModel("aSUbSubClass"));
         
-        node = new ClassNode(aClass);
+        node = new ClassNode(aClass, treeHash);
         assertEquals(aClass, node.getModel());
-        assertEquals(5, node.size());
+        this.verifyNodeSize(5);
     }
     
     @Test
     public void testAddClassToNode(){
-        node.add(new ClassNode(new ClassModel("SomeClass")));
+        node.addNode(new ClassNode(new ClassModel("SomeClassX"), treeHash));
         assertEquals(2, node.size());
+        assertEquals(1, treeHash.size());
     }
     
     @Test
     public void testRemoveClassFromNode(){
-        ClassNode nodeToBeRemoved = new ClassNode(new ClassModel("RemovedClass"));
-        node.add(nodeToBeRemoved);
+        ClassNode nodeToBeRemoved = 
+                new ClassNode(new ClassModel("RemovedClass"), treeHash);
+        node.addNode(nodeToBeRemoved);
         assertEquals(2, node.size());
-        nodeToBeRemoved.removeFromParent();
+        assertEquals(1, treeHash.size());
+        node.removeNode(nodeToBeRemoved, treeHash);
         assertEquals(1, node.size());
+        assertEquals(0, treeHash.size());
     }
 }

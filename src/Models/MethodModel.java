@@ -14,10 +14,10 @@ import java.util.LinkedList;
  */
 public class MethodModel extends ClassModel{
     private String source;
-    private ClassModel returnType;
     private ClassType type;
     private LinkedList<VariableModel> parameters;
     private LinkedList references;
+    protected ClassModel returnType;
     
     public MethodModel(){
         this.type = ClassType.INSTANCE;
@@ -69,13 +69,6 @@ public class MethodModel extends ClassModel{
         this.returnType = parent;
         this.parameters = params;
         this.source = source;
-    }
-    
-    private void initializeFields(){
-        this.type = ClassType.INSTANCE;
-        this.scope = ScopeType.PUBLIC;
-        this.parameters = new LinkedList();
-        this.references = new LinkedList();
     }
     
     @Override
@@ -183,17 +176,25 @@ public class MethodModel extends ClassModel{
         return parent.getClass() + this.path;
     }
     
+    public String getSignarureString(){
+        return this.scopeString() + 
+                    this.returnType.toString().toLowerCase() +" "+ 
+                        this.name();
+    }
+    
     @Override
     public String toSourceString(){
-        String signature =  this.scopeString() + 
-                            this.returnType.toString().toLowerCase() +" "+ 
-                            this.name() + "(";
+        String signature =  this.getSignarureString() + "(";
         for(VariableModel param: parameters){
             if(param != parameters.get(0))
                 signature += ", ";
             signature += param.getType().name()+" "+param.name();
         }
-        return signature + "){\n"+ this.getSource() + "\n}";
+        return signature + this.getMethodBody();
+    }
+    
+    public String getMethodBody(){
+        return "{\n"+ this.getSource() + "\n}";
     }
     
     @Override
@@ -203,5 +204,9 @@ public class MethodModel extends ClassModel{
     
     public boolean isConstructor(){
         return this.name().compareTo(this.getParent().name()) == 0;
+    }
+    
+    public boolean isAbstract(){
+        return false;
     }
 }

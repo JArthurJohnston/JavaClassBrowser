@@ -31,6 +31,17 @@ public class ModelNode extends DefaultMutableTreeNode{
         return (BaseModel)this.getUserObject();
     }
     
+    public ModelNode addNode(ModelNode aNode){
+        this.add(aNode);
+        return aNode;
+    }
+    
+    public ModelNode removeNode(ModelNode aNode, HashMap aMap){
+        this.remove(aNode);
+        aMap.remove(aNode.getModel());
+        return aNode;
+    }
+    
     /**
      * Returns the number of nodes in this branch of a tree.
      * For testing purposes only.
@@ -38,7 +49,7 @@ public class ModelNode extends DefaultMutableTreeNode{
      */
     public int size(){
         int i=0;
-        Enumeration e = this.breadthFirstEnumeration();
+        Enumeration<ModelNode> e = this.breadthFirstEnumeration();
         while(e.hasMoreElements()){
             i++;
             e.nextElement();
