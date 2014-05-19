@@ -37,15 +37,19 @@ public class ClassTreePanel extends BaseTreePanel {
         super.setModel(controller);
         if(controller.getSelectedClass() != null){
             this.fillFromClass(controller.getSelectedClass());
+            this.expandAll();
             return;
         }
         if(controller.getSelectedPackage() != null)
             this.fillFromPackage(controller.getSelectedPackage());
+        this.expandAll();
     }
     
     private void fillFromPackage(PackageModel aPackage){
+        this.clear();
         for(ClassModel c : aPackage.getTopLevelClasses())
             this.addModelToRoot(c);
+        this.expandAll();
     }
     
     private void fillFromClass(ClassModel aClass){
@@ -67,7 +71,13 @@ public class ClassTreePanel extends BaseTreePanel {
     
     public void addPackageClasses(PackageModel aPackage){
         for(ClassModel c : aPackage.getClassList())
-            top.add(new ClassNode(c, treeMap));
+            this.getRootNode().add(new ClassNode(c, treeMap));
+    }
+    
+    @Override
+    public void clear(){
+        top = null;
+        treeMap.clear();
     }
     
     @Override
@@ -87,6 +97,12 @@ public class ClassTreePanel extends BaseTreePanel {
         if(!aModel.isPackage())
             return;
         super.selectionChanged(aModel);
+        if(aModel.isPackage())
+            this.fillFromPackage((PackageModel)aModel);
+    }
+    
+    @Override
+    public void modelAdded(BaseModel aModel){
         if(aModel.isPackage())
             this.fillFromPackage((PackageModel)aModel);
     }

@@ -81,6 +81,11 @@ public class BaseTreePanel extends BasePanel {
         });
     }
     
+    public void expandAll(){
+        for(int i=0; i< this.tree().getRowCount(); i++)
+            this.tree().expandRow(i);
+    }
+    
     protected DefaultTreeModel treeModel(){
         return (DefaultTreeModel)this.tree().getModel();
     }
@@ -118,6 +123,10 @@ public class BaseTreePanel extends BasePanel {
         return i;
     }
     
+    /**
+     * Only works if the tree has been expanded.
+     * @param x 
+     */
     public void setSelectedIndex(int x){
         this.tree().setSelectionPath(this.tree().getPathForRow(x));
     }
