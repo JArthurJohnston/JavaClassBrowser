@@ -4,11 +4,11 @@
  */
 package UIModels;
 
-import MainBase.Events.ModelAddedEvent;
-import MainBase.Events.ModelChangedEvent;
-import MainBase.Events.ModelEventHandler;
-import MainBase.Events.ModelEventListener;
-import MainBase.Events.ModelRemovedEvent;
+import MainBase.Events.ModelEvents.ModelAddedEvent;
+import MainBase.Events.ModelEvents.ModelChangedEvent;
+import MainBase.Events.ModelEvents.ModelEventHandler;
+import MainBase.Events.ModelEvents.ModelEventListener;
+import MainBase.Events.ModelEvents.ModelRemovedEvent;
 import MainBase.MainApplication;
 import Models.BaseModel;
 import Models.ProjectModel;
@@ -30,7 +30,7 @@ public class BaseUIController implements ModelEventListener{
     public BaseUIController(MainApplication main){
         this.main = main;
         this.selectedProject = main.getSelectedProject();
-        ModelEventHandler.addModelListener(this); //
+        ModelEventHandler.addListener(this); //
     }
     
     public void setProject(ProjectModel aProject){
@@ -42,7 +42,7 @@ public class BaseUIController implements ModelEventListener{
     }
     
     public void close(){
-        ModelEventHandler.removeModelListener(this);
+        ModelEventHandler.removeListener(this);
     }
     
     /**

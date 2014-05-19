@@ -6,7 +6,7 @@ package Internal;
 
 import Exceptions.AlreadyExistsException;
 import MainBase.EventTester;
-import MainBase.Events.ModelEventHandler;
+import MainBase.Events.ModelEvents.ModelEventHandler;
 import MainBase.MainApplication;                   
 import Models.ClassModel;
 import Models.MethodModel;

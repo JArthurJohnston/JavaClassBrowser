@@ -29,14 +29,14 @@ public class BaseTreePanel extends BasePanel {
         treeMap = new HashMap();
     }
     
-    protected ModelNode nodeFromModel(BaseModel aModel){
+    protected ModelNode createNodeFromModel(BaseModel aModel){
         return new ModelNode(aModel, treeMap);
     }
     
     public ModelNode addModelToNode(ModelNode parent, BaseModel aModel){
         return this.expandToNode(
                 parent.addNode(
-                        this.nodeFromModel(aModel)));
+                        this.createNodeFromModel(aModel)));
     }
     
     public ModelNode addModelToRoot(BaseModel aModel){

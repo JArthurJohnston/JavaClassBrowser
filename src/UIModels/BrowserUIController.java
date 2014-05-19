@@ -41,18 +41,6 @@ public class BrowserUIController extends BaseUIController{
         return shell;
     }
     
-    public ClassNode getAllClasses(){
-        if(allClassNode == null)
-            this.initializeClassNode();
-        return allClassNode;
-    }
-    
-    private void initializeClassNode(){
-        allClassNode = new ClassNode(ClassModel.getObjectClass());
-        for(ClassModel c : selectedProject.getClassList())
-            allClassNode.add(new ClassNode(c));
-    }
-    
     public SystemBrowserShell getShell(){
         if(shell == null)
             shell = new SystemBrowserShell(this);

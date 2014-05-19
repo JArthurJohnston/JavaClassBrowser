@@ -28,7 +28,7 @@ public class ClassTreePanel extends BaseTreePanel {
     }
     
     @Override
-    protected ClassNode nodeFromModel(BaseModel aClass){
+    protected ClassNode createNodeFromModel(BaseModel aClass){
         return new ClassNode((ClassModel)aClass, treeMap);
     }
     
@@ -103,8 +103,16 @@ public class ClassTreePanel extends BaseTreePanel {
     
     @Override
     public void modelAdded(BaseModel aModel){
-        if(aModel.isPackage())
-            this.fillFromPackage((PackageModel)aModel);
+        if(!aModel.isClass())
+            return;
+        if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
+            if(((ClassModel)aModel).getParent() != null)
+                this.getNodeFromModel(((ClassModel)aModel)
+                    .getParent())
+                    .addNode(new ClassNode((ClassModel)aModel, treeMap));
+            else
+                this.getRootNode()
+                    .addNode(new ClassNode((ClassModel)aModel, treeMap));
     }
 
     /**

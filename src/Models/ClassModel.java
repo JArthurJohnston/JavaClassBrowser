@@ -148,6 +148,11 @@ public class ClassModel extends PackageModel{
         }
     }
     
+    @Override
+    public ClassModel getParent(){
+        return (ClassModel) parent;
+    }
+    
     
     /**
      * #test

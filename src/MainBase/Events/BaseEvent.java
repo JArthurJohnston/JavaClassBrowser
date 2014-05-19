@@ -6,16 +6,16 @@
 
 package MainBase.Events;
 
-import java.util.EventListener;
+import java.util.EventObject;
 
 /**
  *
  * @author arthur
  */
-public interface ModelEventListener extends EventListener{
-    
-    void modelAdded(ModelAddedEvent e);
-    void modelRemoved(ModelRemovedEvent e);
-    void modelChanged(ModelChangedEvent e);
+public class BaseEvent extends EventObject{
+
+    public BaseEvent(Object source) {
+        super(source);
+    }
     
 }

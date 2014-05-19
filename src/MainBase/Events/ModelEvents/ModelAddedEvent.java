@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package MainBase.Events;
+package MainBase.Events.ModelEvents;
 
 import Models.BaseModel;
 
@@ -12,13 +12,14 @@ import Models.BaseModel;
  *
  * @author arthur
  */
-public class ModelRemovedEvent extends BaseModelUpdatedEvent{
+public class ModelAddedEvent extends BaseModelUpdatedEvent{
 
-    public ModelRemovedEvent(BaseModel source, BaseModel updatedModel) {
+    public ModelAddedEvent(BaseModel source, BaseModel updatedModel) {
         super(source, updatedModel);
     }
     
-    public boolean isRemove(){
+    @Override
+    public boolean isAdd(){
         return true;
     }
     

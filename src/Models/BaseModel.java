@@ -4,6 +4,10 @@
  */
 package Models;
 
+import MainBase.Events.ModelEvents.ModelAddedEvent;
+import MainBase.Events.ModelEvents.ModelEventHandler;
+import MainBase.Events.ModelEvents.ModelRemovedEvent;
+import MainBase.Events.ModelEvents.ModelChangedEvent;
 import Exceptions.AlreadyExistsException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.VeryVeryBadException;

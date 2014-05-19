@@ -4,16 +4,16 @@
  * and open the template in the editor.
  */
 
-package MainBase.Events;
+package MainBase.Events.ModelEvents;
 
+import MainBase.Events.BaseEvent;
 import Models.BaseModel;
-import java.util.EventObject;
 
 /**
  *
  * @author arthur
  */
-public class BaseModelUpdatedEvent extends EventObject{
+public class BaseModelUpdatedEvent extends BaseEvent{
     BaseModel updatedModel;
     
     protected BaseModelUpdatedEvent(BaseModel source){

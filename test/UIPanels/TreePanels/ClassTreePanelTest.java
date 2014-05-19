@@ -105,13 +105,25 @@ public class ClassTreePanelTest extends BaseTest{
         }
         return aPackage;
     }
+    
+    @Test
+    public void testClassRemovedFromSelectedPackage(){
+        fail();
+    }
+    
+    @Test
+    public void testClassRemovedFromAnotherPackage(){
+        fail();
+    }
 
     @Test
     public void testClassAddedFromSelectedPackage() {
         MockBrowserController controller = new MockBrowserController();
         PackageModel aPackage = this.packageWithClasses();
         controller.setSelected(aPackage);
+        
         panel.setModel(controller);
+        this.showPanel(panel);
         this.verifyTreeSize(3);
         ClassModel classAdded = null;
         
@@ -125,8 +137,13 @@ public class ClassTreePanelTest extends BaseTest{
         this.verifyTreeSize(4);
     }
     
+    @Test
+    public void testClassAddedFromAnotherPackage(){
+        fail();
+    }
+    
     @Test 
-    public void testSwitchFromOnePackageToAnother(){
+    public void testSelectionChanged(){
         PackageModel packageOne = null;
         PackageModel packageTwo = null;
         try {
@@ -148,24 +165,6 @@ public class ClassTreePanelTest extends BaseTest{
         panel.selectionChanged(packageTwo);
         this.verifyTreeSize(4);
     }
-    
-    @Test
-    public void testPackageSelectionChanged(){
-            PackageModel packageOne = null;
-        try {
-            ProjectModel aProject = new ProjectModel("aProject");
-            packageOne = aProject.addPackage(new PackageModel("package one"));
-            packageOne.addClass(new ClassModel("P1Class1"));
-            packageOne.addClass(new ClassModel("P1Class2"));
-            packageOne.addClass(new ClassModel("P1Class3"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-        
-        panel.selectionChanged(packageOne);
-        this.verifyTreeSize(3);
-    }
-    
     
     /*
     Logical problem
