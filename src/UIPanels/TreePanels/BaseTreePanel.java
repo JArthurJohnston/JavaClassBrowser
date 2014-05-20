@@ -107,6 +107,10 @@ public class BaseTreePanel extends BasePanel {
         rootNode = null;
     }
     
+    public void removeNode(ModelNode aNode){
+        aNode.remove(treeMap);
+    }
+    
     /**
      * Returns the number of nodes in the tree.
      * Not counting the root node.
@@ -140,9 +144,6 @@ public class BaseTreePanel extends BasePanel {
     }
     
     public boolean contains(BaseModel aModel){
-        for(BaseModel mn : treeMap.keySet())
-            if(mn == aModel)
-                return true;
-        return false;
+        return treeMap.containsKey(aModel);
     }
 }

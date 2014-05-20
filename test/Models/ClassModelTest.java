@@ -5,6 +5,7 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.MethodDoesNotExistException;
@@ -142,7 +143,7 @@ public class ClassModelTest extends BaseTest{
         MethodModel newMethod = new MethodModel();
         try {
             newMethod = testClass.addMethod(new MethodModel("newMethod"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail("Exception thrown when it shouldnt");
         }
         assertEquals(testClass, newMethod.getParent());
@@ -150,7 +151,7 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addMethod(new MethodModel("newMethod"));
             fail("Exception not thrown");
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
@@ -160,7 +161,7 @@ public class ClassModelTest extends BaseTest{
         try {
             testClass.addMethod(new MethodModel("aMethodForTesting"));
             assertEquals(1, testClass.getMethods().size());
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
         }
         try {
             testClass.removeMethod("aMethodForTesting");

@@ -172,16 +172,6 @@ public class ClassModel extends PackageModel{
     }
     
     //clearly doesnt work yet...
-    public MethodModel removeMethod(String methodName) throws MethodDoesNotExistException{
-        for(MethodModel m : methods){
-            if(m.name.compareTo(methodName) == 0) {
-                return this.removeMethod(m);
-            }
-        }
-        throw new MethodDoesNotExistException(this, methodName);
-    }
-    
-    //clearly doesnt work yet...
     @Override
     public MethodModel removeMethod(MethodModel aMethod){
         if(methods.contains(aMethod)) 

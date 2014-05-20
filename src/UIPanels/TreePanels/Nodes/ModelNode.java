@@ -36,10 +36,16 @@ public class ModelNode extends DefaultMutableTreeNode{
         return aNode;
     }
     
-    public ModelNode removeNode(ModelNode aNode, HashMap aMap){
+    public ModelNode removeChildNode(ModelNode aNode, HashMap aMap){
         this.remove(aNode);
         aMap.remove(aNode.getModel());
         return aNode;
+    }
+    
+    public ModelNode remove(HashMap aMap){
+        this.removeFromParent();
+        aMap.remove(this.getModel());
+        return this;
     }
     
     /**

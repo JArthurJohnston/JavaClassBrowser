@@ -5,6 +5,7 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -262,7 +263,7 @@ public class ProjectModel extends BaseModel {
         return methods.get(aMethod.name());
     }
     
-    public MethodModel removeMethod(MethodModel aMethod) throws VeryVeryBadException{
+    public MethodModel removeMethod(MethodModel aMethod) throws BaseException{
         if(!methods.get(aMethod.name()).remove(aMethod))
             throw new VeryVeryBadException(this, aMethod);
         if(methods.get(aMethod.name()).isEmpty())

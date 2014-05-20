@@ -12,7 +12,6 @@ import MainBase.Events.ModelEvents.BaseModelUpdatedEvent;
 import MainBase.Events.ModelEvents.ModelEventHandler;
 import MainBase.Events.ModelEvents.ModelRemovedEvent;
 import MainBase.Events.ModelEvents.ModelEventListener;
-import MainBase.Events.*;
 
 /**
  *
@@ -22,7 +21,7 @@ public class EventTester implements ModelEventListener{
     private BaseModelUpdatedEvent event;
     
     public EventTester(){
-        ModelEventHandler.addModelListener(this);
+        ModelEventHandler.addListener(this);
     }
 
     @Override

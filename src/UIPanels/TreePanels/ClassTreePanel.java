@@ -105,12 +105,7 @@ public class ClassTreePanel extends BaseTreePanel {
         if(!aModel.isClass())
             return;
         if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
-            if(((ClassModel)aModel).getParent() != null)
-                /*
-                this.getNodeFromModel(((ClassModel)aModel).getParent())
-                        .remove(this.getNodeFromModel(aModel));
-                Im a bit drunk, and i cannot currently reason through this code...
-                */
+            this.removeNode(this.getNodeFromModel(aModel));
     }
     
     @Override

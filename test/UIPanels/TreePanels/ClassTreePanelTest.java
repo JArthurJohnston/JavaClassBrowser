@@ -112,7 +112,7 @@ public class ClassTreePanelTest extends BaseTest{
         MockBrowserController controller = new MockBrowserController();
         PackageModel aPackage = this.packageWithClasses();
         controller.setSelected(aPackage);
-        ClassModel classRemoved = aPackage.getClassList().getFirst();
+        ClassModel classRemoved = aPackage.getClassList().get(1);
         
         panel.setModel(controller);
         assertTrue(panel.contains(classRemoved));

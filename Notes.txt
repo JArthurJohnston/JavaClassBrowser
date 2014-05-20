@@ -10,3 +10,4 @@ uses valueAdded and valueChanged listeners.
 	-main wont have to hold a list of its open windows. each shellModel will be responsible for
 		itself
 	-wont have to use mocks anymore :D
+-add an isMemberOf(aModel) so a class can say if its part of a package or project. this will return true if the ALL package is selected

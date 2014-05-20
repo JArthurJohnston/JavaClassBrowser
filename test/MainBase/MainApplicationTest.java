@@ -173,38 +173,4 @@ public class MainApplicationTest extends BaseTest {
         main = new MainApplication();
         assertEquals(System.getProperty("user.name"), main.getUserName());
     }
-    
-    @Test
-    public void testAddProjectUpdatesShells(){
-        fail();
-    }
-    
-    
-    @Test
-    public void testAddClassUpdateShells(){
-        SystemBrowserShell aShell = main.openSystemBrowser().getShell();
-        SystemBrowserShell anotherShell = main.openSystemBrowser().getShell();
-        ClassModel newClass = new ClassModel("aClass");
-        main.addUpdateShells(newClass);
-        JList classList = (JList)this.getVariableFromClass(aShell, "classList");
-        JList anotherClassList = (JList)this.getVariableFromClass(anotherShell, "classList");
-        assertEquals(1, classList.getModel().getSize());
-        assertEquals(1, anotherClassList.getModel().getSize());
-    }
-    
-    @Test
-    public void testAddMethodUpdatesShells(){
-        fail();
-    }
-    
-    @Test
-    public void testAddVarUpdatesShells(){
-        fail();
-    }
-    
-    @Test
-    public void testOpenSystemBrowser(){
-        BrowserUIController model = main.openSystemBrowser();
-        assertTrue(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(model));
-    }
 }
