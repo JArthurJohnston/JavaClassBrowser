@@ -9,6 +9,7 @@ package UIPanels.TreePanels;
 import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Internal.Mocks.MockBrowserController;
+import Internal.Mocks.MockPackageModel;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
@@ -108,11 +109,38 @@ public class ClassTreePanelTest extends BaseTest{
     
     @Test
     public void testClassRemovedFromSelectedPackage(){
-        fail();
+        MockBrowserController controller = new MockBrowserController();
+        PackageModel aPackage = this.packageWithClasses();
+        controller.setSelected(aPackage);
+        ClassModel classRemoved = aPackage.getClassList().getFirst();
+        
+        panel.setModel(controller);
+        assertTrue(panel.contains(classRemoved));
+        this.verifyTreeSize(3);
+        
+        panel.modelRemoved(classRemoved);
+        this.verifyTreeSize(2);
+        assertFalse(panel.contains(classRemoved));
     }
     
     @Test
     public void testClassRemovedFromAnotherPackage(){
+        MockBrowserController controller = new MockBrowserController();
+        PackageModel aPackage = this.packageWithClasses();
+        controller.setSelected(aPackage);
+        MockPackageModel anotherPackage = new MockPackageModel("another package");
+        ClassModel classRemoved = 
+                anotherPackage.addClass(new ClassModel("SomeRemovedClass"));
+        
+        panel.setModel(controller);
+        this.verifyTreeSize(3);
+        
+        panel.modelRemoved(classRemoved);
+        this.verifyTreeSize(3);
+    }
+    
+    @Test
+    public void testClassRemovedFromALLPackage(){
         fail();
     }
 
@@ -135,10 +163,28 @@ public class ClassTreePanelTest extends BaseTest{
         
         panel.modelAdded(classAdded);
         this.verifyTreeSize(4);
+        assertTrue(panel.contains(classAdded));
     }
     
     @Test
     public void testClassAddedFromAnotherPackage(){
+        MockBrowserController controller = new MockBrowserController();
+        PackageModel aPackage = this.packageWithClasses();
+        controller.setSelected(aPackage);
+        
+        panel.setModel(controller);
+        this.showPanel(panel);
+        this.verifyTreeSize(3);
+        MockPackageModel anotherPackage = new MockPackageModel("another package");
+        ClassModel classAdded = anotherPackage.addClass(new ClassModel("ClassAdded"));
+        
+        panel.modelAdded(classAdded);
+        this.verifyTreeSize(3);
+        assertFalse(panel.contains(classAdded));
+    }
+    
+    @Test
+    public void testClassAddedFromALLPackage(){
         fail();
     }
     

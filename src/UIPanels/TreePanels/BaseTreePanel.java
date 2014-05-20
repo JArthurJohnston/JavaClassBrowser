@@ -138,4 +138,11 @@ public class BaseTreePanel extends BasePanel {
     public boolean isEmpty(){
         return this.getTreeSize() == 0;
     }
+    
+    public boolean contains(BaseModel aModel){
+        for(BaseModel mn : treeMap.keySet())
+            if(mn == aModel)
+                return true;
+        return false;
+    }
 }

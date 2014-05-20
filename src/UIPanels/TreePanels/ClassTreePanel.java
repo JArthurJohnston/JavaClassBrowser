@@ -54,7 +54,6 @@ public class ClassTreePanel extends BaseTreePanel {
     
     private void fillFromClass(ClassModel aClass){
         this.addModelToRoot(aClass);
-        //extend tree
     }
     
     @Override
@@ -102,13 +101,25 @@ public class ClassTreePanel extends BaseTreePanel {
     }
     
     @Override
+    public void modelRemoved(BaseModel aModel){
+        if(!aModel.isClass())
+            return;
+        if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
+            if(((ClassModel)aModel).getParent() != null)
+                /*
+                this.getNodeFromModel(((ClassModel)aModel).getParent())
+                        .remove(this.getNodeFromModel(aModel));
+                Im a bit drunk, and i cannot currently reason through this code...
+                */
+    }
+    
+    @Override
     public void modelAdded(BaseModel aModel){
         if(!aModel.isClass())
             return;
         if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
             if(((ClassModel)aModel).getParent() != null)
-                this.getNodeFromModel(((ClassModel)aModel)
-                    .getParent())
+                this.getNodeFromModel(((ClassModel)aModel).getParent())
                     .addNode(new ClassNode((ClassModel)aModel, treeMap));
             else
                 this.getRootNode()
