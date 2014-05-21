@@ -32,7 +32,7 @@ public class ProjectModel extends BaseModel {
     private LinkedList<PackageModel> packageList;
     private String userName;
     
-    public static PackageModel ALL_PACKAGE = new PackageModel("ALL");
+    private AllPackage all;
     
     protected Date dateCreated;
     
@@ -77,6 +77,12 @@ public class ProjectModel extends BaseModel {
         methods = new HashMap();
     }
     
+    public AllPackage getAllPackage(){
+        if(all == null)
+            all = new AllPackage(this);
+        return all;
+    }
+    
     /*
      * Abstract Methods
      */
@@ -101,10 +107,17 @@ public class ProjectModel extends BaseModel {
             aList.addAll(p.getPackageList());
         return aList;
     }
+    
+    public LinkedList<PackageModel> getTopLevelPackages(){
+        return packageList;
+    }
+    
     @Override
     public String getPath(){
+        //file path
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
     public Date getDateCreated(){
         return dateCreated;
     }
@@ -307,6 +320,7 @@ public class ProjectModel extends BaseModel {
         return this;
     }
     
+    @Override
     public boolean contains(BaseModel aModel){
         return aModel.getProject() == this;
     }

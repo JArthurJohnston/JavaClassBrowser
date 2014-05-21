@@ -7,7 +7,6 @@
 package UIPanels.TreePanels.Nodes;
 
 import Internal.Mocks.MockClassModel;
-import Models.BaseModel;
 import Models.ClassModel;
 import java.util.HashMap;
 import org.junit.After;
@@ -19,8 +18,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class ClassNodeTest {
-    private HashMap<BaseModel, ModelNode> treeHash;
+public class ClassNodeTest extends BaseNodeTest{
     private ClassNode node;
     
     public ClassNodeTest() {
@@ -45,9 +43,9 @@ public class ClassNodeTest {
         return m;
     }
     
-    private void verifyNodeSize(int x){
-        assertEquals(x, node.size());//minus one for the root node
-        assertEquals(x, treeHash.size());
+    @Override
+    protected ClassNode node(){
+        return node;
     }
 
     /**

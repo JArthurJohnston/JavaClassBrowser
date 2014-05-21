@@ -7,6 +7,7 @@
 package UIPanels.TreePanels.Nodes;
 
 import Models.PackageModel;
+import java.util.HashMap;
 
 /**
  *
@@ -14,17 +15,18 @@ import Models.PackageModel;
  */
 public class PackageNode extends ModelNode{
     
-    public PackageNode(PackageModel aPackage){
-        super(aPackage);
-        this.generatePackageTree();
+    public PackageNode(PackageModel aPackage, HashMap aMap){
+        super(aPackage, aMap);
+        this.generateTreeFromPackage(aMap);
     }
     
-    private void generatePackageTree(){
-        for(PackageModel p : this.getPackage().getPackageList())
-            this.add(new PackageNode(p));
+    private void generateTreeFromPackage(HashMap aMap){
+        for(PackageModel p : this.getModel().getTopLevelPackages())
+            this.add(new PackageNode(p, aMap));
     }
     
-    private PackageModel getPackage(){
+    @Override
+    public PackageModel getModel(){
         return (PackageModel)super.getModel();
     }
     

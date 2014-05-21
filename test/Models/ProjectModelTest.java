@@ -5,12 +5,14 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Exceptions.DoesNotExistException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
+import Models.ProjectModel.AllPackage;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -263,7 +265,7 @@ public class ProjectModelTest extends BaseTest{
             PackageModel aPackage = project.addPackage(new PackageModel("A Pak"));
             ClassModel aClass = aPackage.addClass(new ClassModel("AClass"));
             aMethod = aClass.addMethod(new MethodModel("aMethod"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         return aMethod;
@@ -275,7 +277,7 @@ public class ProjectModelTest extends BaseTest{
         MethodModel aMethod = this.setUpProjectMethod();
         try {
             project.removeMethod(aMethod);
-        } catch (VeryVeryBadException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertNull(project.getMethodDefinitions(aMethod));
@@ -296,7 +298,7 @@ public class ProjectModelTest extends BaseTest{
             aMethod = anotherClass.addMethod(new MethodModel("newMethod"));
             assertEquals(2, project.getMethodDefinitions(aMethod).size());
             assertEquals(aMethod, project.getMethodDefinitions(aMethod).getLast());
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
     }
@@ -336,7 +338,7 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testReservedWords(){
-        assertEquals(17, ProjectModel.getReservedWords().size());
+        assertEquals(19, ProjectModel.getReservedWords().size());
     }
     
     @Test
@@ -375,5 +377,31 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(project, listener.getEvent().getSource());
     }
     
+    @Test
+    public void testAllPackageIsSingleton(){
+        AllPackage all = project.getAllPackage();
+        AllPackage anotherAll = project.getAllPackage();
+        assertEquals(all, anotherAll);
+    }
     
+    private void setUpProjectPackageAndClasses(){
+        try {
+            PackageModel aPackage = project.addPackage(new PackageModel("a package"));
+            aPackage.addClass(new ClassModel("AClass"));
+            aPackage.addClass(new ClassModel("AnotherClass"));
+            aPackage = project.addPackage(new PackageModel("Another Package"));
+            aPackage.addClass(new ClassModel("SomeClass"));
+            ClassModel aClass = aPackage.addClass(new ClassModel("SomeOtherClass"));
+            aClass.addClass(new ClassModel("SomeSubClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void testAllPackageClassList(){
+        AllPackage all= project.getAllPackage();
+        assertEquals(2, all.getPackageList());
+        assertEquals(5, all.getClassList());
+    }
 }

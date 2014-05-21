@@ -104,6 +104,7 @@ public class BaseTreePanel extends BasePanel {
     
     @Override
     public void selectionChanged(BaseModel aModel){
+        //this doesnt work.
         rootNode = null;
     }
     

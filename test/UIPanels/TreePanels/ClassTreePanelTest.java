@@ -14,6 +14,8 @@ import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.BrowserUIController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -25,26 +27,30 @@ import org.junit.Test;
  */
 public class ClassTreePanelTest extends BaseTest{
     private ClassTreePanel panel;
+    private ProjectModel project;
     
     public ClassTreePanelTest() {
     }
     
     @Before
     public void setUp() {
+        project = new ProjectModel("a project");
         panel = new ClassTreePanel();
     }
     
     @After
     public void tearDown() {
+        project = null;
         panel = null;
     }
     
     private BrowserUIController controller(){
         MockBrowserController c = new MockBrowserController();
+        c.setProject(project);
         ClassModel aClass = new ClassModel("AClass");
         c.setSelected(aClass);
         try {
-            PackageModel aPackage = new ProjectModel("a project")
+            PackageModel aPackage = project
                     .addPackage(new PackageModel("SomePackage"));
             
             aPackage.addClass(aClass);
@@ -133,6 +139,8 @@ public class ClassTreePanelTest extends BaseTest{
         MockPackageModel anotherPackage = new MockPackageModel("another package");
         ClassModel classRemoved = 
                 anotherPackage.addClass(new ClassModel("SomeRemovedClass"));
+        anotherPackage.setParent(project);
+        classRemoved.setParent(anotherPackage);
         
         panel.setModel(controller);
         this.verifyTreeSize(3);
@@ -176,8 +184,14 @@ public class ClassTreePanelTest extends BaseTest{
         
         panel.setModel(controller);
         this.verifyTreeSize(3);
-        MockPackageModel anotherPackage = new MockPackageModel("another package");
-        ClassModel classAdded = anotherPackage.addClass(new ClassModel("ClassAdded"));
+        ClassModel classAdded = null;
+        
+        try {
+            PackageModel anotherPackage = project.addPackage(new PackageModel("another package"));
+            classAdded = anotherPackage.addClass(new ClassModel("ClassAdded"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         
         panel.modelAdded(classAdded);
         this.verifyTreeSize(3);
