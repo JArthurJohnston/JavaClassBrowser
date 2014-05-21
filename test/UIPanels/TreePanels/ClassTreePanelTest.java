@@ -86,11 +86,13 @@ public class ClassTreePanelTest extends BaseTest{
     }
 
     @Test
-    public void testGetSelected() {
+    public void testSelectionChangedUpdatesModel() {
         BrowserUIController controller = this.controller();
         panel.setModel(controller);
         panel.setSelectedIndex(3);
         assertEquals("AnotherSubClass", controller.getSelected().name());
+        panel.setSelectedIndex(2);
+        assertEquals("ASubClass", controller.getSelected().name());
     }
     
     private PackageModel packageWithClasses(){
@@ -173,7 +175,6 @@ public class ClassTreePanelTest extends BaseTest{
         controller.setSelected(aPackage);
         
         panel.setModel(controller);
-        this.showPanel(panel);
         this.verifyTreeSize(3);
         MockPackageModel anotherPackage = new MockPackageModel("another package");
         ClassModel classAdded = anotherPackage.addClass(new ClassModel("ClassAdded"));
@@ -224,5 +225,6 @@ public class ClassTreePanelTest extends BaseTest{
     have the controller/shells ignore a class added if its == to its own
     selection
     */
+    
     
 }

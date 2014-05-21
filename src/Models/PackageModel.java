@@ -206,4 +206,12 @@ public class PackageModel extends ProjectModel {
     public boolean isDefault(){
         return this.name.compareTo(DEFAULT_PACKAGE_NAME) == 0;
     }
+    
+    @Override
+    public boolean contains(BaseModel aModel){
+        if(this.getProject().contains(aModel))
+            if(aModel.isClass() || aModel.isPackage() || aModel.isMethod())
+                return ((PackageModel)aModel).getParentPackage() == this;
+        return false;
+    }
 }

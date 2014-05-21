@@ -32,6 +32,8 @@ public class ProjectModel extends BaseModel {
     private LinkedList<PackageModel> packageList;
     private String userName;
     
+    public static PackageModel ALL_PACKAGE = new PackageModel("ALL");
+    
     protected Date dateCreated;
     
     public static String DELETE_WARNING = "You are about to delete this project\n"
@@ -303,6 +305,33 @@ public class ProjectModel extends BaseModel {
         this is unrecoverable, etc...
         */
         return this;
+    }
+    
+    public boolean contains(BaseModel aModel){
+        return aModel.getProject() == this;
+    }
+    
+    public class AllPackage extends PackageModel{
+        
+        public AllPackage(ProjectModel aProject){
+            this.parent = aProject;
+        }
+        
+        @Override
+        public LinkedList getClassList(){
+            return parent.getClassList();
+        }
+
+        @Override
+        public LinkedList getPackageList(){
+            return parent.getPackageList();
+        }
+        
+        @Override
+        public boolean contains(BaseModel aModel){
+            return parent.contains(aModel);
+        }
+        
     }
     
 }

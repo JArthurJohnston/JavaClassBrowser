@@ -104,7 +104,7 @@ public class ClassTreePanel extends BaseTreePanel {
     public void modelRemoved(BaseModel aModel){
         if(!aModel.isClass())
             return;
-        if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
+        if(controller.getSelectedPackage().contains(aModel))
             this.removeNode(this.getNodeFromModel(aModel));
     }
     
@@ -112,7 +112,7 @@ public class ClassTreePanel extends BaseTreePanel {
     public void modelAdded(BaseModel aModel){
         if(!aModel.isClass())
             return;
-        if(((ClassModel)aModel).getParentPackage() == controller.getSelectedPackage())
+        if(controller.getSelectedPackage().contains(aModel))
             if(((ClassModel)aModel).getParent() != null)
                 this.getNodeFromModel(((ClassModel)aModel).getParent())
                     .addNode(new ClassNode((ClassModel)aModel, treeMap));

@@ -113,4 +113,8 @@ public abstract class BaseModel {
     public void fireChanged(BaseModel source){
         ModelEventHandler.fireEvent(new ModelChangedEvent(source));
     }
+    
+    public boolean contains(BaseModel aModel){
+        return false;
+    }
 }

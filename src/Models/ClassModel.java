@@ -283,4 +283,12 @@ public class ClassModel extends PackageModel{
     public boolean isPackage(){
         return false;
     }
+    
+    @Override
+    public boolean contains(BaseModel aModel){
+        if(this.getProject().contains(aModel))
+            if(aModel.isMethod() || aModel.isMethod())
+                return ((MethodModel)aModel).getParent() == this;
+        return false;
+    }
 }
