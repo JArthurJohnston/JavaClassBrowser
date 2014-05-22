@@ -21,8 +21,13 @@ public class PackageNode extends ModelNode{
     }
     
     private void generateTreeFromPackage(HashMap aMap){
-        for(PackageModel p : this.getModel().getTopLevelPackages())
+        System.out.println(this.getModel().name());
+        System.out.println(this.getModel().getTopLevelPackages().size());
+        
+            
+        for(PackageModel p : this.getModel().getTopLevelPackages()){
             this.add(new PackageNode(p, aMap));
+        }
     }
     
     @Override

@@ -32,7 +32,7 @@ public class PackageNodeTest extends BaseNodeTest{
     @Before
     public void setUp() {
         testHash = new HashMap();
-        node = new PackageNode(this.setUpProject().getAllPackage(), testHash);
+        //node = new PackageNode(this.setUpProject().getAllPackage(), testHash);
     }
     
     @After
@@ -63,7 +63,11 @@ public class PackageNodeTest extends BaseNodeTest{
 
     @Test
     public void testInit(){
-        this.verifyNodeSize(6);
+        ProjectModel aProject = this.setUpProject();
+        PackageModel aPackage = aProject.getPackageList().getFirst();
+        node = new PackageNode(aPackage, testHash);
+        this.verifyNodeSize(1);
+        assertEquals(aPackage, node.getModel());
     }
     
 }

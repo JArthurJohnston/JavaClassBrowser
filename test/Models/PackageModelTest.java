@@ -11,6 +11,8 @@ import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -336,6 +338,39 @@ public class PackageModelTest extends BaseTest{
         assertTrue(listener.getEvent().isAdd());
         assertEquals(testPackage, listener.getEvent().getSource());
         assertEquals(aClass, listener.getEvent().getModel());
+    }
+    
+    @Test
+    public void testAddClassToDefaultPackage(){
+        PackageModel defaultPackage = parentProject.getTopLevelPackages().getFirst();
+        assertEquals("default package", defaultPackage.name());
+        
+        ClassModel newClass = null;
+        try {
+            newClass = defaultPackage.addClass(new ClassModel("SomeClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        
+        assertEquals(1, defaultPackage.getTopLevelClasses().size());
+        assertTrue(defaultPackage.getTopLevelClasses().contains(newClass));
+    }
+    
+    @Test
+    public void addPackageToDefaultPackage(){
+        PackageModel defaultPackage = parentProject.getTopLevelPackages().getFirst();
+        assertEquals("default package", defaultPackage.name());
+        
+        PackageModel newPackage = null;
+        try {
+            newPackage = defaultPackage.addPackage(new PackageModel("Some Package"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        
+        assertEquals(1, defaultPackage.getTopLevelPackages().size());
+        assertTrue(defaultPackage.getTopLevelPackages().contains(newPackage));
+        
     }
     
     @Test

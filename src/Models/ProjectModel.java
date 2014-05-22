@@ -60,6 +60,8 @@ public class ProjectModel extends BaseModel {
                     .addElm("extends")
                     .addElm("implements")
                     .addElm("static")
+                    .addElm("default")
+                    .addElm("interface")
                 .addElements(ClassModel.getPrimitiveTypes())
                 .addElements(ScopeType.getStringValues())
                 .addElements(ClassType.getStringValues());
@@ -339,6 +341,11 @@ public class ProjectModel extends BaseModel {
         @Override
         public LinkedList getPackageList(){
             return parent.getPackageList();
+        }
+        
+        @Override
+        public LinkedList<PackageModel> getTopLevelPackages(){
+            return parent.getTopLevelPackages();
         }
         
         @Override
