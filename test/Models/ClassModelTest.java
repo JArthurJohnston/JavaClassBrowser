@@ -464,4 +464,9 @@ public class ClassModelTest extends BaseTest{
         assertTrue(e.isChange());
         assertEquals(testClass, e.getSource());
     }
+    
+    @Test
+    public void testAddDuplicateClassDoenstFireEvent(){
+        fail();
+    }
 }
