@@ -88,8 +88,8 @@ public class PackageModel extends ProjectModel {
             newPackage.setParent(this);
             this.packageList.add(newPackage);
         }
-        this.fireAdded(this, newPackage);
-        return this.getProject().addPackage(newPackage);
+        this.fireAdded(this, this.getProject().addPackage(newPackage));
+        return newPackage;
     }
     
     @Override

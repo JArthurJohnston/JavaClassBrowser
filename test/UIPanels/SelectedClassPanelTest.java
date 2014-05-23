@@ -5,6 +5,7 @@
 package UIPanels;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import MainBase.SortedList;
@@ -25,7 +26,7 @@ import org.junit.Test;
  * @author Arthur
  */
 public class SelectedClassPanelTest extends BaseTest {
-    private BrowserUIController model;
+    private BrowserUIController controller;
     private SelectedClassPanel panel;
     
     public SelectedClassPanelTest() {
@@ -51,17 +52,17 @@ public class SelectedClassPanelTest extends BaseTest {
             aClass.addMethod(new MethodModel("aStaticMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
-        model = main.openSystemBrowser();
+        controller = new BrowserUIController(main);
         panel = new SelectedClassPanel();
-        panel = (SelectedClassPanel)this.getVariableFromClass(model.getShell(), "classBrowserPanel");
+        panel = (SelectedClassPanel)this.getVariableFromClass(controller.getShell(), "classBrowserPanel");
     }
     
     @After
     public void tearDown() {
-        model = null;
+        controller = null;
         panel = null;
     }
     
@@ -69,7 +70,7 @@ public class SelectedClassPanelTest extends BaseTest {
     private LinkedList<ClassModel> setUpOtherClasses(){
         LinkedList<ClassModel> aList = new LinkedList();
         try {
-            ClassModel aClass = model.getSelectedPackage()
+            ClassModel aClass = controller.getSelectedPackage()
                     .addClass(new ClassModel("SecondClass"));
             aList.add(aClass);
             aClass.addMethod(new MethodModel("secondClassInstMethodOne", ClassType.INSTANCE));
@@ -85,7 +86,7 @@ public class SelectedClassPanelTest extends BaseTest {
             aClass.addVariable(new VariableModel(
                     ClassType.STATIC, ClassModel.getPrimitive("void"), "secondClassStatVarTwo"));
             
-            aClass = model.getSelectedPackage()
+            aClass = controller.getSelectedPackage()
                     .addClass(new ClassModel("ThirdClass"));
             aList.add(aClass);
             aClass.addMethod(new MethodModel("secondClassInstMethodOne", ClassType.INSTANCE));
@@ -106,7 +107,7 @@ public class SelectedClassPanelTest extends BaseTest {
                     ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarTwo"));
             aClass.addVariable(new VariableModel(
                     ClassType.STATIC, ClassModel.getPrimitive("void"), "thirdClassStatVarThree"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertEquals("SecondClass",aList.getFirst().name());
@@ -124,15 +125,15 @@ public class SelectedClassPanelTest extends BaseTest {
         assertEquals(1, classList.getModel().getSize());
         ClassFieldsPanel cfPresenter = (ClassFieldsPanel)this.getVariableFromClass(panel, "classFieldsPresenter");
         MethodPanel mPresenter = (MethodPanel)this.getVariableFromClass(panel, "methodPresenter");
-        assertEquals(model, this.getVariableFromClass(cfPresenter, "model"));
-        assertEquals(model, this.getVariableFromClass(mPresenter, "model"));
+        assertEquals(controller, this.getVariableFromClass(cfPresenter, "model"));
+        assertEquals(controller, this.getVariableFromClass(mPresenter, "model"));
     }
     
     @Test
     public void testSetSelectionUpdatesModel(){
         JList classList = (JList)this.getVariableFromClass(panel, "classList");
         classList.setSelectedIndex(0);
-        assertEquals("AClass", model.getSelected().name());
+        assertEquals("AClass", controller.getSelected().name());
     }
     
     @Test

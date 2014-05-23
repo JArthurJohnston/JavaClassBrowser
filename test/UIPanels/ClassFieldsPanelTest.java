@@ -5,11 +5,9 @@
 package UIPanels;
 
 import UIPanels.ListPanels.VariableListPanel;
-import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
 import Internal.Mocks.MockBrowserController;
 import Internal.Mocks.MockClassModel;
-import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIController;
@@ -62,7 +60,7 @@ public class ClassFieldsPanelTest extends BaseTest{
                     ClassModel.getObjectClass(), "anotherVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, 
                     ClassModel.getObjectClass(), "yetAnotherVar"));
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         return controller;
     }
     

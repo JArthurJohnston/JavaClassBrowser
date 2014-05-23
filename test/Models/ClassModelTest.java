@@ -158,21 +158,7 @@ public class ClassModelTest extends BaseTest{
     
     @Test
     public void testRemoveMethod(){
-        try {
-            testClass.addMethod(new MethodModel("aMethodForTesting"));
-            assertEquals(1, testClass.getMethods().size());
-        } catch (BaseException ex) {
-        }
-        try {
-            testClass.removeMethod("aMethodForTesting");
-        } catch (MethodDoesNotExistException ex) {
-            fail(ex.getMessage());
-        }
-        assertEquals(0, testClass.getMethods().size());
-        try {
-            testClass.removeMethod("aNonExistantMethod");
-            fail("Exception not thrown");
-        } catch (MethodDoesNotExistException ex) {}
+        fail();
     }
     
     @Test
@@ -284,14 +270,16 @@ public class ClassModelTest extends BaseTest{
         MethodModel aMethod = null;
         assertTrue(testClass.getStaticMethods().isEmpty());
         try {
-            aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.STATIC));
-        } catch (AlreadyExistsException ex) {
+            aMethod = testClass
+                    .addMethod(new MethodModel("aMethod", ClassType.STATIC));
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getStaticMethods().contains(aMethod));
         try {
-            aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.INSTANCE));
-        } catch (AlreadyExistsException ex) {
+            aMethod = testClass
+                    .addMethod(new MethodModel("anotherMethod", ClassType.INSTANCE));
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getStaticMethods().contains(aMethod));
@@ -303,13 +291,13 @@ public class ClassModelTest extends BaseTest{
         assertTrue(testClass.getInstanceMethods().isEmpty());
         try {
             aMethod = testClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getInstanceMethods().contains(aMethod));
         try {
             aMethod = testClass.addMethod(new MethodModel("anotherMethod", ClassType.STATIC));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertFalse(testClass.getInstanceMethods().contains(aMethod));
@@ -320,14 +308,20 @@ public class ClassModelTest extends BaseTest{
         VariableModel aVar = null;
         assertTrue(testClass.getStaticVars().isEmpty());
         try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "aVar"));
+            aVar = testClass
+                    .addVariable(
+                            new VariableModel(ClassType.STATIC, 
+                                    new ClassModel(), "aVar"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertTrue(testClass.getVariables().contains(aVar));
         assertTrue(testClass.getStaticVars().contains(aVar));
         try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "anotherVar"));
+            aVar = testClass
+                    .addVariable(
+                            new VariableModel(ClassType.INSTANCE,
+                                    new ClassModel(), "anotherVar"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }

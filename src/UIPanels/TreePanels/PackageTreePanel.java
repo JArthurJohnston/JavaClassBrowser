@@ -6,6 +6,9 @@
 
 package UIPanels.TreePanels;
 
+import Models.BaseModel;
+import Models.PackageModel;
+import UIModels.BrowserUIController;
 import UIPanels.TreePanels.Nodes.PackageNode;
 import javax.swing.JTree;
 
@@ -32,6 +35,29 @@ public class PackageTreePanel extends BaseTreePanel {
         if(rootNode == null)
             rootNode = new PackageNode(controller.getSelectedProject().getAllPackage(), treeMap);
         return (PackageNode)rootNode;
+    }
+    
+    @Override
+    public void setModel(BrowserUIController controller){
+        super.setModel(controller);
+        this.getRootNode();
+    }
+    
+    @Override
+    public void modelAdded(BaseModel aModel){
+        if(aModel.isPackage())
+            if(((PackageModel)aModel).getParent().isProject())
+                this.getRootNode()
+                        .addNode(new PackageNode((PackageModel)aModel, treeMap));
+            else
+                this.getNodeFromModel(aModel)
+                        .addNode(new PackageNode((PackageModel)aModel, treeMap));
+    }
+    
+    @Override
+    public void modelRemoved(BaseModel aModel){
+        if(aModel.isPackage())
+            this.getNodeFromModel(aModel).remove(treeMap);
     }
 
     /**

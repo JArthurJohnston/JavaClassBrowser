@@ -85,7 +85,7 @@ public class PanelTester extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         MockClassModel aClass = new MockClassModel("AddedClass");
-        this.testPanel.addToSelected(aClass);
+        //this.testPanel.addToSelected(aClass);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 

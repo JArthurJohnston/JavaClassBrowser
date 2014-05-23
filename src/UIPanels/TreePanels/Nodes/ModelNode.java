@@ -9,6 +9,7 @@ package UIPanels.TreePanels.Nodes;
 import Models.BaseModel;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -61,6 +62,18 @@ public class ModelNode extends DefaultMutableTreeNode{
             e.nextElement();
         }
         return i;
+    }
+    
+    public void printChildren(){
+        System.out.println(this.getModel().toString());
+        if(children == null)
+            return;
+        for(ModelNode m : this.getChildren())
+            m.printChildren();
+    }
+    
+    public Vector<ModelNode> getChildren(){
+        return children;
     }
     
 }

@@ -42,6 +42,7 @@ public class SystemBrowserShell extends BaseUIShell {
     @Override
     protected SortedList<BasePanel> myPanels(){
         return super.myPanels()
+                .addElm(packageTree)
                 .addElm(classBrowserPanel)
                 .addElm(modelEditPanel);
     }
@@ -87,11 +88,8 @@ public class SystemBrowserShell extends BaseUIShell {
 
         jSplitPane2 = new javax.swing.JSplitPane();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        packageList = new javax.swing.JList();
-        jLabel1 = new javax.swing.JLabel();
         classBrowserPanel = new UIPanels.SelectedClassPanel();
+        packageTree = new UIPanels.TreePanels.PackageTreePanel();
         modelEditPanel = new UIPanels.ModelEditPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -100,19 +98,12 @@ public class SystemBrowserShell extends BaseUIShell {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jSplitPane2.setDividerLocation(250);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
-
-        jScrollPane1.setViewportView(packageList);
-
-        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jLabel1.setText("Packages");
-        jPanel1.add(jLabel1, java.awt.BorderLayout.PAGE_START);
-
-        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setDividerLocation(125);
         jSplitPane1.setRightComponent(classBrowserPanel);
+        jSplitPane1.setLeftComponent(packageTree);
 
         jSplitPane2.setTopComponent(jSplitPane1);
         jSplitPane2.setRightComponent(modelEditPanel);
@@ -173,16 +164,13 @@ public class SystemBrowserShell extends BaseUIShell {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPackageMenuItem;
     private UIPanels.SelectedClassPanel classBrowserPanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
     private UIPanels.ModelEditPanel modelEditPanel;
-    private javax.swing.JList packageList;
+    private UIPanels.TreePanels.PackageTreePanel packageTree;
     // End of variables declaration//GEN-END:variables
 
 }

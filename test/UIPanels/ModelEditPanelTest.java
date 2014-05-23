@@ -5,6 +5,7 @@
 package UIPanels;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
@@ -15,10 +16,10 @@ import UIModels.BrowserUIController;
 import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -51,7 +52,7 @@ public class ModelEditPanelTest extends BaseTest{
             MethodModel aMethod = aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
             model = new BrowserUIController(main);
             model.setSelected(aMethod);
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         panel = new ModelEditPanel();

@@ -330,6 +330,7 @@ public class ProjectModel extends BaseModel {
     public class AllPackage extends PackageModel{
         
         public AllPackage(ProjectModel aProject){
+            this.name = "ALL";
             this.parent = aProject;
         }
         

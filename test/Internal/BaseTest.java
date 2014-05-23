@@ -5,8 +5,9 @@
 package Internal;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import MainBase.EventTester;
-import MainBase.Events.ModelEvents.ModelEventHandler;
+import MainBase.Events.ModelEvents.ModelEventHandler;                   
 import MainBase.MainApplication;                   
 import Models.ClassModel;
 import Models.MethodModel;
@@ -22,6 +23,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -173,7 +176,7 @@ public class BaseTest {
     protected void addMethodToClass(ClassModel aClass, MethodModel aMethod){
         try {
             aClass.addMethod(aMethod);
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
     }

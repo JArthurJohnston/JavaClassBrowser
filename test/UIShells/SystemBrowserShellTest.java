@@ -6,15 +6,12 @@ package UIShells;
 
 import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
-import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.BrowserUIController;
 import UIPanels.BasePanel;
 import UIPanels.SelectedClassPanel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +41,7 @@ public class SystemBrowserShellTest extends BaseTest{
     @Before
     public void setUp() {
         this.setUpMain();
-        BrowserUIController aModel = main.openSystemBrowser();
+        BrowserUIController aModel = new BrowserUIController(main);
         shell = aModel.getShell();
     }
     
@@ -178,8 +175,6 @@ public class SystemBrowserShellTest extends BaseTest{
     
     @Test
     public void testDefaultSelections(){
-        JList packages = (JList)this.getVariableFromClass(shell, "packageList");
-        assertEquals(0, packages.getSelectedIndex());
-        assertEquals(ProjectModel.ALL_PACKAGE, packages.getSelectedValue());
+        fail("should be moved to individual panels");
     }
 }

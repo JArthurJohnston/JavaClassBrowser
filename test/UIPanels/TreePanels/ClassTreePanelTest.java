@@ -23,7 +23,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class ClassTreePanelTest extends BaseTest{
+public class ClassTreePanelTest extends BaseTreePanelTest{
     private ClassTreePanel panel;
     private ProjectModel project;
     
@@ -62,11 +62,6 @@ public class ClassTreePanelTest extends BaseTest{
         c.setSelected(aClass);
         assertEquals(aClass, c.getSelectedClass());
         return c;
-    }
-    
-    private void verifyTreeSize(int expected){
-        assertEquals(expected, panel.getTreeSize()); //nodes in the tree
-        assertEquals(expected, panel.getHashSize()); //nodes in the hash
     }
     
     @Test

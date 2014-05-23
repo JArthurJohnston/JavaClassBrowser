@@ -7,14 +7,12 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Internal.BaseTest;
-import LanguageBase.JavaLang;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,7 +44,7 @@ public class MethodModelTest extends BaseTest{
         try {
             method = this.setUpClassWithName("ParentClass")
                     .addMethod(new MethodModel("aMethod"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
     }
@@ -109,15 +107,18 @@ public class MethodModelTest extends BaseTest{
     public void testMethodSignature(){
         MethodModel otherMethod = null;
         try {
-            otherMethod = this.setUpClassWithName("AClass").addMethod(new MethodModel("anotherMethod"));
-        } catch (AlreadyExistsException ex) {
+            otherMethod = this.setUpClassWithName("AClass")
+                    .addMethod(new MethodModel("anotherMethod"));
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         assertFalse(method.matchSignature(otherMethod));
         otherMethod.setName("aMethod");
         assertTrue(method.matchSignature(otherMethod));
-        VariableModel intVar = new VariableModel(ScopeType.NONE, new ClassModel("Int"),"x");
-        VariableModel charVar = new VariableModel(ScopeType.NONE, new ClassModel("Char"),"y");
+        VariableModel intVar = 
+                new VariableModel(ScopeType.NONE, new ClassModel("Int"),"x");
+        VariableModel charVar = 
+                new VariableModel(ScopeType.NONE, new ClassModel("Char"),"y");
         LinkedList vars = new LinkedList();
         vars.add(intVar);
         vars.add(charVar);
@@ -129,7 +130,8 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testParameters(){
-        LinkedList params = (LinkedList)this.getVariableFromClass(method, "parameters");
+        LinkedList params = 
+                (LinkedList)this.getVariableFromClass(method, "parameters");
         assertEquals(0, params.size());
         fail("Write more of me!");
     }
@@ -210,9 +212,11 @@ public class MethodModelTest extends BaseTest{
         
         MethodModel anotherMethod = null;
         try {
-            ClassModel aClass = method.getParent().addClass(new ClassModel("AnotherClass"));
+            ClassModel aClass = method
+                    .getParent()
+                    .addClass(new ClassModel("AnotherClass"));
             anotherMethod = aClass.addMethod(new MethodModel("aMethod"));
-        } catch (AlreadyExistsException ex) {
+        } catch (BaseException ex) {
             fail(ex.getMessage());
         }
         

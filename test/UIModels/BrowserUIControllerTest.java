@@ -13,8 +13,6 @@ import Models.ProjectModel;
 import UIPanels.TreePanels.Nodes.*;
 import UIShells.SystemBrowserShell;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -164,7 +162,6 @@ public class BrowserUIControllerTest extends BaseTest{
     
     @Test
     public void testGetAllClasses(){
-        ClassNode allClasses = controller.getAllClasses();
-        
+        fail("need to decide how Ill handle caching the big class tree");
     }
 }

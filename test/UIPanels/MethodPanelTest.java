@@ -45,7 +45,7 @@ public class MethodPanelTest extends BaseTest{
             aClass.addMethod(new MethodModel("anotherMethod"));
             aClass.addMethod(new MethodModel("yetAnotherMethod", ClassType.STATIC));
         controller = new MockBrowserController();
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         panel  = new MethodPanel();
         panel.setModel(controller);
     }
@@ -148,7 +148,7 @@ public class MethodPanelTest extends BaseTest{
         MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
         MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
         MockClassModel aClass = (MockClassModel)this.getTestClass();
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         panel.selectionChanged(aClass);
         assertEquals(1, instList.getTableSize());
         assertEquals(2, statList.getTableSize());
@@ -172,7 +172,7 @@ public class MethodPanelTest extends BaseTest{
         MethodlListPanel instList = (MethodlListPanel)panel.myPanels().getFirst();
         MethodlListPanel statList = (MethodlListPanel)panel.myPanels().getLast();
         MockClassModel aClass = (MockClassModel)this.getTestClass();
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         panel.selectionChanged(aClass);
         assertEquals(1, instList.getTableSize());
         assertEquals(2, statList.getTableSize());

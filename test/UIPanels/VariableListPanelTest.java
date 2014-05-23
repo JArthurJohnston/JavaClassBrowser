@@ -44,7 +44,7 @@ public class VariableListPanelTest {
         aClass.addVariable(new VariableModel("yetAnotherVar", ClassType.STATIC));
         aClass.addVariable(new VariableModel("andYetAnotherVar", ClassType.STATIC));
         aClass.addVariable(new VariableModel("andAnotherVar", ClassType.STATIC));
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         return controller;
     }
 

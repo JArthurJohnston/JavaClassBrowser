@@ -137,7 +137,7 @@ public class MethodlListPanelTest extends BaseTest{
     public void testMethodAdded(){
         MockBrowserController controller = new MockBrowserController();
         MockClassModel aClass = this.classWithMethods();
-        controller.setSelectedClass(aClass);
+        controller.setSelected(aClass);
         
         panel.setSelectionType(ClassType.INSTANCE);
         panel.setModel(controller);
@@ -161,7 +161,7 @@ public class MethodlListPanelTest extends BaseTest{
         panel.setSelectionType(ClassType.STATIC);
         panel.setModel(controller);
         assertTrue(panel.isEmpty());
-        controller.setSelectedClass(this.classWithMethods());
+        controller.setSelected(this.classWithMethods());
         
         panel.setModel(controller);
         assertEquals(3, panel.getTableSize());

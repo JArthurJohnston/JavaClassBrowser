@@ -20,8 +20,13 @@ public class BaseNodeTest extends BaseTest{
     
     
     protected void verifyNodeSize(int x){
-        assertEquals(x, node().size());//minus one for the root node
+        assertEquals(x, node().size());
         assertEquals(x, treeHash.size());
+    }
+    
+    protected void printHashNodes(){
+        for(ModelNode m : treeHash.values())
+            System.out.println(m.getModel().toString());
     }
     
     protected ModelNode node(){

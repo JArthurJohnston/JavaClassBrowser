@@ -90,14 +90,15 @@ public class PackageNodeTest extends BaseNodeTest{
         node = new PackageNode(this.setUpProject().getAllPackage(), treeHash);
         PackageNode aNode = null;
         try {
-            aNode = new PackageNode(project.getDefaultPackage()
-                    .addPackage(new PackageModel("some random package")), treeHash);
-            this.verifyNodeSize(8);
+            PackageModel aModel = project.getDefaultPackage()
+                    .addPackage(new PackageModel("some random package"));
+            this.verifyNodeSize(7);
+            aNode = new PackageNode(aModel, treeHash);
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        aNode.remove(treeHash);
-        this.verifyNodeSize(7);
+        node.add(aNode);
+        this.verifyNodeSize(8);
     }
     
 }
