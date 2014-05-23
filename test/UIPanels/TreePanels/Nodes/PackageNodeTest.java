@@ -7,7 +7,6 @@
 package UIPanels.TreePanels.Nodes;
 
 import Exceptions.AlreadyExistsException;
-import Models.BaseModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import org.junit.Test;
 public class PackageNodeTest extends BaseNodeTest{
     
     private ProjectModel project;
-    private HashMap<BaseModel, ModelNode> testHash;
     private PackageNode node;
     
     public PackageNodeTest() {
@@ -31,13 +29,12 @@ public class PackageNodeTest extends BaseNodeTest{
     
     @Before
     public void setUp() {
-        testHash = new HashMap();
-        //node = new PackageNode(this.setUpProject().getAllPackage(), testHash);
+        treeHash = new HashMap();
     }
     
     @After
     public void tearDown() {
-        testHash = null;
+        treeHash = null;
         node = null;
     }
     
@@ -65,9 +62,42 @@ public class PackageNodeTest extends BaseNodeTest{
     public void testInit(){
         ProjectModel aProject = this.setUpProject();
         PackageModel aPackage = aProject.getPackageList().getFirst();
-        node = new PackageNode(aPackage, testHash);
+        node = new PackageNode(aPackage, treeHash);
         this.verifyNodeSize(1);
         assertEquals(aPackage, node.getModel());
+    }
+    
+    @Test
+    public void testRoot(){
+        node = new PackageNode(this.setUpProject().getAllPackage(), treeHash);
+        this.verifyNodeSize(7);
+        //5 packages + the default package + the all package
+    }
+    
+    @Test
+    public void testRemove(){
+        this.setUpProject();
+        PackageModel aModel = project.findPackage("some package");
+        PackageModel packageToBeRemoved = project.findPackage("some other package");
+        node = new PackageNode(aModel, treeHash);
+        PackageNode removedNode = node.addNode(new PackageNode(packageToBeRemoved, treeHash));
+        this.verifyNodeSize(2);
+        node.remove(removedNode);
+    }
+    
+    @Test
+    public void testAdd(){
+        node = new PackageNode(this.setUpProject().getAllPackage(), treeHash);
+        PackageNode aNode = null;
+        try {
+            aNode = new PackageNode(project.getDefaultPackage()
+                    .addPackage(new PackageModel("some random package")), treeHash);
+            this.verifyNodeSize(8);
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        aNode.remove(treeHash);
+        this.verifyNodeSize(7);
     }
     
 }

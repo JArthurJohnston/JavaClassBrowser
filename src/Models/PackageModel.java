@@ -15,7 +15,6 @@ import java.util.LinkedList;
  * @author Arthur
  */
 public class PackageModel extends ProjectModel {
-    protected LinkedList<PackageModel> packageList;
     protected ProjectModel parent;
     protected LinkedList<ClassModel> classList;
     
@@ -29,7 +28,9 @@ public class PackageModel extends ProjectModel {
      * Default constructor
      * Should not be called AT ALL!
      */
-    public PackageModel(){
+    protected PackageModel(){
+        packageList = new LinkedList();
+        classList = new LinkedList();
     }
     
     /**
@@ -44,9 +45,9 @@ public class PackageModel extends ProjectModel {
      * @param parent 
      */
     public PackageModel(ProjectModel parent){
-        initialize();
+        this();
         this.parent = parent;
-        this.name = "default package";
+        this.name = DEFAULT_PACKAGE_NAME;
     }
     
     /**
@@ -56,13 +57,8 @@ public class PackageModel extends ProjectModel {
      * @param name String
      */
     public PackageModel(String name){
-        initialize();
+        this();
         this.name = name;
-    }
-    
-    private void initialize(){
-        packageList = new LinkedList();
-        classList = new LinkedList();
     }
     
     @Override

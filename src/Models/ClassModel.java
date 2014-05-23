@@ -34,7 +34,7 @@ public class ClassModel extends PackageModel{
     private static ClassModel OBJECT_CLASS;
     
     //use these constructors for testing only
-    public ClassModel(){
+    protected ClassModel(){
         this.scope = ScopeType.PUBLIC;
         classList = new LinkedList();
         this.methods = new LinkedList();

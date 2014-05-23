@@ -14,8 +14,6 @@ import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import UIModels.BrowserUIController;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;

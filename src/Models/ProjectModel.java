@@ -29,7 +29,7 @@ public class ProjectModel extends BaseModel {
     private HashMap <String, ClassModel> classes;
     private HashMap <String, LinkedList<MethodModel>> methods;
     private HashMap <String, PackageModel> packages;
-    private LinkedList<PackageModel> packageList;
+    protected LinkedList<PackageModel> packageList;
     private String userName;
     
     private AllPackage all;

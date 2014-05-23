@@ -11,8 +11,6 @@ import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -371,6 +369,11 @@ public class PackageModelTest extends BaseTest{
         assertEquals(1, defaultPackage.getTopLevelPackages().size());
         assertTrue(defaultPackage.getTopLevelPackages().contains(newPackage));
         
+    }
+    
+    @Test
+    public void testRename(){
+        fail();
     }
     
     @Test

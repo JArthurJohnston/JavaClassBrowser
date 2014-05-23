@@ -91,7 +91,7 @@ public class ClassNodeTest extends BaseNodeTest{
         node.addNode(nodeToBeRemoved);
         assertEquals(2, node.size());
         assertEquals(1, treeHash.size());
-        node.removeNode(nodeToBeRemoved, treeHash);
+        nodeToBeRemoved.remove(treeHash);
         assertEquals(1, node.size());
         assertEquals(0, treeHash.size());
     }

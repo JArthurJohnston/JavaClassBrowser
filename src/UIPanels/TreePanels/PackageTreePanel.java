@@ -31,6 +31,7 @@ public class PackageTreePanel extends BaseTreePanel {
     public PackageNode getRootNode(){
         if(rootNode == null)
             rootNode = new PackageNode(controller.getSelectedProject().getAllPackage(), treeMap);
+        return (PackageNode)rootNode;
     }
 
     /**

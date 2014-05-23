@@ -29,6 +29,10 @@ public class BaseTreePanel extends BasePanel {
         treeMap = new HashMap();
     }
     
+    protected HashMap getHash(){
+        return treeMap;
+    }
+    
     protected ModelNode createNodeFromModel(BaseModel aModel){
         return new ModelNode(aModel, treeMap);
     }
