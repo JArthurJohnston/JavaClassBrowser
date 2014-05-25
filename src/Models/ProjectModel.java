@@ -161,7 +161,7 @@ public class ProjectModel extends BaseModel {
      * @param className
      * @return boolean
      */
-    protected boolean okToAddClass(String className){
+    public boolean okToAddClass(String className){
         return !this.classes.containsKey(className);
     }
     public boolean okToAddPackage(String packageName){

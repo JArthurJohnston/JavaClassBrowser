@@ -13,6 +13,7 @@ import Exceptions.VeryVeryBadException;
 import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.Buffer.ClassModelBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -290,5 +291,10 @@ public class ClassModel extends PackageModel{
             if(aModel.isMethod() || aModel.isMethod())
                 return ((MethodModel)aModel).getParent() == this;
         return false;
+    }
+    
+    @Override
+    public ClassModelBuffer getBuffer(){
+        return new ClassModelBuffer(this);
     }
 }

@@ -66,22 +66,6 @@ public class PackageModel extends ProjectModel {
         return this.getProject().getMain();
     }
     
-    
-    @Override
-    public boolean okToAddPackage(String newPackageName){
-        return this.getProject().okToAddPackage(this.name()+"."+newPackageName);
-    }
-    
-    @Override
-    protected boolean okToAddClass(String newClassName){
-        return this.getProject().okToAddClass(newClassName);
-    }
-    
-    @Override
-    protected boolean okToRemovePackage(PackageModel aPackage){
-        return this.getProject().okToRemovePackage(aPackage);
-    }
-    
     @Override
     public PackageModel addPackage(PackageModel newPackage) throws AlreadyExistsException{
         if(newPackage.getParent() == null){

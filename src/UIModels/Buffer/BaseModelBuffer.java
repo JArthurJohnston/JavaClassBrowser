@@ -11,6 +11,7 @@ import Models.BaseModel;
 import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.LinkedList;
 
 /**
  * Created to hold changes and check their
@@ -20,16 +21,23 @@ import Types.ScopeType;
  */
 public class BaseModelBuffer {
     protected BaseModel entity;
-    protected SortedList fields;
+    protected SortedList fields; // may not be necessary.
     protected boolean isValid;
     
     protected String name;
     protected ScopeType scope;
     protected boolean isFinal;
-    protected ClassType type;
+    protected ClassType type; // will probably be pushed down
+    protected LinkedList<String> warnings;
+    
+    /*
+    I wonder if i can replace these with a HashMap...
+    -no, javas not dynamic enough
+    */
     
     public BaseModelBuffer(){
         this.isValid = true;
+        warnings = new LinkedList();
     }
     
     public BaseModelBuffer(BaseModel aModel){
