@@ -8,13 +8,11 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
-import Exceptions.MethodDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.Events.ModelEvents.BaseModelUpdatedEvent;
 import MainBase.Events.ModelEvents.ModelAddedEvent;
-import MainBase.Events.ModelEvents.ModelEventHandler;
 import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
@@ -31,8 +29,6 @@ import org.junit.Test;
  * @author Arthur
  */
 public class ClassModelTest extends BaseTest{
-    private ProjectModel parentProject;
-    private PackageModel parentPackage;
     private ClassModel testClass;
     
     public ClassModelTest() {
@@ -47,13 +43,19 @@ public class ClassModelTest extends BaseTest{
     }
     
     @Before
-    public void setUp() throws AlreadyExistsException {
-        parentProject = new MainApplication().addProject(new ProjectModel("Parent Project"));
-        parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
-        testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
+    @Override
+    public void setUp(){
+        try {
+            parentProject = new MainApplication().addProject(new ProjectModel("Parent Project"));
+            parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
+            testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @After
+    @Override
     public void tearDown() {
         testClass = null;
         parentPackage = null;
@@ -468,5 +470,31 @@ public class ClassModelTest extends BaseTest{
     @Test
     public void testAddDuplicateClassDoenstFireEvent(){
         fail();
+    }
+    
+    @Test
+    public void testClassDeclaration(){
+        String expected =  "class InstanceClass";
+        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        testClass.setScope(ScopeType.PUBLIC);
+        expected =  "public class InstanceClass";
+        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        testClass.setParent(new ClassModel("ParentClass"));
+        expected =  "public class InstanceClass extends ParentClass";
+        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        
+    }
+    
+    @Test
+    public void testClasImplementsInterface(){
+        InterfaceModel anInterface = new InterfaceModel("SomeInterface");
+        anInterface = testClass.implementsInterface(anInterface);
+        assertTrue(testClass.getInterfaces().contains(anInterface));
+        assertTrue(anInterface.getClassList().contains(testClass));
+        /*
+        an interface should have reference to all the classes that implement it
+        so that it can tell them to update when a new abstract method is added
+        or removed from the interface.
+        */
     }
 }

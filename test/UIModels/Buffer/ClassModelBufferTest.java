@@ -9,8 +9,6 @@ package UIModels.Buffer;
 import Exceptions.AlreadyExistsException;
 import Models.ClassModel;
 import Models.ProjectModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;

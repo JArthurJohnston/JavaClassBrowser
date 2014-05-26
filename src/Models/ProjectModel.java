@@ -309,6 +309,12 @@ public class ProjectModel extends BaseModel {
         return classes.get(aClassName);
     }
     
+    public InterfaceModel findInterface(String name){
+        if(this.findClass(name).isInterface())
+            return (InterfaceModel)this.findClass(name);
+        return null;
+    }
+    
     public PackageModel findPackage(String aPackageName){
         return packages.get(aPackageName);
     }

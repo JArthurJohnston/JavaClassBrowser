@@ -24,6 +24,11 @@ public class VariableModel extends BaseModel{
     private VariableModel(){
         //used only for returning a new VariableModel from parsed source code.
     }
+    
+    public VariableModel(String name){
+        this.name = name;
+    }
+    
     public VariableModel(String name, ClassType instanceOrStatic){
         this.staticOrInstance = instanceOrStatic;
         this.name = name;

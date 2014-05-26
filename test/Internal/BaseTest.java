@@ -11,6 +11,7 @@ import MainBase.Events.ModelEvents.ModelEventHandler;
 import MainBase.MainApplication;                   
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.PackageModel;
 import Models.ProjectModel;
 import java.awt.BorderLayout;
 import java.lang.reflect.Field;
@@ -23,8 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,6 +34,8 @@ import static org.junit.Assert.fail;
  */
 public class BaseTest {
     protected MainApplication main;
+    public ProjectModel parentProject;
+    public PackageModel parentPackage;
     
     public void setUpMain(){
         this.main = new MainApplication();
@@ -44,6 +45,22 @@ public class BaseTest {
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
+    }
+    
+    public void setUp(){
+        this.setUpMain();
+        try {
+            parentProject  = main.addProject(new ProjectModel("parent project"));
+            parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    public void tearDown(){
+        main = null;
+        parentProject = null;
+        parentPackage = null;
     }
     
     protected ProjectModel project(){

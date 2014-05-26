@@ -6,7 +6,7 @@ package UIPanels;
 
 import Models.BaseModel;
 import Models.MethodModel;
-import UIModels.BrowserUIController;
+import UIModels.Buffer.BaseModelBuffer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -16,7 +16,7 @@ import javax.swing.event.DocumentListener;
  */
 public class ModelEditPanel extends BasePanel{
     
-    private BaseModel selectedModel;
+    private BaseModelBuffer buffer;
     
     /**
      * Creates new form ModelEditPanel
@@ -27,25 +27,8 @@ public class ModelEditPanel extends BasePanel{
         this.commentTextArea.getDocument().addDocumentListener(this.setUpDocListener());
     }
     
-    @Override
-    public void setModel(BrowserUIController aModel){
-        this.controller = aModel;
-        this.setSelected(aModel.getSelected());
-    }
-    
-    public void setSelected(BaseModel aModel){
-        if(aModel == null)
-            return;
-        this.selectedModel = aModel;
-        this.modelEditTextArea.setText(selectedModel.toSourceString());
-        this.commentTextArea.setText(selectedModel.getComment());
-        if(!selectedModel.isMethod())
-            this.modelEditTextArea.setEditable(false);
-    }
-    
     private void updateModel(){
-        if(selectedModel.isMethod())
-            ((MethodModel)selectedModel).setSource(this.modelEditTextArea.getText());
+        buffer.saveToModel();
     }
     
     private DocumentListener setUpDocListener(){

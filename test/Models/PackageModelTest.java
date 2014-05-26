@@ -11,6 +11,8 @@ import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -394,5 +396,33 @@ public class PackageModelTest extends BaseTest{
     @Test
     public void testParentIsProject(){
         assertEquals(testPackage.getParent(), testPackage.getProject());
+    }
+    
+    @Test
+    public void testAddInterface(){
+        InterfaceModel anInterface = null;
+        try {
+            anInterface = testPackage.addInterface(new InterfaceModel("SomeInterface"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(testPackage, anInterface.getParentPackage());
+        assertTrue(testPackage.getInterfaces().contains(anInterface));
+        assertEquals(anInterface, parentProject.findClass("SomeInterface"));
+    }
+    
+    @Test 
+    public void testAddSubInterface(){
+        InterfaceModel anInterface = null;
+        try {
+            InterfaceModel parentInterface = testPackage
+                    .addInterface(new InterfaceModel("ParentInterface"));
+            anInterface = parentInterface.addInterface(new InterfaceModel("SomeInterface"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(testPackage, anInterface.getParentPackage());
+        assertFalse(testPackage.getInterfaces().contains(anInterface));
+        assertEquals(anInterface, parentProject.findClass("SomeInterface"));
     }
 }

@@ -3,20 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/BaseListPanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/SelectedClassPanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/VariableListPanel.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIModels/Buffer/BaseModelBuffer.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIModels/Buffer/ClassModelBuffer.java</file>
             <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/ClassModel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/Internal/Mocks/MockBrowserController.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/Internal/Mocks/MockClassModel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/ImportListPanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/VariableModel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/BasePanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/Models/MethodModel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/ClassFieldsPanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/UIPanels/VariableListPanelTest.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/src/UIPanels/MethodlListPanel.java</file>
-            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/UIPanels/ImportListPanelTest.java</file>
+            <file>file:/home/arthur/NetBeans8Projects/JavaClassBrowser/test/UIModels/Buffer/ClassModelBufferTest.java</file>
         </group>
     </open-files>
 </project-private>

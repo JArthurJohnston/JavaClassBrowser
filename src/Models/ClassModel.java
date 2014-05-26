@@ -34,10 +34,7 @@ public class ClassModel extends PackageModel{
             = new HashMap();
     private static ClassModel OBJECT_CLASS;
     
-    //use these constructors for testing only
     protected ClassModel(){
-        this.scope = ScopeType.PUBLIC;
-        classList = new LinkedList();
         this.methods = new LinkedList();
         this.variables = new LinkedList();
     }
@@ -150,7 +147,9 @@ public class ClassModel extends PackageModel{
     }
     
     @Override
-    public ClassModel getParent(){
+    public PackageModel getParent(){
+        if(parent == null)
+            return parentPackage;
         return (ClassModel) parent;
     }
     
@@ -236,7 +235,9 @@ public class ClassModel extends PackageModel{
     }
     
     public ScopeType getScope(){
-        return this.scope;
+        if(scope == null)
+            scope = ScopeType.NONE;
+        return scope;
     }
     
     /*
@@ -276,6 +277,16 @@ public class ClassModel extends PackageModel{
         return classList;
     }
     
+    public InterfaceModel implementsInterface(InterfaceModel anInterface){
+        interfaceList.add(anInterface);
+        this.implementAbstractMethods();
+        return anInterface;
+    }
+    
+    private void implementAbstractMethods(){
+        //write me
+    }
+    
     public ClassModel getReturnType(){
         return this;
     }
@@ -297,4 +308,28 @@ public class ClassModel extends PackageModel{
     public ClassModelBuffer getBuffer(){
         return new ClassModelBuffer(this);
     }
+    
+    public boolean isInterface(){
+        return false;
+    }
+    
+    private String getScopeString(){
+        if(this.getScope() == ScopeType.NONE)
+            return "";
+        return scope.toString().toLowerCase() + " ";
+    }
+    
+    private String inheritenceString(){
+        if(parent == null || !parent.isClass())
+            return "";
+        return " extends " + this.parent.name();
+    }
+    
+    public String getDeclaration(){
+        return this.getScopeString() 
+                + "class "
+                + this.name() 
+                + this.inheritenceString();
+    }
+    
 }

@@ -4,19 +4,8 @@
  */
 package UIPanels;
 
-import Exceptions.AlreadyExistsException;
-import Exceptions.BaseException;
-import Internal.BaseTest;
-import MainBase.MainApplication;
-import Models.ClassModel;
-import Models.MethodModel;
-import Models.ProjectModel;
-import Types.ClassType;
-import UIModels.BrowserUIController;
-import javax.swing.JTextArea;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,9 +14,8 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class ModelEditPanelTest extends BaseTest{
+public class ModelEditPanelTest extends BasePanelTest{
     private ModelEditPanel panel;
-    private BrowserUIController model;
     
     public ModelEditPanelTest() {
     }
@@ -41,42 +29,21 @@ public class ModelEditPanelTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
-        MainApplication main = new MainApplication();
-        try {
-            ProjectModel aProject = 
-                    main.setSelectedProejct(main.addProject(
-                    new ProjectModel("a project")));
-            ClassModel aClass = 
-                    aProject.getDefaultPackage().addClass(new ClassModel("AClass"));
-            MethodModel aMethod = aClass.addMethod(new MethodModel("aMethod", ClassType.INSTANCE));
-            model = new BrowserUIController(main);
-            model.setSelected(aMethod);
-        } catch (BaseException ex) {
-            fail(ex.getMessage());
-        }
+        super.setUp();
         panel = new ModelEditPanel();
-        panel.setModel(model);
     }
     
     @After
+    @Override
     public void tearDown() {
+        super.tearDown();
         panel = null;
-        model = null;
     }
     
     @Test
-    public void testInit(){
-        assertEquals(model, this.getVariableFromClass(panel, "model"));
-        JTextArea editSource = (JTextArea)this.getVariableFromClass(panel, "modelEditTextArea");
-        assertTrue(this.compareStrings("private void aMethod(){\n" +
-"\n" +
-"}", editSource.getText()));
-        assertTrue(editSource.isEditable());
-    }
-    
-    @Test
-    public void testSaveToModel(){
-        fail();
+    public void testSetSelectedClass(){
+        panel.setSelected(testClass);
     }
 }

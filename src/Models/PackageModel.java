@@ -17,6 +17,7 @@ import java.util.LinkedList;
 public class PackageModel extends ProjectModel {
     protected ProjectModel parent;
     protected LinkedList<ClassModel> classList;
+    protected LinkedList<InterfaceModel> interfaceList;
     
     private static final String DEFAULT_PACKAGE_NAME = "default package";
     /*
@@ -31,6 +32,7 @@ public class PackageModel extends ProjectModel {
     protected PackageModel(){
         packageList = new LinkedList();
         classList = new LinkedList();
+        interfaceList = new LinkedList();
     }
     
     /**
@@ -67,7 +69,8 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    public PackageModel addPackage(PackageModel newPackage) throws AlreadyExistsException{
+    public PackageModel addPackage(PackageModel newPackage) 
+            throws AlreadyExistsException{
         if(newPackage.getParent() == null){
             newPackage.setParent(this);
             this.packageList.add(newPackage);
@@ -77,7 +80,8 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    public ClassModel addClass(ClassModel newClass) throws AlreadyExistsException{
+    public ClassModel addClass(ClassModel newClass) 
+            throws AlreadyExistsException{
         this.getProject().addClass(newClass);
         if(newClass.parent == null){
             classList.add(newClass);
@@ -85,6 +89,23 @@ public class PackageModel extends ProjectModel {
         }
         this.fireAdded(this, newClass);
         return newClass;
+    }
+    
+    public InterfaceModel addInterface(InterfaceModel newInterface) 
+            throws AlreadyExistsException{
+        if(newInterface.getParentPackage() == null)
+            newInterface.setParent(this);
+        interfaceList.add((InterfaceModel)
+                this.getParent()
+                        .addClass(newInterface));
+        return newInterface;
+    }
+    
+    public InterfaceModel removeInterface(InterfaceModel anInterface) throws VeryVeryBadException{
+        if(anInterface.getParent() == this)
+            interfaceList.remove(anInterface);
+        fireRemoved(this, this.getProject().removeClass(anInterface));
+        return anInterface;
     }
     
     public void rename(String newName) throws AlreadyExistsException{
@@ -129,8 +150,8 @@ public class PackageModel extends ProjectModel {
             if(aPackage.getParent() == this){
                 this.packageList.remove(aPackage);
             }
-            fireRemoved(this, aPackage);
-            return this.getProject().removePackage(aPackage);
+            fireRemoved(this, this.getProject().removePackage(aPackage));
+            return aPackage;
         }else {
             throw new PackageDoesNotExistException(this, aPackage);
         }
@@ -163,6 +184,10 @@ public class PackageModel extends ProjectModel {
             aList.addAll(p.getPackageList());
         return aList;
     }
+    
+    public LinkedList<InterfaceModel> getInterfaces(){
+        return interfaceList;
+    } 
     
     @Override
     public ProjectModel getProject(){

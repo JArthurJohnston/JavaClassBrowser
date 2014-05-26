@@ -15,11 +15,22 @@ import Exceptions.VeryVeryBadException;
  */
 public class InterfaceModel extends ClassModel{
     
+    public InterfaceModel(String name){
+        super(name);
+    }
+    
     @Override
     public AbstractMethodModel addMethod(MethodModel newMethod) throws BaseException {
         if(!newMethod.isAbstract())
             throw new VeryVeryBadException(this, newMethod);
         return (AbstractMethodModel)super.addMethod(newMethod);
     }
+    
+    @Override
+    public boolean isInterface(){
+        return true;
+    }
+    
+    
     
 }
