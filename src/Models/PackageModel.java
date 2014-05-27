@@ -52,6 +52,21 @@ public class PackageModel extends ProjectModel {
         this.name = DEFAULT_PACKAGE_NAME;
     }
     
+    
+    public void addChild(PackageModel newChild){
+        if(newChild.isPackage())
+            packageList.add(newChild);
+        if(newChild.isClass())
+            classList.add((ClassModel)newChild);
+    }
+    
+    public void removeChild(PackageModel aChild){
+        if(aChild.isPackage())
+            packageList.remove(aChild);
+        if(aChild.isClass())
+            classList.remove((ClassModel)aChild);
+    }
+    
     /**
      * New Sub Package Constructor
      * Used to add a PackageModel to an existing PackageModel
@@ -82,23 +97,21 @@ public class PackageModel extends ProjectModel {
     @Override
     public ClassModel addClass(ClassModel newClass) 
             throws AlreadyExistsException{
-        this.getProject().addClass(newClass);
         if(newClass.parent == null){
-            classList.add(newClass);
             newClass.setParent(this);
+            classList.add(newClass);
         }
-        this.fireAdded(this, newClass);
+        this.fireAdded(this, this.getProject().addClass(newClass));
         return newClass;
     }
     
     public InterfaceModel addInterface(InterfaceModel newInterface) 
             throws AlreadyExistsException{
-        if(newInterface.getParentPackage() == null)
+        if(newInterface.getParentPackage() == null){
             newInterface.setParent(this);
-        interfaceList.add((InterfaceModel)
-                this.getParent()
-                        .addClass(newInterface));
-        return newInterface;
+            interfaceList.add(newInterface);
+        }
+        return (InterfaceModel)this.getProject().addClass(newInterface);
     }
     
     public InterfaceModel removeInterface(InterfaceModel anInterface) throws VeryVeryBadException{

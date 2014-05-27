@@ -9,6 +9,7 @@ package UIModels.Buffer;
 import Exceptions.AlreadyExistsException;
 import Models.ClassModel;
 import Models.ProjectModel;
+import Types.ScopeType;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -31,6 +32,7 @@ public class ClassModelBufferTest extends BaseBufferTest{
         try {
             baseClass = aProject.getDefaultPackage().addClass(new ClassModel("BaseClass"));
             aProject.getDefaultPackage().addClass(new ClassModel("SomeOtherClass"));
+            baseClass.setScope(ScopeType.PRIVATE);
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }

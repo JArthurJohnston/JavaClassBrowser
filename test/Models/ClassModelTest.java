@@ -17,6 +17,8 @@ import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -28,26 +30,17 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class ClassModelTest extends BaseTest{
+public class ClassModelTest extends BaseModelTest{
     private ClassModel testClass;
     
     public ClassModelTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
     @Before
     @Override
     public void setUp(){
+        super.setUp();
         try {
-            parentProject = new MainApplication().addProject(new ProjectModel("Parent Project"));
-            parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
             testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -58,8 +51,7 @@ public class ClassModelTest extends BaseTest{
     @Override
     public void tearDown() {
         testClass = null;
-        parentPackage = null;
-        parentProject = null;
+        super.tearDown();
     }
     
     private void setUpSubClasses(){
@@ -482,7 +474,20 @@ public class ClassModelTest extends BaseTest{
         testClass.setParent(new ClassModel("ParentClass"));
         expected =  "public class InstanceClass extends ParentClass";
         assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
-        
+        try {
+            testClass.addInterface(new InterfaceModel("SomeInterface"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        expected =  "public class InstanceClass extends ParentClass implements SomeInterface";
+        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        try {
+            testClass.addInterface(new InterfaceModel("SomeOtherInterface"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        expected =  "public class InstanceClass extends ParentClass implements SomeInterface implements SomeOtherInterface";
+        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
     }
     
     @Test
@@ -496,5 +501,24 @@ public class ClassModelTest extends BaseTest{
         so that it can tell them to update when a new abstract method is added
         or removed from the interface.
         */
+    }
+    
+    @Test
+    public void testMoveClass(){
+        ClassModel p1 = null;
+        ClassModel p2 = null;
+        ClassModel child = null;
+        try {
+            p1 = parentPackage.addClass(new ClassModel("ParentOne"));
+            p2 = parentPackage.addClass(new ClassModel("ParentTwo"));
+            child = p1.addClass(new ClassModel("Child"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        
+        child.moveToClass(p2);
+        assertEquals(p2, child.getParent());
+        assertFalse(p1.getSubClasses().contains(child));
+        assertTrue(p2.getSubClasses().contains(child));
     }
 }

@@ -262,6 +262,12 @@ public class ClassModel extends PackageModel{
         aPackage.adoptClass(this);
     }
     
+    public void moveToClass(ClassModel newParent){
+        this.getParent().removeChild(this);
+        this.setParent(newParent);
+        newParent.addChild(this);
+    }
+    
     @Override
     public LinkedList<ClassModel> getClassList(){
         LinkedList myClassList = new LinkedList();
@@ -325,11 +331,19 @@ public class ClassModel extends PackageModel{
         return " extends " + this.parent.name();
     }
     
+    private String interfacesString(){
+        String s = "";
+        for(InterfaceModel im : interfaceList)
+            s += " implements " + im.name();
+        return s;
+    }
+    
     public String getDeclaration(){
         return this.getScopeString() 
                 + "class "
                 + this.name() 
-                + this.inheritenceString();
+                + this.inheritenceString()
+                + this.interfacesString();
     }
     
 }
