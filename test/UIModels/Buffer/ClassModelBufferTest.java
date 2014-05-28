@@ -8,8 +8,11 @@ package UIModels.Buffer;
 
 import Exceptions.AlreadyExistsException;
 import Models.ClassModel;
+import Models.InterfaceModel;
 import Models.ProjectModel;
 import Types.ScopeType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -27,12 +30,13 @@ public class ClassModelBufferTest extends BaseBufferTest{
     }
     
     @Before
+    @Override
     public void setUp() {
-        ProjectModel aProject = new ProjectModel("parent project");
+        super.setUp();
         try {
-            baseClass = aProject.getDefaultPackage().addClass(new ClassModel("BaseClass"));
-            aProject.getDefaultPackage().addClass(new ClassModel("SomeOtherClass"));
-            baseClass.setScope(ScopeType.PRIVATE);
+            parentPackage.addClass(new ClassModel("SomeOtherClass"));
+            parentPackage.addClass(new ClassModel("BaseClass")).setScope(ScopeType.PRIVATE);
+            baseClass = parentProject.findClass("BaseClass");
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -40,6 +44,7 @@ public class ClassModelBufferTest extends BaseBufferTest{
     }
     
     @After
+    @Override
     public void tearDown() {
         baseClass= null;
         buffer = null;
@@ -51,6 +56,9 @@ public class ClassModelBufferTest extends BaseBufferTest{
         assertEquals(buffer.name, baseClass.name());
         assertTrue(buffer.isValid());
         assertTrue(buffer.warnings.isEmpty());
+        assertFalse(buffer.isAbstract());
+        assertNull(buffer.getParentClass());
+        assertEquals(parentPackage, buffer.getParentPackage());
     }
     
     @Test
@@ -73,10 +81,15 @@ public class ClassModelBufferTest extends BaseBufferTest{
     }
     
     @Test
-    public void testSaveToModel(){
+    public void applyChanges(){
         buffer.setName("SomeName");
         buffer.saveToModel();
         assertEquals("SomeName",baseClass.name());
+    }
+    
+    @Test
+    public void testRevertChanges(){
+        fail();
     }
     
     @Test
@@ -91,7 +104,63 @@ public class ClassModelBufferTest extends BaseBufferTest{
     
     @Test
     public void testSetNameAddsWarning(){
-        
+        fail();
     }
+    
+    @Test
+    public void testEditableString(){
+        String expected = "private class BaseClass";
+        assertEquals(expected, buffer.editableString());
+    }
+    
+    /**
+     * this tests the "happy case"
+     * Ill need to write other tests for errors and 
+     * edge cases
+     */
+    @Test
+    public void testParseText(){
+        String sourceText = "public abstract class SomeClass";
+        buffer.parseSource(sourceText);
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertEquals("SomeClass", buffer.name);
+        assertTrue(buffer.isAbstract());
+        assertNull(buffer.getParentClass());
+        assertTrue(buffer.getInterfaces().isEmpty());
+        
+        //test subclass declaration
+        sourceText = "public class SomeClass extends SomeOtherClass";
+        buffer.parseSource(sourceText);
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertEquals("SomeClass", buffer.name);
+        assertFalse(buffer.isAbstract());
+        assertEquals(parentProject.findClass("SomeOtherClass"), buffer.getParentClass());
+    }
+    
+    @Test
+    public void testParseImplements(){
+        assertTrue(buffer.getInterfaces().isEmpty());
+        try {
+            parentPackage.addInterface(new InterfaceModel("AnInterface"));
+            parentPackage.addInterface(new InterfaceModel("AnotherInterface"));
+            parentPackage.addInterface(new InterfaceModel("YetAnotherInterface"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        InterfaceModel anInterface  = parentProject.findInterface("AnInterface");
+        
+        String sourceText = "class SomeClass implements AnInterface";
+        buffer.parseSource(sourceText);
+        assertEquals(1, buffer.getInterfaces().size());
+        assertTrue(buffer.getInterfaces().contains(anInterface));
+        
+        sourceText = "class SomeClass implements AnInterface implements AnotherInterface";
+        buffer.parseSource(sourceText);
+        assertEquals(2, buffer.getInterfaces().size());
+        assertTrue(buffer.getInterfaces().contains(anInterface));
+        anInterface  = parentProject.findInterface("AnotherInterface");
+        assertTrue(buffer.getInterfaces().contains(anInterface));
+    }
+    
     
 }

@@ -11,6 +11,8 @@ import Models.BaseModel;
 import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -19,7 +21,7 @@ import java.util.LinkedList;
  * 
  * @author arthur
  */
-public class BaseModelBuffer {
+public abstract class BaseModelBuffer {
     protected BaseModel entity;
     protected SortedList fields; // may not be necessary.
     protected boolean isValid;
@@ -98,6 +100,9 @@ public class BaseModelBuffer {
             this.scope = ScopeType.NONE;
         return this.scope;
     }
+    public void setScope(ScopeType scope){
+        this.scope = scope;
+    }
     public ClassType getType(){
         return this.type;
     }
@@ -107,5 +112,45 @@ public class BaseModelBuffer {
     public String getSourceString(){
         return this.getEntity().toSourceString();
     }
+    public void setClassType(ClassType type){
+        this.type = type;
+    }
+    
+    protected ArrayList<String> splitAtWhiteSpaces(String source){
+        if(source.isEmpty())
+            return new ArrayList();
+        return new ArrayList(Arrays.asList(source.split("\\s+")));
+    }
+    
+    public ArrayList<String> parseScope(ArrayList<String> sourceTokens){
+        for(ScopeType s : ScopeType.values())
+            if(sourceTokens.contains(s.toString().toLowerCase())){
+                this.setScope(s);
+                sourceTokens.remove(s.toString().toLowerCase());
+                break;
+            }
+        return sourceTokens;
+    }
+    public ArrayList<String> parseClassType(ArrayList<String> sourceTokens){
+        for(ClassType c : ClassType.values())
+            if(sourceTokens.contains(c.toString().toLowerCase())){
+                this.setClassType(c);
+                sourceTokens.remove(c.toString().toLowerCase());
+                break;
+            }
+        return sourceTokens;
+    }
+    public boolean clearToken(ArrayList<String> tokens, String value){
+        try{
+            tokens.remove(tokens.indexOf(value));
+        }catch (IndexOutOfBoundsException ex){
+            return false;
+        }
+        return true;
+    }
+    
+    
+    public abstract String editableString();
+    public abstract void parseSource(String source);
     
 }

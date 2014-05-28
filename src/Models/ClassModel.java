@@ -24,6 +24,7 @@ import java.util.LinkedList;
 public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
+    protected boolean isAbstract;
     protected PackageModel parentPackage;
     public LinkedList<MethodModel> methods;
     public LinkedList<VariableModel> variables;
@@ -37,6 +38,7 @@ public class ClassModel extends PackageModel{
     protected ClassModel(){
         this.methods = new LinkedList();
         this.variables = new LinkedList();
+        this.isAbstract = false;
     }
     
     public ClassModel(String name, ScopeType scope){
@@ -57,6 +59,14 @@ public class ClassModel extends PackageModel{
                     .addElm("float")
                     .addElm("double")
                     .addElm("void");
+    }
+    
+    public void setAbstract(boolean isAbstract){
+        this.isAbstract = isAbstract;
+    }
+    
+    public boolean isAbstract(){
+        return isAbstract;
     }
     
     public static ClassModel getPrimitive(String aString){

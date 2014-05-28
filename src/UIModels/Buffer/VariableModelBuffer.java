@@ -11,8 +11,7 @@ import MainBase.SortedList;
 import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
-import Types.ScopeType;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -60,8 +59,18 @@ public  class VariableModelBuffer extends BaseModelBuffer{
         this.value = this.removeSemicolon(aString);
     }
     
+    @Override
+    public void parseSource(String source){
+        if(source.contains("=")){
+            this.parseDeclaration(source.split("=")[0]);
+            this.setValue(source.split("=")[1]);
+        }
+    }
+    
+    
+    
     public boolean parseDeclaration(String decl){
-        LinkedList<String> tokens = new LinkedList(Arrays.asList(decl.split("\\s+")));
+        ArrayList<String> tokens = this.splitAtWhiteSpaces(decl);
         if(tokens.size() < 2)
             return false;
         //need to check for duplicate names before setting name.
@@ -72,19 +81,9 @@ public  class VariableModelBuffer extends BaseModelBuffer{
         tokens.removeLast();
         if(tokens.isEmpty())
             return true;
-        for(ScopeType s : ScopeType.values())
-            if(tokens.contains(s.toString().toLowerCase())){
-                this.scope = s;
-                tokens.remove(s.toString().toLowerCase());
-                break;
-            }
+        this.parseScope(tokens);
+        this.parseClassType(tokens);
         
-        for(ClassType c : ClassType.values())
-            if(tokens.contains(c.toString().toLowerCase())){
-                this.setType(c);
-                tokens.remove(c.toString().toLowerCase());
-                break;
-            }
         if(tokens.isEmpty())
             return true;
         
@@ -93,15 +92,6 @@ public  class VariableModelBuffer extends BaseModelBuffer{
             tokens.remove("final");
         }
         return tokens.isEmpty();
-    }
-    
-    public boolean parseSource(String source){
-        if(source.contains("=")){
-            this.parseDeclaration(source.split("=")[0]);
-            this.setValue(source.split("=")[1]);
-            return true;
-        }
-        return this.parseDeclaration(source);
     }
     
     @Override
@@ -122,6 +112,11 @@ public  class VariableModelBuffer extends BaseModelBuffer{
     
     public ClassModel getObjectType(){
         return objectType;
+    }
+
+    @Override
+    public String editableString() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

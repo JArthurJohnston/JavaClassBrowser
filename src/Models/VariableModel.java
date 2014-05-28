@@ -8,6 +8,7 @@ import Exceptions.CannotBeDeletedException;
 import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.Buffer.BaseModelBuffer;
 
 /**
  *
@@ -167,5 +168,10 @@ public class VariableModel extends BaseModel{
         no longer compile
         */
         return this;
+    }
+
+    @Override
+    public BaseModelBuffer getBuffer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

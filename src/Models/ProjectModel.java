@@ -13,6 +13,7 @@ import MainBase.MainApplication;
 import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
+import UIModels.Buffer.BaseModelBuffer;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -331,6 +332,11 @@ public class ProjectModel extends BaseModel {
     @Override
     public boolean contains(BaseModel aModel){
         return aModel.getProject() == this;
+    }
+
+    @Override
+    public BaseModelBuffer getBuffer() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public class AllPackage extends PackageModel{

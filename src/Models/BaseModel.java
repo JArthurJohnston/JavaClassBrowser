@@ -8,10 +8,8 @@ import MainBase.Events.ModelEvents.ModelAddedEvent;
 import MainBase.Events.ModelEvents.ModelEventHandler;
 import MainBase.Events.ModelEvents.ModelRemovedEvent;
 import MainBase.Events.ModelEvents.ModelChangedEvent;
-import Exceptions.AlreadyExistsException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.VeryVeryBadException;
-import MainBase.Events.*;
 import Types.ClassType;
 import UIModels.Buffer.BaseModelBuffer;
 import java.util.LinkedList;
@@ -94,15 +92,12 @@ public abstract class BaseModel {
         return false;
     }
     
-    public BaseModelBuffer getBuffer(){
-        return new BaseModelBuffer(this);
-    }
-    
     //Abstract Methods
     abstract public String toSourceString();
     abstract public String getPath();
     abstract public BaseModel remove() throws CannotBeDeletedException,
             VeryVeryBadException;
+    public abstract BaseModelBuffer getBuffer();
     
     public void fireAdded(BaseModel source, BaseModel target){
         ModelEventHandler.fireEvent(new ModelAddedEvent(source, target));

@@ -515,7 +515,6 @@ public class ClassModelTest extends BaseModelTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        
         child.moveToClass(p2);
         assertEquals(p2, child.getParent());
         assertFalse(p1.getSubClasses().contains(child));
