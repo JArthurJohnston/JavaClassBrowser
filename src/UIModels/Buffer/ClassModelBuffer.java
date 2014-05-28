@@ -6,9 +6,9 @@
 
 package UIModels.Buffer;
 
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.InterfaceModel;
-import Models.PackageModel;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -19,16 +19,27 @@ import java.util.LinkedList;
 public class ClassModelBuffer extends BaseModelBuffer{
     private boolean isAbstract;
     private ClassModel parentClass;
-    private PackageModel parentPackage;
     private LinkedList<InterfaceModel> interfaceList;
     
     
     public ClassModelBuffer(ClassModel baseEntity){
-        super(baseEntity);
+        this.initializeFromModel(baseEntity);
+    }
+    
+    @Override
+    public void initializeFromModel(BaseModel aModel){
+        super.initializeFromModel(aModel);
+        this.initializeFromClass((ClassModel)aModel);
+    }
+    
+    private void initializeFromClass(ClassModel baseEntity){
         isAbstract = baseEntity.isAbstract();
         if(baseEntity.getParent().isClass())
             parentClass = (ClassModel)baseEntity.getParent();
+        else
+            parentClass = null;
         interfaceList = baseEntity.getInterfaces();
+        scope  = baseEntity.getScope();
     }
     
     @Override
@@ -42,9 +53,9 @@ public class ClassModelBuffer extends BaseModelBuffer{
     
     @Override
     public boolean isValid(){
-        if(this.name != entity.name())
+        if(this.name.compareTo(entity.name()) != 0)
             return entity.getProject().okToAddClass(name);
-        return true;
+        return super.isValid();
     }
     public boolean isAbstract(){
         return isAbstract;
@@ -56,9 +67,6 @@ public class ClassModelBuffer extends BaseModelBuffer{
     
     public ClassModel getParentClass(){
         return parentClass;
-    }
-    public PackageModel getParentPackage(){
-        return parentPackage;
     }
     
     public String newClassName(){
@@ -100,6 +108,7 @@ public class ClassModelBuffer extends BaseModelBuffer{
     }
     
     public ArrayList<String> parseImplements(ArrayList<String> tokens){
+        interfaceList.clear();
         while(tokens.contains("implements")){
             int index = tokens.indexOf("implements");
             if(index >=0 && tokens.size() >= index + 1){

@@ -24,7 +24,6 @@ import java.util.LinkedList;
 public abstract class BaseModelBuffer {
     protected BaseModel entity;
     protected SortedList fields; // may not be necessary.
-    protected boolean isValid;
     
     protected String name;
     protected ScopeType scope;
@@ -36,16 +35,16 @@ public abstract class BaseModelBuffer {
     I wonder if i can replace these with a HashMap...
     -no, javas not dynamic enough
     */
-    
-    public BaseModelBuffer(){
-        this.isValid = true;
-        warnings = new LinkedList();
-    }
+    protected BaseModelBuffer(){}
     
     public BaseModelBuffer(BaseModel aModel){
-        this();
-        this.entity = aModel;
-        this.name = aModel.name();
+        this.initializeFromModel(aModel);
+    }
+    
+    public void initializeFromModel(BaseModel aModel){
+        warnings = new LinkedList();
+        entity = aModel;
+        name = aModel.name();
     }
     
     protected SortedList testFields(){
@@ -58,13 +57,17 @@ public abstract class BaseModelBuffer {
                 return false;
         if(this.name.isEmpty())
             return false;
-        return isValid;
+        return true;
     }
     
     public BaseModel saveChanges(){
         if(this.isValid())
             return null;
         return this.getEntity();
+    }
+    
+    public void revertChanges(){
+        this.initializeFromModel(entity);
     }
     
     public BaseModel getEntity(){

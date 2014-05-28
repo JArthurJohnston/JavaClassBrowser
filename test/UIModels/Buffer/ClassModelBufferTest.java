@@ -9,10 +9,7 @@ package UIModels.Buffer;
 import Exceptions.AlreadyExistsException;
 import Models.ClassModel;
 import Models.InterfaceModel;
-import Models.ProjectModel;
 import Types.ScopeType;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -58,7 +55,6 @@ public class ClassModelBufferTest extends BaseBufferTest{
         assertTrue(buffer.warnings.isEmpty());
         assertFalse(buffer.isAbstract());
         assertNull(buffer.getParentClass());
-        assertEquals(parentPackage, buffer.getParentPackage());
     }
     
     @Test
@@ -89,7 +85,20 @@ public class ClassModelBufferTest extends BaseBufferTest{
     
     @Test
     public void testRevertChanges(){
-        fail();
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        assertEquals("BaseClass", buffer.getName());
+        assertNull(buffer.getParentClass());
+        
+        buffer.parseSource("public class SomeClass extends SomeOtherClass");
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertEquals("SomeClass", buffer.getName());
+        assertEquals(ClassModel.class, buffer.getParentClass().getClass());
+        assertEquals(parentProject.findClass("SomeOtherClass"), buffer.getParentClass());
+        
+        buffer.revertChanges();
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        assertEquals("BaseClass", buffer.getName());
+        assertNull(buffer.getParentClass());
     }
     
     @Test
@@ -135,6 +144,25 @@ public class ClassModelBufferTest extends BaseBufferTest{
         assertEquals("SomeClass", buffer.name);
         assertFalse(buffer.isAbstract());
         assertEquals(parentProject.findClass("SomeOtherClass"), buffer.getParentClass());
+        assertTrue(buffer.isValid());
+    }
+    
+    @Test
+    public void testParseScope(){
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        String sourceText = "public class BaseClass";
+        buffer.parseSource(sourceText);
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertTrue(buffer.isValid());
+    }
+    
+    @Test
+    public void testParseAbstract(){
+        assertFalse(buffer.isAbstract());
+        String sourceText = "public abstract class BaseClass";
+        buffer.parseSource(sourceText);
+        assertTrue(buffer.isAbstract());
+        assertTrue(buffer.isValid());
     }
     
     @Test
@@ -160,6 +188,7 @@ public class ClassModelBufferTest extends BaseBufferTest{
         assertTrue(buffer.getInterfaces().contains(anInterface));
         anInterface  = parentProject.findInterface("AnotherInterface");
         assertTrue(buffer.getInterfaces().contains(anInterface));
+        assertTrue(buffer.isValid());
     }
     
     
