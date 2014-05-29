@@ -23,8 +23,6 @@ import java.util.LinkedList;
  */
 public abstract class BaseModelBuffer {
     protected BaseModel entity;
-    protected SortedList fields; // may not be necessary.
-    protected boolean isStatic;
     
     protected String name;
     protected ScopeType scope;
@@ -42,7 +40,7 @@ public abstract class BaseModelBuffer {
         this.initializeFromModel(aModel);
     }
     
-    public void initializeFromModel(BaseModel aModel){
+    protected void initializeFromModel(BaseModel aModel){
         warnings = new LinkedList();
         entity = aModel;
         name = aModel.name();
@@ -59,6 +57,16 @@ public abstract class BaseModelBuffer {
         if(this.name.isEmpty())
             return false;
         return true;
+    }
+    
+    public void setClassType(ClassType aType){
+        this.type = aType;
+    }
+    
+    public ClassType getClasType(){
+        if(type == null)
+            return ClassType.INSTANCE;
+        return type;
     }
     
     public BaseModel saveChanges(){
@@ -110,14 +118,6 @@ public abstract class BaseModelBuffer {
         this.scope = scope;
     }
     
-    public void setStatic(boolean isStatic){
-        this.isStatic = isStatic;
-    }
-    
-    public boolean isStatic(){
-        return isStatic;
-    }
-    
     public ClassType getType(){
         return this.type;
     }
@@ -128,10 +128,6 @@ public abstract class BaseModelBuffer {
     
     public String getSourceString(){
         return this.getEntity().toSourceString();
-    }
-    
-    public void setClassType(ClassType type){
-        this.type = type;
     }
     
     protected ArrayList<String> splitAtWhiteSpaces(String source){
@@ -153,9 +149,9 @@ public abstract class BaseModelBuffer {
     
     public ArrayList<String> parseStatic(ArrayList<String> tokens){
         if(this.clearToken(tokens, "static"))
-            this.setStatic(true);
+            this.setClassType(ClassType.STATIC);
         else
-            this.setStatic(false);
+            this.setClassType(ClassType.INSTANCE);
         return tokens;
     }
     
@@ -178,8 +174,6 @@ public abstract class BaseModelBuffer {
         return true;
     }
     
-    
     public abstract String editableString();
     public abstract void parseSource(String source);
-    
 }

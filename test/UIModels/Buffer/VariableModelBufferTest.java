@@ -48,7 +48,7 @@ public class VariableModelBufferTest extends BaseTest{
         try {
             parentClass = parentPackage.addClass(new ClassModel("Parent"));
         baseVar = parentClass.addVariable(
-                new VariableModel(ScopeType.PRIVATE, new ClassModel("int"), "x"));
+                new VariableModel(ScopeType.PRIVATE, ClassModel.getPrimitive("int"), "x"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
@@ -134,9 +134,9 @@ public class VariableModelBufferTest extends BaseTest{
     @Test
     public void testParseStatic(){
         buffer.parseSource("static int x");
-        assertTrue(buffer.isStatic());
+        assertEquals(ClassType.STATIC, buffer.getClasType());
         buffer.parseSource("int x");
-        assertFalse(buffer.isStatic());
+        assertEquals(ClassType.INSTANCE, buffer.getClasType());
     }
     
     @Test
@@ -150,7 +150,7 @@ public class VariableModelBufferTest extends BaseTest{
         buffer.parseSource(source);
         assertEquals(ScopeType.PUBLIC, buffer.getScope());
         assertEquals(ClassModel.getPrimitive("int"), buffer.getObjectType());
-        assertTrue(buffer.isStatic());
+        assertEquals(ClassType.STATIC, buffer.getClasType());
         assertEquals("5", buffer.getValue());
     }
     
@@ -165,7 +165,42 @@ public class VariableModelBufferTest extends BaseTest{
     }
     
     @Test
+    public void testSaveToModileWhileInvalid(){
+        fail();
+    }
+    
+    @Test
     public void testRevertChanges(){
+        VariableModel testVar = null;
+        try {
+            testVar = parentClass.addVariable(new VariableModel("someVar"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        testVar.setScope(ScopeType.NONE);
+        testVar.setType(ClassType.STATIC);
+        testVar.setObjectType(ClassModel.getPrimitive("char"));
+        
+        buffer = new VariableModelBuffer(testVar);
+        assertEquals("someVar", buffer.getName());
+        assertEquals(ClassType.STATIC, buffer.getType());
+        assertEquals(ClassModel.getPrimitive("char"), buffer.getObjectType());
+        
+        buffer.parseSource("private float aFloatVar");
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        assertEquals(ClassModel.getPrimitive("float"), buffer.getObjectType());
+        assertEquals("aFloatVar", buffer.getName());
+        assertEquals(ClassType.INSTANCE, buffer.getType());
+        
+        buffer.revertChanges();
+        assertEquals(ScopeType.NONE, buffer.getScope());
+        assertEquals(ClassModel.getPrimitive("char"), buffer.getObjectType());
+        assertEquals("someVar", buffer.getName());
+        assertEquals(ClassType.STATIC, buffer.getType());
+    }
+    
+    @Test
+    public void testChangeFromStaticToInstanceAddsWarning(){
         fail();
     }
     
@@ -180,6 +215,11 @@ public class VariableModelBufferTest extends BaseTest{
         of course certian errors, like adding two variables with the
         same name to a class, should not be allowed, period.
         */
+    }
+    
+    @Test
+    public void testEditableString(){
+        assertTrue(this.compareStrings("private int x;", buffer.editableString()));
     }
     
 }

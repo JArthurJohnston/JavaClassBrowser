@@ -14,6 +14,7 @@ import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.Buffer.BaseModelBuffer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -63,6 +64,8 @@ public class ProjectModel extends BaseModel {
                     .addElm("static")
                     .addElm("default")
                     .addElm("interface")
+                    .addElm("try")
+                    .addElm("catch")
                 .addElements(ClassModel.getPrimitiveTypes())
                 .addElements(ScopeType.getStringValues())
                 .addElements(ClassType.getStringValues());

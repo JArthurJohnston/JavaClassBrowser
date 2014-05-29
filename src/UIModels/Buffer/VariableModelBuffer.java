@@ -8,6 +8,7 @@ package UIModels.Buffer;
 
 import Exceptions.AlreadyExistsException;
 import MainBase.SortedList;
+import Models.BaseModel;
 import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
@@ -22,7 +23,16 @@ public  class VariableModelBuffer extends BaseModelBuffer{
     private String value;
     
     public VariableModelBuffer(VariableModel aVar){
-        super(aVar);
+        this.initializeFromModel(aVar);
+    }
+    
+    @Override
+    protected void initializeFromModel(BaseModel aModel){
+        super.initializeFromModel(aModel);
+        this.intitializeFromVar((VariableModel)aModel);
+    }
+    
+    private void intitializeFromVar(VariableModel aVar){
         this.type = aVar.getType();
         this.scope = aVar.getScope();
         this.isFinal = aVar.isFinal();
@@ -69,13 +79,17 @@ public  class VariableModelBuffer extends BaseModelBuffer{
         return objectType;
     }
     
-    @Override
-    public void parseSource(String source){
+    private void splitAndParseSource(String source){
         if(source.contains("=")){
             this.parseDeclaration(source.split("=")[0]);
             this.setValue(source.split("=")[1]);
         }else
             this.parseDeclaration(source);
+    }
+    
+    @Override
+    public void parseSource(String source){
+        this.splitAndParseSource(this.removeSemicolon(source));
     }
     
     public ArrayList<String> parseName(ArrayList<String> tokens){
@@ -115,6 +129,7 @@ public  class VariableModelBuffer extends BaseModelBuffer{
                 .setType(type)
                 .setScope(scope)
                 .setValue(value)
+                .setType(this.getType())
                 .setFinal(isFinal);
     }
     
@@ -125,7 +140,7 @@ public  class VariableModelBuffer extends BaseModelBuffer{
 
     @Override
     public String editableString() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.getEntity().toSourceString();
     }
     
 }

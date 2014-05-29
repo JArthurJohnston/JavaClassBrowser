@@ -27,7 +27,7 @@ public class ClassModelBuffer extends BaseModelBuffer{
     }
     
     @Override
-    public void initializeFromModel(BaseModel aModel){
+    protected void initializeFromModel(BaseModel aModel){
         super.initializeFromModel(aModel);
         this.initializeFromClass((ClassModel)aModel);
     }
