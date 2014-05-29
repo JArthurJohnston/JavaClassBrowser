@@ -12,7 +12,6 @@ import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  *
@@ -56,7 +55,18 @@ public  class VariableModelBuffer extends BaseModelBuffer{
     }
     
     public void setValue(String aString){
-        this.value = this.removeSemicolon(aString);
+        this.value = this.removeSemicolon(aString).trim();
+    }
+    public String getValue(){
+        return value;
+    }
+    
+    public void setObjectType(ClassModel objectType){
+        this.objectType = objectType;
+    }
+    
+    public ClassModel getObjectType(){
+        return objectType;
     }
     
     @Override
@@ -64,34 +74,37 @@ public  class VariableModelBuffer extends BaseModelBuffer{
         if(source.contains("=")){
             this.parseDeclaration(source.split("=")[0]);
             this.setValue(source.split("=")[1]);
-        }
+        }else
+            this.parseDeclaration(source);
     }
     
+    public ArrayList<String> parseName(ArrayList<String> tokens){
+        this.setName(tokens.get(tokens.size()-1));
+        tokens.remove(tokens.size()-1);
+        return tokens;
+    }
     
-    
-    public boolean parseDeclaration(String decl){
+    public ArrayList<String> parseDeclaration(String decl){
         ArrayList<String> tokens = this.splitAtWhiteSpaces(decl);
-        if(tokens.size() < 2)
-            return false;
-        //need to check for duplicate names before setting name.
-        this.setName(tokens.getLast());
-        tokens.removeLast();
-        //need to check the project for a class with this object type string
-        this.objectType = new ClassModel(tokens.getLast());
-        tokens.removeLast();
-        if(tokens.isEmpty())
-            return true;
         this.parseScope(tokens);
-        this.parseClassType(tokens);
-        
-        if(tokens.isEmpty())
-            return true;
-        
-        if(tokens.contains("final")){
+        this.parseFinal(tokens);
+        this.parseStatic(tokens);
+        this.parseObjectType(tokens);
+        this.parseName(tokens);
+        return tokens;
+    }
+    
+    public ArrayList<String> parseObjectType(ArrayList<String> tokens){
+        this.setObjectType(entity.getProject().findClass(tokens.get(0)));
+        return tokens;
+    }
+    
+    public ArrayList<String> parseFinal(ArrayList<String> tokens){
+        if(this.clearToken(tokens, "final"))
             this.isFinal = true;
-            tokens.remove("final");
-        }
-        return tokens.isEmpty();
+        else
+            this.isFinal = false;
+        return tokens;
     }
     
     @Override
@@ -108,10 +121,6 @@ public  class VariableModelBuffer extends BaseModelBuffer{
     public void addModel() throws AlreadyExistsException{
         this.saveToModel();
         this.getEntity().getParent().addVariable(this.getEntity());
-    }
-    
-    public ClassModel getObjectType(){
-        return objectType;
     }
 
     @Override

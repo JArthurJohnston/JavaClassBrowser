@@ -307,6 +307,9 @@ public class ProjectModel extends BaseModel {
     }
     
     public ClassModel findClass(String aClassName){
+        if(classes.get(aClassName) == null)
+            if(ClassModel.getPrimitiveTypes().contains(aClassName))
+                return ClassModel.getPrimitive(aClassName);
         return classes.get(aClassName);
     }
     

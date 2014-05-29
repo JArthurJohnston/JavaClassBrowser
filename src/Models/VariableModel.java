@@ -69,6 +69,10 @@ public class VariableModel extends BaseModel{
     public ClassModel getParent(){
         return parent;
     }
+    @Override
+    public ProjectModel getProject(){
+        return parent.getProject();
+    }
     public ScopeType getScope(){
         if(scope == null)
             scope = ScopeType.NONE;

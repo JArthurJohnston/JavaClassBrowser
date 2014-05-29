@@ -404,4 +404,9 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(2, all.getPackageList());
         assertEquals(5, all.getClassList());
     }
+    
+    @Test
+    public void testFindPrimitive(){
+        assertEquals(ClassModel.getPrimitive("int"), project.findClass("int"));
+    }
 }

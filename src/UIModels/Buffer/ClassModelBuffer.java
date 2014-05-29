@@ -38,8 +38,8 @@ public class ClassModelBuffer extends BaseModelBuffer{
             parentClass = (ClassModel)baseEntity.getParent();
         else
             parentClass = null;
-        interfaceList = baseEntity.getInterfaces();
-        scope  = baseEntity.getScope();
+        interfaceList = new LinkedList();
+        scope = baseEntity.getScope();
     }
     
     @Override
@@ -124,9 +124,18 @@ public class ClassModelBuffer extends BaseModelBuffer{
         return tokens;
     }
     
+    @Override
+    public void saveToModel(){
+        super.saveToModel();
+        this.getEntity().setScope(this.getScope());
+        this.getEntity().moveToClass(this.getParentClass());
+        this.setModelInterfaces();
+    }
     
+    private void setModelInterfaces(){
+        this.getEntity().setInterfaces(interfaceList);
+    }
     
-
     @Override
     public String editableString() {
         return this.getEntity().getDeclaration();
@@ -137,11 +146,11 @@ public class ClassModelBuffer extends BaseModelBuffer{
         ArrayList<String> tokens = this.splitAtWhiteSpaces(source);
         if(tokens.size()< 2)
             return;
-        this.parseScope(tokens);
-        this.parseName(tokens);
-        this.parseAbstract(tokens);
-        this.parseParentClass(tokens);
-        this.parseImplements(tokens);
+        this.parseScope(
+            this.parseName(
+                this.parseAbstract(
+                    this.parseParentClass(
+                        this.parseImplements(tokens)))));
     }
     
 }

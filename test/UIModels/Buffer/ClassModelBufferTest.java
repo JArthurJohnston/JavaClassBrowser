@@ -33,6 +33,7 @@ public class ClassModelBufferTest extends BaseBufferTest{
         try {
             parentPackage.addClass(new ClassModel("SomeOtherClass"));
             parentPackage.addClass(new ClassModel("BaseClass")).setScope(ScopeType.PRIVATE);
+            parentPackage.addInterface(new InterfaceModel("AnInterface"));
             baseClass = parentProject.findClass("BaseClass");
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -169,7 +170,6 @@ public class ClassModelBufferTest extends BaseBufferTest{
     public void testParseImplements(){
         assertTrue(buffer.getInterfaces().isEmpty());
         try {
-            parentPackage.addInterface(new InterfaceModel("AnInterface"));
             parentPackage.addInterface(new InterfaceModel("AnotherInterface"));
             parentPackage.addInterface(new InterfaceModel("YetAnotherInterface"));
         } catch (AlreadyExistsException ex) {
@@ -189,6 +189,17 @@ public class ClassModelBufferTest extends BaseBufferTest{
         anInterface  = parentProject.findInterface("AnotherInterface");
         assertTrue(buffer.getInterfaces().contains(anInterface));
         assertTrue(buffer.isValid());
+    }
+    
+    @Test
+    public void testSaveToModel(){
+        String sourceText = "public class SomeClass extends SomeOtherClass implements AnInterface";
+        buffer.parseSource(sourceText);
+        buffer.saveToModel();
+        assertEquals(ScopeType.PUBLIC, baseClass.getScope());
+        assertEquals("SomeClass", baseClass.name());
+        assertEquals(this.findClass("SomeOtherClass"), baseClass.getParent());
+        assertEquals(this.findClass("AnInterface"),baseClass.getInterfaces().getFirst());
     }
     
     

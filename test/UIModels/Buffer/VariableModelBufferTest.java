@@ -12,6 +12,8 @@ import Models.ClassModel;
 import Models.VariableModel;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -24,7 +26,7 @@ import org.junit.Test;
  * @author arthur
  */
 public class VariableModelBufferTest extends BaseTest{
-    private VariableModel model;
+    private VariableModel baseVar;
     private VariableModelBuffer buffer;
     private ClassModel parentClass;
     
@@ -40,37 +42,32 @@ public class VariableModelBufferTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
-        parentClass = new ClassModel("Parent");
-        this.setUpVar();
-        buffer = new VariableModelBuffer(model);
+        super.setUp();
+        try {
+            parentClass = parentPackage.addClass(new ClassModel("Parent"));
+        baseVar = parentClass.addVariable(
+                new VariableModel(ScopeType.PRIVATE, new ClassModel("int"), "x"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        baseVar.setType(ClassType.INSTANCE);
+        buffer = new VariableModelBuffer(baseVar);
     }
     
     @After
+    @Override
     public void tearDown() {
+        super.tearDown();
         buffer = null;
-        model = null;
+        baseVar = null;
         parentClass = null;
-    }
-    
-    private void setUpVar(){
-        model = new VariableModel(ScopeType.PRIVATE, new ClassModel("int"), "x");
-        model.setType(ClassType.INSTANCE);
-        model.setParent(parentClass);
-    }
-    
-    private void setUpNullVar(){
-        model.setScope(null);
-        model.setParent(null);
-        model.setObjectType(null);
-        model.setName(null);
-        model.setType(null);
-        model.setValue(null);
     }
 
     @Test
     public void testInit() {
-        assertEquals(model, buffer.getEntity());
+        assertEquals(baseVar, buffer.getEntity());
         assertTrue(buffer.getEntity().isVariable());
     }
     
@@ -99,60 +96,77 @@ public class VariableModelBufferTest extends BaseTest{
     }
     
     @Test
-    public void testParseDeclaration(){
-        String source = "Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
-        source = "private Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
-        source = "private static Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
-        source = "private static Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
-        source = "static private Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
+    public void testParseName(){
+        buffer.parseSource("int aName");
+        assertEquals("aName", buffer.getName());
+        buffer.parseSource("int x");
+        assertEquals("x", buffer.getName());
     }
     
     @Test
-    public void testParseDeclarationWithFinalContainsValue(){
-        String source = "final Integer x = 4;";
-        assertTrue(buffer.parseSource(source));
-        assertEquals(" 4", (String)this.getVariableFromClass(buffer, "value"));
-        assertTrue((boolean)this.getVariableFromClass(buffer, "isFinal"));
-        assertEquals("Integer", ((ClassModel)this.getVariableFromClass(buffer, "objectType")).name());
-        assertTrue(buffer.isValid());
+    public void testParseFinal(){
+        buffer.parseSource("final int x");
+        assertTrue(buffer.isFinal());
+        buffer.parseSource("int x");
+        assertFalse(buffer.isFinal());
     }
     
     @Test
-    public void testParseDeclarationFinalWithoutValue(){
-        String source = "final Integer x;";
-        assertTrue(buffer.parseDeclaration(source));
-        assertTrue((boolean)this.getVariableFromClass(buffer, "isFinal"));
-        assertEquals("Integer", ((ClassModel)this.getVariableFromClass(buffer, "objectType")).name());
-        assertEquals("x", model.name());
-        assertTrue(buffer.isValid());
+    public void testParseScope(){
+        buffer.parseSource("public int x");
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        buffer.parseSource("private int x");
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        buffer.parseSource("int x");
+        assertEquals(ScopeType.NONE, buffer.getScope());
     }
     
     @Test
-    public void testInvalidDeclarationFinal(){
-        assertFalse(buffer.parseDeclaration("final intever int x;"));
+    public void testParseObjectType(){
+        buffer.parseSource("char x");
+        assertEquals(ClassModel.getPrimitive("char"), buffer.getObjectType());
+        buffer.parseSource("int x");
+        assertEquals(ClassModel.getPrimitive("int"), buffer.getObjectType());
+        buffer.parseSource("Object x");
+        assertEquals(ClassModel.getPrimitive("Object"), buffer.getObjectType());
+    }
+    
+    @Test
+    public void testParseStatic(){
+        buffer.parseSource("static int x");
+        assertTrue(buffer.isStatic());
+        buffer.parseSource("int x");
+        assertFalse(buffer.isStatic());
+    }
+    
+    @Test
+    public void testParseFinalWithoutValueAddsWarning(){
+        fail();
     }
     
     @Test
     public void testParseSource(){
         String source = "public static int x = 5;";
-        assertTrue(buffer.parseSource(source));
-        assertTrue(buffer.isValid());
+        buffer.parseSource(source);
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertEquals(ClassModel.getPrimitive("int"), buffer.getObjectType());
+        assertTrue(buffer.isStatic());
+        assertEquals("5", buffer.getValue());
     }
     
     @Test
     public void testSaveToModel(){
-        assertEquals(model, buffer.getEntity());
         this.testParseSource();
         buffer.saveToModel();
-        assertEquals(ScopeType.PUBLIC, model.getScope());
-        assertEquals(ClassType.STATIC, model.getType());
-        assertEquals("int", model.getObjectType().name());
-        assertTrue(this.compareStrings(" 5", model.getValue()));
+        assertEquals(ScopeType.PUBLIC, baseVar.getScope());
+        assertEquals(ClassModel.getPrimitive("int"), baseVar.getObjectType());
+        assertEquals(ClassType.STATIC, baseVar.getType());
+        assertEquals("5", baseVar.getValue());
+    }
+    
+    @Test
+    public void testRevertChanges(){
+        fail();
     }
     
     @Test

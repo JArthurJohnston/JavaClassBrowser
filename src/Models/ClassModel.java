@@ -266,13 +266,22 @@ public class ClassModel extends PackageModel{
         return this.getParentPackage().getPath() + this.path;
     }
     
+    public void setInterfaces(LinkedList<InterfaceModel> newInterfaces){
+        interfaceList.clear();
+        interfaceList.addAll(newInterfaces);
+    }
+    
     public void moveToPackage(PackageModel aPackage) throws AlreadyExistsException, VeryVeryBadException{
+        if(aPackage == null)
+            return;
         this.getParentPackage().classMoved(this);
         this.parent = aPackage;
         aPackage.adoptClass(this);
     }
     
     public void moveToClass(ClassModel newParent){
+        if(newParent == null)
+            return;
         this.getParent().removeChild(this);
         this.setParent(newParent);
         newParent.addChild(this);

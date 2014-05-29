@@ -67,6 +67,12 @@ public class BaseTest {
         return main.getSelectedProject();
     }
     
+    protected ClassModel findClass(String name){
+        assertFalse(parentProject.findClass(name) == null);
+        // if this failed, you probably misspelled the class-name
+        return parentProject.findClass(name);
+    }
+    
     /**
      * gets a private variable from a class.
      * the user must cast the return object into the desired object

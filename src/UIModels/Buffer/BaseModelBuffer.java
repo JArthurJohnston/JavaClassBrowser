@@ -24,6 +24,7 @@ import java.util.LinkedList;
 public abstract class BaseModelBuffer {
     protected BaseModel entity;
     protected SortedList fields; // may not be necessary.
+    protected boolean isStatic;
     
     protected String name;
     protected ScopeType scope;
@@ -98,23 +99,37 @@ public abstract class BaseModelBuffer {
             this.name = new String();
         return this.name;
     }
+    
     public ScopeType getScope(){
         if(this.scope == null)
             this.scope = ScopeType.NONE;
         return this.scope;
     }
+    
     public void setScope(ScopeType scope){
         this.scope = scope;
     }
+    
+    public void setStatic(boolean isStatic){
+        this.isStatic = isStatic;
+    }
+    
+    public boolean isStatic(){
+        return isStatic;
+    }
+    
     public ClassType getType(){
         return this.type;
     }
+    
     public boolean isFinal(){
         return isFinal;
     }
+    
     public String getSourceString(){
         return this.getEntity().toSourceString();
     }
+    
     public void setClassType(ClassType type){
         this.type = type;
     }
@@ -131,9 +146,19 @@ public abstract class BaseModelBuffer {
                 this.setScope(s);
                 sourceTokens.remove(s.toString().toLowerCase());
                 break;
-            }
+            }else
+                this.setScope(ScopeType.NONE);
         return sourceTokens;
     }
+    
+    public ArrayList<String> parseStatic(ArrayList<String> tokens){
+        if(this.clearToken(tokens, "static"))
+            this.setStatic(true);
+        else
+            this.setStatic(false);
+        return tokens;
+    }
+    
     public ArrayList<String> parseClassType(ArrayList<String> sourceTokens){
         for(ClassType c : ClassType.values())
             if(sourceTokens.contains(c.toString().toLowerCase())){
@@ -143,6 +168,7 @@ public abstract class BaseModelBuffer {
             }
         return sourceTokens;
     }
+    
     public boolean clearToken(ArrayList<String> tokens, String value){
         try{
             tokens.remove(tokens.indexOf(value));
