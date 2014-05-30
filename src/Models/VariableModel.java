@@ -47,6 +47,17 @@ public class VariableModel extends BaseModel{
         this.name = name;
     }
     
+    /**
+     * Constructor for method parameters
+     * 
+     * @param name
+     * @param objectType 
+     */
+    public VariableModel(String name, ClassModel objectType){
+        this.name = name;
+        this.type = objectType;
+    }
+    
     public boolean isFinal(){
         return this.isFinal;
     }

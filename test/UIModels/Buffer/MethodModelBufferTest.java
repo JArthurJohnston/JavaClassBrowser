@@ -9,6 +9,7 @@ package UIModels.Buffer;
 import Exceptions.BaseException;
 import Models.ClassModel;
 import Models.MethodModel;
+import Types.ClassType;
 import Types.ScopeType;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -39,6 +40,7 @@ public class MethodModelBufferTest extends BaseBufferTest {
         } catch (BaseException ex) {
             fail(ex.getMessage());
         }
+        buffer = new MethodModelBuffer(aMethod);
     }
     
     @After
@@ -49,6 +51,16 @@ public class MethodModelBufferTest extends BaseBufferTest {
         parentClass = null;
         aMethod = null;
     }
+    
+    @Test
+    public void testInit(){
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        assertEquals(ClassType.INSTANCE, buffer.getClasType());
+        assertFalse(buffer.isAbstract());
+        assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
+        assertNull(buffer.getBody());
+        assertTrue(buffer.getParameters().isEmpty());
+    }
 
     /**
      * Test of editableString method, of class MethodModelBuffer.
@@ -56,7 +68,8 @@ public class MethodModelBufferTest extends BaseBufferTest {
     @Test
     public void testEditableString() {
         assertTrue(this.compareStrings(
-                "private double testMethod(){}", buffer.editableString()));
+                "private double testMethod(){\n\n"
+                        + "}", buffer.editableString()));
     }
 
     /**
@@ -64,6 +77,46 @@ public class MethodModelBufferTest extends BaseBufferTest {
      */
     @Test
     public void testParseSource() {
+        buffer.parseSource("public double testMethod(){};");
+        assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
+        assertEquals("{}", buffer.getBody());
+    }
+    
+    @Test
+    public void testScope(){
+        buffer.parseSource("public double testMethod(){}");
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        buffer.parseSource("private double testMethod(){}");
+        assertEquals(ScopeType.PRIVATE, buffer.getScope());
+        buffer.parseSource("double testMethod(){}");
+        assertEquals(ScopeType.NONE, buffer.getScope());
+    }
+    
+    @Test
+    public void testStatic(){
+        buffer.parseSource("static double testMethod(){}");
+        assertEquals(ClassType.STATIC, buffer.getType());
+        buffer.parseSource("double testMethod(){}");
+        assertEquals(ClassType.INSTANCE, buffer.getType());
+    }
+    
+    @Test
+    public void testAbstract(){
+        buffer.parseSource("abstract double testMethod(){}");
+        assertTrue(buffer.isAbstract());
+        buffer.parseSource("double testMethod(){}");
+        assertFalse(buffer.isAbstract());
+    }
+    
+    @Test
+    public void parseReturnType(){
+        buffer.parseSource("float testMethod(){}");
+        assertEquals(ClassModel.getPrimitive("float"), buffer.getReturnType());
+    }
+    
+    @Test
+    public void parseParameters(){
+        fail();
     }
     
 }

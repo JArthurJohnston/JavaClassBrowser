@@ -190,6 +190,7 @@ public class MethodModel extends ClassModel{
                 signature += ", ";
             signature += param.getType().name()+" "+param.name();
         }
+        signature += ")";
         return signature + this.getMethodBody();
     }
     

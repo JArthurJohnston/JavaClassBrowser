@@ -143,14 +143,12 @@ public class ClassModelBuffer extends BaseModelBuffer{
     
     @Override
     public void parseSource(String source){
-        ArrayList<String> tokens = this.splitAtWhiteSpaces(source);
-        if(tokens.size()< 2)
-            return;
         this.parseScope(
             this.parseName(
                 this.parseAbstract(
                     this.parseParentClass(
-                        this.parseImplements(tokens)))));
+                        this.parseImplements(
+                            this.splitAtWhiteSpaces(source))))));
     }
     
 }
