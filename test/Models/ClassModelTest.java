@@ -491,6 +491,12 @@ public class ClassModelTest extends BaseModelTest{
     }
     
     @Test
+    public void testClassDeclarationFinal(){
+        testClass.setFinal(true);
+        assertTrue(this.compareStrings("public final InstanceClass", testClass.getDeclaration()));
+    }
+    
+    @Test
     public void testClasImplementsInterface(){
         InterfaceModel anInterface = new InterfaceModel("SomeInterface");
         anInterface = testClass.implementsInterface(anInterface);
@@ -519,5 +525,10 @@ public class ClassModelTest extends BaseModelTest{
         assertEquals(p2, child.getParent());
         assertFalse(p1.getSubClasses().contains(child));
         assertTrue(p2.getSubClasses().contains(child));
+    }
+    
+    @Test
+    public void testToSourceString(){
+        fail();
     }
 }

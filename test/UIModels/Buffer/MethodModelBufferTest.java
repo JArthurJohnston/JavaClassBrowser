@@ -9,8 +9,10 @@ package UIModels.Buffer;
 import Exceptions.BaseException;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.VariableModel;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.LinkedList;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -52,14 +54,16 @@ public class MethodModelBufferTest extends BaseBufferTest {
         aMethod = null;
     }
     
+    @Override
+    protected MethodModelBuffer getBuffer(){
+        return buffer;
+    }
+    
     @Test
     public void testInit(){
-        assertEquals(ScopeType.PRIVATE, buffer.getScope());
-        assertEquals(ClassType.INSTANCE, buffer.getClasType());
-        assertFalse(buffer.isAbstract());
-        assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
-        assertNull(buffer.getBody());
+        this.validateNullFields();
         assertTrue(buffer.getParameters().isEmpty());
+        assertTrue(buffer.getWarnings().isEmpty());
     }
 
     /**
@@ -77,9 +81,25 @@ public class MethodModelBufferTest extends BaseBufferTest {
      */
     @Test
     public void testParseSource() {
-        buffer.parseSource("public double testMethod(){};");
+        buffer.parseSource("public double testMethod(){}");
         assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
-        assertEquals("{}", buffer.getBody());
+        assertEquals(ScopeType.PUBLIC, buffer.getScope());
+        assertEquals("{\n\n}", buffer.getBody());
+    }
+    
+    @Test
+    public void testParseWeirdSource(){
+        buffer.parseSource("(public int testMethod)");
+        assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
+        assertEquals("{\n\n}", buffer.getBody());
+        buffer.parseSource("{public int testMethod}");
+        assertEquals(ClassModel.getPrimitive("double"), buffer.getReturnType());
+        assertEquals("{\n\n}", buffer.getBody());
+    }
+    
+    @Test
+    public void testParseFinal(){
+        fail();
     }
     
     @Test
@@ -115,7 +135,44 @@ public class MethodModelBufferTest extends BaseBufferTest {
     }
     
     @Test
-    public void parseParameters(){
+    public void testParseParameters(){
+        LinkedList params = (LinkedList)this.getVariableFromClass(buffer, "parameters");
+        params = new LinkedList();
+        buffer.parseParameters("int x, char y, float z, double a");
+        assertEquals(4, buffer.getParameters().size());
+        
+        buffer.parseParameters("int x");
+        assertEquals(1, buffer.getParameters().size());
+        
+        buffer.parseParameters("");
+        assertTrue(buffer.getParameters().isEmpty());
+        
+        buffer.parseParameters("intx");
+        assertTrue(buffer.getParameters().isEmpty());
+    }
+    
+    @Test
+    public void testParameterFromToken(){
+        buffer.initParams();
+        buffer.addParameterFromToken(new String[]{"int", "x"});
+        assertEquals(ClassModel.getPrimitive("int"), buffer.getParameters().getFirst().getObjectType());
+        assertEquals("x", buffer.getParameters().getFirst().name());
+        
+        buffer.addParameterFromToken(null);
+        assertEquals(1, buffer.getParameters().size());
+        
+        buffer.addParameterFromToken(new String[]{"int"});
+        assertEquals(1, buffer.getParameters().size());
+        
+        buffer.addParameterFromToken(new String[]{"int", ""});
+        assertEquals(1, buffer.getParameters().size());
+        
+        buffer.addParameterFromToken(new String[]{"", "int"});
+        assertEquals(1, buffer.getParameters().size());
+    }
+    
+    @Test
+    public void testParseName(){
         fail();
     }
     

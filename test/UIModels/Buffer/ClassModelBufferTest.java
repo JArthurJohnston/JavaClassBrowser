@@ -202,5 +202,21 @@ public class ClassModelBufferTest extends BaseBufferTest{
         assertEquals(this.findClass("AnInterface"),baseClass.getInterfaces().getFirst());
     }
     
+    @Test
+    public void testParseFinal(){
+        buffer.parseSource("public final class SomeClass");
+        assertTrue(baseClass.isFinal());
+    }
+    
+    @Test
+    public void testParseFinalAddsWarning(){
+        fail();
+        /*
+        final classes cant have sub-classes, so if the user wants to turn a class 
+        into a final class, he/she needs to be warned if the class in 
+        question already has sub-classes.
+        */
+    }
+    
     
 }

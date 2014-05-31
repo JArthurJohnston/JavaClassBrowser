@@ -25,6 +25,7 @@ public class ClassModel extends PackageModel{
     //parent here means the class's package
     protected ScopeType scope;
     protected boolean isAbstract;
+    protected boolean isFinal;
     protected PackageModel parentPackage;
     public LinkedList<MethodModel> methods;
     public LinkedList<VariableModel> variables;
@@ -67,6 +68,13 @@ public class ClassModel extends PackageModel{
     
     public boolean isAbstract(){
         return isAbstract;
+    }
+    
+    public void setFinal(boolean isFinal){
+        this.isFinal = isFinal;
+    }
+    public boolean isFinal(){
+        return isFinal;
     }
     
     public static ClassModel getPrimitive(String aString){

@@ -37,7 +37,7 @@ public abstract class BaseModelBuffer {
     protected BaseModelBuffer(){}
     
     public BaseModelBuffer(BaseModel aModel){
-        this.initializeFromModel(aModel);
+        this.entity = aModel;
     }
     
     protected void initializeFromModel(BaseModel aModel){
@@ -46,12 +46,22 @@ public abstract class BaseModelBuffer {
         name = aModel.name();
     }
     
-    protected SortedList testFields(){
-        return new SortedList().addElm(name);
+    public LinkedList<String> getWarnings(){
+        if(warnings == null)
+            warnings =  new LinkedList();
+        return warnings;
+    }
+    
+    protected SortedList modelFields(){
+        return new SortedList()
+                .addElm(name)
+                .addElm(scope)
+                .addElm(isFinal)
+                .addElm(type);
     }
     
     public boolean isValid(){
-        for(Object o : this.testFields())
+        for(Object o : this.modelFields())
             if(o == null)
                 return false;
         if(this.name.isEmpty())
