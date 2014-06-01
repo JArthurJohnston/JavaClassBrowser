@@ -26,6 +26,7 @@ public class ClassModel extends PackageModel{
     protected ScopeType scope;
     protected boolean isAbstract;
     protected boolean isFinal;
+    private ClassModel generic;
     protected PackageModel parentPackage;
     public LinkedList<MethodModel> methods;
     public LinkedList<VariableModel> variables;
@@ -55,6 +56,7 @@ public class ClassModel extends PackageModel{
     public static SortedList<String> getPrimitiveTypes(){
         return new SortedList()
                     .addElm("int")
+                    .addElm("byte")
                     .addElm("long")
                     .addElm("char")
                     .addElm("float")
@@ -75,6 +77,20 @@ public class ClassModel extends PackageModel{
     }
     public boolean isFinal(){
         return isFinal;
+    }
+    
+    public ClassModel getGenericType(){
+        return generic;
+    }
+    
+    public void setGenericType(ClassModel generic){
+        this.generic = generic;
+    }
+    
+    private String genericTypeString(){
+        if(generic == null)
+            return "";
+        return " <"+generic.name()+"> ";
     }
     
     public static ClassModel getPrimitive(String aString){

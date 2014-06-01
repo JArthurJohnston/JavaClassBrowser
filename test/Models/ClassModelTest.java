@@ -9,7 +9,6 @@ import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.VeryVeryBadException;
-import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.Events.ModelEvents.BaseModelUpdatedEvent;
 import MainBase.Events.ModelEvents.ModelAddedEvent;
@@ -17,13 +16,9 @@ import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -529,6 +524,11 @@ public class ClassModelTest extends BaseModelTest{
     
     @Test
     public void testToSourceString(){
+        fail();
+    }
+    
+    @Test
+    public void testGeneric(){
         fail();
     }
 }

@@ -21,6 +21,26 @@ import java.util.List;
  */
 public class SortedList<T> extends LinkedList<T>{
     
+    public static SortedList with(Object elem){
+        return new SortedList()
+                .addElm(elem);
+    }
+    public static SortedList with(Object elem1, Object elem2){
+        return new SortedList()
+                .addElm(elem1)
+                .addElm(elem2);
+    }
+    public static SortedList with(Object elem1, Object elem2, Object elem3){
+        return new SortedList()
+                .addElm(elem1)
+                .addElm(elem2)
+                .addElm(elem3);
+    }
+    public static SortedList withAll(List elements){
+        return new SortedList()
+                .addElements(elements);
+    }
+    
     /**
      * allows one to chain addElm() calls together.
      * 
