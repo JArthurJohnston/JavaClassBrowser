@@ -7,13 +7,14 @@
 package LanguageBase;
 
 import Models.BaseModel;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.util.Trees;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
@@ -23,7 +24,6 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
-import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 /**
@@ -54,6 +54,11 @@ public class Compiler {
         if(compiler == null)
             compiler = ToolProvider.getSystemJavaCompiler();
         return compiler;
+    }
+    
+    public Trees getParseTree(){
+        Trees inst = Trees.instance(this.getCompilationTask());
+        return Trees.instance(this.getCompilationTask());
     }
     
     private CompilationTask getCompilationTask(){
