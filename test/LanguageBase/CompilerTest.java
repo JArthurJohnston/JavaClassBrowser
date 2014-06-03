@@ -10,6 +10,8 @@ import Internal.BaseTest;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ScopeType;
+import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.Trees;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -26,10 +28,12 @@ public class CompilerTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
     }
     
     @After
+    @Override
     public void tearDown() {
         compiler = null;
     }
@@ -69,6 +73,14 @@ public class CompilerTest extends BaseTest{
         
         compiler = new Compiler(aMethod);
         this.assertValidCompile();
+    }
+    
+    @Test
+    public void getParseTree(){
+        this.testParseMethod();
+        Trees aTree = compiler.getParseTree();
+        TreePathScanner scanner = new TreePathScanner();
+        System.out.println(aTree.toString());
     }
     
 }

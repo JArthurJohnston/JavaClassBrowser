@@ -15,6 +15,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
@@ -57,7 +59,6 @@ public class Compiler {
     }
     
     public Trees getParseTree(){
-        Trees inst = Trees.instance(this.getCompilationTask());
         return Trees.instance(this.getCompilationTask());
     }
     
@@ -72,7 +73,13 @@ public class Compiler {
     }
     
     public boolean performCompilation(){
-        return this.getCompilationTask().call();
+        boolean successful = this.getCompilationTask().call();
+        try {
+            manager.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Compiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return successful;
     }
     
     public void printErrors(){
