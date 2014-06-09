@@ -40,6 +40,31 @@ public class Parser {
         }
     }
     
+    void parseBlocks(){
+        for(int i=0; i < source.length(); i++){
+            if(source.charAt(i) == '{'){
+                addSegment(new CodeSnippet(new String(source.substring(position, i-1)), i));
+                position = i;
+            }if(source.charAt(i) == '}'){
+                addBlockToSegment(new CodeSnippet(new String(source.substring(position, i-1)), i));
+            }
+        }
+    }
+    
+    void addSegment(CodeSnippet code){
+        if(current != null)
+            current.addSnippet(code);
+        current = code;
+    }
+    
+    void addBlockToSegment(CodeSnippet code){
+        
+    }
+    
+    void closeSegment(){
+        
+    }
+    
     void setCurrent(CodeSnippet newSnippet){
         if(current == null){
             current = newSnippet;
@@ -81,11 +106,29 @@ public class Parser {
         String body;
         LinkedList<CodeSnippet> subSnippets;
         char symbol;
+        int position;
         
-        public CodeSnippet(String source, char symbol){
+        public CodeSnippet(String source){
             this.head = source;
             subSnippets = new LinkedList();
+        }
+        
+        public CodeSnippet(String source, char symbol){
+            this(source);
             this.symbol = symbol;
+        }
+        
+        public CodeSnippet(String source, int pos){
+            this(source);
+            position = pos;
+        }
+        
+        int getPosition(){
+            return position;
+        }
+        
+        void setPosition(int x){
+            position = x;
         }
         
         void addSnippet(CodeSnippet newSnippet){

@@ -66,6 +66,11 @@ public class ProjectModel extends BaseModel {
                     .addElm("interface")
                     .addElm("try")
                     .addElm("catch")
+                    .addElm("break")
+                    .addElm("for")
+                    .addElm("if")
+                    .addElm("else")
+                    .addElm("new")
                 .addElements(ClassModel.getPrimitiveTypes())
                 .addElements(ScopeType.getStringValues())
                 .addElements(ClassType.getStringValues());

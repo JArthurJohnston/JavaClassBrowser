@@ -12,6 +12,7 @@ import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
+import MainBase.SortedList;
 import Models.ProjectModel.AllPackage;
 import java.util.Date;
 import java.util.HashMap;
@@ -338,7 +339,13 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testReservedWords(){
-        assertEquals(19, ProjectModel.getReservedWords().size());
+        assertEquals(29, ProjectModel.getReservedWords().size());
+        SortedList<String> copy = new SortedList().addElements(ProjectModel.getReservedWords());
+        for(String s : ProjectModel.getReservedWords())
+            if(!copy.remove(s))
+                fail();
+        //^asserts that there are no duplicates in getReservedWords()
+        assertTrue(copy.isEmpty());
     }
     
     @Test

@@ -67,9 +67,8 @@ public class CompilerTest extends BaseTest{
         aMethod.setReturnType(ClassModel.getPrimitive("char"));
         aMethod.setSource("return 'c';");
         
-        assertTrue(
-                this.compareStrings("private char someMethod(){\nreturn 'c';\n}"
-                        , aMethod.toSourceString()));
+        this.compareStrings("private char someMethod(){\nreturn 'c';\n}"
+                        , aMethod.toSourceString());
         
         compiler = new Compiler(aMethod);
         this.assertValidCompile();

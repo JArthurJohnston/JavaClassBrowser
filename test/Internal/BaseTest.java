@@ -115,7 +115,11 @@ public class BaseTest {
         return null;
     }
     
-    public boolean compareStrings(String a, String b){
+    public void compareStrings(String a, String b){
+        assertTrue(this.verifyStrings(a, b));
+    }
+    
+    private boolean verifyStrings(String a, String b){
         if(a.compareTo(b)!=0){
             System.out.println("Expected:\n"+a);
             System.out.println("****");
