@@ -37,14 +37,19 @@ public class ParseTree {
     
     protected int skipUntilSymbol(int from, String symbol){
         for(int i = from; i< this.getSource().length(); i++){
-            String test = source.substring(i, i+symbol.length());
             if(this.isCurrentSymbol(i, symbol))
                 return i;
         }
         return -1;
     }
     
+    protected boolean isEndOfSource(int index){
+        return index >= this.getSource().length();
+    }
+    
     protected boolean isCurrentSymbol(int index, String symbol){
+        if(this.isEndOfSource(index + symbol.length()-1))
+            return false;
         return this
                 .getSource()
                 .substring(index, index+symbol.length())
@@ -53,12 +58,13 @@ public class ParseTree {
 
     protected void parseFrom(int index) {
         for (int i = index; i < this.getSource().length(); i++) {
-            if(this.isCurrentSymbol(i, "if"))
-                i = this.parseIfStatement(i);
-                //System.out.println("hit if");
-            else if (this.getSource().charAt(i) == '{')
+            if(this.isCurrentSymbol(i, "if")){
+                this.parseIfStatement(i);
+                break;
+            }else if (this.getSource().charAt(i) == '{'){
                 children.add(new TreeNode(this, i));
-            else if (this.getSource().charAt(i) == '}')
+                break;
+            }else if (this.getSource().charAt(i) == '}')
                 this.closeNode(++i);
         }
     }
@@ -85,14 +91,15 @@ public class ParseTree {
     }
 
     protected LinkedList<ParseTree> getNodes() {
-        if (!children.isEmpty()) {
-            LinkedList nodes = new LinkedList();
-            for (ParseTree n : children) {
+        if(this.getChildren().isEmpty())
+            return SortedList.with(this);
+        else{
+            SortedList nodes = SortedList.with(this);
+            for (TreeNode n : children) {
                 nodes.addAll(n.getNodes());
             }
             return nodes;
         }
-        return SortedList.with(this);
     }
 
     public LinkedList<TreeNode> getChildren() {
@@ -136,7 +143,7 @@ public class ParseTree {
         return index;
     }
     
-    protected int parseIfStatement(int index){
+    protected void parseIfStatement(int index){
         int start = this.skipWhiteSpaces(this.skipUntilSymbol(index, ")"));
         int end = -1;
         if(this.getSource().charAt(start) == '{')
@@ -145,7 +152,6 @@ public class ParseTree {
             end = this.skipUntilSymbol(start, ";");
         if(end > 0)
             this.getChildren().add(new TreeNode(this, index, end));
-        return end;
     }
 
     protected int ignoreComments(int start){
