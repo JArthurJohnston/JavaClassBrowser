@@ -66,7 +66,7 @@ public class ParseTreeTest extends BaseTest{
                 .getFirst()
                 .getChildren().isEmpty());
         
-        //assertEquals(3, tree.getNodes().size());
+        assertEquals(3, tree.getNodes().size());
     }
     
     @Test
