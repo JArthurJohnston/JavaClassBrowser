@@ -11,14 +11,14 @@ import java.util.LinkedList;
  *
  * @author arthur
  */
-public class ScopeTree extends BaseParseTree{
+public class ScopeTree extends BaseParseTree {
 
     protected LinkedList<Block> children;
-    protected LinkedList<String> statements;
+    protected boolean openParen = false;
 
     private ScopeTree() {
+        super();
         children = new LinkedList();
-        statements = new LinkedList();
     }
 
     public ScopeTree(String source) {
@@ -30,41 +30,47 @@ public class ScopeTree extends BaseParseTree{
     protected void parseFrom(int index) {
         int statementPtr = index;
         while (index < this.source().length()) {
-            if(this.endOfStatement(index))
-                if(this.isSingleStatement())
+            char test = this.source().charAt(index);
+            if (this.isCurrentSymbol(index, '('))
+                openParen = true;
+            if (this.endOfStatement(index))
+                if (this.isSingleStatement())
                     this.closeBlock(index);
-                else{
-                    this.addStatement(this.getSegment(statementPtr, index));
-                    statementPtr = index;
+                else {
+                    this.addStatement(statementPtr, index + 1);
+                    statementPtr = index + 1;
                 }
             if (this.beginningOfBlock(index)) {
                 if (this.isSingleStatement(index))
-                    this.addBlock(statementPtr, true, index+1);
-                else 
-                    this.addBlock(statementPtr, false, index+1);
+                    this.addBlock(statementPtr, true, index);
+                else
+                    this.addBlock(statementPtr, false, index);
                 break;
             }
-            if (this.endOfBlock(index)) {
+            if (this.endOfBlock(index))
                 this.closeBlock(index);
-            }
             index++;
         }
     }
-    
-    protected boolean isSingleStatement(){
+
+    public LinkedList<Block> getChildren() {
+        return children;
+    }
+
+    protected boolean isSingleStatement() {
         return false;
     }
-    
-    protected void addStatement(String statement){
-        if(!statement.isEmpty())
-            statements.add(statement);
+
+    protected void addStatement(int start, int end) {
+        if (end - start > 0)
+            children.add(new Block(this, start, end));
     }
-    
-    protected boolean endOfStatement(int index){
+
+    protected boolean endOfStatement(int index) {
         return this.source().charAt(index) == ';';
     }
-    
-    public String getSource(){
+
+    public String getSource() {
         return source;
     }
 
@@ -73,23 +79,20 @@ public class ScopeTree extends BaseParseTree{
     }
 
     protected boolean beginningOfBlock(int index) {
-        if (source().charAt(index) == '{') {
+        if (source().charAt(index) == '{')
             return true;
-        }
-        if (source().charAt(index) == ')') {
-            if (source().charAt(this.skipWhiteSpaces(index)) != '{') {
+        if (source().charAt(index) == ')')
+            if (openParen)
+                return false;
+            else if (source().charAt(this.skipWhiteSpaces(index)) != '{')
                 return true;
-            }
-        }
         return false;
     }
 
     protected boolean isSingleStatement(int index) {
-        if (source().charAt(index) == ')') {
-            if (source().charAt(this.skipWhiteSpaces(index)) != '{') {
+        if (source().charAt(index) == ')')
+            if (source().charAt(this.skipWhiteSpaces(index)) != '{')
                 return true;
-            }
-        }
         return false;
     }
 
@@ -99,10 +102,10 @@ public class ScopeTree extends BaseParseTree{
 
     protected void addBlock(int statementPtr, boolean isSingleStatement, int index) {
         this.children.add(new Block(
-                this, 
-                this.getSegment(statementPtr, index), 
-                isSingleStatement, 
-                index+1));
+                this,
+                this.getSegment(statementPtr, index),
+                isSingleStatement,
+                index + 1));
     }
 
     public class Block extends ScopeTree {
@@ -116,6 +119,12 @@ public class ScopeTree extends BaseParseTree{
             super();
         }
 
+        private Block(ScopeTree parent, int startIndex, int endINdex) {
+            this();
+            this.parent = parent;
+            this.source = this.getSegment(startIndex, endINdex);
+        }
+
         private Block(ScopeTree parent, String declaration, boolean singleStatement, int x) {
             this();
             this.declaration = declaration;
@@ -124,15 +133,19 @@ public class ScopeTree extends BaseParseTree{
             this.startIndex = x;
             this.parseFrom(x);
         }
-        
+
+        public String getDeclaration() {
+            return declaration;
+        }
+
         @Override
-        protected boolean isSingleStatement(){
+        protected boolean isSingleStatement() {
             return this.singleStatement;
         }
 
         @Override
         protected void closeBlock(int index) {
-            this.source = new String(source().substring(startIndex, index));
+            this.source = this.getSegment(startIndex, index);
             parent.parseFrom(index + 1);
         }
 

@@ -187,6 +187,21 @@ public class ClassModel extends PackageModel{
         return (ClassModel) parent;
     }
     
+    /**
+     * This way, each method can ask its parent
+     * for the class its being called from.
+     * And I wont have to write extra logic on 
+     * Project Model to handle the keyword "this"
+     * 
+     * @param className name of the class being searched for
+     * @return the ClassModel whose name equals className, or null if none found
+     */
+    @Override
+    public ClassModel findClass(String className){
+        if(className.compareTo("this") == 0)
+            return this;
+        return this.getProject().findClass(className);
+    }
     
     /**
      * #test
