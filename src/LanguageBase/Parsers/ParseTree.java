@@ -43,6 +43,10 @@ public class ParseTree {
         return -1;
     }
     
+    protected int skipAfterSymbol(int index, String symbol){
+        return this.skipUntilSymbol(index, symbol) + 1;
+    }
+    
     protected boolean isEndOfSource(int index){
         return index >= this.getSource().length();
     }
@@ -144,14 +148,14 @@ public class ParseTree {
     }
     
     protected void parseIfStatement(int index){
-        int start = this.skipWhiteSpaces(this.skipUntilSymbol(index, ")"));
+        int start = this.skipWhiteSpaces(this.skipAfterSymbol(index, ")"));
         int end = -1;
-        if(this.getSource().charAt(start) == '{')
-            end = this.skipUntilSymbol(start, "}");
+        if(this.getSource().charAt(this.skipWhiteSpaces(start)) == '{')
+            end = this.skipAfterSymbol(start, "}");
         else
-            end = this.skipUntilSymbol(start, ";");
+            end = this.skipAfterSymbol(start, ";");
         if(end > 0)
-            this.getChildren().add(new TreeNode(this, index, end));
+            this.getChildren().add(new TreeNode(this, start, end));
     }
 
     protected int ignoreComments(int start){
@@ -195,6 +199,7 @@ public class ParseTree {
             this.parent = parent;
             this.startIndex = start;
             this.endIndex = end;
+            parent.parseFrom(end + 1);
         }
 
         @Override
@@ -252,13 +257,17 @@ public class ParseTree {
             String s = originalSource;
             int start = 0;
             int end = s.length();
-            if ("{}".contains(Character.toString(originalSource.charAt(0)))) {
+            if (this.hasBrackets(originalSource, 0)) 
                 start = 1;
-            }
-            if ("{}".contains(Character.toString(originalSource.charAt(end - 1)))) {
+            if (this.hasBrackets(originalSource, end - 1))
                 end = end - 1;
-            }
             return new String(originalSource.substring(start, end));
+        }
+        
+        private boolean hasBrackets(String originalSource, int charIndex){
+            return "{}".contains(
+                    Character.toString(
+                            originalSource.charAt(charIndex)));
         }
     }
 }

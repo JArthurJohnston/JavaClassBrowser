@@ -178,13 +178,16 @@ public class ParseTreeTest extends BaseTest{
                 + "some statement();"
                 + "}";
         tree = new ParseTree(source);
-        tree.parseIfStatement(0);
         assertEquals(1, tree.getChildren().size());
+        assertEquals(2, tree.getNodes().size());
         
         TreeNode node = tree.getChildren().getFirst();
-        assertEquals("if(some.boolean())", node.getDeclaration());
+        
+        assertEquals(18, node.startIndex);
+        assertEquals(36, node.endIndex);
+        this.compareStrings("if(some.boolean())", node.getDeclaration());
         assertEquals(1, node.getStatements().size());
-        assertEquals("some statement();", node.getStatements().getFirst());
+        this.compareStrings("some statement();", node.getStatements().getFirst());
     }
     
     @Test
@@ -232,6 +235,22 @@ public class ParseTreeTest extends BaseTest{
         assertEquals(-1, index);
         index = tree.skipUntilSymbol(0, "b");
         assertEquals(-1, index);
+    }
+    
+    @Test
+    public void testArraysDontHaveTheirOwnScope(){
+        String source = "String[] something = new String[]{\"foo\",\"bar\"};";
+        tree = new ParseTree(source);
+        assertEquals(1, tree.getNodes().size());
+    }
+    
+    @Test 
+    public void testParseSingleStatement(){
+        String source = "String something = \"foobar\";";
+        tree = new ParseTree(source);
+        assertEquals(1, tree.getNodes().size());
+        assertEquals(null, tree.getDeclaration());
+        assertEquals(source, tree.getStatements().getFirst());
     }
     
 }
