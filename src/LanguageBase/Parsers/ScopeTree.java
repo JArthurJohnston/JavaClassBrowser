@@ -14,7 +14,6 @@ import java.util.LinkedList;
 public class ScopeTree extends BaseParseTree {
 
     protected LinkedList<Block> children;
-    protected boolean openParen = false;
 
     private ScopeTree() {
         super();
@@ -22,32 +21,28 @@ public class ScopeTree extends BaseParseTree {
     }
 
     public ScopeTree(String source) {
-        this();
-        this.source = source;
+        super(source);
         this.parseFrom(0);
     }
 
     protected void parseFrom(int index) {
         int statementPtr = index;
         while (index < this.source().length()) {
-            char test = this.source().charAt(index);
-            if (this.isCurrentSymbol(index, '('))
-                openParen = true;
-            if (this.endOfStatement(index))
+            if(this.isIfStatement(index) || this.isLoop(index))
+                this.parseStatement(new ScopeStack(), index);
+            else if(this.endOfStatement(index))
                 if (this.isSingleStatement())
                     this.closeBlock(index);
                 else {
                     this.addStatement(statementPtr, index + 1);
                     statementPtr = index + 1;
                 }
-            if (this.beginningOfBlock(index)) {
+            else if(this.beginningOfBlock(index))
                 if (this.isSingleStatement(index))
                     this.addBlock(statementPtr, true, index);
                 else
                     this.addBlock(statementPtr, false, index);
-                break;
-            }
-            if (this.endOfBlock(index))
+            else if (this.endOfBlock(index))
                 this.closeBlock(index);
             index++;
         }
@@ -79,14 +74,34 @@ public class ScopeTree extends BaseParseTree {
     }
 
     protected boolean beginningOfBlock(int index) {
-        if (source().charAt(index) == '{')
-            return true;
-        if (source().charAt(index) == ')')
-            if (openParen)
-                return false;
-            else if (source().charAt(this.skipWhiteSpaces(index)) != '{')
-                return true;
-        return false;
+        return source().charAt(index) == '{';
+    }
+    
+    protected boolean isLoop(int index){
+        return this.isCurrentSymbol(index, "for") ||
+                this.isCurrentSymbol(index, "while");
+    }
+    
+    protected boolean isIfStatement(int index){
+        return this.isCurrentSymbol(index, "if");
+    }
+    
+    protected void parseStatement(ScopeStack parens, int index){
+        while(index < this.source().length()){
+            if(this.isCurrentSymbol(index, '('))
+                parens.open(this.source().charAt(index));
+            if(this.isCurrentSymbol(index, ')')){
+                parens.close(this.source().charAt(index));
+                if(parens.isEmpty()){
+                    if(this.nextNonWhiteCharFrom(index) == '{')
+                        this.addBlock(index, false, index);
+                    else
+                        this.addBlock(index, true, index);
+                    break;
+                }
+            }
+            index++;
+        }
     }
 
     protected boolean isSingleStatement(int index) {
@@ -152,6 +167,26 @@ public class ScopeTree extends BaseParseTree {
         @Override
         protected String source() {
             return parent.source();
+        }
+    }
+    
+    private class ScopeStack extends LinkedList{
+        
+        void open(char c){
+            this.add(c);
+        }
+        
+        void close(char c){
+            if(closesScope(c))
+                this.removeLast();
+        }
+        
+        private boolean closesScope(char c){
+            if(c == '}')
+                return this.getLast() == '{';
+            if(c == ')')
+                return this.getLast() == '(';
+            return false;
         }
     }
 }

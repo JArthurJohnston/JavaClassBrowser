@@ -20,12 +20,13 @@ public class BaseParseTree {
         errors = new LinkedList();
     }
     
-    protected String source(){
-        return source;
+    protected BaseParseTree(String source){
+        this();
+        this.source = source;
     }
     
-    protected String getSegment(int startIndex, int endIndex){
-        return new String(this.source().substring(startIndex, endIndex));
+    protected String source(){
+        return source;
     }
 
     protected int skipWhiteSpaces(int index) {
@@ -45,13 +46,34 @@ public class BaseParseTree {
     }
     
     protected boolean isCurrentSymbol(int index, String symbol){
+        if(index+symbol.length() > source().length())
+            return false;
         return this
                 .source()
                 .substring(index, index+symbol.length())
                 .compareTo(symbol) == 0;
     }
     protected boolean isCurrentSymbol(int index, char symbol){
+        if (index > source().length())
+            return false;
         return this.source().charAt(index) == symbol;
+    }
+    
+    protected char nextNonWhiteCharFrom(int index){
+        while(this.source().charAt(index++) != ' ');
+        return this.source().charAt(index);
+    }
+    
+    protected String sourceFrom(int startIndex){
+        return new String(source().substring(startIndex));
+    }
+    
+    protected String sourceTo(int endIndex){
+        return new String(source().substring(0, endIndex));
+    }
+    
+    protected String sourceFromTo(int start, int end){
+        return new String(source().substring(start, end));
     }
     
 }
