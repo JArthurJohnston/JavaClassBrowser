@@ -170,23 +170,4 @@ public class ScopeTree extends BaseParseTree {
         }
     }
     
-    private class ScopeStack extends LinkedList{
-        
-        void open(char c){
-            this.add(c);
-        }
-        
-        void close(char c){
-            if(closesScope(c))
-                this.removeLast();
-        }
-        
-        private boolean closesScope(char c){
-            if(c == '}')
-                return this.getLast() == '{';
-            if(c == ')')
-                return this.getLast() == '(';
-            return false;
-        }
-    }
 }

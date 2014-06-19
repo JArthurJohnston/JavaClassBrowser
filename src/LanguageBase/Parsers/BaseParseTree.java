@@ -35,45 +35,108 @@ public class BaseParseTree {
         return index;
     }
     
-    protected int skipUntilAfterSymbol(int startIndex, String symbol){
-        while(!this.isCurrentSymbol(startIndex++, symbol)){
-            if(startIndex >= this.source().length()){
-                errors.add("parse error"); // make more meaningful errors
-                return -1;
-            }
+    protected int skipUntilAfterSymbol(int index, String symbol){
+        while(index < 0 || index + symbol.length() < source().length()){
+            if(this.isCurrentSymbol(index, symbol))
+                return symbol.length() + index;
+            index++;
         }
-        return startIndex;
+        return -1;
+    }
+    
+    protected int nextIndexOfCharFromIndex(char c, int index){
+        if(this.indexOutOfRange(index))
+            return -1;
+        do{
+            if(source().charAt(index) == c)
+                return index;
+        }while(++index < source().length());
+        return -1;
     }
     
     protected boolean isCurrentSymbol(int index, String symbol){
-        if(index+symbol.length() > source().length())
+        if(index < 0 || index+symbol.length() > source().length())
             return false;
-        return this
-                .source()
-                .substring(index, index+symbol.length())
-                .compareTo(symbol) == 0;
+        return this.sourceFromTo(
+                index, index+symbol.length()).compareTo(symbol) == 0;
     }
     protected boolean isCurrentSymbol(int index, char symbol){
-        if (index > source().length())
+        if (this.indexOutOfRange(index))
             return false;
         return this.source().charAt(index) == symbol;
     }
     
     protected char nextNonWhiteCharFrom(int index){
-        while(this.source().charAt(index++) != ' ');
-        return this.source().charAt(index);
+        if(this.indexOutOfRange(index))
+            return '\0';
+        while(index < source().length()){
+            if(this.source().charAt(index) != ' ')
+                return source().charAt(index);
+            index++;
+            }
+        return '\0';
+    }
+    
+    protected boolean indexOutOfRange(int index){
+        return index < 0 || index >= source().length();
     }
     
     protected String sourceFrom(int startIndex){
+        if(this.indexOutOfRange(startIndex))
+            return null;
         return new String(source().substring(startIndex));
     }
     
     protected String sourceTo(int endIndex){
+        if(this.indexOutOfRange(endIndex))
+            return null;
         return new String(source().substring(0, endIndex));
     }
     
     protected String sourceFromTo(int start, int end){
+        if(start < 0 || end >= source().length()+1)
+            return null;
         return new String(source().substring(start, end));
+    }
+    
+    /***************************/
+    
+    protected class ParseStack extends LinkedList{
+        
+        void open(char c){
+            this.add(c);
+        }
+        
+        void close(char c){
+            if(closesScope(c))
+                this.removeLast();
+        }
+        
+        private boolean closesScope(char c){
+            if(c == '}')
+                return (char)this.getLast() == '{';
+            if(c == ')')
+                return (char)this.getLast() == '(';
+            return false;
+        }
+        
+        public boolean isOpen(){
+            return this.isOpenBraces() || this.isOpenParen();
+        }
+        
+        private boolean isOpenSymbol(char symbol){
+            if(!this.isEmpty())
+                return (char)this.getLast() == symbol;
+            return false;
+        }
+        
+        public boolean isOpenBraces(){
+            return this.isOpenSymbol('{');
+        }
+        
+        public boolean isOpenParen(){
+            return this.isOpenSymbol('(');
+        }
     }
     
 }
