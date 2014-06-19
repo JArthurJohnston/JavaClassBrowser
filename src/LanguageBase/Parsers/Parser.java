@@ -93,9 +93,11 @@ public class Parser extends BaseParseTree{
                 stack.open('(');
             if(this.isCurrentSymbol(index, ')')){
                 stack.close(')');
+                //needs to skip past the '{' if its the next nonWhite symbol
+                    //and push it to the stack
                 if(stack.isEmpty()){
                     this.nodes.add(
-                            new ParseNode(this, start, index, new ParseStack()));
+                            new ParseNode(this, start, new ParseStack()));
                     break;
                 }
             }
@@ -110,11 +112,11 @@ public class Parser extends BaseParseTree{
             super();
         }
         
-        private ParseNode(Parser parent, int start, int index, ParseStack stack){
+        private ParseNode(Parser parent, int start, ParseStack stack){
             this();
             this.parent = parent;
             this.start = start;
-            this.parseFrom(index, stack);
+            this.parseFrom(++start, stack);
         }
         
         @Override
