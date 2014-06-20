@@ -75,6 +75,13 @@ public class ParserTest {
     }
     
     @Test
+    public void testParseDoLoop(){
+        String source = "do{someStatement();}while(someBoolean());";
+        parser = new Parser(source);
+        fail();
+    }
+    
+    @Test
     public void testParseNestedStatements(){
         String source = "if(someBoolean()){if(someOtherBoolean()){someSTAtement();}}";
         //repeat for each statement type

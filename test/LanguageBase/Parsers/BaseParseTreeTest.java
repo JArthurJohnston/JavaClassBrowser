@@ -120,6 +120,24 @@ public class BaseParseTreeTest {
         assertEquals('4', tree.nextNonWhiteCharFrom(7));
         assertEquals('5', tree.nextNonWhiteCharFrom(10));
     }
+    
+    @Test
+    public void testIgnoreComments(){
+        String source = "//some single line comment text\n someStatement();";
+        
+        source = "/*some multiple line\ncomment text*/someStatement();";
+        fail();
+    }
+    
+    @Test
+    public void testNonWhiteCharFromWithNewLineAndTabs(){
+        String source = "01 34  \n8  \t2345";
+        tree = new BaseParseTree(source);
+        
+        assertEquals('3', tree.nextNonWhiteCharFrom(3));
+        assertEquals('8', tree.nextNonWhiteCharFrom(5));
+        assertEquals('2', tree.nextNonWhiteCharFrom(9));
+    }
 
     @Test
     public void testSourceFrom() {

@@ -30,6 +30,12 @@ public class Parser extends BaseParseTree{
     }
     
     protected void parseFrom(int index, ParseStack stack){
+        /*
+         * if stack contains '{' and it encounters another '{'
+         *      new Node(etc...)
+         * or, it stack is empty, or the last open symbol is '('
+         *      new Node(etc...)
+         */
         while(!this.indexOutOfRange(index)){
             if(isIfOrLoopStatement(index)){
                 parseStatement(stack, index);
@@ -39,6 +45,11 @@ public class Parser extends BaseParseTree{
                 this.closeBlock(index, stack);
                 break;
             }
+            /*
+             * these should be if(isParen())
+             *                      pushToStack(paren)
+             * braces should be handled seperately, using the notes above ^
+             */
             if(this.isOpenChar(index))
                 this.pushOpenToStack(index, stack);
             if(this.isCloseChar(index))
@@ -61,11 +72,6 @@ public class Parser extends BaseParseTree{
     }
     protected void pushCloseToStack(int index, ParseStack stack){
         stack.close(source().charAt(index));
-    }
-    
-    protected void ifOpenerPushToStack(int index, ParseStack stack){
-        if(this.isCurrentSymbol(index, '{') || this.isCurrentSymbol(index, '('))
-            stack.open(source().charAt(index));
     }
     
     protected boolean isEndOfBlock(int index, ParseStack stack){
@@ -93,15 +99,18 @@ public class Parser extends BaseParseTree{
                 stack.open('(');
             if(this.isCurrentSymbol(index, ')')){
                 stack.close(')');
-                //needs to skip past the '{' if its the next nonWhite symbol
-                    //and push it to the stack
-                if(stack.isEmpty()){
-                    this.nodes.add(
-                            new ParseNode(this, start, new ParseStack()));
+                if(this.nextNonWhiteCharFrom(index+1) == '{')
+                    stack.open('{');
+                if(!stack.isOpenParen()){
+                    this.addNodeFromIndex(start);
                     break;
                 }
             }
         }while(!indexOutOfRange(++index));
+    }
+    
+    protected void addNodeFromIndex(int index){
+        this.nodes.add(new ParseNode(this, index, new ParseStack()));
     }
     
     public class ParseNode extends Parser {
