@@ -77,6 +77,14 @@ public class BaseParseTree {
         return '\0';
     }
     
+    protected int advanceToCharacterFrom(char c, int index){
+        do{
+            if(source().charAt(index) == c)
+                return index;
+        }while(!this.indexOutOfRange(++index));
+        return -1;
+    }
+    
     protected boolean indexOutOfRange(int index){
         return index < 0 || index >= source().length();
     }
@@ -102,12 +110,16 @@ public class BaseParseTree {
     /***************************/
     
     protected class ParseStack extends LinkedList{
-        
+        /*
+        Need to add errors
+        */
         void open(char c){
             this.add(c);
         }
         
         void close(char c){
+            if(c == ';')
+                return;
             if(closesScope(c))
                 this.removeLast();
         }
