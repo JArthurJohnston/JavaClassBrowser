@@ -113,11 +113,11 @@ public class BaseParseTree {
         /*
         Need to add errors
         */
-        void open(char c){
+        void push(char c){
             this.add(c);
         }
         
-        void close(char c){
+        void pop(char c){
             if(c == ';')
                 return;
             if(closesScope(c))

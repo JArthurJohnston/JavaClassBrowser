@@ -43,9 +43,9 @@ public class Parser extends BaseParseTree{
             }
             
             if(this.isCurrentSymbol(index, '('))
-                stack.open('(');
+                stack.push('(');
             if(this.isCurrentSymbol(index, ')')){
-                stack.close(')');
+                stack.pop(')');
                 if(!stack.isOpenParen()){
                     if(this.nextNonWhiteCharFrom(index) != '.'){
                         if(this.nextNonWhiteCharFrom(index+1) == ';')
@@ -72,7 +72,7 @@ public class Parser extends BaseParseTree{
                 }
             }
             if(this.isCurrentSymbol(index, '{')){
-                stack.open('{');
+                stack.push('{');
                 this.addNodeStartingFromParsingFrom(statementStart, ++index, stack);
                 break;
             }
@@ -109,7 +109,7 @@ public class Parser extends BaseParseTree{
         int start = index+2; //to get past "do"
         if(this.nextNonWhiteCharFrom(start) == '{'){
             start = this.nextIndexOfCharFromIndex('{', index);
-            stack.open('{');
+            stack.push('{');
         }
         this.addStatement(index, start)
                 .setDoLoop(true)
@@ -127,7 +127,7 @@ public class Parser extends BaseParseTree{
     
     protected void closeBlock(int index, ParseStack stack){
         if(stack.isOpen())
-            stack.close(source().charAt(index));
+            stack.pop(source().charAt(index));
         this.parseFrom(++index, stack);
     }
     
