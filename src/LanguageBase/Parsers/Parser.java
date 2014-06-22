@@ -38,7 +38,7 @@ public class Parser extends BaseParseTree{
             //^remove this later
             
             if(this.isCurrentSymbol(index, "do")){
-                this.parseDoWhileLoop(index);
+                this.openDoWhileLoop(index, stack);
                 break;
             }
             
@@ -46,21 +46,29 @@ public class Parser extends BaseParseTree{
                 stack.open('(');
             if(this.isCurrentSymbol(index, ')')){
                 stack.close(')');
-                if(!stack.isOpenParen())
-                    if(this.nextNonWhiteCharFrom(index+1) != '{' &&
-                            this.nextNonWhiteCharFrom(index+1) != ';'){
-                        this.addNodeStartingFromParsingFrom(statementStart, ++index, stack);
-                        break;
-                    }
-            }
-            if(this.isCurrentSymbol(index, ';')){
                 if(!stack.isOpenParen()){
-                    this.addStatement(statementStart, index);
-                    statementStart = index;
-                }
-                if(stack.isEmpty()){
-                    this.closeBlock(index, stack);
-                    break;
+                    if(this.nextNonWhiteCharFrom(index) != '.'){
+                        if(this.nextNonWhiteCharFrom(index+1) == ';')
+                            index = this.nextIndexOfCharFromIndex(';', index);
+                        if(statementStart > 0)
+                            if(source().charAt(statementStart-1)== '}')
+                                statementStart--;
+                        /*
+                        should be
+                        if(previousCharacterFrom(index) == '}')
+                        */
+                        
+                        ParseNode newNode = this.addStatement(statementStart, index);
+                        if(stack.isEmpty()){
+                            newNode.parseFrom(index+1, stack);
+                            break;
+                        }
+                        statementStart = index;
+                        /*
+                        should be, statementStart = 
+                            indexOfNextNonWhiteCharFrom(int);
+                        */
+                    }
                 }
             }
             if(this.isCurrentSymbol(index, '{')){
@@ -69,6 +77,10 @@ public class Parser extends BaseParseTree{
                 break;
             }
             if(this.isCurrentSymbol(index, '}')){
+                if(this.isDoLoop()){
+                    parent().closeBlock(index, stack);
+                    break;
+                }
                 this.closeBlock(index, stack);
                 break;
             }
@@ -76,41 +88,35 @@ public class Parser extends BaseParseTree{
         }
     }
     
+    protected Parser parent(){
+        return this;
+    }
+    
+    protected void addNode(ParseNode node){
+        this.nodes.add(node);
+    }
+    
     /*
     doesnt call parseFrom()
     */
-    protected void addStatement(int start, int end){
-        nodes.add(new ParseNode(this, start, end));
+    protected ParseNode addStatement(int start, int end){
+        ParseNode temp = new ParseNode(this, start, end);
+        nodes.add(temp);
+        return temp;
     }
     
-    protected void parseDoWhileLoop(int index){
-        int start = index;
-        index += 2; //do start after the "do"
-        int statementStart = index;
-        ParseStack stack = new ParseStack();
-        LinkedList<String> doStatements = new LinkedList();
-        do{
-            if(this.isCurrentSymbol(index, ';')){
-                doStatements.add(source().substring(statementStart, index));
-                statementStart = index +1;
-            }
-        }while(!this.indexOutOfRange(index++));
+    protected void openDoWhileLoop(int index, ParseStack stack){
+        int start = index+2; //to get past "do"
+        if(this.nextNonWhiteCharFrom(start) == '{'){
+            start = this.nextIndexOfCharFromIndex('{', index);
+            stack.open('{');
+        }
+        this.addStatement(index, start)
+                .setDoLoop(true)
+                .parseFrom(start+1, stack);
     }
-    
-    protected boolean isOpenChar(int index){
-        return source().charAt(index) == '{' ||
-                source().charAt(index) == '(';
-    }
-    protected boolean isCloseChar(int index){
-        return source().charAt(index) == '}' ||
-                source().charAt(index) == ')';
-    }
-    
-    protected void pushOpenToStack(int index, ParseStack stack){
-        stack.open(source().charAt(index));
-    }
-    protected void pushCloseToStack(int index, ParseStack stack){
-        stack.close(source().charAt(index));
+    protected void closeDoWhileLoop(int index, ParseStack stack){
+        this.parseFrom(index, stack);
     }
     
     protected boolean isEndOfBlock(int index, ParseStack stack){
@@ -119,52 +125,36 @@ public class Parser extends BaseParseTree{
         return this.isCurrentSymbol(index, '}');
     }
     
-    protected boolean isIfOrLoopStatement(int index){
-        return this.isCurrentSymbol(index, "if") ||
-                this.isCurrentSymbol(index, "for") ||
-                this.isCurrentSymbol(index, "while");
-    }
-    
     protected void closeBlock(int index, ParseStack stack){
         if(stack.isOpen())
             stack.close(source().charAt(index));
         this.parseFrom(++index, stack);
     }
     
-    protected void parseStatement(ParseStack stack, int index){
-        int start = index;
-        do{
-            if(isCurrentSymbol(index, '('))
-                stack.open('(');
-            if(this.isCurrentSymbol(index, ')')){
-                stack.close(')');
-                if(this.nextNonWhiteCharFrom(index+1) == '{'){
-                    index = this.advanceToCharacterFrom('{', index);
-                    stack.open('{');
-                }
-                if(!stack.isOpenParen()){
-                    this.addNodeStartingFromParsingFrom(start, ++index, stack);
-                    break;
-                }
-            }
-        }while(!indexOutOfRange(++index));
-    }
-    
     protected void addNodeStartingFromParsingFrom(int start, int parse, ParseStack stack){
         this.nodes.add(new ParseNode(this, start, parse, stack));
+    }
+    
+    protected boolean isDoLoop(){
+        return false;
     }
     
     public class ParseNode extends Parser {
         int start, end;
         private Parser parent;
+        private boolean isDoLoop;
         
         private ParseNode(){
             super();
         }
         
-        private ParseNode(Parser parent, int start){
+        private ParseNode(Parser parent){
             this();
             this.parent = parent;
+        }
+        
+        private ParseNode(Parser parent, int start){
+            this(parent);
             this.start = start;
         }
         
@@ -184,16 +174,47 @@ public class Parser extends BaseParseTree{
         }
         
         @Override
+        protected Parser parent(){
+            return this.parent;
+        }
+        
+        @Override
+        protected void closeDoWhileLoop(int index, ParseStack stack){
+            this.parent.closeDoWhileLoop(index, stack);
+        }
+        
+        @Override
         protected void closeBlock(int index, ParseStack stack){
             this.end = index;
-            if(source().charAt(index) == '}')
-                stack.close('}');
-            parent.closeBlock(index, stack);
+            super.closeBlock(index, stack);
         }
         
         @Override
         protected String source(){
             return parent.source();
+        }
+        
+        @Override
+        protected boolean isDoLoop(){
+            if(!isDoLoop)
+                return parent.isDoLoop();
+            return isDoLoop;
+        }
+        public String getSource(){
+            return new String(source().substring(start, end+1));
+        }
+        
+        protected ParseNode setDoLoop(boolean isDo){
+            this.isDoLoop = isDo;
+            return this;
+        }
+        protected ParseNode setStart(int start){
+            this.start = start;
+            return this;
+        }
+        protected ParseNode startParseUsing(ParseStack stack){
+            this.parseFrom(this.start, stack);
+            return this;
         }
         
     }
