@@ -178,4 +178,9 @@ public class BaseParseTreeTest {
         
         assertEquals("estMethod", tree.sourceFromTo(6, 15));
     }
+    
+    @Test
+    public void testPreviousCharFromIndex(){
+        fail();
+    }
 }

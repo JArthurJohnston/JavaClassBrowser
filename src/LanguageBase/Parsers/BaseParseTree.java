@@ -70,7 +70,9 @@ public class BaseParseTree {
         if(this.indexOutOfRange(index))
             return '\0';
         while(index < source().length()){
-            if(this.source().charAt(index) != ' ')
+            if(!this.isCurrentSymbol(index, ' ') &&
+                    !this.isCurrentSymbol(index, '\n') &&
+                    !this.isCurrentSymbol(index, '\t'))
                 return source().charAt(index);
             index++;
             }

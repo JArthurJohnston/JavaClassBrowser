@@ -52,10 +52,33 @@ public class ParserTest extends BaseTest{
         assertEquals(source.length()-1, node.end);
         this.compareStrings(stmt, node.getSource());
     }
+    
+    @Test
+    public void testParseMultipleSimpleStatements(){
+        String source = "if(someBoolean()){\n"
+                + "someMethod();\n"
+                + "someOtherMethod();\n"
+                + "}";
+        parser = new Parser(source);
+        
+        assertEquals(1, parser.getNodes().size());
+        ParseNode node = parser.getNodes().getFirst();
+        assertEquals(2, node.getNodes().size());
+        assertEquals("if(someBoolean()){", node.getSource());
+        assertEquals("someMethod();", node.getNodes().getFirst().getSource());
+        assertEquals("someOtherMethod();", node.getNodes().getLast().getSource());
+    }
 
     @Test
     public void testParseSimpleStatements() {
-        String source = "if(someBoolean()){someMethod();}";
+        String source = "if(someBoolean()){someVar = aVar;}";
+        parser = new Parser(source);
+        this.verifyParserWithSimpleStatements(
+                source, 
+                "if(someBoolean())", 
+                "{someVar = aVar;}");
+        
+        source = "if(someBoolean()){someMethod();}";
         parser = new Parser(source);
         this.verifyParserWithSimpleStatements(
                 source, 
@@ -67,6 +90,13 @@ public class ParserTest extends BaseTest{
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean())", 
+                "someMethod();");
+        
+        source = "if(someBoolean)someMethod();";
+        parser = new Parser(source);
+        this.verifyParserWithSimpleStatements(
+                source, 
+                "if(someBoolean)", 
                 "someMethod();");
         
         source = "while(someBoolean()){someMethod();}";
