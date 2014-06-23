@@ -37,6 +37,34 @@ public class Parser extends BaseParseTree{
             char test = source().charAt(index);
             //^remove this later
             
+            //ignore comments
+            //these NEED refactoring!!!!
+            if(this.isCurrentSymbol(index, "//")){
+                while(!this.isCurrentSymbol(++index, '\n'));
+                this.addStatement(statementStart, index);
+                statementStart = index+1;
+            }
+            if(this.isCurrentSymbol(index, "/*")){
+                while(!this.isCurrentSymbol(++index, "*/"));
+                this.addStatement(statementStart, ++index);
+                statementStart = index+1;
+            }
+            if(this.isCurrentSymbol(index, '"')){
+                while(!this.indexOutOfRange(++index)){
+                    if(this.isCurrentSymbol(index, '"'))
+                        if(!this.isCurrentSymbol(index-1, '\\'))
+                            break;
+                }
+            }
+            if(this.isCurrentSymbol(index, '\'')){
+                while(!this.indexOutOfRange(++index)){
+                    if(this.isCurrentSymbol(index, '\''))
+                        if(!this.isCurrentSymbol(index-1, '\\'))
+                            break;
+                }
+            }
+            //^refactor me!!!!
+            
             if(this.isCurrentSymbol(index, "do")){
                 this.openDoWhileLoop(index, stack);
                 break;
@@ -68,28 +96,25 @@ public class Parser extends BaseParseTree{
             }
             if(this.isCurrentSymbol(index, '{')){
                 stack.push('{');
-                this.setEnd(index)
-                        .addStatement(statementStart, index)
+                this.addStatement(statementStart, index)
                             .parseFrom(index+1, stack);
                 break;
             }
             if(this.isCurrentSymbol(index, ';')){
                 if(!stack.isOpenParen()){
                     this.addStatement(statementStart, index);
-                    statementStart = index+1;
+                    this.parseFrom(index+1, stack);
+                    break;
                 }
                 if(stack.isEmpty()){
                     this.closeBlock(index, stack);
                     break;
                 }
             }
-                    
             if(this.isCurrentSymbol(index, '}')){
-                if(this.isDoLoop()){
-                    parent().closeBlock(index, stack);
-                    break;
-                }
-                this.closeBlock(index, stack);
+                stack.pop('}');
+                this.getLastChild().setEnd(index);
+                this.parseFrom(index+1, stack);
                 break;
             }
             index++;
@@ -98,6 +123,12 @@ public class Parser extends BaseParseTree{
     
     protected Parser setEnd(int index){
         return this;
+    }
+    
+    protected Parser getLastChild(){
+        if(this.nodes.isEmpty())
+            return this;
+        return nodes.getLast().getLastChild();
     }
     
     protected Parser parent(){

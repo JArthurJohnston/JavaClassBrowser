@@ -17,3 +17,6 @@ uses valueAdded and valueChanged listeners.
 
 -came up with an idea to make an even simpler parser. just implicitly add braces to the stack, even if the they arent in the code. IE; for a single statement 'if' add a brace to the stack after 
 if(boolean). it wont get added to the source string. but I can simplify ALL the other logic. 
+-use '{' to note the beginning of a block with brackets, and '{{' to note the beginning of a single statement block.
+
+-use Semaphores for multiple windows accessing a single model(?)

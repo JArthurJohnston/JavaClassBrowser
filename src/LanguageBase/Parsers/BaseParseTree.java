@@ -126,6 +126,7 @@ public class BaseParseTree {
                 this.removeLast();
         }
         
+        
         private boolean closesScope(char c){
             if(c == '}')
                 return (char)this.getLast() == '{';
