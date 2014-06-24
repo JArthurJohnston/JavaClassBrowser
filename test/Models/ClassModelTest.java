@@ -462,33 +462,33 @@ public class ClassModelTest extends BaseModelTest{
     @Test
     public void testClassDeclaration(){
         String expected =  "class InstanceClass";
-        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        this.compareStrings(expected, testClass.getDeclaration());
         testClass.setScope(ScopeType.PUBLIC);
         expected =  "public class InstanceClass";
-        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        this.compareStrings(expected, testClass.getDeclaration());
         testClass.setParent(new ClassModel("ParentClass"));
         expected =  "public class InstanceClass extends ParentClass";
-        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        this.compareStrings(expected, testClass.getDeclaration());
         try {
             testClass.addInterface(new InterfaceModel("SomeInterface"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         expected =  "public class InstanceClass extends ParentClass implements SomeInterface";
-        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        this.compareStrings(expected, testClass.getDeclaration());
         try {
             testClass.addInterface(new InterfaceModel("SomeOtherInterface"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         expected =  "public class InstanceClass extends ParentClass implements SomeInterface implements SomeOtherInterface";
-        assertTrue(this.compareStrings(expected, testClass.getDeclaration()));
+        this.compareStrings(expected, testClass.getDeclaration());
     }
     
     @Test
     public void testClassDeclarationFinal(){
         testClass.setFinal(true);
-        assertTrue(this.compareStrings("public final InstanceClass", testClass.getDeclaration()));
+        this.compareStrings("public final InstanceClass", testClass.getDeclaration());
     }
     
     @Test

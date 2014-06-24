@@ -8,6 +8,7 @@ package LanguageBase.Parsers;
 
 import Internal.BaseTest;
 import LanguageBase.Parsers.Parser.ParseNode;
+import MainBase.SortedList;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -36,9 +37,18 @@ public class ParserTest extends BaseTest{
     
     @Test
     public void testInit(){
-        parser = new Parser("");
+        this.initializeParserWith("");
         assertTrue(parser.getNodes().isEmpty());
         assertEquals("", parser.source);
+    }
+    
+    private void initializeParserWith(String source){
+        try {
+            parser = new Parser(source);
+        } catch (BaseParseTree.ParseException ex) {
+            System.out.println(ex.getMessage());
+            fail();
+        }
     }
     
     private void verifyParserWithSimpleStatements(String source, String decl, String stmt){
@@ -51,6 +61,13 @@ public class ParserTest extends BaseTest{
         node = node.getNodes().getFirst();
         assertEquals(source.length()-1, node.end);
         this.compareStrings(stmt, node.getSource());
+        
+        assertEquals(2, parser.getLines().size());
+        this.compareStrings(decl, parser.getLines().getFirst().getSource());
+        this.compareStrings(stmt, parser.getLines().getLast().getSource());
+        
+        for(ParseNode pn : parser.getLines())
+            assertEquals(parser, pn.getRoot());
     }
     
     @Test
@@ -59,8 +76,7 @@ public class ParserTest extends BaseTest{
                 + "someMethod();\n"
                 + "someOtherMethod();\n"
                 + "}";
-        parser = new Parser(source);
-        
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         ParseNode node = parser.getNodes().getFirst();
         assertEquals(2, node.getNodes().size());
@@ -72,56 +88,56 @@ public class ParserTest extends BaseTest{
     @Test
     public void testParseSimpleStatements() {
         String source = "if(someBoolean()){someVar = aVar;}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean()){", 
                 "someVar = aVar;}");
         
         source = "if(someBoolean()){someMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean()){", 
                 "someMethod();}");
         
         source = "if(someBoolean())someMethod();";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean())", 
                 "someMethod();");
         
         source = "if(someBoolean)someMethod();";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean)", 
                 "someMethod();");
         
         source = "while(someBoolean()){someMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "while(someBoolean()){", 
                 "someMethod();}");
         
         source = "while(someBoolean())someMethod();";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "while(someBoolean())", 
                 "someMethod();");
         
         source = "for(some;setOf;things){someMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "for(some;setOf;things){", 
                 "someMethod();}");
         
         source = "for(some;setOf;things)someMethod();";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "for(some;setOf;things)", 
@@ -131,17 +147,49 @@ public class ParserTest extends BaseTest{
     @Test
     public void testNoSoSimpleStatements(){
         String source = "if(someBoolean()){someMethod().chainedMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParserWithSimpleStatements(
                 source, 
                 "if(someBoolean()){", 
                 "someMethod().chainedMethod();}");
     }
     
+    public void testParseMultipleIfs(){
+        String source = "if(someBoolean()){"
+                            + "someMethod().chainedMethod();"
+                            + "if(someOtherBoolean)"
+                                + "someMethod().someVar;"
+                        + "}";
+        this.initializeParserWith(source);
+        
+        assertEquals(1, parser.getNodes().size());
+        ParseNode node = parser.getNodes().getFirst();
+        this.compareStrings("if(someBoolean()){", node.getSource());
+        assertEquals(2, node.getNodes().size());
+        this.compareStrings("someMethod().chainedMethod();"
+                , node.getNodes().getFirst().getSource());
+        
+        node = node.getNodes().getLast();
+        this.compareStrings("if(someOtherBoolean)"
+                , node.getSource());
+        assertEquals(1, node.getNodes().size());
+        
+        node = node.getNodes().getFirst();
+        this.compareStrings("someMethod().someVar;}", node.getSource());
+        
+        
+        assertEquals(4, parser.getLines().size());
+        this.compareLists(parser.getLines(), new SortedList()
+                .addElm("if(someBoolean()){")
+                .addElm("someMethod().chainedMethod();")
+                .addElm("if(someOtherBoolean)")
+                .addElm("someMethod().someVar;}"));
+    }
+    
     @Test
     public void testParseDoLoop(){
         String source = "do{someStatement();}while(someBoolean());";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(2, parser.getNodes().size());
         
         ParseNode node = parser.getNodes().get(0);
@@ -164,7 +212,7 @@ public class ParserTest extends BaseTest{
     @Test
     public void testParseDoLoopWithoutBracktes(){
         String source = "do someStatement(); while(someBoolean());";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(2, parser.getNodes().size());
         
         ParseNode node = parser.getNodes().get(0);
@@ -189,7 +237,7 @@ public class ParserTest extends BaseTest{
         String source = "if(someBoolean()){"
                 + "if(someOtherBoolean()){"
                 + "someStatement();}}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         
         ParseNode node = parser.getNodes().getFirst();
@@ -205,7 +253,7 @@ public class ParserTest extends BaseTest{
         String source = "someMethod(new AnonymClass{"
                 + "someMethod();"
                 + "});";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         ParseNode node = parser.getNodes().getFirst();
         assertEquals(1, node.getNodes().size());
@@ -224,7 +272,7 @@ public class ParserTest extends BaseTest{
     @Test
     public void testParseAddsComments(){
         String source = "if(someBoolean()){//commentedOutCode();\nsomeMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         ParseNode node = parser.getNodes().getFirst();
         this.compareStrings("if(someBoolean()){", node.getSource());
@@ -234,7 +282,7 @@ public class ParserTest extends BaseTest{
         this.compareStrings("someMethod();}", node.getNodes().getLast().getSource());
         
         source = "if(someBoolean()){/**commentedOutCode();\n */someMethod();}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         node = parser.getNodes().getFirst();
         this.compareStrings("if(someBoolean()){", node.getSource());
@@ -256,17 +304,17 @@ public class ParserTest extends BaseTest{
     @Test
     public void testParseIgnoresStringLiteral(){
         String source = "if(something){String thing = \"some string\";}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParseSimpleString("if(something){", 
                 "String thing = \"some string\";}");
         
         source = "if(something){String thing = \"some \"string\"\";}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParseSimpleString("if(something){", 
                 "String thing = \"some \"string\"\";}");
         
         source = "if(something){String thing = \'some \'string\'\';}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         this.verifyParseSimpleString("if(something){", 
                 "String thing = \'some \'string\'\';}");
         String[] test = new String[]{"",""};
@@ -277,12 +325,33 @@ public class ParserTest extends BaseTest{
         String source = "public enum ClassType {\n" +
                             "STATIC, INSTANCE;\n" +
                         "}";
-        parser = new Parser(source);
+        this.initializeParserWith(source);
         assertEquals(1, parser.getNodes().size());
         ParseNode node = parser.getNodes().getFirst();
         this.compareStrings("public enum ClassType {", node.getSource());
         node = node.getNodes().getFirst();
         this.compareStrings("\nSTATIC, INSTANCE;\n}", node.getSource());
+    }
+    
+    private void verifyParseIfElse(String[] source){
+        assertEquals(2, parser.getNodes().size());
+        
+        ParseNode node = parser.getNodes().getFirst();
+        assertEquals(1, node.getNodes().size());
+        this.compareStrings(source[0], node.getSource());
+        
+        node = node.getNodes().getFirst();
+        assertTrue(node.getNodes().isEmpty());
+        this.compareStrings(source[1], node.getSource());
+        
+        node = parser.getNodes().getLast();
+        assertEquals(1, node.getNodes().size());
+        this.compareStrings(source[2], node.getSource());
+        
+        node = node.getNodes().getFirst();
+        assertTrue(node.getNodes().isEmpty());
+        this.compareStrings(source[3], node.getSource());
+        
     }
     
     @Test
@@ -292,28 +361,99 @@ public class ParserTest extends BaseTest{
                 + "} else {"
                 + "someOtherMethod();"
                 + "}";
-        parser = new Parser(source);
-        assertEquals(2, parser.getNodes().size());
+        this.initializeParserWith(source);
         
-        ParseNode node = parser.getNodes().getFirst();
-        assertEquals(1, node.getNodes().size());
-        this.compareStrings("if(someBoolean()){", node.getSource());
+        this.verifyParseIfElse(new String[]{
+                "if(someBoolean()){",
+                "someMethod();}",
+                " else {",
+                "someOtherMethod();}"});
+    }
+    
+    @Test
+    public void testParseIfElseIf(){
+        String source = "if(someBoolean()){"
+                + "someMethod();"
+                + "} else if(someOtherBoolean()){"
+                + "someOtherMethod();"
+                + "}";
+        this.initializeParserWith(source);
+        this.verifyParseIfElse(new String[]{
+                "if(someBoolean()){",
+                "someMethod();}",
+                " else if(someOtherBoolean()){",
+                "someOtherMethod();}"});
+    }
+    
+    @Test
+    public void testParsedLines(){
+        String source = "if(something){String thing = \"some string\";}";
+        this.initializeParserWith(source);
         
-        node = node.getNodes().getFirst();
-        assertTrue(node.getNodes().isEmpty());
-        this.compareStrings("someMethod();}", node.getSource());
+        assertEquals(2, parser.getLines().size());
+        this.compareStrings("if(something){", 
+                parser.getLines().getFirst().getSource());
+        this.compareStrings("String thing = \"some string\";}", 
+                parser.getLines().getLast().getSource());
         
-        node = parser.getNodes().getLast();
-        assertEquals(1, node.getNodes().size());
-        this.compareStrings(" else {", node.getSource());
+        source = "if(someBoolean()){"
+                + "if(someOtherBoolean()){"
+                + "someStatement();}}";
+        this.initializeParserWith(source);
+        assertEquals(3, parser.getLines().size());
+        this.compareStrings("if(someBoolean()){", 
+                parser.getLines().get(0).getSource());
+        this.compareStrings("if(someOtherBoolean()){", 
+                parser.getLines().get(1).getSource());
+        this.compareStrings("someStatement();}}", 
+                parser.getLines().get(2).getSource());
+    }
+    
+    @Test
+    public void testLineNumberFromIndex(){
+        String source = "if(someBoolean()){"
+                + "if(someOtherBoolean()){"
+                + "someStatement();}}";
+        this.initializeParserWith(source);
         
-        node = node.getNodes().getFirst();
-        assertTrue(node.getNodes().isEmpty());
-        this.compareStrings("someOtherMethod();}", node.getSource());
+        assertEquals(-1, parser.lineNumberFromIndex(-1));
+        assertEquals(-1, parser.lineNumberFromIndex(61));
+        
+        assertEquals(1, parser.lineNumberFromIndex(0));
+        assertEquals(1, parser.lineNumberFromIndex(9));
+        assertEquals(1, parser.lineNumberFromIndex(17));
+        
+        assertEquals(2, parser.lineNumberFromIndex(18));
+        assertEquals(2, parser.lineNumberFromIndex(22));
+        assertEquals(2, parser.lineNumberFromIndex(40));
+        
+        assertEquals(3, parser.lineNumberFromIndex(41));
+        assertEquals(3, parser.lineNumberFromIndex(49));
+        assertEquals(3, parser.lineNumberFromIndex(58));
+    }
+    
+    @Test
+    public void testParserErrors(){
+        String source = "if(someBoolean()){"
+                + "if(someOtherBoolean()){"
+                + "someStatement();}";
+        this.initializeParserWith(source);
+        
+        assertEquals(1, parser.getErrors().size());
+        this.compareStrings("reached end with unclosed {", 
+                parser.getErrors().getFirst());
+        
+        source = "if(someBoolean()){"
+                + "if(someOtherBoolean())"
+                + "someStatement();}}";
+        this.initializeParserWith(source);
+        
+        assertEquals(1, parser.getErrors().size());
+        this.compareStrings("Parse error at line: 3", 
+                parser.getErrors().getFirst());
     }
     
     //testParseIfElseWithoutBraces
     // testIgnoresArrayDeclaration
-    //eventually gotta test for errors
     
 }

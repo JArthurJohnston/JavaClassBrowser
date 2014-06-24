@@ -6,6 +6,7 @@
 
 package LanguageBase.Parsers;
 
+import Exceptions.BaseException;
 import java.util.LinkedList;
 
 /**
@@ -115,24 +116,33 @@ public class BaseParseTree {
         /*
         Need to add errors
         */
-        void push(char c){
-            this.add(c);
+        void push(char c) throws StackException{
+            if(this.isOpenChar(c))
+                this.add(c);
+            else
+                throw new StackException(c);
         }
         
-        void pop(char c){
-            if(c == ';')
-                return;
+        void pop(char c) throws StackException{
             if(closesScope(c))
                 this.removeLast();
+            else
+                throw new StackException(c);
         }
         
         
         private boolean closesScope(char c){
+            if(this.isEmpty())
+                return false;
             if(c == '}')
                 return (char)this.getLast() == '{';
             if(c == ')')
                 return (char)this.getLast() == '(';
             return false;
+        }
+        
+        private boolean isOpenChar(char c){
+            return c =='{' || c == '(';
         }
         
         public boolean isOpen(){
@@ -151,6 +161,18 @@ public class BaseParseTree {
         
         public boolean isOpenParen(){
             return this.isOpenSymbol('(');
+        }
+    }
+    
+    public class StackException extends BaseException {
+        public StackException(char c){
+            super("Stack error with char: " + c);
+        }
+    }
+    
+    public class ParseException extends BaseException {
+        public ParseException(int lineNum){
+            super("Parse error at line: "+ lineNum);
         }
     }
     
