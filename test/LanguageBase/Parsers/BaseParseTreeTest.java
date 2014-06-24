@@ -183,4 +183,9 @@ public class BaseParseTreeTest {
     public void testPreviousCharFromIndex(){
         fail();
     }
+    
+    @Test
+    public void testAddSingleLineComment(){
+        String source = "someMethod(); //does something\n someOtherMethod();";
+    }
 }

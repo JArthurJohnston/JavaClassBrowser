@@ -17,7 +17,6 @@ public class Parser extends BaseParseTree{
     private BaseModel model;
     private boolean parsed;
     protected LinkedList<ParseNode> nodes;
-    private LinkedList<String> errors;
     
     private Parser(){
         nodes = new LinkedList();
@@ -61,6 +60,7 @@ public class Parser extends BaseParseTree{
         return lines;
     }
     
+    @Override
     protected int lineNumberFromIndex(int index){
         if(!this.indexOutOfRange(index))
             for(int i = 0; i < this.getLines().size(); i++)
@@ -82,33 +82,19 @@ public class Parser extends BaseParseTree{
             char test = source().charAt(index);
             //^remove this later
             
-            //ignore comments
-            //these NEED refactoring!!!!
-            if(this.isCurrentSymbol(index, "//")){
-                while(!this.isCurrentSymbol(++index, '\n'));
-                this.addStatement(statementStart, index);
+            if(this.isBeginningOfComment(index)){
+                int commentStart = index;
+                if(this.isCurrentSymbol(index, "//"))
+                    while(!this.isCurrentSymbol(++index, '\n'));
+                else if(this.isCurrentSymbol(index, "/*"))
+                    while(!this.isCurrentSymbol(++index, "*/"));
+                if(this.isCurrentSymbol(index, "*/"))
+                    index++;
+                this.addStatement(commentStart, index);
                 statementStart = index+1;
             }
-            if(this.isCurrentSymbol(index, "/*")){
-                while(!this.isCurrentSymbol(++index, "*/"));
-                this.addStatement(statementStart, ++index);
-                statementStart = index+1;
-            }
-            if(this.isCurrentSymbol(index, '"')){
-                while(!this.indexOutOfRange(++index)){
-                    if(this.isCurrentSymbol(index, '"'))
-                        if(!this.isCurrentSymbol(index-1, '\\'))
-                            break;
-                }
-            }
-            if(this.isCurrentSymbol(index, '\'')){
-                while(!this.indexOutOfRange(++index)){
-                    if(this.isCurrentSymbol(index, '\''))
-                        if(!this.isCurrentSymbol(index-1, '\\'))
-                            break;
-                }
-            }
-            //^refactor me!!!!
+            
+            this.skipPossibleStringLiteral(index);
             
             if(this.isCurrentSymbol(index, "do")){
                 this.openDoWhileLoop(index, stack);
@@ -174,22 +160,6 @@ public class Parser extends BaseParseTree{
         this.errors.add(errorMsg);
     }
     
-    private void pushToStack(char c, int index, ParseStack stack) throws ParseException{
-        try {
-            stack.push(c);
-        } catch (StackException ex) {
-            throw new ParseException(this.lineNumberFromIndex(index));
-        }
-    }
-    
-    private void popFromStack(char c, int index, ParseStack stack) throws ParseException{
-        try {
-            stack.pop(c);
-        } catch (StackException ex) {
-            throw new ParseException(this.lineNumberFromIndex(index));
-        }
-    }
-    
     protected Parser setEnd(int index){
         return this;
     }
@@ -208,9 +178,8 @@ public class Parser extends BaseParseTree{
         this.nodes.add(node);
     }
     
-    /*
-    doesnt call parseFrom()
-    */
+    
+    @Override
     protected ParseNode addStatement(int start, int end){
         ParseNode temp = new ParseNode(this, start, end);
         nodes.add(temp);

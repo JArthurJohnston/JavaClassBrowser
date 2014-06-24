@@ -16,6 +16,7 @@ import java.util.LinkedList;
 public class BaseParseTree {
     protected String source;
     protected LinkedList<String> errors;
+    protected ParseStack stack;
     
     protected BaseParseTree(){
         errors = new LinkedList();
@@ -110,12 +111,96 @@ public class BaseParseTree {
         return new String(source().substring(start, end));
     }
     
+    protected boolean isBeginningOfComment(int index){
+        return this.isCurrentSymbol(index, "//") ||
+                this.isCurrentSymbol(index, "/*");
+    }
+    
+    protected boolean isBeginningOfStringLiteral(int index){
+        return this.isCurrentSymbol(index, '"') ||
+                this.isCurrentSymbol(index, '\'');
+    }
+    
+    protected void skipPossibleStringLiteral(int index){
+            if(this.isBeginningOfStringLiteral(index)){
+                char stringStart = source().charAt(index);
+                while(!this.indexOutOfRange(++index)){
+                    if(this.isCurrentSymbol(index, stringStart))
+                        if(!this.isCurrentSymbol(index-1, '\\'))
+                            break;
+                }
+            }
+    }
+    
+    protected int addPossibleComment(int index){
+            if(this.isBeginningOfComment(index)){
+                int commentStart = index;
+                if(this.isCurrentSymbol(index, "//"))
+                    while(!this.isCurrentSymbol(++index, '\n'));
+                else if(this.isCurrentSymbol(index, "/*"))
+                    while(!this.isCurrentSymbol(++index, "*/"));
+                if(this.isCurrentSymbol(index, "*/"))
+                    index++;
+                this.addStatement(commentStart, index);
+            }
+            return index;
+    }
+    
+    protected BaseParseTree addStatement(int start, int end){
+        return this;
+    }
+    
+    protected LinkedList getLines(){
+        return new LinkedList();
+    }
+    
+    protected int lineNumberFromIndex(int index){
+        return -1;
+    }
+    
+    protected void pushToStack(char c, int index) throws ParseException{
+        this.pushToStack(c, index, stack);
+    }
+    protected void popFromStack(char c, int index) throws ParseException{
+        this.popFromStack(c, index, stack);
+    }
+    
+    protected void pushToStack(char c, int index, ParseStack stack) throws ParseException{
+        try {
+            stack.push(c);
+        } catch (StackException ex) {
+            throw new ParseException(this.lineNumberFromIndex(index));
+        }
+    }
+    
+    protected void popFromStack(char c, int index, ParseStack stack) throws ParseException{
+        try {
+            stack.pop(c);
+        } catch (StackException ex) {
+            throw new ParseException(this.lineNumberFromIndex(index));
+        }
+    }
+    
     /***************************/
     
     protected class ParseStack extends LinkedList{
         /*
         Need to add errors
         */
+        void push(String c) throws StackException{
+            if(this.isOpenChar(c))
+                this.add(c);
+            else
+                throw new StackException(c);
+        }
+        
+        void pop(String c) throws StackException{
+            if(closesScope(c))
+                this.removeLast();
+            else
+                throw new StackException(c);
+        }
+        
         void push(char c) throws StackException{
             if(this.isOpenChar(c))
                 this.add(c);
@@ -130,6 +215,19 @@ public class BaseParseTree {
                 throw new StackException(c);
         }
         
+        boolean peek(String s){
+            if(this.isEmpty())
+                return false;
+            return s.compareTo((String)this.getLast())==0;
+        }
+        
+        private boolean closesScope(String c){
+            if(this.isEmpty())
+                return false;
+            if(c.compareTo("}}") == 0)
+                return ((String)this.getLast()).compareTo("}}") == 0;
+            return false;
+        }
         
         private boolean closesScope(char c){
             if(this.isEmpty())
@@ -139,6 +237,10 @@ public class BaseParseTree {
             if(c == ')')
                 return (char)this.getLast() == '(';
             return false;
+        }
+        
+        private boolean isOpenChar(String c){
+            return c.compareTo("{{") == 0;
         }
         
         private boolean isOpenChar(char c){
@@ -165,6 +267,9 @@ public class BaseParseTree {
     }
     
     public class StackException extends BaseException {
+        public StackException(String c){
+            super("Stack error with char: " + c);
+        }
         public StackException(char c){
             super("Stack error with char: " + c);
         }
