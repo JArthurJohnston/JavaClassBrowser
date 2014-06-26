@@ -14,6 +14,7 @@ import java.util.LinkedList;
  * @author arthur
  */
 public class Parser extends BaseParseTree{
+    private String source;
     private BaseModel model;
     private boolean parsed;
     protected LinkedList<ParseNode> nodes;
@@ -52,6 +53,7 @@ public class Parser extends BaseParseTree{
         return nodes;
     }
     
+    @Override
     public LinkedList<ParseNode> getLines(){
         LinkedList lines = new LinkedList();
         for(ParseNode pn : nodes){

@@ -14,9 +14,8 @@ import java.util.LinkedList;
  * @author arthur
  */
 public class BaseParseTree {
-    protected String source;
+    private String source;
     protected LinkedList<String> errors;
-    protected ParseStack stack;
     
     protected BaseParseTree(){
         errors = new LinkedList();
@@ -79,6 +78,24 @@ public class BaseParseTree {
             index++;
             }
         return '\0';
+    }
+    
+    protected int advanceToNextNonWhiteCharFrom(int index){
+        while(!this.indexOutOfRange(index))
+            if(!this.isWhiteChar(source.charAt(++index)))
+                return index;
+        return -1;
+    }
+    
+    protected boolean isNextSymbolFromIndex(String symbol, int index){
+        return this.isCurrentSymbol(
+                this.advanceToNextNonWhiteCharFrom(index), symbol);
+    }
+    
+    protected boolean isWhiteChar(char c){
+        return c == ' ' ||
+                c == '\t' ||
+                c == '\n';
     }
     
     protected int advanceToCharacterFrom(char c, int index){
@@ -156,13 +173,6 @@ public class BaseParseTree {
     
     protected int lineNumberFromIndex(int index){
         return -1;
-    }
-    
-    protected void pushToStack(char c, int index) throws ParseException{
-        this.pushToStack(c, index, stack);
-    }
-    protected void popFromStack(char c, int index) throws ParseException{
-        this.popFromStack(c, index, stack);
     }
     
     protected void pushToStack(char c, int index, ParseStack stack) throws ParseException{
@@ -280,5 +290,6 @@ public class BaseParseTree {
             super("Parse error at line: "+ lineNum);
         }
     }
+    
     
 }

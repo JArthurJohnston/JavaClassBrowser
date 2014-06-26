@@ -184,8 +184,30 @@ public class BaseParseTreeTest {
         fail();
     }
     
+    
     @Test
-    public void testAddSingleLineComment(){
-        String source = "someMethod(); //does something\n someOtherMethod();";
+    public void testAdvanceToNextNonWhiteChar(){
+        String source = "some    thing";
+        tree = new BaseParseTree(source);
+        
+        assertEquals(-1, tree.advanceToNextNonWhiteCharFrom(-1));
+        assertEquals(1, tree.advanceToNextNonWhiteCharFrom(0));
+        assertEquals(8, tree.advanceToNextNonWhiteCharFrom(3));
+        assertEquals(8, tree.advanceToNextNonWhiteCharFrom(4));
+        assertEquals(8, tree.advanceToNextNonWhiteCharFrom(5));
+        assertEquals(8, tree.advanceToNextNonWhiteCharFrom(6));
+        assertEquals(-1, tree.advanceToNextNonWhiteCharFrom(13));
+    }
+    
+    @Test
+    public void testIsNextSymbolFromIndex(){
+        String source = "if else   if \n  something \t else";
+        tree = new BaseParseTree(source);
+        
+        assertFalse(tree.isNextSymbolFromIndex("else", 0));
+        assertTrue(tree.isNextSymbolFromIndex("else", 1));
+        assertTrue(tree.isNextSymbolFromIndex("if", 6));
+        assertTrue(tree.isNextSymbolFromIndex("something", 11));
+        assertTrue(tree.isNextSymbolFromIndex("else", 27));
     }
 }

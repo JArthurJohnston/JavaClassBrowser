@@ -9,6 +9,7 @@ import Exceptions.BaseException;
 import MainBase.EventTester;
 import MainBase.Events.ModelEvents.ModelEventHandler;                   
 import MainBase.MainApplication;                   
+import MainBase.SortedList;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
@@ -17,6 +18,7 @@ import java.awt.BorderLayout;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +26,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -167,6 +173,8 @@ public class BaseTest {
      * @param b
      * @return 
      */
+    
+    
     public boolean compareLists(List a, List b){
         if(a.size() != b.size())
             return false;
