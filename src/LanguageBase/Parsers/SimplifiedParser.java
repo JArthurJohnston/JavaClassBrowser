@@ -79,6 +79,7 @@ public class SimplifiedParser extends BaseParseTree {
                 }  
             }
             
+            /*
             if(this.isCurrentSymbol(index, "else")){
                 if(this.nextNonWhiteCharFrom(index + 3) != '{'){
                     this.openStackWithSymbolAtIndex("{{", index);
@@ -88,6 +89,7 @@ public class SimplifiedParser extends BaseParseTree {
                 this.parseFrom(index+3);
                 break;
             }
+            */
             
             if(this.isCurrentSymbol(index, ';')){
                 if(!stack().isOpenParen()){
@@ -110,6 +112,7 @@ public class SimplifiedParser extends BaseParseTree {
             if(this.isCurrentSymbol(index, '}')){
                 this.closeStackWithSymbolAtIndex("}", index);
                 this.getParent().addStatementToBlock(index, index);
+                this.getParent().parseFrom(index+1);
                 break;
             }
             index++;
