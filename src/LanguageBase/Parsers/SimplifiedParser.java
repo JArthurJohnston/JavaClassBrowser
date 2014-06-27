@@ -17,6 +17,7 @@ public class SimplifiedParser extends BaseParseTree {
     protected LinkedList<BlockNode> nodes;
     private String source;
     private BracketStack stack;
+    private BlockNode last;
     
     protected SimplifiedParser(){
         nodes = new LinkedList();
@@ -79,17 +80,19 @@ public class SimplifiedParser extends BaseParseTree {
                 }  
             }
             
-            /*
+            //repeat below for try blocks
+            
             if(this.isCurrentSymbol(index, "else")){
-                if(this.nextNonWhiteCharFrom(index + 3) != '{'){
-                    this.openStackWithSymbolAtIndex("{{", index);
-                    this.addElseBlockStartingAtIndex(index);
+                if(stack().isLastSymbol("}}") || stack().isLastSymbol("}")){
+                    index += 3; //put index at end of 'else'
+                    this.expandNodeToAndParseFrom(index);
+                    break;
+                }else{
+                    this.addSingleStatementAndBlock(index, index+3);
                     break;
                 }
-                this.parseFrom(index+3);
-                break;
+                    
             }
-            */
             
             if(this.isCurrentSymbol(index, ';')){
                 if(!stack().isOpenParen()){
@@ -175,6 +178,15 @@ public class SimplifiedParser extends BaseParseTree {
         this.nodes.getLast().parseFrom(start+1);
     }
     
+    protected void expandNodeToAndParseFrom(int index) throws ParseException{
+        this.getParent().nodes.getLast().end = index;
+        if(this.nextNonWhiteCharFrom(index+1) != '{'){
+            this.openStackWithSymbolAtIndex("{{", index);
+            this.getParent().nodes.getLast().addStatementStarting(index);
+        }else
+            this.getParent().nodes.getLast().parseFrom(index);
+    }
+    
     
     /**
      * Each node represents one scope in 
@@ -258,9 +270,16 @@ public class SimplifiedParser extends BaseParseTree {
     
     protected class BracketStack extends LinkedList<String>{
         private final String[] validSymbols;
+        private String lastSymbol;
         
         private BracketStack(){
             validSymbols = new String[]{"(", ")", "{", "}","{{","}}"};
+        }
+        
+        public boolean isLastSymbol(String symbol){
+            if(lastSymbol == null)
+                return false;
+            return lastSymbol.compareTo(symbol) == 0;
         }
         
         private boolean peek(String symbol){
@@ -270,16 +289,19 @@ public class SimplifiedParser extends BaseParseTree {
         }
         
         private void open(String openSymbol) throws StackException{
-            if(this.isValidSymbol(openSymbol))
+            if(this.isValidSymbol(openSymbol)){
                 this.add(openSymbol);
-            else
+                lastSymbol = openSymbol;
+            }else
                 throw new StackException(openSymbol);
         }
         
         private void close(String closeSymbol) throws StackException{
             if(this.isValidSymbol(closeSymbol))
-                if(matchSymbol(closeSymbol))
+                if(matchSymbol(closeSymbol)){
+                    lastSymbol = closeSymbol;
                     this.removeLast();
+                }
             else
                 throw new StackException(closeSymbol);
         }
