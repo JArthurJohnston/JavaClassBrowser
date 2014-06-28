@@ -57,7 +57,9 @@ public class SimplifiedParser extends BaseParseTree {
     protected void parseFrom(int index) throws ParseException{
         int statementStart = index;
         while(!this.indexOutOfRange(index)){
+            //remove after testing
             char test = source().charAt(index);
+            //^remove after testing
             if(this.isBeginningOfComment(index))
                 statementStart = this.addPossibleComment(index);
             
@@ -85,6 +87,8 @@ public class SimplifiedParser extends BaseParseTree {
             if(this.isCurrentSymbol(index, "else")){
                 if(stack().isLastSymbol("}}") || stack().isLastSymbol("}")){
                     index += 3; //put index at end of 'else'
+                    if(this.nextNonWhiteCharFrom(index+1) == '{')
+                        index = this.nextIndexOfCharFromIndex('{', index);
                     this.expandNodeToAndParseFrom(index);
                     break;
                 }else{
@@ -162,6 +166,12 @@ public class SimplifiedParser extends BaseParseTree {
     
     protected void addStatementWithNewBlock(int start, int index) throws ParseException{
         this.nodes.add(new BlockNode(this, start, index));
+        /*
+        in the else block, this is adding a new
+        node when it should be further expanding the current node, or 
+        just further expand the node in the else case of this method and
+        parse from there.
+        */
         this.nodes.getLast().parseFrom(index);
     }
     
@@ -180,11 +190,11 @@ public class SimplifiedParser extends BaseParseTree {
     
     protected void expandNodeToAndParseFrom(int index) throws ParseException{
         this.getParent().nodes.getLast().end = index;
-        if(this.nextNonWhiteCharFrom(index+1) != '{'){
+        if(!this.isCurrentSymbol(index, '{')){
             this.openStackWithSymbolAtIndex("{{", index);
             this.getParent().nodes.getLast().addStatementStarting(index);
         }else
-            this.getParent().nodes.getLast().parseFrom(index);
+            this.getParent().nodes.getLast().parseFrom(index+1);
     }
     
     
