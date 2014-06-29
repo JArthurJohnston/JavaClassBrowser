@@ -192,9 +192,11 @@ public class SimplifiedParser extends BaseParseTree {
         this.getParent().nodes.getLast().end = index;
         if(!this.isCurrentSymbol(index, '{')){
             this.openStackWithSymbolAtIndex("{{", index);
-            this.getParent().nodes.getLast().addStatementStarting(index);
-        }else
-            this.getParent().nodes.getLast().parseFrom(index+1);
+            this.addStatementStarting(index);
+        }else{
+            this.openStackWithSymbolAtIndex("{", index);
+            this.parseFrom(index+1);
+        }
     }
     
     

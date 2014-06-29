@@ -145,5 +145,4 @@ public class SimplifiedParserTest extends BaseTest{
         assertEquals(3, parser.nodes.size());
         assertEquals(5, parser.getLines().size());
     }
-    
 }
