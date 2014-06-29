@@ -36,11 +36,34 @@ public class SimplifiedParserTest extends BaseTest{
         parser = null;
     }
     
+    public void initializeParserWithSource(String source){
+        parser = new SimplifiedParser(source);
+        if(parser.getError() != null){
+            System.out.println(parser.getError());
+            fail();
+        }
+    }
+    
     private void verifyParserLines(String[] a, String[] b){
         if(a.length != b.length)
             fail();
         for(int i=0; i< a.length; i++)
             this.compareStrings(a[i], b[i]);
+    }
+    
+    //can probably be pushed up
+    private void validateParserLinesAgainstSize(int size){
+        if(parser.getLines().size() != size){
+            System.out.println("Incorrect lines size\n");
+            this.displayParserLines();
+            fail();
+        }
+    }
+    
+    //can probably be pushed up
+    private void displayParserLines(){
+        for(BlockNode b : parser.getLines())
+            System.out.println(b.getSource());
     }
     
     private String[] StringArrayFromLines(){
@@ -85,28 +108,28 @@ public class SimplifiedParserTest extends BaseTest{
     @Test
     public void testParseSimpleStatements() {
         String source = "if(someBoolean()){someMethod();}";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithBrackets(
                 "if(someBoolean()){", 
                 "someMethod();", 
                 "}");
         
         source = "if(someBoolean().somethingElse()){someMethod();}";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithBrackets(
                 "if(someBoolean().somethingElse()){", 
                 "someMethod();", 
                 "}");
         
         source = "while(someBoolean()){someMethod().someVar;}";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithBrackets(
                 "while(someBoolean()){", 
                 "someMethod().someVar;", 
                 "}");
         
         source = "for(some; kindOf; stuff){someMethod();}";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithBrackets(
                 "for(some; kindOf; stuff){", 
                 "someMethod();", 
@@ -116,19 +139,19 @@ public class SimplifiedParserTest extends BaseTest{
     @Test
     public void testParseSimpleStatementsWithoutBrackets(){
         String source = "if(someBoolean())someMethod();";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithoutBrackets(
                 "if(someBoolean())", 
                 "someMethod();");
         
         source = "while(someBoolean().someVar)someMethod();";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithoutBrackets(
                 "while(someBoolean().someVar)", 
                 "someMethod();");
         
         source = "for(some; kindOf; stuff)someMethod();";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         this.verifyParserWithStatementsWithoutBrackets(
                 "for(some; kindOf; stuff)", 
                 "someMethod();");
@@ -141,8 +164,32 @@ public class SimplifiedParserTest extends BaseTest{
                         + "} else {"
                             + "someOtherMethod();"
                         + "}";
-        parser = new SimplifiedParser(source);
+        this.initializeParserWithSource(source);
         assertEquals(3, parser.nodes.size());
-        assertEquals(5, parser.getLines().size());
+        this.validateParserLinesAgainstSize(5);
+        
+        BlockNode node = parser.nodes.getFirst();
+        this.compareStrings("if(someBoolean()){", node.getSource());
+        node = node.nodes.getFirst();
+        this.compareStrings("someMethod();", node.getSource());
+        
+        node = parser.nodes.get(1);
+        this.compareStrings("} else {", node.getSource());
+        node = node.nodes.getFirst();
+        this.compareStrings("someOtherMethod();", node.getSource());
+        
+        node = parser.nodes.getLast();
+        this.compareStrings("}", node.getSource());
+    }
+    
+    @Test
+    public void testIfElseStatementWithoutBrackets(){
+        String source = "if(someBoolean())"
+                            + "someMethod();"
+                        + "else"
+                            + "someOtherMethod();";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.nodes.size());
+        this.validateParserLinesAgainstSize(4);
     }
 }

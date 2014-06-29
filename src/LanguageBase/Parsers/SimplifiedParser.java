@@ -52,14 +52,27 @@ public class SimplifiedParser extends BaseParseTree {
             System.out.println(error);
             //^remove after done testing
         }
+        this.checkForLineErrors();
+    }
+    
+    private void checkForLineErrors(){
+        if(error == null){
+            int lineError = 1;
+            for(BlockNode b : this.getLines()){
+                if(b.end < b.start)
+                    error = "Parse Error at line: " + lineError;
+                lineError++;
+            }
+        }
+    }
+    
+    public String getError(){
+        return error;
     }
     
     protected void parseFrom(int index) throws ParseException{
         int statementStart = index;
         while(!this.indexOutOfRange(index)){
-            //remove after testing
-            char test = source().charAt(index);
-            //^remove after testing
             if(this.isBeginningOfComment(index))
                 statementStart = this.addPossibleComment(index);
             
@@ -188,14 +201,17 @@ public class SimplifiedParser extends BaseParseTree {
         this.nodes.getLast().parseFrom(start+1);
     }
     
+    /*
+    Clean this up!!!
+    */
     protected void expandNodeToAndParseFrom(int index) throws ParseException{
-        this.getParent().nodes.getLast().end = index;
+        this.getParent().nodes.getLast().end = index+1;
         if(!this.isCurrentSymbol(index, '{')){
             this.openStackWithSymbolAtIndex("{{", index);
-            this.addStatementStarting(index);
+            this.nodes.getLast().parseFrom(index+1);
         }else{
             this.openStackWithSymbolAtIndex("{", index);
-            this.parseFrom(index+1);
+            this.nodes.getLast().parseFrom(index+1);
         }
     }
     
