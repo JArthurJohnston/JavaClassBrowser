@@ -186,7 +186,7 @@ public class SimplifiedParserTest extends BaseTest{
     public void testIfElseStatementWithoutBrackets(){
         String source = "if(someBoolean())"
                             + "someMethod();"
-                        +"else"
+                        +"else "
                             + "someOtherMethod();";
         this.initializeParserWithSource(source);
         assertEquals(2, parser.nodes.size());

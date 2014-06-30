@@ -86,7 +86,8 @@ public class SimplifiedParser extends BaseParseTree {
                         //check to see if its a single-statement block
                         if (nextChar != '{' && nextChar != ';') {
                             this.openStackWithSymbolAtIndex("{{", index);
-                            this.addSingleStatementAndBlock(statementStart, index);
+                            this.addStatementStartingAndEnding(statementStart, index);
+                            this.nodes.getLast().parseFrom(index+1);
                             break;
                         }
                 }
@@ -97,18 +98,19 @@ public class SimplifiedParser extends BaseParseTree {
                 index += 3; //put index at end of 'else'
                 if (this.nextNonWhiteCharFrom(index + 1) == '{')
                     index = this.nextIndexOfCharFromIndex('{', index);
-                this.expandNodeToAndParseFrom(index);
-                break;
+                if(stack.isLastSymbol("}")){
+                    this.expandNodeToAndParseFrom(index);
+                    break;
+                }
+                this.getParent().addStatementStartingAndEnding(statementStart, index);
+                this.nodes.getLast().parseFrom(index+1);
             }
 
             if (this.isCurrentSymbol(index, ';'))
                 if (!stack().isOpenParen()) {
-                    if (stack().peek("{{")) {
+                    if (stack().peek("{{"))
                         this.closeStackWithSymbolAtIndex("}}", index);
-                        this.closeBlock(index);
-                        break;
-                    }
-                    this.addStatementToBlock(statementStart, index);
+                    this.addStatementStartingAndEnding(statementStart, index);
                     statementStart = index + 1;
                 }
 
@@ -120,7 +122,7 @@ public class SimplifiedParser extends BaseParseTree {
 
             if (this.isCurrentSymbol(index, '}')) {
                 this.closeStackWithSymbolAtIndex("}", index);
-                this.getParent().addStatementToBlock(index, index);
+                this.getParent().addStatementStartingAndEnding(index, index);
                 this.getParent().parseFrom(index + 1);
                 break;
             }
@@ -161,7 +163,7 @@ public class SimplifiedParser extends BaseParseTree {
     }
 
     protected void addSingleStatementAndBlock(int start, int end) throws ParseException {
-        this.addStatementToBlock(start, end);
+        this.addStatementStartingAndEnding(start, end);
         this.nodes.getLast().addStatementStarting(end + 1);
     }
 
@@ -176,9 +178,10 @@ public class SimplifiedParser extends BaseParseTree {
         this.nodes.getLast().parseFrom(index);
     }
 
-    protected void addStatementToBlock(int start, int index) {
-        this.getParent().nodes.add(new BlockNode(this, start, index + 1));
+    protected void addStatementStartingAndEnding(int start, int index) {
+        this.nodes.add(new BlockNode(this, start, index + 1));
     }
+    
 
     protected void addElseBlockStartingAtIndex(int start) throws ParseException {
         this.addStatementStarting(start + 3);
@@ -193,42 +196,15 @@ public class SimplifiedParser extends BaseParseTree {
      Clean this up!!!
      */
     protected void expandNodeToAndParseFrom(int index) throws ParseException {
-        BlockNode last = this.getParent().nodes.getLast();
-        last.end = index + 1;
         if (!this.isCurrentSymbol(index, '{')){
             this.openStackWithSymbolAtIndex("{{", index);
+            this.getParent().parseFrom(index+1);
+            return;
         }else{
             this.openStackWithSymbolAtIndex("{", index);
-        }
-        last.addStatementStarting(index+1);
-        /*
-        youre always gonna be adding an 'else' statement, which could either be...
-        
-        'else'
-        '} else'
-        'else {'
-        or
-        '} else {'
-        
-        so expanding to the right index, then adding that statement sould
-        always be the first step.
-        then ...
-        
-        if(!else block ends with '{')
-            stack.open({{)
-            addStatementStarting()
-        else
-            stack.open({)
-            addStatementStarting()
-        */
-        if(false){ // block commented out for testing
-        if (!this.isCurrentSymbol(index, '{')) {
-            this.openStackWithSymbolAtIndex("{{", index);
-            this.nodes.getLast().addStatementStarting(index + 1);
-        } else {
-            this.openStackWithSymbolAtIndex("{", index);
-            this.nodes.getLast().parseFrom(index + 1);
-        }
+            BlockNode last = this.getParent().nodes.getLast();
+            last.end = index + 1;
+            last.parseFrom(index+1);
         }
     }
 
@@ -309,7 +285,6 @@ public class SimplifiedParser extends BaseParseTree {
      Make a new parse stack that deals exclusively with strings
      */
     protected class BracketStack extends LinkedList<String> {
-
         private final String[] validSymbols;
         private String lastSymbol;
 
