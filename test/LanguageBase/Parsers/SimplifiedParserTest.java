@@ -39,8 +39,7 @@ public class SimplifiedParserTest extends BaseTest{
     public void initializeParserWithSource(String source){
         parser = new SimplifiedParser(source);
         if(parser.getError() != null){
-            System.out.println(parser.getError());
-            fail();
+            fail(parser.getError());
         }
     }
     
@@ -191,5 +190,173 @@ public class SimplifiedParserTest extends BaseTest{
         this.initializeParserWithSource(source);
         assertEquals(2, parser.nodes.size());
         this.validateParserLinesAgainstSize(4);
+    }
+    
+    
+    @Test
+    public void testParseMultipleSimpleStatements(){
+        String source = "if(someBoolean()){\n"
+                + "someMethod();\n"
+                + "someOtherMethod();\n"
+                + "}";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(2, node.getScopes().size());
+        this.compareStrings("if(someBoolean()){", node.getSource());
+        this.compareStrings("\nsomeMethod();", node.getScopes().getFirst().getSource());
+        this.compareStrings("\nsomeOtherMethod();", node.getScopes().getLast().getSource());
+        this.compareStrings("}", parser.getScopes().getLast().getSource());
+    }
+    
+    @Test
+    public void testParseNestedStatements(){
+        String source = "if(someBoolean()){"
+                + "if(someOtherBoolean()){"
+                + "someStatement();}}";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(2, node.getScopes().size());
+        this.compareStrings("if(someBoolean()){", node.getSource());
+        
+        node = node.getScopes().getFirst();
+        assertEquals(1, node.getScopes().size());
+        this.compareStrings("if(someOtherBoolean()){", node.getSource());
+        
+        node = node.getScopes().getFirst();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("someStatement();", node.getSource());
+        
+        node = parser.getScopes().getFirst().getScopes().getLast();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("}", node.getSource());
+        
+        node = parser.getScopes().getLast();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("}", node.getSource());
+    }
+    
+    @Test
+    public void testParseNestedStatementsWithoutBracktes(){
+        String source = "if(someBoolean())"
+                        + "if(someOtherBoolean())"
+                            + "someStatement();";
+        this.initializeParserWithSource(source);
+        assertEquals(1, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(1, node.getScopes().size());
+        this.compareStrings("if(someBoolean())", node.getSource());
+        
+        node = node.getScopes().getFirst();
+        assertEquals(1, node.getScopes().size());
+        this.compareStrings("if(someOtherBoolean())", node.getSource());
+        
+        node = node.getScopes().getFirst();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("someStatement();", node.getSource());
+    }
+    
+    @Test
+    public void testParseMultipleStatements(){
+        String source = "if(someBoolean()){"
+                            + "someMethod().chainedMethod();"
+                            + "if(someOtherBoolean)"
+                                + "someMethod().someVar;"
+                        + "}";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(2, node.getScopes().size());
+        this.compareStrings("if(someBoolean()){", node.getSource());
+        
+        this.compareStrings("someMethod().chainedMethod();", node.getScopes().getFirst().getSource());
+        assertTrue(node.getScopes().getFirst().getScopes().isEmpty());
+        
+        node = node.getScopes().getLast();
+        assertEquals(1, node.getScopes().size());
+        this.compareStrings("if(someOtherBoolean)", node.getSource());
+        
+        node = node.getScopes().getLast();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("someMethod().someVar;", node.getSource());
+        
+        node = parser.getScopes().getLast();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("}", node.getSource());
+    }
+    
+    @Test
+    public void testParseEnum(){
+        String source = "public enum ClassType {\n" +
+                            "STATIC, INSTANCE;\n" +
+                        "}";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(1, node.getScopes().size());
+        this.compareStrings("public enum ClassType {",node.getSource());
+        
+        node = node.getScopes().getFirst();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("\nSTATIC, INSTANCE;",node.getSource());
+        
+        node = parser.getScopes().getLast();
+        assertTrue(node.getScopes().isEmpty());
+        this.compareStrings("}",node.getSource());
+    }
+    
+    @Test
+    public void testIfWithTryCatch(){
+        String source = "if(someBoolean())"
+                        + "try{"
+                            + "someExpression();"
+                        + "} catch(someException e) {"
+                            + "doSomethingWithTheException(e);"
+                        + "}";
+        this.initializeParserWithSource(source);
+        assertEquals(1, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        assertEquals(3, node.getScopes().size());
+    }
+    
+    /*
+    a lot of these could be fixed with a 
+    nodeThatOpenedBlock variable in the stack...
+    just sayin.
+    */
+    
+    @Test
+    public void testDoWhileLoop(){
+        String source = "do{"
+                            + "someStatement();"
+                        + "}while(someBoolean());";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+    }
+    
+    @Test
+    public void testParseAnonymousInnerClass(){
+        String source = "someMethod(new AnonymClass{"
+                + "someMethod();"
+                + "});";
+        this.initializeParserWithSource(source);
+        assertEquals(2, parser.getScopes().size());
+        
+        BlockNode node = parser.getScopes().getFirst();
+        this.compareStrings("someMethod(new AnonymClass{", node.getSource());
+        assertEquals(1, node.getScopes().size());
+        
+        node = node.getScopes().getLast();
+        this.compareStrings("someMethod();", node.getSource());
+        assertTrue(node.getScopes().isEmpty());
+        
+        this.compareStrings("});", parser.getScopes().getLast().getSource());
+        assertTrue(parser.getScopes().getLast().getScopes().isEmpty());
     }
 }

@@ -28,6 +28,10 @@ public class SimplifiedParser extends BaseParseTree {
         this.source = source;
         this.beginParse();
     }
+    
+    public LinkedList<BlockNode> getScopes(){
+        return nodes;
+    }
 
     /*
      public SimplifiedParser(model)
@@ -51,6 +55,7 @@ public class SimplifiedParser extends BaseParseTree {
             //^remove after done testing
         }
         this.checkForLineErrors();
+        this.checkForStackErrors();
     }
 
     private void checkForLineErrors() {
@@ -62,6 +67,11 @@ public class SimplifiedParser extends BaseParseTree {
                 lineError++;
             }
         }
+    }
+    
+    private void checkForStackErrors(){
+        if(!stack.isEmpty())
+            error = "Finished parse with open stack: " + stack.peek();
     }
 
     public String getError() {
@@ -92,26 +102,31 @@ public class SimplifiedParser extends BaseParseTree {
                         }
                 }
             }
+            
+            if(this.isCurrentSymbol(index, "catch")){
+                index = this.nextIndexOfCharFromIndex('{', index);
+                this.addSpecialCaseNode(statementStart, index);
+                break;
+            }
 
-            //repeat below for try blocks
+            //repeat below for catch blocks
             if (this.isCurrentSymbol(index, "else")) {
                 index += 3; //put index at end of 'else'
                 if (this.nextNonWhiteCharFrom(index + 1) == '{')
                     index = this.nextIndexOfCharFromIndex('{', index);
-                if(stack.isLastSymbol("}")){
-                    this.expandNodeToAndParseFrom(index);
-                    break;
-                }
-                this.getParent().addStatementStartingAndEnding(statementStart, index);
-                this.nodes.getLast().parseFrom(index+1);
+                this.addSpecialCaseNode(statementStart, index);
+                break;
             }
 
             if (this.isCurrentSymbol(index, ';'))
                 if (!stack().isOpenParen()) {
-                    if (stack().peek("{{"))
-                        this.closeStackWithSymbolAtIndex("}}", index);
                     this.addStatementStartingAndEnding(statementStart, index);
                     statementStart = index + 1;
+                    if (stack().peek("{{")){
+                        this.closeStackSingleStatement(index);
+                        this.getParent().parseFrom(index+1);
+                        break;
+                    }
                 }
 
             if (this.isCurrentSymbol(index, '{')) {
@@ -122,12 +137,27 @@ public class SimplifiedParser extends BaseParseTree {
 
             if (this.isCurrentSymbol(index, '}')) {
                 this.closeStackWithSymbolAtIndex("}", index);
-                this.getParent().addStatementStartingAndEnding(index, index);
+                //increment index to handle inner class node ending with '});'
+                int start = index;
+                if(this.nextNonWhiteCharFrom(index+1) == ')'){
+                    index = this.nextIndexOfCharFromIndex(')', index);
+                    this.closeStackWithSymbolAtIndex(")", index);
+                    if(this.nextNonWhiteCharFrom(index+1) == ';')
+                        index = this.nextIndexOfCharFromIndex(';', index);
+                }
+                //clear any lingering single statement parent node from the stack
+                if(stack().peek("{{"))
+                    this.closeStackSingleStatement(index);
+                this.getParent().addStatementStartingAndEnding(start, index);
                 this.getParent().parseFrom(index + 1);
                 break;
             }
             index++;
         }
+    }
+    
+    protected boolean isSpecialCaseBlock(){
+        return false;
     }
 
     protected SimplifiedParser getParent() {
@@ -145,12 +175,46 @@ public class SimplifiedParser extends BaseParseTree {
             lines.addAll(pn.getLines());
         return lines;
     }
+    
+    protected BlockNode addStatement(int index){
+        this.nodes.add(new BlockNode(this, index));
+        return this.nodes.getLast();
+    }
+    @Override
+    protected BlockNode addStatement(int start, int index){
+        this.nodes.add(new BlockNode(this, start, index));
+        return this.nodes.getLast();
+    }
+    
+    /**
+     * Handles else and try blocks.
+     * must be followed by a 'break' in the parseFrom() loop
+     * @param start
+     * @param index
+     * @throws LanguageBase.Parsers.BaseParseTree.ParseException 
+     */
+    protected void addSpecialCaseNode(int start, int index) throws ParseException{
+        if(stack().isLastSymbol("}")){
+            this.expandNodeToAndParseFrom(index);
+        } else if(stack().isLastSymbol("}}")){
+            this.getParent()
+                .addStatement(start, index)
+                    .parseFrom(index+1);
+        }
+    }
 
     protected void openStackWithSymbolAtIndex(String c, int index) throws ParseException {
         try {
             stack().open(c);
         } catch (StackException ex) {
             throw new ParseException(this.lineNumberFromIndex(index));
+        }
+    }
+    
+    protected void closeStackSingleStatement(int index) throws ParseException{
+        while(stack().peek("{{")){
+            this.closeStackWithSymbolAtIndex("}}", index);
+            index++;
         }
     }
 
@@ -169,12 +233,6 @@ public class SimplifiedParser extends BaseParseTree {
 
     protected void addStatementWithNewBlock(int start, int index) throws ParseException {
         this.nodes.add(new BlockNode(this, start, index));
-        /*
-         in the else block, this is adding a new
-         node when it should be further expanding the current node, or 
-         just further expand the node in the else case of this method and
-         parse from there.
-         */
         this.nodes.getLast().parseFrom(index);
     }
 
@@ -199,7 +257,6 @@ public class SimplifiedParser extends BaseParseTree {
         if (!this.isCurrentSymbol(index, '{')){
             this.openStackWithSymbolAtIndex("{{", index);
             this.getParent().parseFrom(index+1);
-            return;
         }else{
             this.openStackWithSymbolAtIndex("{", index);
             BlockNode last = this.getParent().nodes.getLast();
@@ -207,12 +264,22 @@ public class SimplifiedParser extends BaseParseTree {
             last.parseFrom(index+1);
         }
     }
+    
+    @Override
+    protected int lineNumberFromIndex(int index){
+        if(!this.indexOutOfRange(index))
+            for(int i = 0; i < this.getLines().size(); i++)
+                if(index >= this.getLines().get(i).start &&
+                    index <= this.getLines().get(i).end )
+                        return i+1;
+        return -1;
+    }
 
     /**
      * Each node represents one scope in the original source code
      */
     public class BlockNode extends SimplifiedParser {
-
+        private boolean isSpecialCaseBlock; //catch, else
         private int start, end;
         private final SimplifiedParser parent;
 
@@ -242,6 +309,11 @@ public class SimplifiedParser extends BaseParseTree {
             this.parent = parent;
             this.start = start;
             this.end = end;
+        }
+        
+        @Override
+        protected boolean isSpecialCaseBlock(){
+            return this.isSpecialCaseBlock;
         }
 
         @Override

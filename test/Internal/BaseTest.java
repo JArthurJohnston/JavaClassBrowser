@@ -25,9 +25,12 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
@@ -122,7 +125,8 @@ public class BaseTest {
     }
     
     public void compareStrings(String a, String b){
-        assertTrue(this.verifyStrings(a, b));
+        if(!this.verifyStrings(a, b))
+            assertEquals(a,b);
     }
     
     private boolean verifyStrings(String a, String b){
