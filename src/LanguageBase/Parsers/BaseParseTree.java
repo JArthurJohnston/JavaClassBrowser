@@ -7,6 +7,7 @@
 package LanguageBase.Parsers;
 
 import Exceptions.BaseException;
+import LanguageBase.Parsers.Nodes.*;
 import java.util.LinkedList;
 
 /**
@@ -14,20 +15,22 @@ import java.util.LinkedList;
  * @author arthur
  */
 public class BaseParseTree {
-    private String source;
-    protected LinkedList<String> errors;
+    protected String source;
+    protected String error;
     
     protected BaseParseTree(){
-        errors = new LinkedList();
+        //stupid stupid stupid
     }
-    
     protected BaseParseTree(String source){
-        this();
         this.source = source;
     }
     
-    protected String source(){
+    public String source(){
         return source;
+    }
+    
+    public String getError(){
+        return error;
     }
 
     protected int skipWhiteSpaces(int index) {
@@ -158,13 +161,9 @@ public class BaseParseTree {
                     while(!this.isCurrentSymbol(++index, "*/"));
                 if(this.isCurrentSymbol(index, "*/"))
                     index++;
-                this.addStatement(commentStart, index);
+                //this.addStatement(commentStart, index);
             }
             return index;
-    }
-    
-    protected BaseParseTree addStatement(int start, int end){
-        return this;
     }
     
     protected LinkedList getLines(){
@@ -175,115 +174,7 @@ public class BaseParseTree {
         return -1;
     }
     
-    protected void pushToStack(char c, int index, ParseStack stack) throws ParseException{
-        try {
-            stack.push(c);
-        } catch (StackException ex) {
-            throw new ParseException(this.lineNumberFromIndex(index));
-        }
-    }
-    
-    protected void popFromStack(char c, int index, ParseStack stack) throws ParseException{
-        try {
-            stack.pop(c);
-        } catch (StackException ex) {
-            throw new ParseException(this.lineNumberFromIndex(index));
-        }
-    }
-    
     /***************************/
-    
-    protected class ParseStack extends LinkedList{
-        /*
-        Need to add errors
-        */
-        void push(String c) throws StackException{
-            if(this.isOpenChar(c))
-                this.add(c);
-            else
-                throw new StackException(c);
-        }
-        
-        void pop(String c) throws StackException{
-            if(closesScope(c))
-                this.removeLast();
-            else
-                throw new StackException(c);
-        }
-        
-        void push(char c) throws StackException{
-            if(this.isOpenChar(c))
-                this.add(c);
-            else
-                throw new StackException(c);
-        }
-        
-        void pop(char c) throws StackException{
-            if(closesScope(c))
-                this.removeLast();
-            else
-                throw new StackException(c);
-        }
-        
-        boolean peek(String s){
-            if(this.isEmpty())
-                return false;
-            return s.compareTo((String)this.getLast())==0;
-        }
-        
-        private boolean closesScope(String c){
-            if(this.isEmpty())
-                return false;
-            if(c.compareTo("}}") == 0)
-                return ((String)this.getLast()).compareTo("}}") == 0;
-            return false;
-        }
-        
-        private boolean closesScope(char c){
-            if(this.isEmpty())
-                return false;
-            if(c == '}')
-                return (char)this.getLast() == '{';
-            if(c == ')')
-                return (char)this.getLast() == '(';
-            return false;
-        }
-        
-        private boolean isOpenChar(String c){
-            return c.compareTo("{{") == 0;
-        }
-        
-        private boolean isOpenChar(char c){
-            return c =='{' || c == '(';
-        }
-        
-        public boolean isOpen(){
-            return this.isOpenBraces() || this.isOpenParen();
-        }
-        
-        private boolean isOpenSymbol(char symbol){
-            if(!this.isEmpty())
-                return (char)this.getLast() == symbol;
-            return false;
-        }
-        
-        public boolean isOpenBraces(){
-            return this.isOpenSymbol('{');
-        }
-        
-        public boolean isOpenParen(){
-            return this.isOpenSymbol('(');
-        }
-    }
-    
-    public class StackException extends BaseException {
-        public StackException(String c){
-            super("Stack error with char: " + c);
-        }
-        public StackException(char c){
-            super("Stack error with char: " + c);
-        }
-    }
     
     public class ParseException extends BaseException {
         public ParseException(int lineNum){

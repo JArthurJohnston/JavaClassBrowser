@@ -105,7 +105,7 @@ public class SimplifiedParser extends BaseParseTree {
             
             if(this.isCurrentSymbol(index, "catch")){
                 index = this.nextIndexOfCharFromIndex('{', index);
-                this.addSpecialCaseNode(statementStart, index);
+                this.expandNodeToAndParseFrom(index);
                 break;
             }
 
