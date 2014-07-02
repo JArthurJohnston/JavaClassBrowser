@@ -54,8 +54,12 @@ public class BlockParser extends BaseParseTree {
                     break;
                 case ')':
                     stackIt(")", index);
-                    if (this.isSingleStatementBlock(index + 1))
-                        this.addSingleStatementAndBlockAtIndex(index);
+                    if(!stack.isOpenParen())
+                        if(!this.isCurrentSymbol(index+1, '.'))
+                            if (this.isSingleStatementBlock(index+1))
+                                this.addSingleStatementAndBlockAtIndex(index);
+                            else if(this.nextNonWhiteCharFrom(index+1) == '{')
+                                this.addStatementToBlock(index);
                     break;
                 case ';':
                     this.addStatementToBlock(index);
@@ -96,8 +100,8 @@ public class BlockParser extends BaseParseTree {
     }
 
     private boolean isSingleStatementBlock(int index) {
-        return this.isCurrentSymbol(index, ';')
-                || this.isCurrentSymbol(index, '{');
+        return !(this.isCurrentSymbol(index, ';')
+                || this.isCurrentSymbol(index, '{'));
     }
 
     private void addSingleStatementAndBlockAtIndex(int index) throws ParseException {

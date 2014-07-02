@@ -48,6 +48,10 @@ public class BlockParserTest extends BaseTest{
                 + "someMethod();"
                 + "}";
         this.initializeParserWithSource(source);
+        BlockNode node = root;
+        assertEquals(1, node.getStatements().size());
+        this.compareStrings("if(someBoolean())", node.getStatements().getFirst().getSource());
+        
     }
     
 }

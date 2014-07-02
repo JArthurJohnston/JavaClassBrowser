@@ -34,6 +34,8 @@ public class BlockNode extends BaseParseTreeNode{
     
     public BlockNode close(int index){
         this.end = index;
+        if(this.isRoot())
+            return this;
         return this.parentNode.getBlock();
     }
     
