@@ -30,6 +30,20 @@ public class BracketStack extends LinkedList<String>{
             return this.getLast().compareTo(symbol) == 0;
         }
         
+        /**
+         * the fact that a java linkedList cant iterate in 
+         * reverse is fucking stupid.
+         * @return 
+         */
+        public boolean isSingleStatementBlock(){
+            for(int i = this.size()-1; i >=0; i--)
+                if(this.get(i).compareTo("{") ==0)
+                    return false;
+                else if(this.get(i).compareTo("{{")==0)
+                    return true;
+            return false;
+        }
+        
         public void processSymbol(String symbol) throws StackException{
             if(isOpener(symbol))
                 this.open(symbol);

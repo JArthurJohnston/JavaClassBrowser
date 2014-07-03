@@ -44,6 +44,9 @@ public abstract class BaseParseTreeNode {
     }
     
     public String getSource(){
+        while(getParentTree().source().charAt(start) == ' '){
+            start++;
+        }
         return new String(getParentTree().source().substring(start, end));
     }
     
@@ -77,5 +80,4 @@ public abstract class BaseParseTreeNode {
      * @return 
      */
     public abstract BlockNode getBlock();
-    public abstract boolean isSingleStatement();
 }

@@ -59,13 +59,6 @@ public class BlockNode extends BaseParseTreeNode{
     }
     
     @Override
-    public boolean isSingleStatement(){
-        if(this.isRoot())
-            return false;
-        return this.parentNode.isSingleStatement();
-    }
-    
-    @Override
     public BlockNode getBlock(){
         return this;
     }

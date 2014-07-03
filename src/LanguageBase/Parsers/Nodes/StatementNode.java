@@ -28,12 +28,11 @@ public class StatementNode extends BaseParseTreeNode{
     }
     
     @Override
-    public boolean isSingleStatement(){
-        return !(this.isCurrentSymbol(end, '{'));
-    }
-    
-    @Override
     public BlockNode getBlock(){
         return this.parentNode.getBlock();
+    }
+    
+    public BlockNode getChildBlock(){
+        return block;
     }
 }
