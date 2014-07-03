@@ -73,6 +73,10 @@ public abstract class BaseParseTreeNode {
         return index < 0 || index >= getSource().length();
     }
     
+    public String getFormattedSource(){
+        return this.getSource();
+    }
+    
     
     
     /**

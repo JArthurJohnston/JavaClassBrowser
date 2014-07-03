@@ -214,6 +214,25 @@ public class BlockParserTest extends BaseTest{
     
     @Test
     public void testParseAnonymousClass(){
-        fail();
+        String source = "someMethod(new AnonymClass{"
+                + "someMethod();"
+                + "});";
+        this.initializeParserWithSource(source);
+        
+        assertEquals(2, root.getStatements().size());
+        this.compareStrings("someMethod(new AnonymClass", 
+                root.getStatements().getFirst().getSource());
+        
+        BlockNode block = root.getStatements().getFirst().getChildBlock();
+        assertEquals(1, block.getStatements().size());
+        this.compareStrings("someMethod();", 
+                block.getStatements().getFirst().getSource());
+        
+        this.compareStrings(");", 
+                root.getStatements().getLast().getSource());
+        
+        this.compareStrings("someMethod(new AnonymClass{\n"
+                + "\tsomeMethod();\n"
+                + "});", parser.formattedSource());
     }
 }

@@ -35,4 +35,13 @@ public class StatementNode extends BaseParseTreeNode{
     public BlockNode getChildBlock(){
         return block;
     }
+    
+    @Override
+    public String getFormattedSource(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getSource());
+        if(this.block != null)
+            sb.append(block.getFormattedSource());
+        return sb.toString();
+    }
 }

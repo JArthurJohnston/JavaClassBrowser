@@ -15,6 +15,7 @@ import java.util.LinkedList;
  */
 public class BlockNode extends BaseParseTreeNode{
     private LinkedList<StatementNode> statements;
+    private boolean isSingleStatement;
     
     
     protected BlockNode(){
@@ -30,6 +31,14 @@ public class BlockNode extends BaseParseTreeNode{
         this();
         this.parentNode = parent;
         this.start = index;
+    }
+    
+    public void isSingleStatement(boolean single){
+        this.isSingleStatement = single;
+    }
+    
+    public boolean isSingleStatement(){
+        return this.isSingleStatement;
     }
     
     public BlockNode close(int index){
@@ -61,5 +70,19 @@ public class BlockNode extends BaseParseTreeNode{
     @Override
     public BlockNode getBlock(){
         return this;
+    }
+    
+    @Override
+    public String getFormattedSource(){
+        StringBuilder sb = new StringBuilder();
+        if(!this.isSingleStatement)
+            sb.append(" {");
+        for(StatementNode sn : this.getStatements()){
+            sb.append("\n\t");
+            sb.append(sn.getFormattedSource());
+        }
+        if(!this.isSingleStatement)
+            sb.append("\n}");
+        return sb.toString();
     }
 }

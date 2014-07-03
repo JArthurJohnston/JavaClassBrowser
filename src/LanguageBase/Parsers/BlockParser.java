@@ -147,7 +147,13 @@ public class BlockParser extends BaseParseTree {
     }
 
     private void addBlockToStatementAt(int index) {
+        if(currentStatement == null){
+            currentStatement = currentBlock.addStatement(statementStart, index);
+            statementStart = index+1;
+        }
         currentBlock = currentStatement.addBlock(index + 1);
+        if(stack.peek("{{"))
+            currentBlock.isSingleStatement(true);
     }
 
     private void stackIt(String symbol, int index) throws ParseException {
@@ -160,6 +166,14 @@ public class BlockParser extends BaseParseTree {
 
     public BlockNode getTree() {
         return root;
+    }
+    
+    @Override
+    public String formattedSource(){
+        if(error != null)
+            return source();
+        root.isSingleStatement(true); //a hack, to stop root from printing {}
+        return root.getFormattedSource();
     }
 
 }

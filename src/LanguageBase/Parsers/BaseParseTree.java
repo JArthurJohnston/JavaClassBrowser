@@ -7,7 +7,6 @@
 package LanguageBase.Parsers;
 
 import Exceptions.BaseException;
-import LanguageBase.Parsers.Nodes.*;
 import java.util.LinkedList;
 
 /**
@@ -172,6 +171,10 @@ public class BaseParseTree {
     
     protected int lineNumberFromIndex(int index){
         return -1;
+    }
+    
+    public String formattedSource(){
+        return source;
     }
     
     /***************************/
