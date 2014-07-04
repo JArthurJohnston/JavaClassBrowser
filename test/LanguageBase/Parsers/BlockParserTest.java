@@ -210,6 +210,11 @@ public class BlockParserTest extends BaseTest{
                 block.getStatements().getFirst().getSource());
         this.compareStrings("someOtherMethod();", 
                 block.getStatements().getLast().getSource());
+        this.compareStrings("if(someBoolean())\n"
+                        + "\twhile(someBoolean()){\n"
+                            + "\t\tsomeMethod();\n"
+                            + "\t\tsomeOtherMethod();\n"
+                        + "\t}", parser.formattedSource());
     }
     
     @Test
@@ -231,8 +236,21 @@ public class BlockParserTest extends BaseTest{
         this.compareStrings(");", 
                 root.getStatements().getLast().getSource());
         
-        this.compareStrings("someMethod(new AnonymClass{\n"
+        this.compareStrings("someMethod(new AnonymClass {\n"
                 + "\tsomeMethod();\n"
-                + "});", parser.formattedSource());
+                + "});\n", parser.formattedSource());
+    }
+    
+    @Test
+    public void testParseInnerClassWithMultipleStatments(){
+        String source = "someMethod(new AnonymClass{"
+                + "someMethod();"
+                + "someOtherMethod();"
+                + "});";
+        this.initializeParserWithSource(source);
+        this.compareStrings("someMethod(new AnonymClass {\n"
+                + "\tsomeMethod();\n"
+                + "\tsomeOtherMethod();\n"
+                + "});\n", parser.formattedSource());
     }
 }

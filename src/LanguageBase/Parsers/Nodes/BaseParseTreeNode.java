@@ -77,7 +77,9 @@ public abstract class BaseParseTreeNode {
         return this.getSource();
     }
     
-    
+    protected String tabString(){
+        return "";
+    }
     
     /**
      * Return this nodes parent block

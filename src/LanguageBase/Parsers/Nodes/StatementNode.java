@@ -36,12 +36,16 @@ public class StatementNode extends BaseParseTreeNode{
         return block;
     }
     
-    @Override
-    public String getFormattedSource(){
-        StringBuilder sb = new StringBuilder();
+    public void buildFormattedSource(StringBuilder sb){
         sb.append(this.getSource());
         if(this.block != null)
-            sb.append(block.getFormattedSource());
-        return sb.toString();
+            block.buildFormattedSource(sb);
+        else
+            sb.append('\n');
+    }
+    
+    @Override
+    protected String tabString(){
+        return this.getBlock().tabString();
     }
 }
