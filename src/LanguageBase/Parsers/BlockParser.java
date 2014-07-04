@@ -14,11 +14,10 @@ import LanguageBase.Parsers.Stacks.BracketStack;
  * @author arthur
  */
 public class BlockParser extends BaseParseTree {
-
-    private BracketStack stack;
-    private int statementStart;
-    private BlockNode currentBlock;
+    private BracketStack stack; 
+    private int statementStart, lineCount;
     private BlockNode root;
+    private BlockNode currentBlock;
     private StatementNode currentStatement;
 
     private BlockParser() {
@@ -31,7 +30,7 @@ public class BlockParser extends BaseParseTree {
         this();
         this.source = source;
         try {
-            this.parseFrom(0);
+            this.parse();
         } catch (ParseException ex) {
             error = ex.getMessage();
         }
@@ -39,8 +38,10 @@ public class BlockParser extends BaseParseTree {
             error = "Uncloased '"+ stack.getLast()+"' on the stack.";
     }
 
-    private void parseFrom(int index) throws ParseException {
-        statementStart = index;
+    private void parse() throws ParseException {
+        statementStart = 0;
+        lineCount = 1;
+        int index = 0;
         while (!this.indexOutOfRange(index)) {
             switch (this.source.charAt(index)) {
                 case '{':
@@ -80,17 +81,14 @@ public class BlockParser extends BaseParseTree {
                     if (this.isCurrentSymbol(index, "try"))
                         this.addSpecialSyntaxBlock(index, "try");
                     break;
-                case 'c':
-                    //catch
-                    /*
-                     catch statements have brackets, so this may not be necessary
-                     */
-                    break;
                 case '"':
                     //skip over string literals
                     break;
                 case '\'':
                     //skip over string literals
+                    break;
+                case '\n':
+                    lineCount++;
                     break;
                 case '/':
                     //add statement for comments
@@ -127,8 +125,9 @@ public class BlockParser extends BaseParseTree {
     }
 
     private void closeBlock(int index) throws ParseException {
-        if(stack.isSingleStatementBlock())
+        if(currentBlock.isSingleStatement())
             stackIt("}}", index);
+        
         if(this.isCurrentSymbol(index, '}'))
             statementStart++;
         currentBlock = currentBlock.close(index);
@@ -160,7 +159,7 @@ public class BlockParser extends BaseParseTree {
         try {
             stack.processSymbol(symbol);
         } catch (BracketStack.StackException ex) {
-            throw new ParseException(this.lineNumberFromIndex(index));
+            throw new ParseException(lineCount);
         }
     }
 

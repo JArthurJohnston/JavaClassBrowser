@@ -69,14 +69,16 @@ public class BlockNode extends BaseParseTreeNode{
     
     @Override
     public BlockNode getBlock(){
-        return this;
+        if(this.isRoot())
+            return this;
+        return parentNode.getBlock();
     }
     
     @Override
     protected String tabString(){
         if(this.isRoot())
             return super.tabString();
-        return '\t' + parentNode.tabString();
+        return '\t' + this.getBlock().tabString();
     }
     
     @Override
@@ -85,14 +87,16 @@ public class BlockNode extends BaseParseTreeNode{
     }
     
     public StringBuilder buildFormattedSource(StringBuilder sb){
-        if(!this.isSingleStatement)
+        if(!this.isSingleStatement){
             sb.append(" {\n");
+        }
         for(StatementNode sn : this.getStatements()){
-            sb.append(this.tabString());
             sn.buildFormattedSource(sb);
         }
-        if(!this.isSingleStatement)
+        if(!this.isSingleStatement){
+            sb.append(this.getBlock().tabString());
             sb.append("}");
+        }
         return sb;
     }
 }

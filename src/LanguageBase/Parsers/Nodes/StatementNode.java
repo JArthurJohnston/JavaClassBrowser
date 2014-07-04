@@ -18,7 +18,7 @@ public class StatementNode extends BaseParseTreeNode{
     public StatementNode(BaseParseTree parent, int start, int end){
         super(parent, start, end);
     }
-    public StatementNode(BaseParseTreeNode parent, int start, int end){
+    public StatementNode(BlockNode parent, int start, int end){
         super(parent, start, end);
     }
     
@@ -29,7 +29,7 @@ public class StatementNode extends BaseParseTreeNode{
     
     @Override
     public BlockNode getBlock(){
-        return this.parentNode.getBlock();
+        return (BlockNode)this.parentNode;
     }
     
     public BlockNode getChildBlock(){
@@ -37,11 +37,15 @@ public class StatementNode extends BaseParseTreeNode{
     }
     
     public void buildFormattedSource(StringBuilder sb){
+        sb.append(this.tabString());
         sb.append(this.getSource());
-        if(this.block != null)
-            block.buildFormattedSource(sb);
-        else
+        if(this.block == null){
             sb.append('\n');
+        }else{
+            if(this.block.isSingleStatement())
+                sb.append('\n');
+            block.buildFormattedSource(sb);
+        }
     }
     
     @Override

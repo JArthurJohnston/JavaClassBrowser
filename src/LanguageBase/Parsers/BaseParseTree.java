@@ -60,9 +60,14 @@ public class BaseParseTree {
     protected boolean isCurrentSymbol(int index, String symbol){
         if(index < 0 || index+symbol.length() > source().length())
             return false;
+        if(!this.isAlphaNumeric(index-1) || 
+                !this.isAlphaNumeric(index+symbol.length()+1))
+            return false;
         return this.sourceFromTo(
                 index, index+symbol.length()).compareTo(symbol) == 0;
     }
+    
+    
     protected boolean isCurrentSymbol(int index, char symbol){
         if (this.indexOutOfRange(index))
             return false;
@@ -95,9 +100,23 @@ public class BaseParseTree {
     }
     
     protected boolean isWhiteChar(char c){
-        return c == ' ' ||
-                c == '\t' ||
-                c == '\n';
+        return Character.isWhitespace(c);
+    }
+    
+    protected boolean isWhiteChar(int index){
+        if(this.indexOutOfRange(index))
+            return false;
+        return this.isWhiteChar(source.charAt(index));
+    }
+    
+    protected boolean isAlphaNumeric(char c){
+        return Character.isAlphabetic(c) || Character.isDigit(c);
+    }
+    
+    protected boolean isAlphaNumeric(int index){
+        if(this.indexOutOfRange(index))
+            return false;
+        return this.isAlphaNumeric(source.charAt(index));
     }
     
     protected int advanceToCharacterFrom(char c, int index){

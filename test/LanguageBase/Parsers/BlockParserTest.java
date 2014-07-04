@@ -52,7 +52,6 @@ public class BlockParserTest extends BaseTest{
         assertEquals(1, block.getStatements().size());
         statement = block.getStatements().getFirst();
         this.compareStrings(b, statement.getSource());
-        
     }
 
     @Test
@@ -125,12 +124,24 @@ public class BlockParserTest extends BaseTest{
         this.initializeParserWithSource(source);
         //once again without brackets
         this.verifyIfElse();
+        this.compareStrings("if(someBoolean()) {\n"
+                            + "\tsomeMethod();\n"
+                        + "}else {\n"
+                            + "\tsomeOtherMethod();\n"
+                        + "}", parser.formattedSource());
+        
+        
+        
         source = "if(someBoolean())"
                     + "someMethod();"
                 + "else " //edit isCurrentSymbol to look for white spaces before and after the symbol
                     + "someOtherMethod();";
         this.initializeParserWithSource(source);
         this.verifyIfElse();
+        this.compareStrings("if(someBoolean())\n"
+                            + "\tsomeMethod();\n"
+                        + "else\n"
+                            + "\tsomeOtherMethod();\n", parser.formattedSource());
     }
     
     private void validateDoWhile(){
@@ -152,12 +163,18 @@ public class BlockParserTest extends BaseTest{
                       + "}while(someBoolean());";
         this.initializeParserWithSource(source);
         this.validateDoWhile();
+        this.compareStrings("do {\n"
+                        + "\tsomeMethod();\n"
+                      + "}while(someBoolean());\n", parser.formattedSource());
         
         source = "do"
                     + "someMethod();"
                 + "while(someBoolean());";
         this.initializeParserWithSource(source);
         this.validateDoWhile();
+        this.compareStrings("do\n"
+                        + "\tsomeMethod();\n"
+                      + "while(someBoolean());\n", parser.formattedSource());
     }
     
     @Test
@@ -184,6 +201,11 @@ public class BlockParserTest extends BaseTest{
         assertEquals(1, block.getStatements().size());
         this.compareStrings("someOtherObject.someMethod();", 
                 block.getStatements().getFirst().getSource());
+        this.compareStrings("try {\n"
+                            + "\tsomeMethod();\n"
+                        + "}catch(someException(e)) {\n"
+                            + "\tsomeOtherObject.someMethod();\n"
+                        + "}", parser.formattedSource());
     }
     
     @Test
@@ -211,7 +233,7 @@ public class BlockParserTest extends BaseTest{
         this.compareStrings("someOtherMethod();", 
                 block.getStatements().getLast().getSource());
         this.compareStrings("if(someBoolean())\n"
-                        + "\twhile(someBoolean()){\n"
+                        + "\twhile(someBoolean()) {\n"
                             + "\t\tsomeMethod();\n"
                             + "\t\tsomeOtherMethod();\n"
                         + "\t}", parser.formattedSource());
@@ -252,5 +274,89 @@ public class BlockParserTest extends BaseTest{
                 + "\tsomeMethod();\n"
                 + "\tsomeOtherMethod();\n"
                 + "});\n", parser.formattedSource());
+    }
+    
+    @Test
+    public void testSingleStatementWithMultiLineBlock(){
+        String source = "if(something)"
+                + "while(somethingElse){"
+                    + "doSomething();"
+                    + "doAnotherThing();"
+                + "}";
+        this.initializeParserWithSource(source);
+        this.compareStrings("if(something)\n"
+                + "\twhile(somethingElse) {\n"
+                + "\t\tdoSomething();\n"
+                + "\t\tdoAnotherThing();\n"
+                + "\t}", parser.formattedSource());
+    }
+    
+    @Test
+    public void testSingleStatementWithinSingleStatement(){
+        String source = "if(something)"
+                + "while(somethingElse){"
+                    + "if(something);"
+                        + "doAnotherThing();"
+                + "}";
+        this.initializeParserWithSource(source);
+        this.compareStrings("if(something)\n"
+                + "\twhile(somethingElse) {\n"
+                    + "\t\tif(something);\n"
+                        + "\t\t\tdoAnotherThing();\n"
+                + "\t}", parser.formattedSource());
+    }
+    
+    @Test
+    public void testIfElseInSingleStatement(){
+        String source = "if(something)"
+                        + "if(someBoolean()){"
+                            + "someMethod();"
+                            + "someOtherMethod();"
+                        + "} else { "
+                            + "yetAnotherMethod();"
+                        + "}";
+        this.initializeParserWithSource(source);
+        
+        this.compareStrings("if(something)\n"
+                        + "\tif(someBoolean()) {\n"
+                            + "\t\tsomeMethod();\n"
+                            + "\t\tsomeOtherMethod();\n"
+                        + "\t} else { \n"
+                            + "\t\tyetAnotherMethod();\n"
+                        + "\t}", parser.formattedSource());
+    }
+    
+    private String classSource(){
+        return "private class Example {"
+                    + "void someMethod(new TestClass {"
+                        + "someInnerMethod();"
+                    + "});"
+                    + "void someOtherMethod(something aThing){"
+                        + "if(someSingleBoolean)"
+                            + "while(something){"
+                                + "doSomething();"
+                                + "if(aThing)"
+                                    + "doSomethingElse();"
+                            + "}"
+                    + "}"
+                + "}";
+    }
+    
+    @Test
+    public void testAllInAClass(){
+        this.initializeParserWithSource(this.classSource());
+        this.compareStrings("private class Example {\n"
+                    + "\tvoid someMethod(new TestClass {\n"
+                        + "\t\tsomeInnerMethod();\n"
+                    + "\t});"
+                    + "\tvoid someOtherMethod(something aThing){\n"
+                        + "\t\tif(someSingleBoolean)\n"
+                            + "\t\t\twhile(something){\n"
+                                + "\t\t\t\tdoSomething();\n"
+                                + "\t\t\t\t\tif(aThing)\n"
+                                    + "\t\t\t\t\tdoSomethingElse();\n"
+                            + "\t\t\t}\n"
+                    + "\t}\n"
+                + "}", parser.formattedSource());
     }
 }
