@@ -45,8 +45,8 @@ public class ClassModelTest extends BaseModelTest{
     @After
     @Override
     public void tearDown() {
-        testClass = null;
         super.tearDown();
+        testClass = null;
     }
     
     private void setUpSubClasses(){
@@ -129,7 +129,7 @@ public class ClassModelTest extends BaseModelTest{
     
     @Test
     public void testAddMethod(){
-        MethodModel newMethod = new MethodModel();
+        MethodModel newMethod = null;
         try {
             newMethod = testClass.addMethod(new MethodModel("newMethod"));
         } catch (BaseException ex) {
@@ -144,6 +144,15 @@ public class ClassModelTest extends BaseModelTest{
             assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
+    
+    /*
+    Project will hold onto ...
+    Hashmap<String LinkedList<MethodModel>> methodDefinitions;
+    Hashmap<String LinkedList<ClassModel>> classDefinitions;
+    
+    findClass or findMethod will return a list of the corresponding model...
+        or just one model if the list has only one element.
+    */
     
     @Test
     public void testRemoveMethod(){

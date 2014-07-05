@@ -6,9 +6,15 @@
 
 package LanguageBase.Parsers;
 
+import Exceptions.AlreadyExistsException;
+import Exceptions.BaseException;
 import Internal.BaseTest;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
+import Models.ClassModel;
+import Models.MethodModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -26,11 +32,15 @@ public class BlockParserTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
+        super.setUp();
     }
     
     @After
+    @Override
     public void tearDown() {
+        super.tearDown();
         parser = null;
         root = null;
     }
@@ -358,5 +368,22 @@ public class BlockParserTest extends BaseTest{
                             + "\t\t\t}\n"
                     + "\t}\n"
                 + "}", parser.formattedSource());
+    }
+    
+    private void setUpTestProject(){
+        try {
+            parentPackage.addClass(new ClassModel("TestClass"));
+            ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
+            parentPackage.addClass(new ClassModel("RandomClass"));
+            aClass.addClass(new ClassModel("SubClass"));
+            parentPackage.addClass(new ClassModel("HelloWorldClass"));
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void testGetSourceReferences(){
+        
     }
 }

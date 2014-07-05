@@ -6,6 +6,7 @@ package Models;
 
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -15,13 +16,15 @@ import java.util.LinkedList;
 public class MethodModel extends ClassModel{
     private String source;
     private ClassType type;
-    private LinkedList<VariableModel> parameters;
+    private LinkedList<VariableModel> arguments;
     private LinkedList references;
     protected ClassModel returnType;
     
+    private MethodSignature signature;
+    
     public MethodModel(){
         this.type = ClassType.INSTANCE;
-        this.parameters = new LinkedList();
+        this.arguments = new LinkedList();
         this.references = new LinkedList();
     }
     public MethodModel(String name){
@@ -53,7 +56,7 @@ public class MethodModel extends ClassModel{
         this.source = source;
         this.returnType = returnType;
         this.name = name;
-        this.parameters = params;
+        this.arguments = params;
     }
     
     /**
@@ -67,7 +70,7 @@ public class MethodModel extends ClassModel{
         this.parent = parent;
         this.name = parent.name();
         this.returnType = parent;
-        this.parameters = params;
+        this.arguments = params;
         this.source = source;
     }
     
@@ -80,34 +83,37 @@ public class MethodModel extends ClassModel{
         return this.getProject().getMethodDefinitions(this);
     }
     
-    public boolean matchSignature(MethodModel otherMethod){
-        if(this.name.compareTo(otherMethod.name()) != 0){
-            return false;
-        } else if(this.parameters.size() != otherMethod.getParameters().size()){
-            return false;
-        }else{
-            int i;
-            for(i=0; i< parameters.size(); i++){
-                if(this.parameters.get(i).getType() != (otherMethod.parameters.get(i).getType()))
-                    break;
-            }
-            return i >= parameters.size();
-        }
-    }
-    
     public MethodModel addDefinition(MethodModel newDef){
         this.references.add(newDef);
         fireChanged(this);
         return newDef;
     }
     
-    /*
-     * Setters
+    /**
+     * To ensure that each signature is a singleton, this should only be
+     * called when the method is added to the projects method HashMap.
+     * Or this can be called in tests.
+     * 
+     * But if an already created method, outside of a test, has a null signature,
+     * you have a problem.
+     * 
+     * @return 
      */
+    public MethodSignature signature(){
+        if(signature == null)
+            return new MethodSignature(this);
+        return signature;
+    }
+    
+    public void signature(MethodSignature signature) {
+        this.signature = signature;
+    }
+    
     public void setSource(String source){
         this.source = source;
         fireChanged(this);
     }
+    
     public void setType(ClassType newType){
         /*
         -needs a validation method
@@ -119,8 +125,9 @@ public class MethodModel extends ClassModel{
         this.type = newType;
         fireChanged(this);
     }
-    public void setParameters(LinkedList params){
-        this.parameters = params;
+    
+    public void arguments(LinkedList params){
+        this.arguments = params;
         fireChanged(this);
     }
     
@@ -144,10 +151,12 @@ public class MethodModel extends ClassModel{
             return new String();
         return source;
     }
+    
     @Override
     public ClassType getType(){
         return type;
     }
+    
     @Override
     public ScopeType getScope(){
         if(scope == null)
@@ -161,9 +170,10 @@ public class MethodModel extends ClassModel{
         return this.getScope().toString().toLowerCase() + " ";
     }
     
-    public LinkedList<VariableModel> getParameters(){
-        return parameters;
+    public LinkedList<VariableModel> arguments(){
+        return arguments;
     }
+    
     public LinkedList getReferences(){
         return references;
     }
@@ -185,8 +195,8 @@ public class MethodModel extends ClassModel{
     @Override
     public String toSourceString(){
         String signature =  this.getSignarureString() + "(";
-        for(VariableModel param: parameters){
-            if(param != parameters.get(0))
+        for(VariableModel param: arguments){
+            if(param != arguments.get(0))
                 signature += ", ";
             signature += param.getType().name()+" "+param.name();
         }
@@ -207,7 +217,47 @@ public class MethodModel extends ClassModel{
         return this.name().compareTo(this.getParent().name()) == 0;
     }
     
+    @Override
     public boolean isAbstract(){
         return false;
+    }
+    
+    /**
+     * A class for comparing method signatures.
+     */
+    public class MethodSignature{
+        private final String name;
+        private ArrayList<ClassModel> arguments;
+        
+        private MethodSignature(MethodModel aMethod){
+            this.name = aMethod.name();
+            this.initArgs(aMethod);
+        }
+        
+        private void initArgs(MethodModel aMethod){
+            arguments = new ArrayList(aMethod.arguments().size());
+            for(VariableModel var : aMethod.arguments())
+                arguments.add(var.getObjectType());
+        }
+        
+        public String name(){
+            return this.name;
+        }
+        
+        public ArrayList<ClassModel> arguments(){
+            return arguments;
+        }
+        
+        public boolean equals(MethodSignature anotherMethod){
+            if(this.name.compareTo(anotherMethod.name()) != 0)
+                return false;
+            if(this.arguments.size() != anotherMethod.arguments().size())
+                return false;
+            for(int i=0;i< arguments.size();i++){
+                if(arguments.get(i) != anotherMethod.arguments().get(i))
+                    return false;
+            }
+            return true;
+        }
     }
 }

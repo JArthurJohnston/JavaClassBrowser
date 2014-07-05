@@ -8,7 +8,6 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
-import Exceptions.MethodDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.SortedList;
 import Types.ClassType;
@@ -100,6 +99,12 @@ public class ClassModel extends PackageModel{
         return PRIMITIVE_TYPES.get(aString);
     }
     
+    /**
+     * returns a singleton reference to an "Object"
+     * ClassModel.
+     * 
+     * @return 
+     */
     public static ClassModel getObjectClass(){
         if(OBJECT_CLASS == null)
             OBJECT_CLASS = new ClassModel("Object");

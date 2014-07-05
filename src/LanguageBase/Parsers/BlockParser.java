@@ -8,6 +8,8 @@ package LanguageBase.Parsers;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import LanguageBase.Parsers.Stacks.BracketStack;
+import Models.BaseModel;
+import java.util.HashMap;
 
 /**
  *
@@ -19,16 +21,28 @@ public class BlockParser extends BaseParseTree {
     private BlockNode root;
     private BlockNode currentBlock;
     private StatementNode currentStatement;
+    private HashMap<String, BaseModel> references;
 
     private BlockParser() {
         root = new BlockNode(this);
         currentBlock = root;
         stack = new BracketStack();
+        references = new HashMap();
     }
 
     public BlockParser(String source) {
         this();
         this.source = source;
+        this.startParse();
+    }
+    
+    public BlockParser(BaseModel aModel){
+        this();
+        this.source = aModel.toSourceString();
+        this.startParse();
+    }
+    
+    private void startParse(){
         try {
             this.parse();
         } catch (ParseException ex) {

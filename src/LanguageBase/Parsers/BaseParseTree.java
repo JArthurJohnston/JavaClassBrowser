@@ -7,6 +7,7 @@
 package LanguageBase.Parsers;
 
 import Exceptions.BaseException;
+import Models.BaseModel;
 import java.util.LinkedList;
 
 /**
@@ -16,6 +17,7 @@ import java.util.LinkedList;
 public class BaseParseTree {
     protected String source;
     protected String error;
+    protected BaseModel model;
     
     protected BaseParseTree(){
         //stupid stupid stupid

@@ -7,14 +7,15 @@ package Models;
 import Exceptions.AlreadyExistsException;
 import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
+import Exceptions.DoesNotExistException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import MainBase.SortedList;
+import Models.MethodModel.MethodSignature;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.Buffer.BaseModelBuffer;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,8 +29,9 @@ import java.util.LinkedList;
  */
 public class ProjectModel extends BaseModel {
     private MainApplication main;
-    private HashMap <String, ClassModel> classes;
-    private HashMap <String, LinkedList<MethodModel>> methods;
+    private HashMap <String, ClassModel> classes; //this is gettin changed
+    private HashMap <MethodSignature, LinkedList<MethodModel>> methodDefinitions;
+    private HashMap <String, LinkedList<MethodSignature>> methodNames;
     private HashMap <String, PackageModel> packages;
     protected LinkedList<PackageModel> packageList;
     private String userName;
@@ -85,7 +87,8 @@ public class ProjectModel extends BaseModel {
         PackageModel defaultPackage = new PackageModel(this);
         packages.put(defaultPackage.name(), defaultPackage);
         packageList.add(defaultPackage);
-        methods = new HashMap();
+        methodDefinitions = new HashMap();
+        methodNames = new HashMap();
     }
     
     public AllPackage getAllPackage(){
@@ -269,15 +272,37 @@ public class ProjectModel extends BaseModel {
      * @param newMethod the method being added
      * @return the method being added
      */
-    public MethodModel addMethodDefinition(MethodModel newMethod){
-        if(methods.containsKey(newMethod.name())){
-            methods.get(newMethod.name()).add(newMethod);
-        }else{
-            LinkedList newMethodList = new LinkedList();
-            newMethodList.add(newMethod);
-            methods.put(newMethod.name(), newMethodList);
+    public MethodModel addMethod(MethodModel newMethod){
+        MethodSignature sig = newMethod.signature();
+        if(methodNames.containsKey(newMethod.name())){
+            for(MethodSignature ms: methodNames.get(newMethod.name())){
+                if(ms.equals(sig)){
+                    methodDefinitions.get(ms).add(newMethod);
+                    newMethod.signature(ms);
+                    return newMethod;
+                }
+            }
         }
+        methodNames.put(newMethod.name(), new SortedList().addElm(sig));
+        methodDefinitions.put(sig, new SortedList().addElm(newMethod));
+        newMethod.signature(sig);
         return newMethod;
+    }
+    
+    /**
+     * Returns a list of Method
+     * @param methodName
+     * @return
+     * @throws DoesNotExistException 
+     */
+    public LinkedList<MethodModel> findMethods(String methodName) throws DoesNotExistException{
+        if(methodNames.containsKey(methodName)){
+            LinkedList methods = new LinkedList();
+            for(MethodSignature ms : methodNames.get(methodName))
+                methods.addAll(methodDefinitions.get(ms));
+            return methods;
+        }
+        throw new DoesNotExistException(this, methodName);
     }
     
     /**
@@ -286,14 +311,14 @@ public class ProjectModel extends BaseModel {
      * @return a LinkedList of MethodModels
      */
     public LinkedList getMethodDefinitions(MethodModel aMethod){
-        return methods.get(aMethod.name());
+        return methodDefinitions.get(aMethod.signature());
     }
     
     public MethodModel removeMethod(MethodModel aMethod) throws BaseException{
-        if(!methods.get(aMethod.name()).remove(aMethod))
+        if(!methodDefinitions.get(aMethod.name()).remove(aMethod))
             throw new VeryVeryBadException(this, aMethod);
-        if(methods.get(aMethod.name()).isEmpty())
-            methods.remove(aMethod.name());
+        if(methodDefinitions.get(aMethod.name()).isEmpty())
+            methodDefinitions.remove(aMethod.name());
         return aMethod;
         /*
         need to add logic to warn the user if theyre removing a method with references
@@ -314,14 +339,16 @@ public class ProjectModel extends BaseModel {
         this.userName = main.getUserName();
     }
     
-    public ClassModel findClass(String aClassName){
+    public ClassModel findClass(String aClassName) throws DoesNotExistException{
         if(classes.get(aClassName) == null)
             if(ClassModel.getPrimitiveTypes().contains(aClassName))
                 return ClassModel.getPrimitive(aClassName);
+        if(classes.get(aClassName) == null)
+            throw new DoesNotExistException(this, aClassName);
         return classes.get(aClassName);
     }
     
-    public InterfaceModel findInterface(String name){
+    public InterfaceModel findInterface(String name) throws DoesNotExistException{
         if(this.findClass(name).isInterface())
             return (InterfaceModel)this.findClass(name);
         return null;
