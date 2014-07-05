@@ -9,7 +9,6 @@ import Exceptions.BaseException;
 import MainBase.EventTester;
 import MainBase.Events.ModelEvents.ModelEventHandler;                   
 import MainBase.MainApplication;                   
-import MainBase.SortedList;
 import Models.ClassModel;
 import Models.MethodModel;
 import Models.PackageModel;
