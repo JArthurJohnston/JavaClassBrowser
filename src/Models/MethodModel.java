@@ -74,6 +74,10 @@ public class MethodModel extends ClassModel{
         this.source = source;
     }
     
+    public boolean hasSignatureOf(MethodModel anotherMethod){
+        return this.signature().equals(anotherMethod.signature());
+    }
+    
     @Override
     public boolean isMethod(){
         return true;
@@ -220,6 +224,11 @@ public class MethodModel extends ClassModel{
     @Override
     public boolean isAbstract(){
         return false;
+    }
+    
+    @Override
+    public PackageModel getParentPackage(){
+        return this.parent.getParentPackage();
     }
     
     /**

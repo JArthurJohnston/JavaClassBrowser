@@ -10,14 +10,9 @@ import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.PackageModel;
 import Models.ProjectModel;
-import UIPanels.TreePanels.Nodes.*;
-import UIShells.SystemBrowserShell;
-import java.util.LinkedList;
 import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -30,25 +25,18 @@ public class BrowserUIControllerTest extends BaseTest{
     public BrowserUIControllerTest() {
     }
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
     @Before
+    @Override
     public void setUp() {
-        this.setUpMain();
-        main.setSelectedProejct(this.getProject());
-        controller = new BrowserUIController(main);
+        super.setUp();
+        controller = new BrowserUIController(parentProject);
     }
     
     @After
+    @Override
     public void tearDown() {
-        main = null;
         controller = null;
+        super.tearDown();
     }
     
     private ProjectModel getProject(){
@@ -80,26 +68,10 @@ public class BrowserUIControllerTest extends BaseTest{
         assertEquals(main.getSelectedProject(), 
                 (ProjectModel)this.getVariableFromClass(controller, "selectedProject"));
     }
-
-    @Test
-    public void testClose() {
-        SystemBrowserShell aShell = controller.getShell();
-        controller.close();
-        assertFalse(aShell.isVisible());
-        assertFalse(((LinkedList)this.getVariableFromClass(main, "openWindowModels")).contains(controller));
-    }
-    
-    @Test
-    public void testGetShell(){
-        SystemBrowserShell aShell = controller.getShell();
-        assertEquals(SystemBrowserShell.class, controller.getShell().getClass());
-        assertEquals(aShell, controller.getShell());
-        assertTrue(controller.getShell().isVisible());
-    }
     
     @Test
     public void testSelectedProject(){
-        assertEquals("a project", ((ProjectModel)this.getVariableFromClass(controller, "selectedProject")).name());
+        assertEquals("parent project", ((ProjectModel)this.getVariableFromClass(controller, "selectedProject")).name());
     }
     
     @Test
@@ -123,7 +95,7 @@ public class BrowserUIControllerTest extends BaseTest{
             controller.addClass(new ClassModel("AClass"));
             fail("exception not thrown");
         } catch (Exception ex) {
-            assertTrue(this.compareStrings("", ex.getMessage()));
+            this.compareStrings("", ex.getMessage());
         }
     }
     
@@ -159,6 +131,11 @@ public class BrowserUIControllerTest extends BaseTest{
                 
     }
     
+    @Test
+    public void testDefaultModelSelection(){
+        assertEquals(parentProject, controller.getSelectedProject());
+        assertEquals(parentProject.getAllPackage(), controller.getSelectedPackage());
+    }
     
     @Test
     public void testGetAllClasses(){

@@ -35,6 +35,8 @@ public class ClassTreePanel extends BaseTreePanel {
     @Override
     public void setModel(BrowserUIController controller){
         super.setModel(controller);
+        if(controller.getSelectedProject() == null)
+            return;
         if(controller.getSelectedClass() != null){
             this.fillFromClass(controller.getSelectedClass());
             this.expandAll();

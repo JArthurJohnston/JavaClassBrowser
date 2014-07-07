@@ -6,6 +6,7 @@
 
 package UIModels.Buffer;
 
+import Exceptions.DoesNotExistException;
 import Models.BaseModel;
 import Models.ClassModel;
 import Models.InterfaceModel;
@@ -99,7 +100,11 @@ public class ClassModelBuffer extends BaseModelBuffer{
     public ArrayList<String> parseParentClass(ArrayList<String> tokens){
         int index = tokens.indexOf("extends");
         if(index >=0 && tokens.size() >= index + 1){
-            this.parentClass = entity.getProject().findClass(tokens.get(index+1));
+            try {
+                this.parentClass = entity.getProject().findClass(tokens.get(index+1));
+            } catch (DoesNotExistException ex) {
+                warnings.add("Couldnt find class" + tokens.get(index+1));
+            }
             tokens.remove(index);
             tokens.remove(index);
         }else
@@ -112,11 +117,15 @@ public class ClassModelBuffer extends BaseModelBuffer{
         while(tokens.contains("implements")){
             int index = tokens.indexOf("implements");
             if(index >=0 && tokens.size() >= index + 1){
-                this.interfaceList.add(
-                        (InterfaceModel)entity
-                        .getProject()
-                        .findClass(tokens.get(index+1))
-                );
+                try {
+                    this.interfaceList.add(
+                            (InterfaceModel)entity
+                                    .getProject()
+                                    .findClass(tokens.get(index+1))
+                    );
+                } catch (DoesNotExistException ex) {
+                    warnings.add("couldnt find class "+ tokens.get(index+1));
+                }
                 tokens.remove(index);
                 tokens.remove(index);
             }

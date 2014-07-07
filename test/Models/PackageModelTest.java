@@ -5,6 +5,7 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
+import Exceptions.DoesNotExistException;
 import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import Internal.BaseTest;
@@ -25,9 +26,7 @@ import org.junit.Test;
  * @author Arthur
  */
 public class PackageModelTest extends BaseTest{
-    
     PackageModel testPackage;
-    ProjectModel parentProject;
     
     public PackageModelTest() {
     }
@@ -41,18 +40,16 @@ public class PackageModelTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
-        try {
-            parentProject = new MainApplication().addProject(new ProjectModel("AProject"));
-            testPackage = parentProject.addPackage(new PackageModel("New Package"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        super.setUp();
+        testPackage = parentPackage;
     }
     
     @After
+    @Override
     public void tearDown() {
-        parentProject = null;
+        super.tearDown();
         testPackage = null;
     }
 
@@ -82,7 +79,7 @@ public class PackageModelTest extends BaseTest{
         }
         assertEquals(1, testPackage.getClassList().size());
         assertEquals(newClass, testPackage.getClassList().getFirst());
-        assertEquals(newClass, parentProject.findClass("NewClass"));
+        assertEquals(newClass, this.findClass("NewClass"));
         try {
             testPackage.addClass(new ClassModel("NewClass"));
             fail("exception not thrown");
@@ -103,7 +100,7 @@ public class PackageModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         
-        assertEquals(newClass, parentProject.findClass("NewSubClass"));
+        assertEquals(newClass, this.findClass("NewSubClass"));
         assertEquals(2, testPackage.getClassList().size());
         assertTrue(testPackage.getClassList().contains(newClass));
         assertEquals(aClass, testPackage.getClassList().get(0));
@@ -118,13 +115,13 @@ public class PackageModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertTrue(testPackage.getClassList().contains(classToBeRemoved));
-        assertEquals(classToBeRemoved, parentProject.findClass("ClassToBeRemoved"));
+        assertEquals(classToBeRemoved, this.findClass("ClassToBeRemoved"));
         try {
             testPackage.removeClass(classToBeRemoved);
         } catch (VeryVeryBadException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(null, parentProject.findClass("ClassToBeRemoved"));
+        assertEquals(null, this.findClass("ClassToBeRemoved"));
         assertFalse(testPackage.getClassList().contains(classToBeRemoved));
     }
     
@@ -358,7 +355,7 @@ public class PackageModelTest extends BaseTest{
     
     @Test
     public void addPackageToDefaultPackage(){
-        PackageModel defaultPackage = parentProject.getTopLevelPackages().getFirst();
+        PackageModel defaultPackage = parentProject.getDefaultPackage();
         assertEquals("default package", defaultPackage.name());
         
         PackageModel newPackage = null;
@@ -408,7 +405,7 @@ public class PackageModelTest extends BaseTest{
         }
         assertEquals(testPackage, anInterface.getParentPackage());
         assertTrue(testPackage.getInterfaces().contains(anInterface));
-        assertEquals(anInterface, parentProject.findClass("SomeInterface"));
+        assertEquals(anInterface, this.findClass("SomeInterface"));
     }
     
     @Test 
@@ -423,6 +420,6 @@ public class PackageModelTest extends BaseTest{
         }
         assertEquals(testPackage, anInterface.getParentPackage());
         assertFalse(testPackage.getInterfaces().contains(anInterface));
-        assertEquals(anInterface, parentProject.findClass("SomeInterface"));
+        assertEquals(anInterface, this.findClass("SomeInterface"));
     }
 }

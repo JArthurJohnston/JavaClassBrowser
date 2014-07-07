@@ -40,6 +40,7 @@ public class MethodModelTest extends BaseTest{
     
     @Before
     public void setUp() {
+        super.setUp();
         main = new MainApplication();
         try {
             method = this.setUpClassWithName("ParentClass")
@@ -51,19 +52,18 @@ public class MethodModelTest extends BaseTest{
     
     @After
     public void tearDown() {
+        super.tearDown();
         method = null;
     }
     
     private ClassModel setUpClassWithName(String className){
-        ClassModel aClass = null;
+        ClassModel parentClass = null;
         try {
-            ProjectModel aProject = main.addProject(new ProjectModel(className));
-            PackageModel aPackage = aProject.addPackage(new PackageModel(className));
-            aClass = aPackage.addClass(new ClassModel(className));
+            parentClass = parentPackage.addClass(new ClassModel(className));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        return aClass;
+        return parentClass;
     }
 
     /**
@@ -86,10 +86,10 @@ public class MethodModelTest extends BaseTest{
         assertEquals(ClassModel.class, method.getParent().getClass());
         assertEquals("ParentClass", method.getParent().name());
         assertEquals(ProjectModel.class, method.getProject().getClass());
-        assertEquals("A Project", method.getProject().name());
+        assertEquals(parentProject, method.getProject());
         assertEquals(PackageModel.class, method.getParentPackage().getClass());
         assertEquals(method.getParentPackage(), method.parent.getParentPackage());
-        assertEquals("a package", method.getParentPackage().name());
+        assertEquals(parentPackage, method.getParentPackage());
     }
 
     /**
@@ -112,9 +112,13 @@ public class MethodModelTest extends BaseTest{
         } catch (BaseException ex) {
             fail(ex.getMessage());
         }
-        assertFalse(method.matchSignature(otherMethod));
+        assertFalse(method.hasSignatureOf(otherMethod));
         otherMethod.setName("aMethod");
-        assertTrue(method.matchSignature(otherMethod));
+        /*changing the name of the method changes its signature, and its 
+        references and definitions
+        this would fall under some kind of refactoring logic...
+        */
+        assertTrue(method.hasSignatureOf(otherMethod));
         VariableModel intVar = 
                 new VariableModel(ScopeType.NONE, new ClassModel("Int"),"x");
         VariableModel charVar = 
@@ -122,16 +126,16 @@ public class MethodModelTest extends BaseTest{
         LinkedList vars = new LinkedList();
         vars.add(intVar);
         vars.add(charVar);
-        otherMethod.setParameters(vars);
-        assertFalse(method.matchSignature(otherMethod));
-        method.setParameters(vars);
-        assertTrue(method.matchSignature(otherMethod));
+        otherMethod.arguments(vars);
+        assertFalse(method.hasSignatureOf(otherMethod));
+        method.arguments(vars);
+        assertTrue(method.hasSignatureOf(otherMethod));
     }
     
     @Test
     public void testParameters(){
         LinkedList params = 
-                (LinkedList)this.getVariableFromClass(method, "parameters");
+                (LinkedList)this.getVariableFromClass(method, "arguments");
         assertEquals(0, params.size());
         fail("Write more of me!");
     }
@@ -163,7 +167,7 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testReturnType(){
-        assertEquals(null, method.getReturnType());
+        assertEquals(ClassModel.getPrimitive("void"), method.getReturnType());
         ClassModel newReturn = new ClassModel("AClass");
         method.setReturnType(newReturn);
         assertEquals(newReturn, method.getReturnType());
@@ -190,20 +194,23 @@ public class MethodModelTest extends BaseTest{
         String expected = "private void aMethod(){\n"
                 + "Some.testCode();\n"
                 + "}";
-        assertTrue(this.compareStrings(expected, method.toSourceString()));
+        this.compareStrings(expected, method.toSourceString());
     }
     
     @Test
     public void testToSourceStringWithNoneScope(){
         method.setReturnType(ClassModel.getPrimitive("void"));
         String expected = "void aMethod(){"+ "\n\n"+ "}";
-        assertTrue(this.compareStrings(expected, method.toSourceString()));
+        this.compareStrings(expected, method.toSourceString());
     }
     
     @Test
     public void testReferences(){
         assertEquals(LinkedList.class, method.getReferences().getClass());
         fail("need to write logic to check for method references in method source");
+        /*
+        this will have to wait until I write the re-factoring logic.
+        */
     }
     
     @Test public void testDefinitions(){
@@ -227,6 +234,6 @@ public class MethodModelTest extends BaseTest{
     
     @Test
     public void testGetParentPackage(){
-        assertEquals("a package", method.getParentPackage().name());
+        assertEquals(parentPackage, method.getParentPackage());
     }
 }

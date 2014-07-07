@@ -8,7 +8,10 @@ package Models;
 
 import Exceptions.AlreadyExistsException;
 import Exceptions.BaseException;
+import Exceptions.DoesNotExistException;
 import Exceptions.VeryVeryBadException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -52,7 +55,11 @@ public class InterfaceModelTest extends BaseModelTest{
         assertEquals(parentPackage, anInterface.getParent());
         assertTrue(anInterface.getInterfaces().isEmpty());
         assertTrue(anInterface.isInterface());
-        assertEquals(anInterface, parentProject.findInterface("TestInterface"));
+        try {
+            assertEquals(anInterface, parentProject.findInterface("TestInterface"));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @Test
@@ -81,7 +88,11 @@ public class InterfaceModelTest extends BaseModelTest{
         }
         
         assertFalse(anInterface.getInterfaces().contains(child));
-        assertNull(parentProject.findClass("ChildInterface"));
+        try {
+            assertNull(parentProject.findClass("ChildInterface"));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @Test
@@ -94,7 +105,11 @@ public class InterfaceModelTest extends BaseModelTest{
             fail(ex.getMessage());
         }
         assertFalse(anInterface.getInterfaces().contains(child));
-        assertNull(parentProject.findClass("ChildInterface"));
+        try {
+            assertNull(parentProject.findClass("ChildInterface"));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
     }
     
     @Test

@@ -16,6 +16,8 @@ import MainBase.MainApplication;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -82,7 +84,11 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertEquals(parentProject, newSubClass.getProject());
         assertEquals(testClass, newSubClass.getParent());
-        assertEquals(newSubClass, parentProject.findClass("NewSubClass"));
+        try {
+            assertEquals(newSubClass, parentProject.findClass("NewSubClass"));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(parentPackage, newSubClass.getParentPackage());
         assertTrue(testClass.getClassList().contains(newSubClass));
         assertTrue(parentProject.getClassList().contains(newSubClass));
@@ -137,6 +143,12 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertEquals(testClass, newMethod.getParent());
         assertEquals(1, testClass.getMethods().size());
+        assertTrue(testClass.getMethods().contains(newMethod));
+        try {
+            assertEquals(newMethod, parentProject.findMethods("newMethod").getFirst());
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
         try {
             testClass.addMethod(new MethodModel("newMethod"));
             fail("Exception not thrown");
@@ -156,7 +168,20 @@ public class ClassModelTest extends BaseModelTest{
     
     @Test
     public void testRemoveMethod(){
-        fail();
+        this.testAddMethod();
+        MethodModel newMethod = null;
+        try {
+            newMethod = parentProject.findMethods("newMethod").getFirst();
+            testClass.removeMethod(newMethod);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        assertTrue(testClass.getMethods().isEmpty());
+        try {
+            parentProject.findMethods("newMethod");
+            fail("exception not thrown");
+        } catch (DoesNotExistException ex) {
+        }
     }
     
     @Test

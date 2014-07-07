@@ -152,7 +152,11 @@ public class ProjectModelTest extends BaseTest{
         MethodModel aMethod = new MethodModel("aMethod");
         assertTrue(methods.isEmpty());
         assertTrue(methodNames.isEmpty());
-        project.addMethod(aMethod);
+        try {
+            project.addMethod(aMethod);
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
         assertEquals(1, methods.size());
         assertTrue(methods.containsKey(aMethod.signature()));
         assertEquals(1, methodNames.size());
@@ -163,12 +167,88 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testAddDuplicateMethodSignature(){
-        HashMap projectMethods = (HashMap)this.getVariableFromClass(project, "methodDefinitions");
-        assertTrue(projectMethods.isEmpty());
-        project.addMethod(new MethodModel("aMethod"));
-        assertEquals(1, projectMethods.size());
-        project.addMethod(new MethodModel("aMethod"));
-        assertEquals(1, projectMethods.size()); //assert duplicate methodSignatures cant be made
+        HashMap<MethodSignature, LinkedList<MethodModel>> projectMethods = 
+                (HashMap)this.getVariableFromClass(project, "methodDefinitions");
+        MethodModel aMethod1 = null;
+        MethodModel aMethod2 = null;
+        try {
+            assertTrue(projectMethods.isEmpty());
+            aMethod1 = project.addMethod(new MethodModel("aMethod"));
+            assertEquals(1, projectMethods.size());
+            aMethod2 = project.addMethod(new MethodModel("aMethod"));
+            assertEquals(1, projectMethods.size()); //assert duplicate methodSignatures cant be made
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(aMethod1.signature(), aMethod2.signature());
+        assertEquals(2, projectMethods.get(aMethod1.signature()).size());
+        assertTrue( projectMethods.get(aMethod1.signature()).contains(aMethod1));
+        assertTrue( projectMethods.get(aMethod1.signature()).contains(aMethod2));
+    }
+    
+    @Test
+    public void testOverloadedMethods(){
+        HashMap<MethodSignature, LinkedList<MethodModel>> methodDefs = 
+                (HashMap)this.getVariableFromClass(project, "methodDefinitions");
+        HashMap<String, LinkedList<MethodSignature>> methodNames = 
+                (HashMap)this.getVariableFromClass(project, "methodNames");
+        
+        MethodModel method1 = new MethodModel("testMethod");
+        MethodModel method2 = new MethodModel("testMethod");
+        method2.arguments(new SortedList()
+                .addElm(new VariableModel("X", ClassModel.getPrimitive("int")))
+                .addElm(new VariableModel("Y", ClassModel.getPrimitive("char"))));
+        try {
+            project.addMethod(method1);
+            project.addMethod(method2);
+        } catch (AlreadyExistsException ex) {
+            fail(ex.getMessage());
+        }
+        assertEquals(1, methodNames.size());
+        assertEquals(2, methodNames.get("testMethod").size());
+        assertTrue(methodNames.get("testMethod").contains(method1.signature()));
+        assertTrue(methodNames.get("testMethod").contains(method2.signature()));
+        
+        assertEquals(2, methodDefs.size());
+        
+        assertEquals(1, methodDefs.get(method1.signature()).size());
+        assertTrue(methodDefs.get(method1.signature()).contains(method1));
+        assertFalse(methodDefs.get(method1.signature()).contains(method2));
+        
+        assertEquals(1, methodDefs.get(method2.signature()).size());
+        assertTrue(methodDefs.get(method2.signature()).contains(method2));
+        assertFalse(methodDefs.get(method2.signature()).contains(method1));
+        
+        try {
+            assertEquals(2, project.findMethods("testMethod").size());
+            assertTrue(project.findMethods("testMethod").contains(method1));
+            assertTrue(project.findMethods("testMethod").contains(method2));
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
+    @Test
+    public void testRemoveMethod(){
+        MethodModel aMethod = null;
+        HashMap methods = 
+                (HashMap)this.getVariableFromClass(project, "methodDefinitions");
+        HashMap methodNames = 
+                (HashMap)this.getVariableFromClass(project, "methodNames");
+        this.testAddMethod();
+        try {
+            aMethod = project.findMethods("aMethod").getFirst();
+            project.removeMethod(aMethod);
+        } catch (DoesNotExistException ex) {
+            fail(ex.getMessage());
+        }
+        try {
+            project.findMethods("aMethod");
+            fail("exception not thrown");
+        } catch (DoesNotExistException ex) {
+        }
+        assertFalse(methods.containsKey(aMethod.signature()));
+        assertFalse(methodNames.containsKey(aMethod.name()));
     }
     
     @Test
@@ -282,20 +362,6 @@ public class ProjectModelTest extends BaseTest{
         assertEquals(5, project.getClassList().size());
     }
     
-    @Test
-    public void testRemoveMethod(){
-        HashMap methods = (HashMap)this.getVariableFromClass(project, "methodDefinitions");
-        MethodModel aMethod = new MethodModel("someMethod");
-        project.addMethod(aMethod);
-        try {
-            project.removeMethod(aMethod);
-        } catch (BaseException ex) {
-            fail(ex.getMessage());
-        }
-        assertNull(project.getMethodDefinitions(aMethod));
-        assertFalse(methods.containsKey(aMethod.name()));
-        assertFalse(methods.containsValue(aMethod));
-    }
     
     @Test
     public void testGetMethodDefinitions(){

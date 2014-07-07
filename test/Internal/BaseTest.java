@@ -6,6 +6,7 @@ package Internal;
 
 import Exceptions.AlreadyExistsException;
 import Exceptions.BaseException;
+import Exceptions.DoesNotExistException;
 import MainBase.EventTester;
 import MainBase.Events.ModelEvents.ModelEventHandler;                   
 import MainBase.MainApplication;                   
@@ -17,7 +18,6 @@ import java.awt.BorderLayout;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -45,20 +39,12 @@ public class BaseTest {
     public ProjectModel parentProject;
     public PackageModel parentPackage;
     
-    public void setUpMain(){
-        this.main = new MainApplication();
-        try {
-            ProjectModel aProject = main.addProject(new ProjectModel("a project"));
-            main.setSelectedProejct(aProject);
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-    }
     
     public void setUp(){
-        this.setUpMain();
+        main = new MainApplication();
         try {
             parentProject  = main.addProject(new ProjectModel("parent project"));
+            main.setSelectedProejct(parentProject);
             parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
@@ -76,9 +62,13 @@ public class BaseTest {
     }
     
     protected ClassModel findClass(String name){
-        assertFalse(parentProject.findClass(name) == null);
+        try {
+            assertFalse(parentProject.findClass(name) == null);
+        } catch (DoesNotExistException ex) {
+            Logger.getLogger(BaseTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // if this failed, you probably misspelled the class-name
-        return parentProject.findClass(name);
+        return null;
     }
     
     /**

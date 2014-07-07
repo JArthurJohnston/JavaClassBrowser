@@ -19,6 +19,11 @@ public class ModelChangedEvent extends BaseModelUpdatedEvent{
     }
     
     @Override
+    public BaseModel getSource(){
+        return (BaseModel)super.getSource();
+    }
+    
+    @Override
     public boolean isChange(){
         return true;
     }

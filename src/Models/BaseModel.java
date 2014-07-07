@@ -112,4 +112,8 @@ public abstract class BaseModel {
     public boolean contains(BaseModel aModel){
         return false;
     }
+    
+    public PackageModel getParentPackage(){
+        return null;
+    }
 }

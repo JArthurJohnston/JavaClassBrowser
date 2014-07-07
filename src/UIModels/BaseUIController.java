@@ -78,16 +78,22 @@ public class BaseUIController implements ModelEventListener{
 
     @Override
     public void modelAdded(ModelAddedEvent e) {
+        if(this.shell() == null)
+            return;
         this.shell().modelAdded(e.getModel());
     }
 
     @Override
     public void modelRemoved(ModelRemovedEvent e) {
+        if(this.shell() == null)
+            return;
         this.shell().modelRemoved(e.getModel());
     }
 
     @Override
     public void modelChanged(ModelChangedEvent e) {
-        this.shell().modelChanged(e.getModel());
+        if(this.shell() == null)
+            return;
+        this.shell().modelChanged(e.getSource());
     }
 }

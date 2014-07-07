@@ -41,7 +41,7 @@ public class MethodlListPanelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        this.setUpMain();
+        super.setUp();
         panel = new MethodlListPanel();
     }
     

@@ -69,17 +69,17 @@ public class VariableModelTest extends BaseTest{
     @Test
     public void testToSourceString() {
         String expected = "private Type x;";
-        assertTrue(this.compareStrings(expected, var.toSourceString()));
+        this.compareStrings(expected, var.toSourceString());
         var.setScope(ScopeType.NONE);
         expected = "Type x;";
-        assertTrue(this.compareStrings(expected, var.toSourceString()));
+        this.compareStrings(expected, var.toSourceString());
     }
     
     @Test 
     public void testToSourceStringWithInitializedValue(){
         var.setValue("new Type()");
         String expected = "private Type x = new Type();";
-        assertTrue(this.compareStrings(expected, var.toSourceString()));
+        this.compareStrings(expected, var.toSourceString());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class VariableModelTest extends BaseTest{
     @Test
     public void testSetName(){
         var.setName("aNameString");
-        assertTrue(this.compareStrings("aNameString", var.name()));
+        this.compareStrings("aNameString", var.name());
         var.setName("aNameString");
         assertEquals("aNameString", var.name());
     }
@@ -104,7 +104,7 @@ public class VariableModelTest extends BaseTest{
     @Test
     public void testFinalVar(){
         var.setFinal(true);
-        assertTrue(this.compareStrings("private final Type x;", var.toSourceString()));
+        this.compareStrings("private final Type x;", var.toSourceString());
     }
     
 }

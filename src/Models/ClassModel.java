@@ -5,7 +5,6 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
-import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.VeryVeryBadException;
@@ -202,7 +201,7 @@ public class ClassModel extends PackageModel{
      * @return the ClassModel whose name equals className, or null if none found
      */
     @Override
-    public ClassModel findClass(String className){
+    public ClassModel findClass(String className) throws DoesNotExistException{
         if(className.compareTo("this") == 0)
             return this;
         return this.getProject().findClass(className);
@@ -214,23 +213,26 @@ public class ClassModel extends PackageModel{
      * use the long one in production
      * @param newMethod the method being added
      * @return the method being added
-     * @throws Exceptions.AlreadyExistsException
      */
-    public MethodModel addMethod(MethodModel newMethod) throws BaseException{
-        if(!this.okToAddMethod(newMethod.name()))
-            throw new AlreadyExistsException(this, newMethod);
+    @Override
+    public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException {
+        for(MethodModel mm : methods)
+            if(newMethod.hasSignatureOf(mm))
+                throw new AlreadyExistsException(this, newMethod);
         methods.add(newMethod);
-        this.getProject().addMethodDefinition(newMethod);
         newMethod.setParent(this);
+        fireAdded(this, this.getProject().addMethod(newMethod));
         return newMethod;
     }
     
-    //clearly doesnt work yet...
+    
     @Override
-    public MethodModel removeMethod(MethodModel aMethod){
-        if(methods.contains(aMethod)) 
-            return aMethod;
-        return null;
+    public MethodModel removeMethod(MethodModel aMethod) throws DoesNotExistException{
+        if(!methods.contains(aMethod))
+            throw new DoesNotExistException(this, aMethod);
+        methods.remove(aMethod);
+        fireRemoved(this, this.getProject().removeMethod(aMethod));
+        return aMethod;
     }
     
     public VariableModel removeVariable(VariableModel aVar) throws DoesNotExistException{

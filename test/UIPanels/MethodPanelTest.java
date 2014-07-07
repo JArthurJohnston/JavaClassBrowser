@@ -39,7 +39,7 @@ public class MethodPanelTest extends BaseTest{
     
     @Before
     public void setUp() {
-        this.setUpMain();
+        super.setUp();
         MockClassModel aClass = new MockClassModel("AClass");
             aClass.addMethod(new MethodModel("aMethod"));
             aClass.addMethod(new MethodModel("anotherMethod"));

@@ -189,4 +189,9 @@ public class VariableModel extends BaseModel{
     public BaseModelBuffer getBuffer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public PackageModel getParentPackage(){
+        return this.parent.getParentPackage();
+    }
 }

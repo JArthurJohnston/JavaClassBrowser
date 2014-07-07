@@ -5,7 +5,6 @@
 package Models;
 
 import Exceptions.AlreadyExistsException;
-import Exceptions.BaseException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.PackageDoesNotExistException;
@@ -97,6 +96,10 @@ public class ProjectModel extends BaseModel {
         return all;
     }
     
+    public MainApplication getMain(){
+        return main;
+    }
+    
     /*
      * Abstract Methods
      */
@@ -109,10 +112,6 @@ public class ProjectModel extends BaseModel {
     @Override
     public boolean isProject(){
         return true;
-    }
-    
-    protected PackageModel getParentPackage(){
-        return null;
     }
     
     public LinkedList<PackageModel> getPackageList(){
@@ -267,12 +266,19 @@ public class ProjectModel extends BaseModel {
     
     /**
      * adds a method to the project's method hash, or adds it to 
-     * an existing methods list of references or definitions
+     * an existing methods list of references or definitions.
+     * 
+     * This always sets the methods signature to an existing signature
+     * in the hash. unless said signature does not exits. Then garbage collection
+     * should come along and clean up the old signature that was generated
+     * by the method. This is done to ensure object equality when comparing
+     * signatures when adding new methods.
      * 
      * @param newMethod the method being added
      * @return the method being added
+     * @throws Exceptions.AlreadyExistsException
      */
-    public MethodModel addMethod(MethodModel newMethod){
+    public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException{
         MethodSignature sig = newMethod.signature();
         if(methodNames.containsKey(newMethod.name())){
             for(MethodSignature ms: methodNames.get(newMethod.name())){
@@ -282,6 +288,10 @@ public class ProjectModel extends BaseModel {
                     return newMethod;
                 }
             }
+            methodDefinitions.put(sig, new SortedList().addElm(newMethod));
+            methodNames.get(newMethod.name()).add(sig);
+            newMethod.signature(sig);//could just lazy init this on the method.... maybe...
+            return newMethod;
         }
         methodNames.put(newMethod.name(), new SortedList().addElm(sig));
         methodDefinitions.put(sig, new SortedList().addElm(newMethod));
@@ -314,24 +324,26 @@ public class ProjectModel extends BaseModel {
         return methodDefinitions.get(aMethod.signature());
     }
     
-    public MethodModel removeMethod(MethodModel aMethod) throws BaseException{
-        if(!methodDefinitions.get(aMethod.name()).remove(aMethod))
-            throw new VeryVeryBadException(this, aMethod);
-        if(methodDefinitions.get(aMethod.name()).isEmpty())
-            methodDefinitions.remove(aMethod.name());
+    public MethodModel removeMethod(MethodModel aMethod) throws DoesNotExistException{
+        if(!methodDefinitions.containsKey(aMethod.signature()))
+            throw new DoesNotExistException(this, aMethod);
+        if(!methodDefinitions.get(aMethod.signature()).remove(aMethod))
+            throw new DoesNotExistException(this, aMethod);
+        if(methodDefinitions.get(aMethod.signature()).isEmpty())
+            methodDefinitions.remove(aMethod.signature());
+        
+        if(!methodNames.containsKey(aMethod.name()))
+            throw new DoesNotExistException(this, aMethod);
+        if(!methodNames.get(aMethod.name()).remove(aMethod.signature()))
+            throw new DoesNotExistException(this, aMethod);
+        if(methodNames.get(aMethod.name()).isEmpty())
+            methodNames.remove(aMethod.name());
         return aMethod;
-        /*
-        need to add logic to warn the user if theyre removing a method with references
-        */
     }
     
     @Override
     public ProjectModel getProject(){
         return this;
-    }
-    
-    protected MainApplication getMain(){
-        return main;
     }
     
     public void setMain(MainApplication main){

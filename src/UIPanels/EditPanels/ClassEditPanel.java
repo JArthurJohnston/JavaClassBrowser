@@ -22,7 +22,7 @@ public class ClassEditPanel extends BaseEditPanel {
     }
     
     public void setModel(ClassModel aClass){
-        this.classDeclarationField.setText(aClass.getDeclaration());
+        this.classDescriptionField.setText(aClass.getDescription());
     }
 
     /**
@@ -35,45 +35,14 @@ public class ClassEditPanel extends BaseEditPanel {
     private void initComponents() {
 
         classDescriptionField = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        classDeclarationField = new javax.swing.JTextPane();
-        applyRevertPanel1 = new UIPanels.EditPanels.ApplyRevertPanel();
 
-        jScrollPane1.setViewportView(classDeclarationField);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(classDescriptionField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 263, Short.MAX_VALUE)
-                        .addComponent(applyRevertPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(7, 7, 7)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(classDescriptionField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(applyRevertPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        setLayout(new java.awt.BorderLayout());
+        add(classDescriptionField, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private UIPanels.EditPanels.ApplyRevertPanel applyRevertPanel1;
-    private javax.swing.JTextPane classDeclarationField;
     private javax.swing.JLabel classDescriptionField;
-    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     @Override

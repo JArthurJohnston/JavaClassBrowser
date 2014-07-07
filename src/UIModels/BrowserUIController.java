@@ -20,9 +20,7 @@ import java.util.LinkedList;
  */
 public class BrowserUIController extends BaseUIController{
     private SystemBrowserShell shell;
-    private PackageModel selectedPackage;
     private BaseModel selectedModel;
-    private ClassModel selectedClass;
     private ClassNode allClassNode;
     private PackageNode allPackageNode;
     
@@ -33,7 +31,19 @@ public class BrowserUIController extends BaseUIController{
     
     public BrowserUIController(MainApplication main){
         super(main);
+        this.setUpFromMain();
         shell = new SystemBrowserShell(this);
+    }
+    
+    protected BrowserUIController(ProjectModel aProject){
+        super(aProject.getMain());
+        this.setUpFromMain();
+    }
+    
+    private void setUpFromMain(){
+        if(main.getSelectedProject() != null){
+            this.selectedModel = main.getSelectedProject().getAllPackage();
+        }
     }
     
     @Override
@@ -49,16 +59,27 @@ public class BrowserUIController extends BaseUIController{
     
     public ClassModel getSelectedClass(){
         //needs to be refactored. just ask the shell for its selected class
-        if(selectedClass == null)
-            if(!selectedProject.getClassList().isEmpty())
-                selectedClass = selectedProject.getClassList().getFirst();
-        return this.selectedClass;
+        if(selectedModel.isClass())
+            return (ClassModel)selectedModel;
+        return null;
+    }
+    
+    public MethodModel getSelectedMethod(){
+        if(selectedModel.isMethod())
+            return (MethodModel)selectedModel;
+        return null;
+    }
+    
+    public VariableModel getSelectedVariable(){
+        if(selectedModel.isMethod())
+            return (VariableModel)selectedModel;
+        return null;
     }
     
     public PackageModel getSelectedPackage(){
-        if(selectedPackage == null)
-            selectedPackage = selectedProject.getDefaultPackage();
-        return selectedPackage;
+        if(selectedModel.isPackage())
+            return (PackageModel)selectedModel;
+        return null;
     }
     
     public LinkedList<PackageModel> getPackages(){
@@ -86,10 +107,6 @@ public class BrowserUIController extends BaseUIController{
         if(aModel == null)
             return;
         selectedModel = aModel;
-        if(aModel.isClass())
-            selectedClass = (ClassModel)aModel;
-        if(aModel.isPackage())
-            selectedPackage = (PackageModel)aModel;
         shell.selectionChanged(aModel);
     }
     

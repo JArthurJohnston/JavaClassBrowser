@@ -40,6 +40,8 @@ public class PackageTreePanel extends BaseTreePanel {
     @Override
     public void setModel(BrowserUIController controller){
         super.setModel(controller);
+        if(controller.getSelectedProject() == null)
+            return;
         this.getRootNode();
     }
     
