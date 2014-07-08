@@ -110,7 +110,7 @@ public class ProjectModel extends BaseModel {
     }
     
     @Override
-    public boolean isProject(){
+    public boolean isProject() {
         return true;
     }
     
@@ -147,13 +147,13 @@ public class ProjectModel extends BaseModel {
     /*
      * Setters
      */
-    public void setUserName(String newUserName){
+    public void setUserName(String newUserName) {
         this.userName = newUserName;
         fireChanged(this);
     }
     
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return "Project Name: "+this.name+"\n"+
                 "Author: "+this.getUserName()+"\n"+
                 "Date Created: "+this.getDateCreated().toString()+"\n"+
