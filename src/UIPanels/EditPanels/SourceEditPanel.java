@@ -8,11 +8,10 @@ package UIPanels.EditPanels;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
@@ -28,6 +27,7 @@ public class SourceEditPanel extends BaseEditPanel {
     private StyleContext sc = StyleContext.getDefaultStyleContext();
     private DefaultStyledDocument doc = new DefaultStyledDocument(sc);
     private Style sourceStyle;
+    private Style defaultStyle;
 
     /**
      * Creates new form SourceEditPanel
@@ -35,6 +35,7 @@ public class SourceEditPanel extends BaseEditPanel {
     public SourceEditPanel() {
         initComponents();
         this.sourceEditPane.setDocument(doc);
+        this.defaultStyle = this.setUpDefaultStyle();
         this.sourceStyle = this.setUpSourceStyle();
         try {
             doc.insertString(0, "just some test text.", null);
@@ -53,10 +54,19 @@ public class SourceEditPanel extends BaseEditPanel {
         return ss;
     }
     
+    private Style setUpDefaultStyle(){
+        return sc.addStyle("default", null);
+    }
+    
     private void setUpInputAndActionMaps(){
+        this.addInputMap(KeyStroke.getKeyStroke("SPACE"),
+                colorCode(), "colorCode");
+    }
+    
+    private void addInputMap(KeyStroke stroke, Action a, String label){
         this.sourceEditPane.getInputMap()
-                .put(KeyStroke.getKeyStroke("SPACE"), "colorCode");
-        this.sourceEditPane.getActionMap().put("colorCode", colorCode());
+                .put(stroke, label);
+        this.sourceEditPane.getActionMap().put(label, a);
     }
     
     private Action colorCode(){
@@ -72,8 +82,12 @@ public class SourceEditPanel extends BaseEditPanel {
     private void colorCodeSegment(){
         int start =  this.sourceEditCursorPosition;
         this.sourceEditCursorPosition = this.sourceEditPane.getCaretPosition();
-            doc.setCharacterAttributes(start, 
-                    this.sourceEditCursorPosition, sourceStyle, false);
+        doc.setCharacterAttributes(start, 
+            this.sourceEditCursorPosition, sourceStyle, false);
+        /*
+        doc.setCharacterAttributes(sourceEditCursorPosition, 
+                sourceEditCursorPosition, this.defaultStyle, false);
+        */
     }
     
 

@@ -79,7 +79,7 @@ public class PackageModel extends ProjectModel {
     }
     
     @Override
-    protected MainApplication getMain(){
+    public MainApplication getMain(){
         return this.getProject().getMain();
     }
     
