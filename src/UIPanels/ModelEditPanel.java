@@ -4,14 +4,12 @@
  */
 package UIPanels;
 
-import Models.BaseModel;
-import Models.MethodModel;
 import UIModels.Buffer.BaseModelBuffer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- *
+ * Deprecated
  * @author Arthur
  */
 public class ModelEditPanel extends BasePanel{
@@ -28,22 +26,6 @@ public class ModelEditPanel extends BasePanel{
     }
     
     private void updateModel(){
-        buffer.saveToModel();
-    }
-    
-    private DocumentListener setUpDocListener(){
-        return new DocumentListener(){
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateModel();
-            }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateModel();
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e) {}
-        };
     }
 
     /**

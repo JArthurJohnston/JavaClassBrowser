@@ -90,7 +90,7 @@ public class SystemBrowserShell extends BaseUIShell {
         jSplitPane1 = new javax.swing.JSplitPane();
         classBrowserPanel = new UIPanels.SelectedClassPanel();
         packageTree = new UIPanels.TreePanels.PackageTreePanel();
-        modelEditPanel = new UIPanels.ModelEditPanel();
+        modelEditPanel = new UIPanels.EditPanels.ModelEditPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         addPackageMenuItem = new javax.swing.JMenuItem();
@@ -169,7 +169,7 @@ public class SystemBrowserShell extends BaseUIShell {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private UIPanels.ModelEditPanel modelEditPanel;
+    private UIPanels.EditPanels.ModelEditPanel modelEditPanel;
     private UIPanels.TreePanels.PackageTreePanel packageTree;
     // End of variables declaration//GEN-END:variables
 

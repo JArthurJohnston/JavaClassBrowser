@@ -6,11 +6,13 @@
 
 package UIPanels.EditPanels;
 
+import UIPanels.BasePanel;
+
 /**
  *
  * @author arthur
  */
-public class ModelEditPanel extends javax.swing.JPanel {
+public class ModelEditPanel extends BasePanel {
 
     /**
      * Creates new form ModelEditPanel
@@ -28,14 +30,29 @@ public class ModelEditPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        commentEditor = new javax.swing.JTabbedPane();
+        sourceEditor = new UIPanels.EditPanels.SourceEditPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setLayout(new java.awt.BorderLayout());
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        commentEditor.addTab("Source", sourceEditor);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        commentEditor.addTab("Comment", jScrollPane1);
+
+        add(commentEditor, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane commentEditor;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private UIPanels.EditPanels.SourceEditPanel sourceEditor;
     // End of variables declaration//GEN-END:variables
 }

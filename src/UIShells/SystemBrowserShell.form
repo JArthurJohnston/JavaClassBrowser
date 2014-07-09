@@ -91,7 +91,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="UIPanels.ModelEditPanel" name="modelEditPanel">
+        <Component class="UIPanels.EditPanels.ModelEditPanel" name="modelEditPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
               <JSplitPaneConstraints position="right"/>

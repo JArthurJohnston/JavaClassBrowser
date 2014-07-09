@@ -7,9 +7,11 @@
 package UIPanels.EditPanels;
 
 import java.awt.Color;
-import javax.swing.text.AttributeSet;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
@@ -18,29 +20,48 @@ import javax.swing.text.StyleContext;
  * @author arthur
  */
 public class SourceEditPanel extends BaseEditPanel {
-    private final StyleContext cont = StyleContext.getDefaultStyleContext();
-    private final AttributeSet attr = 
-            cont.addAttribute(cont.getEmptySet(), 
-                    StyleConstants.Foreground, Color.BLUE);
-    private DefaultStyledDocument doc;
-    private StyleContext context;
-    private SimpleAttributeSet attributes;
+    private int sourceEditCursorPosition;
+    private StyleContext sc = StyleContext.getDefaultStyleContext();
+    private DefaultStyledDocument doc = new DefaultStyledDocument(sc);
 
     /**
      * Creates new form SourceEditPanel
      */
     public SourceEditPanel() {
-        doc = new DefaultStyledDocument();
-        context = new StyleContext();
         initComponents();
-        this.sourceEditPane.setStyledDocument(doc);
+        this.sourceEditPane.setDocument(doc);
+        try {
+            doc.insertString(0, "just some test text.", null);
+            doc.setCharacterAttributes(0, 5, this.setUpSourceStyle(), false);
+            doc.addDocumentListener(this.setUpDocListener());
+        } catch (BadLocationException ex) {
+            System.err.println("Exception when constructing doc" + ex);
+            System.exit(1);
+        }
     }
     
-    private StyleContext setUpContext(){
-        StyleContext cont = new StyleContext();
-        cont.addStyle("private", null);
-        return cont;
+    private Style setUpSourceStyle(){
+        Style ss = sc.addStyle("JavaReservedWords", null);
+        ss.addAttribute(StyleConstants.Foreground, Color.blue);
+        ss.addAttribute(StyleConstants.Bold, true);
+        return ss;
     }
+    
+    private DocumentListener setUpDocListener(){
+        return new DocumentListener(){
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateModel();
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateModel();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {}
+        };
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
