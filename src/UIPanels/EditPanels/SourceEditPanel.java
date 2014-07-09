@@ -7,6 +7,10 @@
 package UIPanels.EditPanels;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -23,6 +27,7 @@ public class SourceEditPanel extends BaseEditPanel {
     private int sourceEditCursorPosition;
     private StyleContext sc = StyleContext.getDefaultStyleContext();
     private DefaultStyledDocument doc = new DefaultStyledDocument(sc);
+    private Style sourceStyle;
 
     /**
      * Creates new form SourceEditPanel
@@ -30,14 +35,15 @@ public class SourceEditPanel extends BaseEditPanel {
     public SourceEditPanel() {
         initComponents();
         this.sourceEditPane.setDocument(doc);
+        this.sourceStyle = this.setUpSourceStyle();
         try {
             doc.insertString(0, "just some test text.", null);
-            doc.setCharacterAttributes(0, 5, this.setUpSourceStyle(), false);
-            doc.addDocumentListener(this.setUpDocListener());
+            doc.setCharacterAttributes(0, 5, sourceStyle, false);
         } catch (BadLocationException ex) {
             System.err.println("Exception when constructing doc" + ex);
             System.exit(1);
         }
+        this.setUpInputAndActionMaps();
     }
     
     private Style setUpSourceStyle(){
@@ -47,19 +53,27 @@ public class SourceEditPanel extends BaseEditPanel {
         return ss;
     }
     
-    private DocumentListener setUpDocListener(){
-        return new DocumentListener(){
+    private void setUpInputAndActionMaps(){
+        this.sourceEditPane.getInputMap()
+                .put(KeyStroke.getKeyStroke("SPACE"), "colorCode");
+        this.sourceEditPane.getActionMap().put("colorCode", colorCode());
+    }
+    
+    private Action colorCode(){
+        return new AbstractAction(){
+
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateModel();
+            public void actionPerformed(ActionEvent e) {
+                colorCodeSegment();
             }
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateModel();
-            }
-            @Override
-            public void changedUpdate(DocumentEvent e) {}
         };
+    }
+    
+    private void colorCodeSegment(){
+        int start =  this.sourceEditCursorPosition;
+        this.sourceEditCursorPosition = this.sourceEditPane.getCaretPosition();
+            doc.setCharacterAttributes(start, 
+                    this.sourceEditCursorPosition, sourceStyle, false);
     }
     
 
