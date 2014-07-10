@@ -28,12 +28,15 @@ public class SourceEditPanel extends BaseEditPanel {
     private DefaultStyledDocument doc = new DefaultStyledDocument(sc);
     private Style sourceStyle;
     private Style defaultStyle;
+    
+    private boolean isDeleting;
 
     /**
      * Creates new form SourceEditPanel
      */
     public SourceEditPanel() {
         initComponents();
+        this.isDeleting = false;
         this.sourceEditPane.setDocument(doc);
         this.defaultStyle = this.setUpDefaultStyle();
         this.sourceStyle = this.setUpSourceStyle();
@@ -61,6 +64,9 @@ public class SourceEditPanel extends BaseEditPanel {
     private void setUpInputAndActionMaps(){
         this.addInputMap(KeyStroke.getKeyStroke("SPACE"),
                 colorCode(), "colorCode");
+        this.addInputMap(KeyStroke.getKeyStroke("BACK_SPACE"),
+                blackenCode(), "deleteCode");
+        
     }
     
     private void addInputMap(KeyStroke stroke, Action a, String label){
@@ -71,7 +77,6 @@ public class SourceEditPanel extends BaseEditPanel {
     
     private Action colorCode(){
         return new AbstractAction(){
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 colorCodeSegment();
@@ -79,15 +84,46 @@ public class SourceEditPanel extends BaseEditPanel {
         };
     }
     
+    private Action blackenCode(){
+        return new AbstractAction(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                blackenCodeOnDelete();
+            }
+        };
+    }
+    
     private void colorCodeSegment(){
-        int start =  this.sourceEditCursorPosition;
+        this.colorText(this.sourceEditCursorPosition, 
+                this.sourceEditPane.getCaretPosition(), sourceStyle);
         this.sourceEditCursorPosition = this.sourceEditPane.getCaretPosition();
-        doc.setCharacterAttributes(start, 
-            this.sourceEditCursorPosition, sourceStyle, false);
-        /*
-        doc.setCharacterAttributes(sourceEditCursorPosition, 
-                sourceEditCursorPosition, this.defaultStyle, false);
-        */
+    }
+    
+    private void colorText(int start, int end, Style style){
+        doc.setCharacterAttributes(start, end, style, false);
+    }
+    
+    private void blackenCodeOnDelete(){
+        if(!isDeleting){
+            isDeleting = true;
+            int position = this.sourceEditPane.getCaretPosition();
+            while(!this.isDelimeter(--position));
+            this.colorText(sourceEditCursorPosition, 
+                    this.sourceEditPane.getCaretPosition(), sourceStyle);
+            isDeleting = false;
+        }
+    }
+    
+    private boolean isDelimeter(int index){
+        if(index <=0)
+            return false;
+        char c = this.sourceEditPane.getText().charAt(index);
+        return c == ' ' ||
+                c == '.' ||
+                c == '(' ||
+                c == ')' ||
+                c == '{' ||
+                c == '}';
     }
     
 
