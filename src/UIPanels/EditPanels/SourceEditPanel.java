@@ -114,6 +114,19 @@ public class SourceEditPanel extends BaseEditPanel {
         }
     }
     
+    private void applyStylesToSource(){
+        for(int i=0; i < sourceEditPane.getCaretPosition(); i++){
+            
+        }
+    }
+    
+    /*
+    how about this, whenever the user types a delemiter, it triggers a method that will
+    loop through the whole string and colors certain words. hitting the backspace will kill any currently
+    running loops.
+    might want to do this in a seperate thread or process.
+    */
+    
     private boolean isDelimeter(int index){
         if(index <=0)
             return false;
