@@ -31,8 +31,7 @@ public class ClassModel extends PackageModel{
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
     
-    private static HashMap <String, ClassModel> PRIMITIVE_TYPES
-            = new HashMap();
+    private static HashMap <String, ClassModel> PRIMITIVE_TYPES;
     private static ClassModel OBJECT_CLASS;
     
     protected ClassModel(){
@@ -92,9 +91,11 @@ public class ClassModel extends PackageModel{
     }
     
     public static ClassModel getPrimitive(String aString){
-        if(getPrimitiveTypes().contains(aString))
-            if(!PRIMITIVE_TYPES.containsKey(aString))
-                PRIMITIVE_TYPES.put(aString, new ClassModel(aString));
+        if(PRIMITIVE_TYPES == null){
+            PRIMITIVE_TYPES = new HashMap();
+            for(String s : new String[]{"int", "long", "float", "double", "char", "boolean", "byte"})
+                PRIMITIVE_TYPES.put(s, new ClassModel(s));
+        }
         return PRIMITIVE_TYPES.get(aString);
     }
     

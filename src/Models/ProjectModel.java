@@ -353,7 +353,7 @@ public class ProjectModel extends BaseModel {
     
     public ClassModel findClass(String aClassName) throws DoesNotExistException{
         if(classes.get(aClassName) == null)
-            if(ClassModel.getPrimitiveTypes().contains(aClassName))
+            if(ClassModel.getPrimitive(aClassName) != null)
                 return ClassModel.getPrimitive(aClassName);
         if(classes.get(aClassName) == null)
             throw new DoesNotExistException(this, aClassName);

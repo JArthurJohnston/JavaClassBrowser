@@ -426,6 +426,9 @@ public class ClassModelTest extends BaseModelTest{
     
     @Test
     public void testNameChange(){
+        /*
+        needs to be wrapped up into re-factoring logic. 
+        */
         try {
             parentPackage.addClass(new ClassModel("OneName"));
         } catch (AlreadyExistsException ex) {
@@ -437,12 +440,6 @@ public class ClassModelTest extends BaseModelTest{
         } catch (AlreadyExistsException ex) {}
         assertEquals("InstanceClass", testClass.name());
         //assert other instances of the class have been renamed
-        /*
-        oh fuck. each class would have to have its own listener...
-        OR
-        each class can store a listof its references, and just iterate through 
-        that. fireing changedEvents as it goes.
-        */
     }
     
     
