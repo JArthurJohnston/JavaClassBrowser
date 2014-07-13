@@ -12,8 +12,6 @@ import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import MainBase.SortedList;
 import Models.MethodModel.MethodSignature;
-import Types.ClassType;
-import Types.ScopeType;
 import UIModels.Buffer.BaseModelBuffer;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +30,7 @@ public class ProjectModel extends BaseModel {
     private HashMap <MethodSignature, LinkedList<MethodModel>> methodDefinitions;
     private HashMap <String, LinkedList<MethodSignature>> methodNames;
     private HashMap <String, PackageModel> packages;
+    private static HashMap <String, String> RESERVED_WORDS;
     protected LinkedList<PackageModel> packageList;
     private String userName;
     
@@ -54,27 +53,19 @@ public class ProjectModel extends BaseModel {
     }
     
     
-    public static SortedList<String> getReservedWords(){
-        return new SortedList()
-                    .addElm("return")
-                    .addElm("enum")
-                    .addElm("final")
-                    .addElm("synchronized")
-                    .addElm("extends")
-                    .addElm("implements")
-                    .addElm("static")
-                    .addElm("default")
-                    .addElm("interface")
-                    .addElm("try")
-                    .addElm("catch")
-                    .addElm("break")
-                    .addElm("for")
-                    .addElm("if")
-                    .addElm("else")
-                    .addElm("new")
-                .addElements(ClassModel.getPrimitiveTypes())
-                .addElements(ScopeType.getStringValues())
-                .addElements(ClassType.getStringValues());
+    public static HashMap<String, String> getReservedWords(){
+        if(RESERVED_WORDS == null){
+            RESERVED_WORDS = new HashMap();
+            for(String s : new String[]{"return", "enum", "final", "synchronized", 
+                "extends", "implements", "static", "default", "interface", "", 
+                "try", "catch", "break", "for", "if", "else", "new", "static", 
+                "public", "private", "protected"}) {
+                    RESERVED_WORDS.put(s, s);
+            }
+            for(String s : ClassModel.getPrimitiveTypes())
+                RESERVED_WORDS.put(s, s);
+        }
+        return RESERVED_WORDS;
     }
     
     private void initialize(){

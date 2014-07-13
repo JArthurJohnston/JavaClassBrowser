@@ -50,15 +50,10 @@ public class ClassModel extends PackageModel{
         this.name = name;
     }
     
-    public static SortedList<String> getPrimitiveTypes(){
-        return new SortedList()
-                    .addElm("int")
-                    .addElm("byte")
-                    .addElm("long")
-                    .addElm("char")
-                    .addElm("float")
-                    .addElm("double")
-                    .addElm("void");
+    public static String[] getPrimitiveTypes(){
+        return new String[]{
+            "int", "byte", "long", "char", "float", "double", "void", "boolean"
+        }; 
     }
     
     public void setAbstract(boolean isAbstract){
@@ -93,7 +88,7 @@ public class ClassModel extends PackageModel{
     public static ClassModel getPrimitive(String aString){
         if(PRIMITIVE_TYPES == null){
             PRIMITIVE_TYPES = new HashMap();
-            for(String s : new String[]{"int", "long", "float", "double", "char", "boolean", "byte"})
+            for(String s : getPrimitiveTypes())
                 PRIMITIVE_TYPES.put(s, new ClassModel(s));
         }
         return PRIMITIVE_TYPES.get(aString);
@@ -112,7 +107,10 @@ public class ClassModel extends PackageModel{
     }
     
     public boolean isPrimitive(){
-        return ClassModel.getPrimitiveTypes().contains(this.name());
+        for(String type : getPrimitiveTypes())
+            if(type.compareTo(this.name()) == 0)
+                return true;
+        return false;
     }
     
     public boolean okToAddMethod(String newMethodName){

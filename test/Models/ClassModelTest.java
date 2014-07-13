@@ -13,6 +13,7 @@ import MainBase.EventTester;
 import MainBase.Events.ModelEvents.BaseModelUpdatedEvent;
 import MainBase.Events.ModelEvents.ModelAddedEvent;
 import MainBase.MainApplication;
+import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
@@ -131,6 +132,31 @@ public class ClassModelTest extends BaseModelTest{
             assertEquals(CannotBeDeletedException.class, ex.getClass());
         }
         assertTrue(testClass.getClassList().contains(classToBeRemoved));
+    }
+    
+    @Test
+    public void testMethodDefinitions() throws Exception{
+        MethodModel methodOne = testClass.addMethod(new MethodModel("methodOne"));
+        assertEquals(1, parentProject.getMethodDefinitions(methodOne).size());
+        assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodOne));
+        
+        ClassModel classTwo = parentPackage.addClass(new ClassModel("ClassTwo"));
+        MethodModel methodTwo = classTwo.addMethod(new MethodModel("methodOne"));
+        
+        assertEquals(2, parentProject.getMethodDefinitions(methodTwo).size());
+        assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodOne));
+        assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodTwo));
+    }
+    
+    @Test
+    public void testOverloadedMethodDefinitions() throws Exception{
+        MethodModel methodOne = new MethodModel("someMethod");
+        methodOne.arguments(new SortedList<VariableModel>()
+                .addElm(new VariableModel("intX", ClassModel.getPrimitive("int")))
+                .addElm(new VariableModel("charY", ClassModel.getPrimitive("char"))));
+        testClass.addMethod(methodOne);
+        
+        assertEquals(1, parentProject.getMethodDefinitions(methodOne).size());
     }
     
     @Test
@@ -414,14 +440,8 @@ public class ClassModelTest extends BaseModelTest{
     }
     
     @Test
-    public void testRemove(){
+    public void testRemove() throws Exception{
         fail();
-        //assert that this works
-        try {
-            testClass.remove();
-        } catch (CannotBeDeletedException | VeryVeryBadException ex) {
-            fail(ex.getMessage());
-        }
     }
     
     @Test
@@ -487,6 +507,7 @@ public class ClassModelTest extends BaseModelTest{
     
     @Test
     public void testAddDuplicateClassDoenstFireEvent(){
+        //cant remember why I wrote this...
         fail();
     }
     

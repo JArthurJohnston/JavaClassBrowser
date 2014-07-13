@@ -17,6 +17,7 @@ import Models.ProjectModel.AllPackage;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -411,9 +412,11 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testReservedWords(){
-        assertEquals(31, ProjectModel.getReservedWords().size());
-        SortedList<String> copy = new SortedList().addElements(ProjectModel.getReservedWords());
-        for(String s : ProjectModel.getReservedWords())
+        assertEquals(27, ProjectModel.getReservedWords().size());
+        LinkedList<String> copy = new LinkedList();
+        for(String s : ProjectModel.getReservedWords().keySet())
+            copy.add(s);
+        for(String s : ProjectModel.getReservedWords().keySet())
             if(!copy.remove(s))
                 fail();
         //^asserts that there are no duplicates in getReservedWords()
