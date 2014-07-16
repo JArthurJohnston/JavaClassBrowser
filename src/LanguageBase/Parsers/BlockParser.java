@@ -5,17 +5,23 @@
  */
 package LanguageBase.Parsers;
 
+import Exceptions.DoesNotExistException;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import LanguageBase.Parsers.Stacks.BracketStack;
 import Models.BaseModel;
+import Models.ProjectModel;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author arthur
  */
 public class BlockParser extends BaseParseTree {
+    private BaseModel model;
     private BracketStack stack; 
     private int statementStart, lineCount;
     private BlockNode root;
@@ -38,6 +44,7 @@ public class BlockParser extends BaseParseTree {
     
     public BlockParser(BaseModel aModel){
         this();
+        this.model = aModel;
         this.source = aModel.toSourceString();
         this.startParse();
     }
@@ -115,6 +122,12 @@ public class BlockParser extends BaseParseTree {
             index++;
         }
     }
+    
+    private ProjectModel project(){
+        if(model == null)
+            return null;
+        return model.getProject();
+    }
 
     /**
      * Used for do and else statements.
@@ -187,6 +200,22 @@ public class BlockParser extends BaseParseTree {
             return source();
         root.isSingleStatement(true); //a hack, to stop root from printing {}
         return root.getFormattedSource();
+    }
+    
+    public void findReferences(String source){
+        for(String token : source.split("[{(., )}]"))
+            if(!ProjectModel.getReservedWords().containsKey(token)){
+                try {
+                    if(this.project().findClass(token)!= null)
+                        references.put(token, this.project().findClass(token));
+                } catch (DoesNotExistException ex) {
+                    //add not found tokens to list
+                }
+            }
+    }
+    
+    public HashMap<String, BaseModel> getReferences(){
+        return references;
     }
 
 }

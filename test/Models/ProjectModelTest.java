@@ -17,7 +17,6 @@ import Models.ProjectModel.AllPackage;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -46,12 +45,14 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Before
+    @Override
     public void setUp() {
         super.setUp();
         project = parentProject;
     }
     
     @After
+    @Override
     public void tearDown() {
         super.tearDown();
         project = null;
@@ -509,6 +510,17 @@ public class ProjectModelTest extends BaseTest{
         } catch (DoesNotExistException ex) {
             fail(ex.getMessage());
         }
+    }
+    
+    @Test
+    public void testFindMethod(){
+        fail();
+        project.findMethods("someMethod", ClassModel parentClass); //???
+        /*
+        make a method where we try to find a single method with a given class
+        call findMethods() then iterate through the list of methods until you 
+        find one whose class is == the given parentClass?
+        */
     }
     
 }

@@ -74,12 +74,20 @@ public class VariableModel extends BaseModel{
     public ClassType getType(){
         return staticOrInstance;
     }
+    
     public String getValue(){
         return value;
     }
-    public ClassModel getParent(){
+    
+    public ClassModel getParentClass(){
         return parent;
     }
+    
+    @Override
+    public PackageModel getParentPackage(){
+        return parent.getParentPackage();
+    }
+    
     @Override
     public ProjectModel getProject(){
         return parent.getProject();
@@ -188,10 +196,5 @@ public class VariableModel extends BaseModel{
     @Override
     public BaseModelBuffer getBuffer() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public PackageModel getParentPackage(){
-        return this.parent.getParentPackage();
     }
 }

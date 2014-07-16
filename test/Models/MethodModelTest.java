@@ -41,10 +41,11 @@ public class MethodModelTest extends BaseTest{
     @Before
     public void setUp() {
         super.setUp();
-        main = new MainApplication();
+        
         try {
-            method = this.setUpClassWithName("ParentClass")
-                    .addMethod(new MethodModel("aMethod"));
+            ClassModel parentClass = parentPackage
+                    .addClass(new ClassModel("ParentClass"));
+            method = parentClass.addMethod(new MethodModel("aMethod"));
         } catch (BaseException ex) {
             fail(ex.getMessage());
         }
@@ -138,6 +139,12 @@ public class MethodModelTest extends BaseTest{
                 (LinkedList)this.getVariableFromClass(method, "arguments");
         assertEquals(0, params.size());
         fail("Write more of me!");
+    }
+    
+    @Test
+    public void testGetParentClass(){
+        assertSame(ClassModel.class, method.getParentClass().getClass());
+        assertEquals("ParentClass", method.getParentClass().name());
     }
 
     /**
@@ -235,5 +242,12 @@ public class MethodModelTest extends BaseTest{
     @Test
     public void testGetParentPackage(){
         assertEquals(parentPackage, method.getParentPackage());
+    }
+    
+    @Test
+    public void testMethodWithObjectType(){
+        method.setReturnType(ClassModel.getObjectClass());
+        method.setName("someMethod");
+        this.compareStrings("Object someMethod(){\n\n}", method.toSourceString());
     }
 }

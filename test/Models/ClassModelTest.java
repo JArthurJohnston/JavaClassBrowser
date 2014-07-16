@@ -246,7 +246,7 @@ public class ClassModelTest extends BaseModelTest{
             testClass.addVariable(var);
             fail("exception not thrown");
         } catch (AlreadyExistsException ex) {}
-        assertEquals(testClass, var.getParent());
+        assertEquals(testClass, var.getParentClass());
     }
     
     @Test

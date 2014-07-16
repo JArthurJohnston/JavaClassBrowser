@@ -59,9 +59,15 @@ public class BrowserUIController extends BaseUIController{
     
     public ClassModel getSelectedClass(){
         //needs to be refactored. just ask the shell for its selected class
+        //alternatively I could replace all this casting with an interface.
         if(selectedModel.isClass())
             return (ClassModel)selectedModel;
+        if(selectedModel.isMethod())
+            return ((MethodModel)selectedModel).getParentClass();
+        if(selectedModel.isVariable())
+            return ((VariableModel)selectedModel).getParentClass();
         return null;
+        //^this wont work, inless variables have a handle on their parent class
     }
     
     public MethodModel getSelectedMethod(){
@@ -119,8 +125,7 @@ public class BrowserUIController extends BaseUIController{
                 new VariableModel(
                         aType, 
                         new ClassModel("Object"), 
-                        "newVariable").setParent(selectedClass)
-        );
+                        "newVariable").setParent(getSelectedClass()));
     }
     
     public AddVariableDialogue openAddVariable(){

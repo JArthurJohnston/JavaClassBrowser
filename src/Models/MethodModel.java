@@ -19,7 +19,6 @@ public class MethodModel extends ClassModel{
     private LinkedList<VariableModel> arguments;
     private LinkedList references;
     protected ClassModel returnType;
-    
     private MethodSignature signature;
     
     public MethodModel(){
@@ -192,7 +191,7 @@ public class MethodModel extends ClassModel{
     
     public String getSignarureString(){
         return this.scopeString() + 
-                    this.returnType.toString().toLowerCase() +" "+ 
+                    this.getReturnType().toString() +" "+ 
                         this.name();
     }
     
@@ -229,6 +228,10 @@ public class MethodModel extends ClassModel{
     @Override
     public PackageModel getParentPackage(){
         return this.parent.getParentPackage();
+    }
+    
+    public ClassModel getParentClass(){
+        return (ClassModel)this.parent;
     }
     
     /**

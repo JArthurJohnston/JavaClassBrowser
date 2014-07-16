@@ -7,14 +7,11 @@
 package LanguageBase.Parsers;
 
 import Exceptions.AlreadyExistsException;
-import Exceptions.BaseException;
 import Internal.BaseTest;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.ClassModel;
 import Models.MethodModel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -383,7 +380,52 @@ public class BlockParserTest extends BaseTest{
     }
     
     @Test
-    public void testGetSourceReferences(){
+    public void testParseSimpleMethodString(){
+        String source = "someMethod(){"
+                + "someStatement();"
+                + "someOtherStatement();"
+                + "}";
+        this.initializeParserWithSource(source);
+        assertEquals(1, root.getStatements().size());
+        this.compareStrings("someMethod()", root.getStatements().getFirst().getSource());
         
+    }
+    
+    @Test
+    public void testReferenceSource() throws Exception{
+        ClassModel classA = parentPackage.addClass(new ClassModel("ClassA"));
+        MethodModel methodOne = classA.addMethod(new MethodModel("methodOne"));
+        ClassModel classB = parentPackage.addClass(new ClassModel("ClassB"));
+        MethodModel methodTwo = classB.addMethod(new MethodModel("methodTwo"));
+        
+        parser = new BlockParser(methodOne);
+        String source = "ClassA aThing = new ClassA(); aThing.methodOne()";
+        parser.findReferences(source);
+        
+        assertTrue(parser.getReferences().containsValue(classA));
+        assertEquals(2, parser.getReferences().size());
+        
+    }
+    
+    @Test
+    public void testParseSimpleMethodModel()throws Exception{
+        ClassModel aClass = parentPackage.addClass(new ClassModel("TestClass"));
+        aClass.addMethod(new MethodModel("someOtherMethod"));
+        MethodModel aMethod = aClass.addMethod(new MethodModel("someMethod"));
+        aMethod.setReturnType(ClassModel.getObjectClass());
+        aMethod.setSource("int x = 5;\nsomeOtherMethod();");
+        
+        parser = new BlockParser(aMethod);
+        root = parser.getTree();
+        assertEquals(1, root.getStatements().size());
+        StatementNode statement = root.getStatements().getFirst();
+        this.compareStrings("Object someMethod()", statement.getSource());
+        
+        BlockNode node = statement.getBlock();
+        assertEquals(2, node.getStatements().size());
+        this.compareStrings("int x = 5;", node.getStatements().getFirst().getSource());
+        this.compareStrings("someOtherMethod();", node.getStatements().getLast().getSource());
+        
+        assertEquals(2, parser.getReferences().size());
     }
 }
