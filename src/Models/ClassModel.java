@@ -8,7 +8,6 @@ import Exceptions.AlreadyExistsException;
 import Exceptions.CannotBeDeletedException;
 import Exceptions.DoesNotExistException;
 import Exceptions.VeryVeryBadException;
-import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.Buffer.ClassModelBuffer;

@@ -513,9 +513,14 @@ public class ProjectModelTest extends BaseTest{
     }
     
     @Test
-    public void testFindMethod(){
-        fail();
-        project.findMethods("someMethod", ClassModel parentClass); //???
+    public void testFindMethod() throws Exception{
+        ClassModel aClass = parentPackage.addClass(new ClassModel("OneClass"));
+        aClass.addMethod(new MethodModel("oneMethod"));
+        aClass = parentPackage.addClass(new ClassModel("TwoClass"));
+        MethodModel aMethod = aClass.addMethod(new MethodModel("oneMethod"));
+        
+        
+        project.findMethod("oneMethod", aClass);
         /*
         make a method where we try to find a single method with a given class
         call findMethods() then iterate through the list of methods until you 

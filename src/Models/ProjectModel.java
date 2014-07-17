@@ -306,6 +306,14 @@ public class ProjectModel extends BaseModel {
         throw new DoesNotExistException(this, methodName);
     }
     
+    public MethodModel findMethod(String methodName, ClassModel parentClass){
+        if(methodNames.get(methodName) != null)
+            for(MethodSignature ms : methodNames.get(methodName))
+                if(parentClass == ms)
+                    //wont work. doesnt account for overloaded methods
+            
+    }
+    
     /**
      * returns a LinkedList of method definitions
      * @param aMethod 

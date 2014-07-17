@@ -74,6 +74,7 @@ public class BlockParser extends BaseParseTree {
                     this.closeBlock(index);
                     break;
                 case '(':
+                    //attempt to parse a method
                     stackIt("(", index);
                     break;
                 case ')':
@@ -116,6 +117,9 @@ public class BlockParser extends BaseParseTree {
                     if (source.charAt(index + 1) == '/') {
                     } else if (source.charAt(index + 1) == '*') {
                     }
+                    break;
+                case '.':
+                    //attempt to parse a method and its class
                     break;
                 default:
             }
