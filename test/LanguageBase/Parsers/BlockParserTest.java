@@ -324,6 +324,10 @@ public class BlockParserTest extends BaseTest{
                         + "}";
         this.initializeParserWithSource(source);
         
+        assertEquals(1, root.getStatements().size());
+        BlockNode block = root.getStatements().getFirst().getChildBlock();
+        assertEquals(3, block.getStatements().size());
+        
         this.compareStrings("if(something)\n"
                         + "\tif(someBoolean()) {\n"
                             + "\t\tsomeMethod();\n"

@@ -14,8 +14,8 @@ import java.util.LinkedList;
  * @author arthur
  */
 public class BracketStack extends LinkedList<String>{
-        private static final String[] openers = new String[]{"(","{","{{"};
-        private static final String[] closers = new String[]{")","}","}}"};
+        private static final String[] openers = new String[]{"[","(","{","{{"};
+        private static final String[] closers = new String[]{"]",")","}","}}"};
         private String lastSymbol;
 
         public boolean isLastSymbol(String symbol) {
@@ -79,11 +79,9 @@ public class BracketStack extends LinkedList<String>{
                 return this.getLast().compareTo("{{") == 0;
             if (symbol.compareTo(")") == 0)
                 return this.getLast().compareTo("(") == 0;
+            if (symbol.compareTo("]") == 0)
+                return this.getLast().compareTo("[") == 0;
             return false;
-        }
-
-        private boolean isOpen() {
-            return this.isOpenBracket() || this.isOpenParen();
         }
 
         public boolean isOpenParen() {
@@ -92,11 +90,11 @@ public class BracketStack extends LinkedList<String>{
             return this.getLast().compareTo("(") == 0;
         }
 
-        public boolean isOpenBracket() {
+        public boolean isOpenCurlyBracket() {
             if (this.isEmpty())
                 return false;
-            return this.getLast().compareTo("{") == 0
-                    || this.getLast().compareTo("{{") == 0;
+            return this.getLast().equals("{")
+                    || this.getLast().equals("{{");
         }
 
         private boolean isValidSymbol(String symbol) {
