@@ -7,6 +7,8 @@
 package LanguageBase.Parsers;
 
 import Internal.BaseTest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -43,11 +45,13 @@ public class BlockTreeTest extends BaseTest{
         
         assertEquals(parser, parser.getRootNode().getTree());
         assertEquals(parser.getRootNode(), 
-                this.getVariableFromClass(parser, "currentNode"));
+                this.getVariableFromClass(parser, "currentBlock"));
         assertTrue(parser.getRootNode().getStatements().isEmpty());
+        assertFalse(parser.getRootNode().isSingleStatement());
         assertEquals(1, parser.getBlocks().size());
         
         assertEquals(1, parser.getLineCount());
+        assertNull(this.getVariableFromClass(parser, "currentStatement"));
     }
     
     @Test
@@ -78,10 +82,97 @@ public class BlockTreeTest extends BaseTest{
     }
     
     @Test
+    public void testStackThrowsException(){
+        for(String symbol : new String[]{"}", ")", "]",})
+            try {
+                parser = new BlockTree(symbol);
+                fail("Exception not thrown");
+            } catch (BaseParseTree.ParseException ex) {
+                this.compareStrings("Parse error at line: 1", ex.getMessage());
+            }
+    }
+    
+    @Test
     public void testParseMethodStatement() throws Exception{
         String source = "someMethod();";
         parser = new BlockTree(source);
         assertEquals(1, parser.getRootNode().getStatements().size());
+        
+        StatementNode statement = parser.getRootNode().getStatements().getFirst();
+        assertSame(statement, 
+                this.getVariableFromClass(parser, "currentStatement"));
+        
+        assertSame(parser.getRootNode(), statement.getParentBlock());
+        assertSame(parser, statement.getTree());
+        assertNull(this.getVariableFromClass(statement, "childBlock"));
+        this.compareStrings(source, statement.getSource());
+    }
+    
+    @Test
+    public void testStatementGetSource() throws Exception{
+        String source = "someMethod();";
+        parser = new BlockTree(source);
+        StatementNode statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals(source, statement.getSource());
+        
+        source = "\nsomeMethod();";
+        parser = new BlockTree(source);
+        statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\nsomeMethod();\n";
+        parser = new BlockTree(source);
+        statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t\nsomeMethod();\n";
+        parser = new BlockTree(source);
+        statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t\nsomeMethod();\t\n\t";
+        parser = new BlockTree(source);
+        statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t \nsomeMethod(); \t\n \t";
+        parser = new BlockTree(source);
+        statement = parser.getRootNode().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+    }
+    
+    @Test
+    public void testParseStatementWithBlock() throws Exception{
+        String source = "someMethod(){\n"
+                + "someStatement();"
+                + "}";
+        parser = new BlockTree(source);
+        
+        StatementNode statement = parser.getRootNode().getStatements().getFirst();
+        BlockNode block = statement.getChildBlock();
+        assertSame(statement, block.getParentStatement());
+        assertEquals(1, block.getStatements().size());
+        assertFalse(block.isSingleStatement());
+        
+        this.compareStrings("someMethod()", statement.getSource());
+        statement = block.getStatements().getFirst();
+        this.compareStrings("someStatement();", statement.getSource());
+    }
+    
+    @Test
+    public void testParseSimgleStatementBlock() throws Exception{
+        String source = "someMethod()\n"
+                + "someStatement();";
+        parser = new BlockTree(source);
+        
+        assertEquals(1, parser.getRootNode().getStatements().size());
+        assertFalse(parser.getRootNode().isSingleStatement());
+        
+        StatementNode statement = parser.getRootNode().getStatements().getFirst();
+        //this.compareStrings("someMethod()", statement.getSource());
+        
+        BlockNode block = statement.getChildBlock();
+        assertEquals(1, block.getStatements().size());
     }
     
 }

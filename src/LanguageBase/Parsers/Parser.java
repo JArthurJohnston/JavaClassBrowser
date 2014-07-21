@@ -17,6 +17,7 @@ public abstract class Parser extends BaseParseTree{
     protected LinkedList<String> errors;
     protected BracketStack stack;
     protected int lineCount;
+    protected int statementStart;
     
     protected Parser(){
         errors = new LinkedList();
@@ -27,7 +28,6 @@ public abstract class Parser extends BaseParseTree{
     protected Parser(String source) throws ParseException{
         this();
         this.source = source;
-        this.parseFrom(0);
     }
     
     public LinkedList<String> getErrors(){
@@ -35,6 +35,7 @@ public abstract class Parser extends BaseParseTree{
     }
     
     protected void parseFrom(int index) throws ParseException{
+        statementStart = index;
         while(!this.indexOutOfRange(index)){
             switch(this.source.charAt(index)){
                 case '{':

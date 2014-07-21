@@ -15,12 +15,18 @@ import java.util.LinkedList;
 public class BlockTree extends Parser{
     private LinkedList<BlockNode> blocks;
     private BlockNode root;
-    private BlockNode currentNode;
+    private BlockNode currentBlock;
+    private StatementNode currentStatement;
     
     public BlockTree(String source) throws ParseException{
         super(source);
+        this.setUpRootNodeAndBlocks();
+        this.parseFrom(0);
+    }
+    
+    private void setUpRootNodeAndBlocks(){
         root =  new BlockNode(this);
-        currentNode = root;
+        currentBlock = root;
         blocks = new LinkedList();
         blocks.add(root);
     }
@@ -35,6 +41,8 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseOpenCurlyBracket(int index) {
+        this.addStatementToBlockEndingAt(index);
+        this.currentBlock = this.currentStatement.getChildBlock();
     }
 
     @Override
@@ -63,6 +71,14 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseSemicolon(int index) {
+        this.addStatementToBlockEndingAt(index+1);
+    }
+    
+    private void addStatementToBlockEndingAt(int index){
+        this.currentStatement = 
+                this.currentBlock
+                        .addStatement(statementStart, index);
+        this.statementStart = this.indexOfNextNonWhiteCharFrom(index);
     }
     
 }

@@ -15,6 +15,8 @@ import java.util.LinkedList;
 public class BlockNode {
     private Parser tree;
     private LinkedList<StatementNode> statements;
+    private StatementNode parent;
+    private boolean isSingleStatement;
     
     private BlockNode(){
         statements = new LinkedList();
@@ -25,12 +27,35 @@ public class BlockNode {
         this.tree = tree;
     }
     
+    public BlockNode(StatementNode parent){
+        this(parent.getTree());
+        this.parent = parent;
+    }
+    
+    public BlockNode(StatementNode parent, boolean isSingleStatement){
+        this(parent);
+        this.isSingleStatement = isSingleStatement;
+    }
+    
     public Parser getTree(){
         return tree;
     }
     
     public LinkedList<StatementNode> getStatements(){
         return statements;
+    }
+    
+    public StatementNode addStatement(int start, int end){
+        this.statements.add(new StatementNode(this, start, end));
+        return this.statements.getLast();
+    }
+    
+    public StatementNode getParentStatement(){
+        return this.parent;
+    }
+    
+    public boolean isSingleStatement(){
+        return this.isSingleStatement;
     }
     
 }
