@@ -173,7 +173,7 @@ public class BaseParseTree {
     }
     
     protected int indexOfNextNonWhiteCharFrom(int index){
-        while(this.indexOutOfRange(++index)){
+        while(!this.indexOutOfRange(++index)){
             if(!this.isWhiteChar(index))
                 break;
         }

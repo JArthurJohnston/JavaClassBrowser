@@ -35,13 +35,14 @@ public class BlockTree extends Parser{
         return blocks;
     }
     
-    public BlockNode getRootNode(){
+    public BlockNode getRootBlock(){
         return root;
     }
 
     @Override
     protected void parseOpenCurlyBracket(int index) {
         this.addStatementToBlockEndingAt(index);
+        this.statementStart = index+1;
         this.currentBlock = this.currentStatement.getChildBlock();
     }
 
@@ -55,6 +56,16 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseCloseParen(int index) {
+        for(char c : new char[]{';', '{', '.'})
+            if(this.nextNonWhiteCharFrom(index +1) == c)
+                return;
+        if(stack.isOpenParen())
+            return;
+        currentBlock = 
+                this.addStatementToBlockEndingAt(index+1)
+                        .getChildBlock();
+        currentBlock.singleStatement(true);
+        this.statementStart = index+1;
     }
 
     @Override
@@ -71,14 +82,17 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseSemicolon(int index) {
+        if(stack.isOpenParen())
+            return;
         this.addStatementToBlockEndingAt(index+1);
+        this.statementStart = index+1;
     }
     
-    private void addStatementToBlockEndingAt(int index){
+    private StatementNode addStatementToBlockEndingAt(int index){
         this.currentStatement = 
                 this.currentBlock
                         .addStatement(statementStart, index);
-        this.statementStart = this.indexOfNextNonWhiteCharFrom(index);
+        return currentStatement;
     }
     
 }

@@ -54,8 +54,22 @@ public class BlockNode {
         return this.parent;
     }
     
+    public BlockNode getParentBlock(){
+        if(this.isRoot())
+            return this;
+        return this.getParentStatement().getParentBlock();
+    }
+    
+    public void singleStatement(boolean isSingle){
+        this.isSingleStatement = isSingle;
+    }
+    
     public boolean isSingleStatement(){
         return this.isSingleStatement;
+    }
+    
+    public boolean isRoot(){
+        return this.parent == null && this.tree != null;
     }
     
 }
