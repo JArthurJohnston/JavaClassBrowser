@@ -328,6 +328,22 @@ public class BlockTreeTest extends BaseTest{
         parser = new BlockTree(source);
         
         assertEquals(2, parser.getRootBlock().getStatements().size());
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(someObject.someBoolean())", statement.getSource());
+        BlockNode block = statement.getChildBlock();
+        assertFalse(block.isSingleStatement());
+        assertEquals(1, block.getStatements().size());
+        this.compareStrings("someMethod().someOtherMethod();", 
+                block.getStatements().getFirst().getSource());
+        
+        statement = parser.getRootBlock().getStatements().getLast();
+        this.compareStrings("else", statement.getSource());
+        block = statement.getChildBlock();
+        assertFalse(block.isSingleStatement());
+        assertEquals(1, block.getStatements().size());
+        this.compareStrings("someObject.someMethod();", 
+                block.getStatements().getFirst().getSource());
     }
     
 }

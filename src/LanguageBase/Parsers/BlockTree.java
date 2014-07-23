@@ -48,6 +48,8 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseCloseCurlyBracket(int index) {
+        statementStart = index+1;
+        this.currentBlock = this.currentBlock.getParentBlock();
     }
 
     @Override
@@ -88,11 +90,44 @@ public class BlockTree extends Parser{
         this.statementStart = index+1;
     }
     
+    @Override
+    protected void parseReservedWord(int index){
+        switch(source.charAt(index)){
+            case 'e':
+                if(this.isCurrentSymbol(index, "else"))
+                    this.parseElseStatement(index);
+                break;
+        }
+    }
+    
+    private void parseElseStatement(int index){
+        int end = index + 3;
+        /*
+        while(true){
+            if(this.isWhiteChar(++index))
+                continue;
+            else if(this.isCurrentSymbol(index, "if"))
+                while()
+            else if()
+        }
+                */
+        currentBlock.addStatement(index, end);
+    }
+    
     private StatementNode addStatementToBlockEndingAt(int index){
         this.currentStatement = 
                 this.currentBlock
                         .addStatement(statementStart, index);
         return currentStatement;
     }
+    
+    /**
+     * Tests I need to write
+     * 
+     * test skips string literals
+     * test parse array declarations
+     * test do-while
+     * test references
+     */
     
 }

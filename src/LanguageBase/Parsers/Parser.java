@@ -71,6 +71,9 @@ public abstract class Parser extends BaseParseTree{
                 case '\n':
                     lineCount++;
                     break;
+                case 'e':
+                    this.parseReservedWord(index);
+                    break;
             }
             index++;
         }
@@ -96,4 +99,5 @@ public abstract class Parser extends BaseParseTree{
     protected abstract void parseCloseBracket(int index);
     protected abstract void parsePeriod(int index);
     protected abstract void parseSemicolon(int index);
+    protected abstract void parseReservedWord(int index);
 }

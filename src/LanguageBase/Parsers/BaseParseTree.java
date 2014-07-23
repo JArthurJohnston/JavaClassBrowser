@@ -62,11 +62,17 @@ public class BaseParseTree {
     protected boolean isCurrentSymbol(int index, String symbol){
         if(index < 0 || index+symbol.length() > source().length())
             return false;
-        if(!this.isAlphaNumeric(index-1) || 
-                !this.isAlphaNumeric(index+symbol.length()+1))
+        if(!this.isValidSeperator(index-1) || 
+                !this.isValidSeperator(index + symbol.length() + 1))
             return false;
         return this.sourceFromTo(
                 index, index+symbol.length()).compareTo(symbol) == 0;
+    }
+    
+    private boolean isValidSeperator(int index){
+        if(this.indexOutOfRange(index))
+            return false;
+        return !this.isAlphaNumeric(index) || this.isWhiteChar(index);
     }
     
     
