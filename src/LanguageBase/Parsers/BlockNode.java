@@ -50,6 +50,11 @@ public class BlockNode {
         return this.statements.getLast();
     }
     
+    public StatementNode addStatement(int start){
+        this.statements.add(new StatementNode(this, start));
+        return this.statements.getLast();
+    }
+    
     public StatementNode getParentStatement(){
         return this.parent;
     }

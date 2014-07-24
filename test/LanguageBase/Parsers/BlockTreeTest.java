@@ -327,6 +327,9 @@ public class BlockTreeTest extends BaseTest{
                 + "}";
         parser = new BlockTree(source);
         
+        for(StatementNode s : parser.getRootBlock().getStatements())
+            System.out.println(s.getSource());
+        
         assertEquals(2, parser.getRootBlock().getStatements().size());
         
         StatementNode statement = parser.getRootBlock().getStatements().getFirst();

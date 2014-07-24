@@ -15,10 +15,14 @@ public class StatementNode {
     private final BlockNode parentBlock;
     private BlockNode childBlock;
     
-    public StatementNode(BlockNode parent, int start, int end){
-        this.start = start;
-        this.end = end;
+    public StatementNode(BlockNode parent, int start){
         this.parentBlock = parent;
+        this.start = start;
+    }
+    
+    public StatementNode(BlockNode parent, int start, int end){
+        this(parent, start);
+        this.end = end;
     }
     
     public BlockNode getParentBlock(){
@@ -41,8 +45,12 @@ public class StatementNode {
         return new String(this.source().substring(start, end));
     }
     
-    public void setEnd(int end){
+    public void close(int end){
         this.end = end;
+    }
+    
+    public boolean isOpen(){
+        return this.end == 0;
     }
     
     private String source(){

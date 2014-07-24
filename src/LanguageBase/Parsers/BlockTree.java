@@ -29,6 +29,11 @@ public class BlockTree extends Parser{
         currentBlock = root;
         blocks = new LinkedList();
         blocks.add(root);
+        
+        /*
+        start off with an open statement
+        */
+        currentStatement = currentBlock.addStatement(0);
     }
     
     public LinkedList<BlockNode> getBlocks(){
@@ -101,7 +106,7 @@ public class BlockTree extends Parser{
     }
     
     private void parseElseStatement(int index){
-        int end = index + 3;
+        int end = index + 4;
         /*
         while(true){
             if(this.isWhiteChar(++index))
@@ -110,8 +115,19 @@ public class BlockTree extends Parser{
                 while()
             else if()
         }
+        
+        
+        
+        I could make an "open" statement. a statement with an end
+        of 0. if the parser hits say, a '{' with an open statement, instead
+        of creating a new statement and block, it will close the currently open statement 
+        and add a block to it.
                 */
-        currentBlock.addStatement(index, end);
+        if(this.isNextSymbolFromIndex("if", index)){
+            
+        } else if(this.isNextSymbolFromIndex("{", index))
+            end = this.nextIndexOfCharFromIndex('{', index);
+        currentStatement = currentBlock.addStatement(index, end);
     }
     
     private StatementNode addStatementToBlockEndingAt(int index){
