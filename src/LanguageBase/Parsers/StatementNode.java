@@ -42,6 +42,8 @@ public class StatementNode {
     public String getSource(){
         start = this.trimWhiteSpaces(start, 1);
         end = this.trimWhiteSpaces(end, -1);
+        if(end < start)
+            return "";
         return new String(this.source().substring(start, end));
     }
     

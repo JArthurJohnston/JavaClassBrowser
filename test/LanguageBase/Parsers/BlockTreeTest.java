@@ -7,8 +7,6 @@
 package LanguageBase.Parsers;
 
 import Internal.BaseTest;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -54,12 +52,12 @@ public class BlockTreeTest extends BaseTest{
         assertEquals(parser, parser.getRootBlock().getTree());
         assertEquals(parser.getRootBlock(), 
                 this.getVariableFromClass(parser, "currentBlock"));
-        assertTrue(parser.getRootBlock().getStatements().isEmpty());
+        assertEquals(1, parser.getRootBlock().getStatements().size());
         assertFalse(parser.getRootBlock().isSingleStatement());
         assertEquals(1, parser.getBlocks().size());
         
         assertEquals(1, parser.getLineCount());
-        assertNull(this.getVariableFromClass(parser, "currentStatement"));
+        assertEquals("",parser.getRootBlock().getStatements().getFirst().getSource());
         
         assertTrue(parser.getRootBlock().isRoot());
         assertEquals(parser.getRootBlock(), parser.getRootBlock().getParentBlock());
@@ -160,6 +158,7 @@ public class BlockTreeTest extends BaseTest{
         parser = new BlockTree(source);
         
         StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals(1, parser.getRootBlock().getStatements().size());
         BlockNode block = statement.getChildBlock();
         assertSame(statement, block.getParentStatement());
         assertEquals(1, block.getStatements().size());
@@ -347,6 +346,36 @@ public class BlockTreeTest extends BaseTest{
         assertEquals(1, block.getStatements().size());
         this.compareStrings("someObject.someMethod();", 
                 block.getStatements().getFirst().getSource());
+    }
+    
+    private void printStatementsFromBlock(BlockNode aBlock){
+        for(StatementNode s : aBlock.getStatements())
+            System.out.println('\'' + s.getSource() + '\'');
+    }
+    
+    @Test
+    public void testOpenStatement() throws Exception{
+        String source = "if(someMethod()";
+        parser = new BlockTree(source);
+        
+        //this.printStatementsFromBlock(parser.getRootBlock());
+        assertEquals(1, parser.getRootBlock().getStatements().size());
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        assertTrue(statement.isOpen());
+        
+        
+        source = "if(someMethod())";
+        parser = new BlockTree(source);
+        
+        //this.printStatementsFromBlock(parser.getRootBlock());
+        assertEquals(1, parser.getRootBlock().getStatements().size());
+        
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertFalse(statement.isOpen());
+        BlockNode block = this.verifyAndGetChildBlockFromStatement(statement);
+        assertEquals(1, block.getStatements().size());
+        assertEquals("", block.getStatements().getFirst().getSource());
     }
     
 }

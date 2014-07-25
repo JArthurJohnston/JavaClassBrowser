@@ -46,9 +46,10 @@ public class BlockTree extends Parser{
 
     @Override
     protected void parseOpenCurlyBracket(int index) {
-        this.addStatementToBlockEndingAt(index);
-        this.statementStart = index+1;
+        //this.addStatementToBlockEndingAt(index);
+        currentStatement.close(index);
         this.currentBlock = this.currentStatement.getChildBlock();
+        currentStatement = currentBlock.addStatement(index+1);//eliminates the need for statement start?
     }
 
     @Override
@@ -68,11 +69,19 @@ public class BlockTree extends Parser{
                 return;
         if(stack.isOpenParen())
             return;
-        currentBlock = 
+        if(currentStatement.isOpen()){
+            currentStatement.close(index+1);
+            currentBlock = currentStatement.getChildBlock();
+            currentBlock.singleStatement(true);
+            currentStatement = currentBlock.addStatement(index+1);
+        }else{
+            //this should be obsolete
+            currentBlock = 
                 this.addStatementToBlockEndingAt(index+1)
                         .getChildBlock();
-        currentBlock.singleStatement(true);
-        this.statementStart = index+1;
+            currentBlock.singleStatement(true);
+            this.statementStart = index+1;
+        }
     }
 
     @Override
@@ -91,7 +100,8 @@ public class BlockTree extends Parser{
     protected void parseSemicolon(int index) {
         if(stack.isOpenParen())
             return;
-        this.addStatementToBlockEndingAt(index+1);
+        //this.addStatementToBlockEndingAt(index+1);
+        currentStatement.close(index+1);
         this.statementStart = index+1;
     }
     
