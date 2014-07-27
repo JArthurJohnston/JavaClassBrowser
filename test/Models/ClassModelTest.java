@@ -17,8 +17,6 @@ import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;

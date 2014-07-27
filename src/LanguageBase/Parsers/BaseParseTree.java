@@ -63,13 +63,15 @@ public class BaseParseTree {
         if(index < 0 || index+symbol.length() > source().length())
             return false;
         if(!this.isValidSeperator(index-1) || 
-                !this.isValidSeperator(index + symbol.length() + 1))
+                !this.isValidSeperator(index + symbol.length()))
             return false;
         return this.sourceFromTo(
                 index, index+symbol.length()).compareTo(symbol) == 0;
     }
     
     private boolean isValidSeperator(int index){
+        if(index == -1) //means we're looking at the first character
+            return true;
         if(this.indexOutOfRange(index))
             return false;
         return !this.isAlphaNumeric(index) || this.isWhiteChar(index);

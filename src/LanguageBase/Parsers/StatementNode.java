@@ -40,11 +40,9 @@ public class StatementNode {
     }
     
     public String getSource(){
-        start = this.trimWhiteSpaces(start, 1);
-        end = this.trimWhiteSpaces(end, -1);
         if(end < start)
             return "";
-        return new String(this.source().substring(start, end));
+        return this.source().substring(start, end).trim();
     }
     
     public void close(int end){
@@ -56,20 +54,18 @@ public class StatementNode {
     }
     
     private String source(){
-        return this.getTree().source();
+        return this.parentBlock.source();
     }
     
-    private int trimWhiteSpaces(int index, int step){
-        if(index >= end)
-            return index;
-        while(true){
-            if(Character.isWhitespace(source().charAt(index)) && 
-                    index + step < end &&
-                    index + step >=0)
-                index += step;
-            else 
-                break;
-        }
-        return index;
+    public boolean isClassDeclaration(){
+        return false;
+    }
+    
+    public ScopeType getScope(){
+        
+    }
+    
+    private String[] sourceTokens(){
+        return this.source().split(" ");
     }
 }

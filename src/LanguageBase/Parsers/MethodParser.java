@@ -4,14 +4,13 @@
  * and open the template in the editor.
  */
 
-package Models;
-
-import Internal.BaseTest;
+package LanguageBase.Parsers;
 
 /**
  *
  * @author arthur
  */
-public class BaseModelTest extends BaseTest{
+public class MethodParser extends BlockParser {
+    
     
 }

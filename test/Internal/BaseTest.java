@@ -42,6 +42,10 @@ public class BaseTest {
     
     public void setUp(){
         main = new MainApplication();
+        setUpProjectAndPackage();
+    }
+
+    protected void setUpProjectAndPackage() {
         try {
             parentProject  = main.addProject(new ProjectModel("parent project"));
             main.setSelectedProejct(parentProject);

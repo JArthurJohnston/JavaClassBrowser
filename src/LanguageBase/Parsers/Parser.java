@@ -7,6 +7,7 @@
 package LanguageBase.Parsers;
 
 import LanguageBase.Parsers.Stacks.BracketStack;
+import Models.BaseModel;
 import java.util.LinkedList;
 
 /**
@@ -14,10 +15,11 @@ import java.util.LinkedList;
  * @author arthur
  */
 public abstract class Parser extends BaseParseTree{
+    protected BaseModel baseModel;
     protected LinkedList<String> errors;
+    protected LinkedList<ModelReference> references;
     protected BracketStack stack;
     protected int lineCount;
-    protected int statementStart;
     
     protected Parser(){
         errors = new LinkedList();
@@ -34,8 +36,16 @@ public abstract class Parser extends BaseParseTree{
         return errors;
     }
     
+    public BaseModel getModel(){
+        return baseModel;
+    }
+    
+    public void parseSource(String source) throws ParseException{
+        this.source = source;
+        this.parseFrom(0);
+    }
+    
     protected void parseFrom(int index) throws ParseException{
-        statementStart = index;
         while(!this.indexOutOfRange(index)){
             switch(this.source.charAt(index)){
                 case '{':
@@ -68,10 +78,29 @@ public abstract class Parser extends BaseParseTree{
                 case '.':
                     this.parsePeriod(index);
                     break;
+                case '\'':
+                    this.parseStringLiteral(index);
+                    break;
+                case '"':
+                    this.parseStringLiteral(index);
+                    break;
+                case '/':
+                    if(this.isCurrentSymbol(index+1, '*')){
+                        this.parseMultiLineComment(index);
+                        return;
+                    }
+                    if(this.isCurrentSymbol(index+1, '/')){
+                        this.parseSingleLineComment(index);
+                        return; // since these methods call parseFrom()
+                    }
+                    break;
                 case '\n':
                     lineCount++;
                     break;
                 case 'e':
+                    this.parseReservedWord(index);
+                    break;
+                case 'd':
                     this.parseReservedWord(index);
                     break;
             }
@@ -91,6 +120,12 @@ public abstract class Parser extends BaseParseTree{
         return lineCount;
     }
     
+    public LinkedList<ModelReference> getReferences(){
+        if(references == null)
+            return new LinkedList();
+        return references;
+    }
+    
     protected abstract void parseOpenCurlyBracket(int index);
     protected abstract void parseCloseCurlyBracket(int index);
     protected abstract void parseOpenParen(int index);
@@ -100,4 +135,17 @@ public abstract class Parser extends BaseParseTree{
     protected abstract void parsePeriod(int index);
     protected abstract void parseSemicolon(int index);
     protected abstract void parseReservedWord(int index);
+    protected abstract void parseStringLiteral(int index);
+    protected abstract void parseMultiLineComment(int index) throws ParseException;
+    protected abstract void parseSingleLineComment(int index) throws ParseException;
+    protected abstract BaseModel modelFromSource(String source);
+    
+    
+    /**
+     * 
+     */
+    public class ModelReference {
+        
+    }
+    
 }

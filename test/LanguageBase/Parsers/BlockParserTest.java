@@ -6,12 +6,11 @@
 
 package LanguageBase.Parsers;
 
-import Exceptions.AlreadyExistsException;
 import Internal.BaseTest;
-import LanguageBase.Parsers.Nodes.BlockNode;
-import LanguageBase.Parsers.Nodes.StatementNode;
+import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.ProjectModel;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -23,7 +22,6 @@ import org.junit.Test;
  */
 public class BlockParserTest extends BaseTest{
     private BlockParser parser;
-    private BlockNode root;
     
     public BlockParserTest() {
     }
@@ -31,405 +29,553 @@ public class BlockParserTest extends BaseTest{
     @Before
     @Override
     public void setUp() {
-        super.setUp();
     }
     
     @After
     @Override
     public void tearDown() {
-        super.tearDown();
         parser = null;
-        root = null;
     }
     
-    public void initializeParserWithSource(String source){
-        parser = new BlockParser(source);
-        root = parser.getTree();
-        if(parser.getError() != null){
-            fail(parser.getError());
-        }
+    private void verifyBlockStatements(BlockNode aBlock, int numberOfStatements){
+        if(numberOfStatements + 1 != aBlock.getStatements().size())
+            fail("expected "+ numberOfStatements+" but was "+ 
+                    (aBlock.getStatements().size()-1));
+        //assertEquals(numberOfStatements+1, aBlock.getStatements().size());
+        assertEquals("", aBlock.getStatements().getLast().getSource());
     }
     
-    private void verifySimpleStatementWith(String a, String b){
-        BlockNode block = root;
-        assertEquals(1, block.getStatements().size());
-        StatementNode statement = block.getStatements().getFirst();
-        this.compareStrings(a, statement.getSource());
-        block = statement.getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        statement = block.getStatements().getFirst();
-        this.compareStrings(b, statement.getSource());
+    private BlockNode verifyAndGetChildBlockFromStatement(StatementNode aStatement){
+        //errors if the block is null and asserts its the right class
+        //since BlockNodes are lazy-initialized
+        assertSame(BlockNode.class, 
+                this.getVariableFromClass(aStatement, "childBlock").getClass());
+        return aStatement.getChildBlock();
+    }
+    
+    private void printStatementsFromBlock(BlockNode aBlock){
+        for(StatementNode s : aBlock.getStatements())
+            System.out.println('\'' + s.getSource() + '\'');
     }
 
     @Test
-    public void testParseSimpleStatements(){
-        String source = "if(someBoolean()){"
-                + "someMethod();"
-                + "}";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("if(someBoolean())", "someMethod();");
+    public void testConstructor() throws Exception{
+        String source = "";
+        parser = new BlockParser(source);
+        assertTrue(parser.stack.isEmpty());
+        assertEquals(source, parser.source);
+        assertTrue(parser.getErrors().isEmpty());
         
-        source = "for(some;stuff;here){"
-                + "someMethod();"
-                + "}";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("for(some;stuff;here)", "someMethod();");
+        assertEquals(parser, parser.getRootBlock().getTree());
+        assertEquals(parser.getRootBlock(), 
+                this.getVariableFromClass(parser, "currentBlock"));
+        assertEquals(1, parser.getRootBlock().getStatements().size());
+        assertFalse(parser.getRootBlock().isSingleStatement());
+        assertEquals(1, parser.getBlocks().size());
         
-        source = "while(someBoolean().someVar){"
-                + "someMethod().someVar;"
-                + "}";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("while(someBoolean().someVar)", 
-                "someMethod().someVar;");
+        assertEquals(1, parser.getLineCount());
+        assertEquals("",parser.getRootBlock().getStatements().getFirst().getSource());
+        
+        assertTrue(parser.getRootBlock().isRoot());
+        assertEquals(parser.getRootBlock(), parser.getRootBlock().getParentBlock());
+        
+        assertTrue(parser.getReferences().isEmpty());
     }
     
     @Test
-    public void testParseSimpleStatementsWithoutBrackets(){
-        String source = "if(someBoolean())"
-                + "someMethod();";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("if(someBoolean())", "someMethod();");
-        
-        source = "for(some;stuff;here)"
-                + "someMethod();";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("for(some;stuff;here)", "someMethod();");
-        
-        source = "while(someBoolean().someVar)"
-                + "someMethod().someVar;";
-        this.initializeParserWithSource(source);
-        this.verifySimpleStatementWith("while(someBoolean().someVar)", 
-                "someMethod().someVar;");
+    public void testParserLineCount() throws Exception{
+        String source = "someMethod(); \n someOtherMethod();";
+        parser = new BlockParser(source);
+        assertEquals(2, parser.getLineCount());
     }
     
-    private void verifyIfElse(){
-        assertEquals(2, root.getStatements().size());
-        StatementNode statement = root.getStatements().getFirst();
-        this.compareStrings("if(someBoolean())", statement.getSource());
-        BlockNode block = statement.getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        statement = block.getStatements().getFirst();
-        this.compareStrings("someMethod();", statement.getSource());
-        assertNull(statement.getChildBlock());
+    @Test
+    public void testOpenStack() throws Exception{
+        parser = new BlockParser("{");
+        assertTrue(parser.stack.peek("{"));
+        parser = new BlockParser("(");
+        assertTrue(parser.stack.peek("("));
+        parser = new BlockParser("[");
+        assertTrue(parser.stack.peek("["));
+    }
+    
+    @Test
+    public void testStackCloses() throws Exception {
+        parser = new BlockParser("{}");
+        assertTrue(parser.stack.isEmpty());
+        parser = new BlockParser("()");
+        assertTrue(parser.stack.isEmpty());
+        parser = new BlockParser("[]");
+        assertTrue(parser.stack.isEmpty());
+    }
+    
+    @Test
+    public void testStackThrowsException(){
+        for(String symbol : new String[]{"}", ")", "]",})
+            try {
+                parser = new BlockParser(symbol);
+                fail("Exception not thrown");
+            } catch (BaseParseTree.ParseException ex) {
+                this.compareStrings("Parse error at line: 1", ex.getMessage());
+            }
+    }
+    
+    @Test
+    public void testParseMethodStatement() throws Exception{
+        String source = "someMethod();";
+        parser = new BlockParser(source);
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
         
-        statement = root.getStatements().getLast();
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        
+        assertSame(parser.getRootBlock(), statement.getParentBlock());
+        assertSame(parser, statement.getTree());
+        assertNull(this.getVariableFromClass(statement, "childBlock"));
+        this.compareStrings(source, statement.getSource());
+    }
+    
+    @Test
+    public void testStatementGetSource() throws Exception{
+        String source = "someMethod();";
+        parser = new BlockParser(source);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals(source, statement.getSource());
+        
+        source = "\nsomeMethod();";
+        parser = new BlockParser(source);
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\nsomeMethod();\n";
+        parser = new BlockParser(source);
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t\nsomeMethod();\n";
+        parser = new BlockParser(source);
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t\nsomeMethod();\t\n\t";
+        parser = new BlockParser(source);
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+        
+        source = "\t \nsomeMethod(); \t\n \t";
+        parser = new BlockParser(source);
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals("someMethod();", statement.getSource());
+    }
+    
+    @Test
+    public void testParseStatementWithBlock() throws Exception{
+        String source = "someMethod(){\n"
+                + "someStatement();"
+                + "}";
+        parser = new BlockParser(source);
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        BlockNode block = statement.getChildBlock();
+        assertSame(statement, block.getParentStatement());
+        assertEquals(2, block.getStatements().size());
+        assertEquals("", block.getStatements().getLast().getSource());
+        assertFalse(block.isSingleStatement());
+        
+        this.compareStrings("someMethod()", statement.getSource());
+        statement = block.getStatements().getFirst();
+        this.compareStrings("someStatement();", statement.getSource());
+    }
+    
+    @Test
+    public void testParseSingleStatementBlock() throws Exception{
+        String source = "someMethod()\n"
+                + "someStatement();";
+        parser = new BlockParser(source);
+        
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        assertFalse(parser.getRootBlock().isSingleStatement());
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("someMethod()", statement.getSource());
+        
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        
+        statement = block.getStatements().getFirst();
+        this.compareStrings("someStatement();", statement.getSource());
+    }
+    
+    @Test
+    public void testSingleStatementBlockWithMultipleStatementBlock() throws Exception{
+        String source = "if(someMethod())\n"
+                        + "if(someStatement()){"
+                            + "someOtherStatement();"
+                            + "someObject.someField;"
+                        + "}";
+        parser = new BlockParser(source);
+        
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(someMethod())", statement.getSource());
+        
+        BlockNode block = statement.getChildBlock();
+        assertTrue(block.isSingleStatement());
+        this.verifyBlockStatements(block, 1);
+        statement = block.getStatements().getFirst();
+        this.compareStrings("if(someStatement())", statement.getSource());
+        
+        block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 2);
+        this.compareStrings("someOtherStatement();",block.getStatements().getFirst().getSource());
+        this.compareStrings("someObject.someField;",block.getStatements().get(1).getSource());
+    }
+    
+    @Test
+    public void testNestedSingleStatementBlocks() throws Exception{
+        String source = "if(someBoolean)"
+                        + "if(someMethod().someBooleanMethod())"
+                            + "doSomething();";
+        parser = new BlockParser(source);
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(someBoolean)", statement.getSource());
+        
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        
+        statement = block.getStatements().getFirst();
+        this.compareStrings("if(someMethod().someBooleanMethod())", statement.getSource());
+        
+        block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        
+        statement = block.getStatements().getFirst();
+        this.compareStrings("doSomething();", statement.getSource());
+    }
+    
+    @Test
+    public void testNestedStatements() throws Exception{
+        String source = "if(something().somethingElse()){"
+                + "doSomething();"
+                + "}";
+        parser = new BlockParser(source);
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(something().somethingElse())", statement.getSource());
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        this.compareStrings("doSomething();", block.getStatements().getFirst().getSource());
+    }
+    
+    private void verifySimpleStatement(String a, String b){
+        this.verifyBlockStatements(parser.getRootBlock(), 1);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings(a, statement.getSource());
+        BlockNode block = this.verifyAndGetChildBlockFromStatement(statement);
+        this.verifyBlockStatements(block, 1);
+        statement = block.getStatements().getFirst();
+        this.compareStrings(b, statement.getSource());
+    }
+    
+    @Test
+    public void testForLoops() throws Exception{
+        String source = "for(some;set;ofStatements){"
+                + "someMethod().someOtherMethod();"
+                + "}";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("for(some;set;ofStatements)", 
+                "someMethod().someOtherMethod();");
+    }
+    
+    @Test
+    public void testSingleStatementForLoop() throws Exception{
+        String source = "for(some;set;ofStatements)"
+                + "someMethod().someOtherMethod();";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("for(some;set;ofStatements)", 
+                "someMethod().someOtherMethod();");
+        BlockNode block = parser
+                .getRootBlock()
+                    .getStatements()
+                        .getFirst()
+                            .getChildBlock();
+        assertTrue(block.isSingleStatement());
+    }
+    
+    @Test
+    public void testWhileLoop() throws Exception{
+        String source = "while(someObject.someBoolean()){"
+                + "someMethod().someOtherMethod();"
+                + "}";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("while(someObject.someBoolean())", 
+                "someMethod().someOtherMethod();");
+    }
+    
+    @Test
+    public void testSingleStatementWhileLoop() throws Exception{
+        String source = "while(someObject.someBoolean())"
+                + "someMethod().someOtherMethod();";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("while(someObject.someBoolean())", 
+                "someMethod().someOtherMethod();");
+        BlockNode block = parser
+                .getRootBlock()
+                    .getStatements()
+                        .getFirst()
+                            .getChildBlock();
+        assertTrue(block.isSingleStatement());
+    }
+    
+    @Test
+    public void testIfStatement() throws Exception{
+        String source = "if(someObject.someBoolean()){"
+                + "someMethod().someOtherMethod();"
+                + "}";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("if(someObject.someBoolean())", 
+                "someMethod().someOtherMethod();");
+    }
+    
+    @Test
+    public void testSingleStatementIfStatement() throws Exception{
+        String source = "if(someObject.someBoolean())"
+                + "someMethod().someOtherMethod();";
+        parser = new BlockParser(source);
+        this.verifySimpleStatement("if(someObject.someBoolean())", 
+                "someMethod().someOtherMethod();");
+        BlockNode block = parser
+                .getRootBlock()
+                    .getStatements()
+                        .getFirst()
+                            .getChildBlock();
+        assertTrue(block.isSingleStatement());
+    }
+
+    private void verifyIfElseStatement(boolean singleStatements) {
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(someObject.someBoolean())", statement.getSource());
+        BlockNode block = statement.getChildBlock();
+        assertTrue(block.isSingleStatement() == singleStatements);
+        this.verifyBlockStatements(block, 1);
+        this.compareStrings("someMethod().someOtherMethod();", 
+                block.getStatements().getFirst().getSource());
+        
+        statement = parser.getRootBlock().getStatements().get(1);
         this.compareStrings("else", statement.getSource());
         block = statement.getChildBlock();
-        assertEquals(1, block.getStatements().size());
+        assertTrue(block.isSingleStatement() == singleStatements);
+        this.verifyBlockStatements(block, 1);
+        this.compareStrings("someObject.someMethod();", 
+                block.getStatements().getFirst().getSource());
+    }
+    
+    @Test
+    public void testIfElse() throws Exception{
+        String source = "if(someObject.someBoolean()){"
+                + "someMethod().someOtherMethod();"
+                + "} else {"
+                + "someObject.someMethod();"
+                + "}";
+        parser = new BlockParser(source);
+        verifyIfElseStatement(false);
+        
+        source = "if(someObject.someBoolean())"
+                    + "someMethod().someOtherMethod();"
+                + "else "
+                    + "someObject.someMethod();";
+        parser = new BlockParser(source);
+        verifyIfElseStatement(true);
+    }
+    
+    @Test
+    public void testParseIfElseIfStatement() throws Exception{
+        String source = "if(something){"
+                + "doSomething();"
+                + "}else if(somethingElse){"
+                + "doSomethingElse();"
+                + "}";
+        parser = new BlockParser(source);
+        verifyIfElseIfStatement(false);
+        
+        source = "if(something)"
+                + "doSomething();"
+                + "else if(somethingElse)"
+                + "doSomethingElse();";
+        parser = new BlockParser(source);
+        verifyIfElseIfStatement(true);
+    }
+
+    private void verifyIfElseIfStatement(boolean isSingleStatement) {
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
+        
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("if(something)", statement.getSource());
+        
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        assertTrue(block.isSingleStatement() == isSingleStatement);
+        
         statement = block.getStatements().getFirst();
-        this.compareStrings("someOtherMethod();", statement.getSource());
-        assertNull(statement.getChildBlock());
+        this.compareStrings("doSomething();", statement.getSource());
+        
+        statement = parser.getRootBlock().getStatements().get(1);
+        this.compareStrings("else if(somethingElse)", statement.getSource());
+        
+        block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        assertTrue(block.isSingleStatement() == isSingleStatement);
+        
+        statement = block.getStatements().getFirst();
+        this.compareStrings("doSomethingElse();", statement.getSource());
     }
     
     @Test
-    public void testParseIfElse(){
-        String source = "if(someBoolean()){"
-                            + "someMethod();"
-                        + "} else {"
-                            + "someOtherMethod();"
-                        + "}";
-        this.initializeParserWithSource(source);
-        //once again without brackets
-        this.verifyIfElse();
-        this.compareStrings("if(someBoolean()) {\n"
-                            + "\tsomeMethod();\n"
-                        + "}else {\n"
-                            + "\tsomeOtherMethod();\n"
-                        + "}", parser.formattedSource());
+    public void testOpenStatement() throws Exception{
+        String source = "if(someMethod()";
+        parser = new BlockParser(source);
         
+        assertEquals(1, parser.getRootBlock().getStatements().size());
+        assertEquals(1, parser.getLineCount());
         
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        assertTrue(statement.isOpen());
         
-        source = "if(someBoolean())"
-                    + "someMethod();"
-                + "else " //edit isCurrentSymbol to look for white spaces before and after the symbol
-                    + "someOtherMethod();";
-        this.initializeParserWithSource(source);
-        this.verifyIfElse();
-        this.compareStrings("if(someBoolean())\n"
-                            + "\tsomeMethod();\n"
-                        + "else\n"
-                            + "\tsomeOtherMethod();\n", parser.formattedSource());
-    }
-    
-    private void validateDoWhile(){
-        assertEquals(2, root.getStatements().size());
-        this.compareStrings("do", root.getStatements().getFirst().getSource());
+        source = "if(someMethod())";
+        parser = new BlockParser(source);
         
-        BlockNode block = root.getStatements().getFirst().getChildBlock();
+        assertEquals(1, parser.getRootBlock().getStatements().size());
+        
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertFalse(statement.isOpen());
+        BlockNode block = this.verifyAndGetChildBlockFromStatement(statement);
         assertEquals(1, block.getStatements().size());
-        this.compareStrings("someMethod();", block.getStatements().getFirst().getSource());
+        assertEquals("", block.getStatements().getFirst().getSource());
+    }
+    
+    private void verifyDoWhileLoop(){
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("do", statement.getSource());
         
-        this.compareStrings("while(someBoolean());", root.getStatements().getLast().getSource());
-        assertNull(root.getStatements().getLast().getChildBlock());
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 1);
+        
+        statement = block.getStatements().getFirst();
+        this.compareStrings("someStatement();", statement.getSource());
+        
+        statement = parser.getRootBlock().getStatements().get(1);
+        this.compareStrings("while(someBoolean());", statement.getSource());
     }
     
     @Test
-    public void testDoWhile(){
+    public void testParseDoWhileLoop() throws Exception {
         String source = "do{"
-                        + "someMethod();"
-                      + "}while(someBoolean());";
-        this.initializeParserWithSource(source);
-        this.validateDoWhile();
-        this.compareStrings("do {\n"
-                        + "\tsomeMethod();\n"
-                      + "}while(someBoolean());\n", parser.formattedSource());
+                            + "someStatement();"
+                        + "}while(someBoolean());";
+        parser = new BlockParser(source);
+        this.verifyDoWhileLoop();
         
-        source = "do"
-                    + "someMethod();"
+        source = "do "
+                    + "someStatement();"
                 + "while(someBoolean());";
-        this.initializeParserWithSource(source);
-        this.validateDoWhile();
-        this.compareStrings("do\n"
-                        + "\tsomeMethod();\n"
-                      + "while(someBoolean());\n", parser.formattedSource());
+        parser = new BlockParser(source);
+        this.verifyDoWhileLoop();
     }
     
     @Test
-    public void testTryCatch(){
-        String source = "try{"
-                            + "someMethod();"
-                        + "} catch(someException(e)) {"
-                            + "someOtherObject.someMethod();"
-                        + "}";
-        this.initializeParserWithSource(source);
+    public void testParseComments() throws Exception{
+        String source = "do{ //this comment\n"
+                            + "someStatement();"
+                        + "}while(someBoolean());";
+        parser = new BlockParser(source);
         
-        assertEquals(2, root.getStatements().size());
-        this.compareStrings("try", root.getStatements().getFirst().getSource());
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("do", statement.getSource());
         
-        BlockNode block = root.getStatements().getFirst().getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        this.compareStrings("someMethod();", 
-                block.getStatements().getFirst().getSource());
+        BlockNode block = statement.getChildBlock();
+        this.verifyBlockStatements(block, 2);
         
-        this.compareStrings("catch(someException(e))", 
-                root.getStatements().getLast().getSource());
+        statement = block.getStatements().getFirst();
+        this.compareStrings("//this comment", statement.getSource());
+        statement = block.getStatements().get(1);
+        this.compareStrings("someStatement();", statement.getSource());
         
-        block = root.getStatements().getLast().getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        this.compareStrings("someOtherObject.someMethod();", 
-                block.getStatements().getFirst().getSource());
-        this.compareStrings("try {\n"
-                            + "\tsomeMethod();\n"
-                        + "}catch(someException(e)) {\n"
-                            + "\tsomeOtherObject.someMethod();\n"
-                        + "}", parser.formattedSource());
+        statement = parser.getRootBlock().getStatements().get(1);
+        this.compareStrings("while(someBoolean());", statement.getSource());
     }
     
     @Test
-    public void testMultiLineSingleStatement(){
-        String source = "if(someBoolean())"
-                        + "while(someBoolean()){"
-                            + "someMethod();"
-                            + "someOtherMethod();"
-                        + "}";
-        this.initializeParserWithSource(source);
+    public void testCommentOnSameLineAsStatement() throws Exception{
+        String source = "do{"
+                            + "someStatement();//this comment\n"
+                        + "}while(someBoolean());";
+        parser = new BlockParser(source);
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
         
-        assertEquals(1, root.getStatements().size());
-        this.compareStrings("if(someBoolean())", 
-                root.getStatements().getFirst().getSource());
+        BlockNode block = parser.getRootBlock().getStatements().getFirst().getChildBlock();
+        this.verifyBlockStatements(block, 2);
         
-        BlockNode block = root.getStatements().getFirst().getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        this.compareStrings("while(someBoolean())", 
-                block.getStatements().getFirst().getSource());
-        
-        block = block.getStatements().getFirst().getChildBlock();
-        assertEquals(2, block.getStatements().size());
-        this.compareStrings("someMethod();", 
-                block.getStatements().getFirst().getSource());
-        this.compareStrings("someOtherMethod();", 
-                block.getStatements().getLast().getSource());
-        this.compareStrings("if(someBoolean())\n"
-                        + "\twhile(someBoolean()) {\n"
-                            + "\t\tsomeMethod();\n"
-                            + "\t\tsomeOtherMethod();\n"
-                        + "\t}", parser.formattedSource());
+        this.compareStrings("someStatement();", block.getStatements().get(0).getSource());
+        this.compareStrings("//this comment", block.getStatements().get(1).getSource());
+        assertEquals(2, parser.getLineCount());
     }
     
     @Test
-    public void testParseAnonymousClass(){
-        String source = "someMethod(new AnonymClass{"
-                + "someMethod();"
-                + "});";
-        this.initializeParserWithSource(source);
+    public void testMultiLineComment() throws Exception{
+        String source = "do{"
+                            + "someStatement(); /*someComment*/" 
+                        + "}while(someBoolean());";
+        parser = new BlockParser(source);
+        this.verifyBlockStatements(parser.getRootBlock(), 2);
         
-        assertEquals(2, root.getStatements().size());
-        this.compareStrings("someMethod(new AnonymClass", 
-                root.getStatements().getFirst().getSource());
-        
-        BlockNode block = root.getStatements().getFirst().getChildBlock();
-        assertEquals(1, block.getStatements().size());
-        this.compareStrings("someMethod();", 
-                block.getStatements().getFirst().getSource());
-        
-        this.compareStrings(");", 
-                root.getStatements().getLast().getSource());
-        
-        this.compareStrings("someMethod(new AnonymClass {\n"
-                + "\tsomeMethod();\n"
-                + "});\n", parser.formattedSource());
+    }
+    
+    private void setUpTestProject() throws Exception{
+        main = new MainApplication();
+        super.setUpProjectAndPackage();
+        ClassModel aClass = parentPackage.addClass(new ClassModel("ClassOne"));
+        aClass.addMethod(new MethodModel("methodOne"));
+        aClass.addMethod(new MethodModel("methodTwo"));
+        aClass = parentPackage.addClass(new ClassModel("ClassTwo"));
+        aClass.addMethod(new MethodModel("methodOne"));
+        aClass.addMethod(new MethodModel("methodTwoOnClassTwo"));
+        aClass.addMethod(new MethodModel("methodThree"));
     }
     
     @Test
-    public void testParseInnerClassWithMultipleStatments(){
-        String source = "someMethod(new AnonymClass{"
-                + "someMethod();"
-                + "someOtherMethod();"
-                + "});";
-        this.initializeParserWithSource(source);
-        this.compareStrings("someMethod(new AnonymClass {\n"
-                + "\tsomeMethod();\n"
-                + "\tsomeOtherMethod();\n"
-                + "});\n", parser.formattedSource());
-    }
-    
-    @Test
-    public void testSingleStatementWithMultiLineBlock(){
-        String source = "if(something)"
-                + "while(somethingElse){"
-                    + "doSomething();"
-                    + "doAnotherThing();"
-                + "}";
-        this.initializeParserWithSource(source);
-        this.compareStrings("if(something)\n"
-                + "\twhile(somethingElse) {\n"
-                + "\t\tdoSomething();\n"
-                + "\t\tdoAnotherThing();\n"
-                + "\t}", parser.formattedSource());
-    }
-    
-    @Test
-    public void testSingleStatementWithinSingleStatement(){
-        String source = "if(something)"
-                + "while(somethingElse){"
-                    + "if(something);"
-                        + "doAnotherThing();"
-                + "}";
-        this.initializeParserWithSource(source);
-        this.compareStrings("if(something)\n"
-                + "\twhile(somethingElse) {\n"
-                    + "\t\tif(something);\n"
-                        + "\t\t\tdoAnotherThing();\n"
-                + "\t}", parser.formattedSource());
-    }
-    
-    @Test
-    public void testIfElseInSingleStatement(){
-        String source = "if(something)"
-                        + "if(someBoolean()){"
-                            + "someMethod();"
-                            + "someOtherMethod();"
-                        + "} else { "
-                            + "yetAnotherMethod();"
-                        + "}";
-        this.initializeParserWithSource(source);
-        
-        assertEquals(1, root.getStatements().size());
-        BlockNode block = root.getStatements().getFirst().getChildBlock();
-        assertEquals(3, block.getStatements().size());
-        
-        this.compareStrings("if(something)\n"
-                        + "\tif(someBoolean()) {\n"
-                            + "\t\tsomeMethod();\n"
-                            + "\t\tsomeOtherMethod();\n"
-                        + "\t} else { \n"
-                            + "\t\tyetAnotherMethod();\n"
-                        + "\t}", parser.formattedSource());
-    }
-    
-    private String classSource(){
-        return "private class Example {"
-                    + "void someMethod(new TestClass {"
-                        + "someInnerMethod();"
-                    + "});"
-                    + "void someOtherMethod(something aThing){"
-                        + "if(someSingleBoolean)"
-                            + "while(something){"
-                                + "doSomething();"
-                                + "if(aThing)"
-                                    + "doSomethingElse();"
-                            + "}"
-                    + "}"
-                + "}";
-    }
-    
-    @Test
-    public void testAllInAClass(){
-        this.initializeParserWithSource(this.classSource());
-        this.compareStrings("private class Example {\n"
-                    + "\tvoid someMethod(new TestClass {\n"
-                        + "\t\tsomeInnerMethod();\n"
-                    + "\t});"
-                    + "\tvoid someOtherMethod(something aThing){\n"
-                        + "\t\tif(someSingleBoolean)\n"
-                            + "\t\t\twhile(something){\n"
-                                + "\t\t\t\tdoSomething();\n"
-                                + "\t\t\t\t\tif(aThing)\n"
-                                    + "\t\t\t\t\tdoSomethingElse();\n"
-                            + "\t\t\t}\n"
-                    + "\t}\n"
-                + "}", parser.formattedSource());
-    }
-    
-    private void setUpTestProject(){
-        try {
-            parentPackage.addClass(new ClassModel("TestClass"));
-            ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
-            parentPackage.addClass(new ClassModel("RandomClass"));
-            aClass.addClass(new ClassModel("SubClass"));
-            parentPackage.addClass(new ClassModel("HelloWorldClass"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
-    }
-    
-    @Test
-    public void testParseSimpleMethodString(){
-        String source = "someMethod(){"
-                + "someStatement();"
-                + "someOtherStatement();"
-                + "}";
-        this.initializeParserWithSource(source);
-        assertEquals(1, root.getStatements().size());
-        this.compareStrings("someMethod()", root.getStatements().getFirst().getSource());
-        
-    }
-    
-    @Test
-    public void testReferenceSource() throws Exception{
-        ClassModel classA = parentPackage.addClass(new ClassModel("ClassA"));
-        MethodModel methodOne = classA.addMethod(new MethodModel("methodOne"));
-        ClassModel classB = parentPackage.addClass(new ClassModel("ClassB"));
-        MethodModel methodTwo = classB.addMethod(new MethodModel("methodTwo"));
-        
-        parser = new BlockParser(methodOne);
-        String source = "ClassA aThing = new ClassA(); aThing.methodOne()";
-        parser.findReferences(source);
-        
-        assertTrue(parser.getReferences().containsValue(classA));
-        assertEquals(2, parser.getReferences().size());
-        
-    }
-    
-    @Test
-    public void testParseSimpleMethodModel()throws Exception{
-        ClassModel aClass = parentPackage.addClass(new ClassModel("TestClass"));
-        aClass.addMethod(new MethodModel("someOtherMethod"));
-        MethodModel aMethod = aClass.addMethod(new MethodModel("someMethod"));
-        aMethod.setReturnType(ClassModel.getObjectClass());
-        aMethod.setSource("int x = 5;\nsomeOtherMethod();");
+    public void testParseFromModel() throws Exception{
+        this.setUpTestProject();
+        MethodModel aMethod = parentProject.findClass("ClassOne").methods.getFirst();
+        this.compareStrings("void methodOne(){\n\n}", aMethod.toSourceString());
         
         parser = new BlockParser(aMethod);
-        root = parser.getTree();
-        assertEquals(1, root.getStatements().size());
-        StatementNode statement = root.getStatements().getFirst();
-        this.compareStrings("Object someMethod()", statement.getSource());
+        assertSame(aMethod, parser.getModel());
+        assertTrue(parser.getReferences().isEmpty());
+        String source = "do{"
+                            + "this.methodTwo(); /*someComment*/" 
+                        + "}while(ClassTwo.methodThree());";
         
-        BlockNode node = statement.getBlock();
-        assertEquals(2, node.getStatements().size());
-        this.compareStrings("int x = 5;", node.getStatements().getFirst().getSource());
-        this.compareStrings("someOtherMethod();", node.getStatements().getLast().getSource());
-        
-        assertEquals(2, parser.getReferences().size());
+        parser.parseSource(source);
+        assertEquals(3, parser.getReferences().size());
     }
+    
+    /**
+     * Tests I need to write
+     * 
+     * test skips string literals
+     * test parse array declarations
+     * test do-while
+     * test references
+     * test parses comments in single statement blocks
+     * 
+     * all of these need to be tested in single, and multi-line blocks
+     */
+    
 }

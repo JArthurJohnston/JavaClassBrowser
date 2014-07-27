@@ -18,7 +18,7 @@ public class BlockNode {
     private StatementNode parent;
     private boolean isSingleStatement;
     
-    private BlockNode(){
+    protected BlockNode(){
         statements = new LinkedList();
     }
     
@@ -75,6 +75,10 @@ public class BlockNode {
     
     public boolean isRoot(){
         return this.parent == null && this.tree != null;
+    }
+    
+    public String source(){
+        return tree.source();
     }
     
 }

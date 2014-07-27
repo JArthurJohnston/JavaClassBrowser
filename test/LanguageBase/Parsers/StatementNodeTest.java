@@ -6,18 +6,36 @@
 
 package LanguageBase.Parsers;
 
+import LanguageBase.Parsers.MockParsers.MockBlockNode;
+import LanguageBase.Parsers.MockParsers.MockBlockParser;
+import Types.ScopeType;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.AfterClass;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
  * @author arthur
  */
 public class StatementNodeTest {
+    private static MockBlockNode parent;
+    private StatementNode statement;
     
     public StatementNodeTest() {
+    }
+    
+    
+    @BeforeClass
+    public static void setUpClass() {
+        parent = new MockBlockNode();
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        parent = null;
     }
     
     @Before
@@ -26,41 +44,22 @@ public class StatementNodeTest {
     
     @After
     public void tearDown() {
+        parent = null;
+        statement = null;
     }
 
-    /**
-     * Test of getParentBlock method, of class StatementNode.
-     */
     @Test
-    public void testGetParentBlock() {
+    public void testIsClassDeclaration(){
+        statement = parent.getStatement("");
+        assertFalse(statement.isClassDeclaration());
+        statement = parent.getStatement("class SomeClass");
+        assertTrue(statement.isClassDeclaration());
     }
-
-    /**
-     * Test of getChildBlock method, of class StatementNode.
-     */
+    
     @Test
-    public void testGetChildBlock() {
-    }
-
-    /**
-     * Test of getTree method, of class StatementNode.
-     */
-    @Test
-    public void testGetTree() {
-    }
-
-    /**
-     * Test of getSource method, of class StatementNode.
-     */
-    @Test
-    public void testGetSource() {
-    }
-
-    /**
-     * Test of setEnd method, of class StatementNode.
-     */
-    @Test
-    public void testSetEnd() {
+    public void testStatementScope(){
+        statement = parent.getStatement("private void someMethod()");
+        assertSame(ScopeType.PRIVATE, statement.getScope());
     }
     
 }
