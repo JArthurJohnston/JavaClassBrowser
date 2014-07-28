@@ -6,6 +6,9 @@
 
 package LanguageBase.Parsers;
 
+import Types.ClassType;
+import Types.ScopeType;
+
 /**
  *
  * @author arthur
@@ -14,6 +17,8 @@ public class StatementNode {
     private int start, end;
     private final BlockNode parentBlock;
     private BlockNode childBlock;
+    private ScopeType scope;
+    private ClassType side;
     
     public StatementNode(BlockNode parent, int start){
         this.parentBlock = parent;
@@ -62,10 +67,34 @@ public class StatementNode {
     }
     
     public ScopeType getScope(){
-        
+        if(this.scope == null)
+            return ScopeType.NONE;
+        return scope;
     }
     
     private String[] sourceTokens(){
         return this.source().split(" ");
     }
+    
+    public void parseStatement(){
+        for(String s : this.source().split("\\s+"))
+            switch(s){
+                case "static":
+                    this.side = ClassType.STATIC;
+                    break;
+                case "private":
+                    this.scope = ScopeType.PRIVATE;
+                    break;
+                case "public":
+                    this.scope = ScopeType.PUBLIC;
+                    break;
+                case "protected":
+                    this.scope = ScopeType.PROTECTED;
+                    break;
+                default:
+                    break;
+            }
+    }
+    
+    
 }

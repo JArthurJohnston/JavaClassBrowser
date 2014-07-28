@@ -7,7 +7,6 @@
 package LanguageBase.Parsers;
 
 import LanguageBase.Parsers.MockParsers.MockBlockNode;
-import LanguageBase.Parsers.MockParsers.MockBlockParser;
 import Types.ScopeType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +43,6 @@ public class StatementNodeTest {
     
     @After
     public void tearDown() {
-        parent = null;
         statement = null;
     }
 
@@ -59,7 +57,20 @@ public class StatementNodeTest {
     @Test
     public void testStatementScope(){
         statement = parent.getStatement("private void someMethod()");
+        statement.parseStatement();
         assertSame(ScopeType.PRIVATE, statement.getScope());
+        
+        statement = parent.getStatement("public void someMethod()");
+        statement.parseStatement();
+        assertSame(ScopeType.PUBLIC, statement.getScope());
+        
+        statement = parent.getStatement("protected void someMethod()");
+        statement.parseStatement();
+        assertSame(ScopeType.PROTECTED, statement.getScope());
+        
+        statement = parent.getStatement("void someMethod()");
+        statement.parseStatement();
+        assertSame(ScopeType.NONE, statement.getScope());
     }
     
 }
