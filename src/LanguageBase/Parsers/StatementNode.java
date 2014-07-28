@@ -19,6 +19,8 @@ public class StatementNode {
     private BlockNode childBlock;
     private ScopeType scope;
     private ClassType side;
+    private StatementType type; 
+    
     
     public StatementNode(BlockNode parent, int start){
         this.parentBlock = parent;
@@ -63,7 +65,7 @@ public class StatementNode {
     }
     
     public boolean isClassDeclaration(){
-        return false;
+        return this.type == StatementType.ClassDecl;
     }
     
     public ScopeType getScope(){
@@ -72,13 +74,22 @@ public class StatementNode {
         return scope;
     }
     
+    public ClassType getClassType(){
+        if(this.side == null)
+            return ClassType.INSTANCE;
+        return side;
+    }
+    
     private String[] sourceTokens(){
         return this.source().split(" ");
     }
     
     public void parseStatement(){
-        for(String s : this.source().split("\\s+"))
+        for(String s : this.source().split("\\s+")) //split at white spaces
             switch(s){
+                case "class":
+                    this.type = StatementType.ClassDecl;
+                    break;
                 case "static":
                     this.side = ClassType.STATIC;
                     break;
@@ -94,6 +105,10 @@ public class StatementNode {
                 default:
                     break;
             }
+    }
+    
+    public enum StatementType {
+        ClassDecl, MethodDecl, VarDecl;
     }
     
     

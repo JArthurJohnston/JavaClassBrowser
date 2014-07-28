@@ -7,6 +7,7 @@
 package LanguageBase.Parsers;
 
 import LanguageBase.Parsers.MockParsers.MockBlockNode;
+import Types.ClassType;
 import Types.ScopeType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -49,13 +50,20 @@ public class StatementNodeTest {
     @Test
     public void testIsClassDeclaration(){
         statement = parent.getStatement("");
+        statement.parseStatement();
         assertFalse(statement.isClassDeclaration());
+        
         statement = parent.getStatement("class SomeClass");
+        statement.parseStatement();
         assertTrue(statement.isClassDeclaration());
     }
     
     @Test
     public void testStatementScope(){
+        statement = parent.getStatement("");
+        statement.parseStatement();
+        assertSame(ScopeType.NONE, statement.getScope());
+        
         statement = parent.getStatement("private void someMethod()");
         statement.parseStatement();
         assertSame(ScopeType.PRIVATE, statement.getScope());
@@ -71,6 +79,24 @@ public class StatementNodeTest {
         statement = parent.getStatement("void someMethod()");
         statement.parseStatement();
         assertSame(ScopeType.NONE, statement.getScope());
+    }
+    
+    @Test
+    public void testStatementClassSide(){
+        statement = parent.getStatement("");
+        assertEquals(ClassType.INSTANCE, statement.getClassType());
+        
+        statement = parent.getStatement("");
+        statement.parseStatement();
+        assertEquals(ClassType.INSTANCE, statement.getClassType());
+        
+        statement = parent.getStatement("private void someMethod()");
+        statement.parseStatement();
+        assertSame(ClassType.INSTANCE, statement.getClassType());
+        
+        statement = parent.getStatement("private static void someMethod()");
+        statement.parseStatement();
+        assertSame(ClassType.STATIC, statement.getClassType());
     }
     
 }
