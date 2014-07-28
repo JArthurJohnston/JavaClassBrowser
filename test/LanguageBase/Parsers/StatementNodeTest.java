@@ -6,6 +6,7 @@
 
 package LanguageBase.Parsers;
 
+import Internal.BaseTest;
 import LanguageBase.Parsers.MockParsers.MockBlockNode;
 import Types.ClassType;
 import Types.ScopeType;
@@ -20,7 +21,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class StatementNodeTest {
+public class StatementNodeTest extends BaseTest{
     private static MockBlockNode parent;
     private StatementNode statement;
     
@@ -97,6 +98,17 @@ public class StatementNodeTest {
         statement = parent.getStatement("private static void someMethod()");
         statement.parseStatement();
         assertSame(ClassType.STATIC, statement.getClassType());
+    }
+    
+    @Test
+    public void testIsMethodDeclaration(){
+        statement = parent.getStatement("");
+        statement.parseStatement();
+        assertFalse(statement.isMethodDeclaration());
+        
+        statement = parent.getStatement("private void aMethod()");
+        statement.parseStatement();
+        assertTrue(statement.isMethodDeclaration());
     }
     
 }

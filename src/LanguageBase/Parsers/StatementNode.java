@@ -85,7 +85,9 @@ public class StatementNode {
     }
     
     public void parseStatement(){
-        for(String s : this.source().split("\\s+")) //split at white spaces
+        for(String s : this.source().split("\\s+")) { //split at white spaces
+            if(s.split(".").length > 1)
+                //parseObjects(s.split(".")
             switch(s){
                 case "class":
                     this.type = StatementType.ClassDecl;
@@ -105,6 +107,11 @@ public class StatementNode {
                 default:
                     break;
             }
+        }
+    }
+    
+    public boolean isMethodDeclaration(){
+        return this.type == StatementType.MethodDecl;
     }
     
     public enum StatementType {

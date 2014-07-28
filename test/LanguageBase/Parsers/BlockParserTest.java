@@ -6,11 +6,9 @@
 
 package LanguageBase.Parsers;
 
-import Internal.BaseTest;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
-import Models.ProjectModel;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -20,7 +18,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class BlockParserTest extends BaseTest{
+public class BlockParserTest extends BaseParserTest{
     private BlockParser parser;
     
     public BlockParserTest() {
@@ -35,27 +33,6 @@ public class BlockParserTest extends BaseTest{
     @Override
     public void tearDown() {
         parser = null;
-    }
-    
-    private void verifyBlockStatements(BlockNode aBlock, int numberOfStatements){
-        if(numberOfStatements + 1 != aBlock.getStatements().size())
-            fail("expected "+ numberOfStatements+" but was "+ 
-                    (aBlock.getStatements().size()-1));
-        //assertEquals(numberOfStatements+1, aBlock.getStatements().size());
-        assertEquals("", aBlock.getStatements().getLast().getSource());
-    }
-    
-    private BlockNode verifyAndGetChildBlockFromStatement(StatementNode aStatement){
-        //errors if the block is null and asserts its the right class
-        //since BlockNodes are lazy-initialized
-        assertSame(BlockNode.class, 
-                this.getVariableFromClass(aStatement, "childBlock").getClass());
-        return aStatement.getChildBlock();
-    }
-    
-    private void printStatementsFromBlock(BlockNode aBlock){
-        for(StatementNode s : aBlock.getStatements())
-            System.out.println('\'' + s.getSource() + '\'');
     }
 
     @Test
