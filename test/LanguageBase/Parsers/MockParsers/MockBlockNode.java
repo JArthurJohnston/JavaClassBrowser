@@ -6,8 +6,8 @@
 
 package LanguageBase.Parsers.MockParsers;
 
-import LanguageBase.Parsers.BlockNode;
-import LanguageBase.Parsers.StatementNode;
+import LanguageBase.Parsers.Nodes.BlockNode;
+import LanguageBase.Parsers.Nodes.StatementNode;
 
 /**
  *

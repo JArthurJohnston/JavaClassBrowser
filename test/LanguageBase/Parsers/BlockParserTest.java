@@ -6,6 +6,8 @@
 
 package LanguageBase.Parsers;
 
+import LanguageBase.Parsers.Nodes.BlockNode;
+import LanguageBase.Parsers.Nodes.StatementNode;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;

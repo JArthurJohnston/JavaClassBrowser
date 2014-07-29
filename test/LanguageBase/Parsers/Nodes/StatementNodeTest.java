@@ -4,10 +4,14 @@
  * and open the template in the editor.
  */
 
-package LanguageBase.Parsers;
+package LanguageBase.Parsers.Nodes;
 
 import Internal.BaseTest;
 import LanguageBase.Parsers.MockParsers.MockBlockNode;
+import LanguageBase.Parsers.Nodes.StatementNode;
+import MainBase.MainApplication;
+import Models.ClassModel;
+import Models.MethodModel;
 import Types.ClassType;
 import Types.ScopeType;
 import org.junit.After;
@@ -48,6 +52,15 @@ public class StatementNodeTest extends BaseTest{
         statement = null;
     }
 
+    
+    protected void setUpParserAndProject()throws Exception{
+        main = new MainApplication();
+        super.setUpProjectAndPackage();
+        ClassModel aClass = parentProject.addClass(new ClassModel("OneClass"));
+        aClass.addMethod(new MethodModel("someMethod"));
+        MethodModel aMethod = aClass.addMethod(new MethodModel("testMethod"));
+        parentProject.addClass(new ClassModel("TwoClass"));
+    }
     @Test
     public void testIsClassDeclaration(){
         statement = parent.getStatement("");
@@ -109,6 +122,11 @@ public class StatementNodeTest extends BaseTest{
         statement = parent.getStatement("private void aMethod()");
         statement.parseStatement();
         assertTrue(statement.isMethodDeclaration());
+    }
+    
+    @Test
+    public void testParseGetsReferences()throws Exception{
+        this.setUpTestProject();
     }
     
 }

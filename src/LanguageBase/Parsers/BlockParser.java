@@ -6,6 +6,8 @@
 
 package LanguageBase.Parsers;
 
+import LanguageBase.Parsers.Nodes.BlockNode;
+import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.BaseModel;
 import java.util.LinkedList;
 

@@ -6,50 +6,116 @@
 
 package LanguageBase.Parsers.Nodes;
 
-import LanguageBase.Parsers.BaseParseTree;
+import LanguageBase.Parsers.Parser;
+import Types.ClassType;
+import Types.ScopeType;
 
 /**
  *
  * @author arthur
  */
-public class StatementNode extends BaseParseTreeNode{
-    private BlockNode block;
+public class StatementNode extends BaseNode{
+    private int start, end;
+    private final BlockNode parentBlock;
+    private BlockNode childBlock;
+    private ScopeType scope;
+    private ClassType side;
+    private StatementType type; 
     
-    public StatementNode(BaseParseTree parent, int start, int end){
-        super(parent, start, end);
+    
+    public StatementNode(BlockNode parent, int start){
+        this.parentBlock = parent;
+        this.start = start;
     }
+    
     public StatementNode(BlockNode parent, int start, int end){
-        super(parent, start, end);
+        this(parent, start);
+        this.end = end;
     }
     
-    public BlockNode addBlock(int start){
-        block = new BlockNode(this, start);
-        return block;
-    }
-    
-    @Override
-    public BlockNode getBlock(){
-        return (BlockNode)this.parentNode;
+    public BlockNode getParentBlock(){
+        return this.parentBlock;
     }
     
     public BlockNode getChildBlock(){
-        return block;
+        if(this.childBlock == null)
+            childBlock = new BlockNode(this);
+        return this.childBlock;
     }
     
-    public void buildFormattedSource(StringBuilder sb){
-        sb.append(this.tabString());
-        sb.append(this.getSource());
-        if(this.block == null){
-            sb.append('\n');
-        }else{
-            if(this.block.isSingleStatement())
-                sb.append('\n');
-            block.buildFormattedSource(sb);
+    public Parser getTree(){
+        return this.parentBlock.getTree();
+    }
+    
+    public String getSource(){
+        if(end < start)
+            return "";
+        return this.source().substring(start, end).trim();
+    }
+    
+    public void close(int end){
+        this.end = end;
+    }
+    
+    public boolean isOpen(){
+        return this.end == 0;
+    }
+    
+    private String source(){
+        return this.parentBlock.source();
+    }
+    
+    public boolean isClassDeclaration(){
+        return this.type == StatementType.ClassDecl;
+    }
+    
+    public ScopeType getScope(){
+        if(this.scope == null)
+            return ScopeType.NONE;
+        return scope;
+    }
+    
+    public ClassType getClassType(){
+        if(this.side == null)
+            return ClassType.INSTANCE;
+        return side;
+    }
+    
+    private String[] sourceTokens(){
+        return this.source().split(" ");
+    }
+    
+    public void parseStatement(){
+        for(String s : this.getSource().split("\\s+")) { //split at white spaces
+            if(s.split(".").length > 1){
+                //parseObjects(s.split(".")
+            }
+            
+            switch(s){
+                case "class":
+                    this.type = StatementType.ClassDecl;
+                    break;
+                case "static":
+                    this.side = ClassType.STATIC;
+                    break;
+                case "private":
+                    this.scope = ScopeType.PRIVATE;
+                    break;
+                case "public":
+                    this.scope = ScopeType.PUBLIC;
+                    break;
+                case "protected":
+                    this.scope = ScopeType.PROTECTED;
+                    break;
+                default:
+                    break;
+            }
         }
     }
     
-    @Override
-    protected String tabString(){
-        return this.getBlock().tabString();
+    public boolean isMethodDeclaration(){
+        return this.type == StatementType.MethodDecl;
     }
+    
+    
 }

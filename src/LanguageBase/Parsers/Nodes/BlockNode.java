@@ -6,46 +6,40 @@
 
 package LanguageBase.Parsers.Nodes;
 
-import LanguageBase.Parsers.BaseParseTree;
+import LanguageBase.Parsers.Parser;
 import java.util.LinkedList;
 
 /**
  *
  * @author arthur
  */
-public class BlockNode extends BaseParseTreeNode{
+public class BlockNode extends BaseNode{
+    private Parser tree;
     private LinkedList<StatementNode> statements;
+    private StatementNode parent;
     private boolean isSingleStatement;
-    
     
     protected BlockNode(){
         statements = new LinkedList();
     }
     
-    public BlockNode(BaseParseTree parentTree){
+    public BlockNode(Parser tree){
         this();
-        this.parentTree = parentTree;
+        this.tree = tree;
     }
     
-    public BlockNode(StatementNode parent, int index){
-        this();
-        this.parentNode = parent;
-        this.start = index;
+    public BlockNode(StatementNode parent){
+        this(parent.getTree());
+        this.parent = parent;
     }
     
-    public void isSingleStatement(boolean single){
-        this.isSingleStatement = single;
+    public BlockNode(StatementNode parent, boolean isSingleStatement){
+        this(parent);
+        this.isSingleStatement = isSingleStatement;
     }
     
-    public boolean isSingleStatement(){
-        return this.isSingleStatement;
-    }
-    
-    public BlockNode close(int index){
-        this.end = index;
-        if(this.isRoot())
-            return this;
-        return this.parentNode.getBlock();
+    public Parser getTree(){
+        return tree;
     }
     
     public LinkedList<StatementNode> getStatements(){
@@ -57,46 +51,35 @@ public class BlockNode extends BaseParseTreeNode{
         return this.statements.getLast();
     }
     
-    @Override
-    public boolean isRoot(){
-        return !(this.parentTree == null);
+    public StatementNode addStatement(int start){
+        this.statements.add(new StatementNode(this, start));
+        return this.statements.getLast();
     }
     
-    @Override
-    public StatementNode getParentNode(){
-        return (StatementNode)super.getParentNode();
+    public StatementNode getParentStatement(){
+        return this.parent;
     }
     
-    @Override
-    public BlockNode getBlock(){
+    public BlockNode getParentBlock(){
         if(this.isRoot())
             return this;
-        return parentNode.getBlock();
+        return this.getParentStatement().getParentBlock();
     }
     
-    @Override
-    protected String tabString(){
-        if(this.isRoot())
-            return super.tabString();
-        return '\t' + this.getBlock().tabString();
+    public void singleStatement(boolean isSingle){
+        this.isSingleStatement = isSingle;
     }
     
-    @Override
-    public String getFormattedSource(){
-        return this.buildFormattedSource(new StringBuilder()).toString();
+    public boolean isSingleStatement(){
+        return this.isSingleStatement;
     }
     
-    public StringBuilder buildFormattedSource(StringBuilder sb){
-        if(!this.isSingleStatement){
-            sb.append(" {\n");
-        }
-        for(StatementNode sn : this.getStatements()){
-            sn.buildFormattedSource(sb);
-        }
-        if(!this.isSingleStatement){
-            sb.append(this.getBlock().tabString());
-            sb.append("}");
-        }
-        return sb;
+    public boolean isRoot(){
+        return this.parent == null && this.tree != null;
     }
+    
+    public String source(){
+        return tree.source();
+    }
+    
 }
