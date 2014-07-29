@@ -26,7 +26,7 @@ public class ClassModel extends PackageModel{
     private ClassModel generic;
     protected PackageModel parentPackage;
     public LinkedList<MethodModel> methods;
-    public LinkedList<VariableModel> variables;
+    public HashMap<String, VariableModel> variables;
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
     
@@ -35,7 +35,7 @@ public class ClassModel extends PackageModel{
     
     protected ClassModel(){
         this.methods = new LinkedList();
-        this.variables = new LinkedList();
+        this.variables = new HashMap();
         this.isAbstract = false;
     }
     
@@ -122,13 +122,7 @@ public class ClassModel extends PackageModel{
     }
     
     public boolean okToAddVariable(String newVarName){
-        //check for redefining instanceVar
-        for(VariableModel v: variables){
-            if(v.name().compareTo(newVarName)==0) {
-                return false;
-            }
-        }
-        return true;
+        return !variables.containsKey(newVarName);
     }
     
     /**
@@ -158,7 +152,7 @@ public class ClassModel extends PackageModel{
     
     public VariableModel addVariable(VariableModel newVar) throws AlreadyExistsException{
         if(this.okToAddVariable(newVar.name())){
-            variables.add(newVar);
+            variables.put(newVar.name(), newVar);
             newVar.setParent(this);
             fireAdded(this, newVar);
             return newVar;
@@ -407,6 +401,10 @@ public class ClassModel extends PackageModel{
                 + this.name() 
                 + this.inheritenceString()
                 + this.interfacesString();
+    }
+    
+    public VariableModel findVariable(String variableName){
+        
     }
     
 }

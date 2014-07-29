@@ -573,6 +573,21 @@ public class ClassModelTest extends BaseModelTest{
     }
     
     @Test
+    public void testFindVariable() throws Exception{
+        VariableModel aVar = 
+                testClass.addVariable(
+                        new VariableModel(
+                                ClassModel.getPrimitive("char"), "aCharVar"));
+        assertSame(aVar, testClass.findVariable("aCharVar"));
+        
+    }
+    
+    @Test
+    public void testAddVariableAddsReference(){
+        fail();
+    }
+    
+    @Test
     public void testToSourceString(){
         fail();
     }

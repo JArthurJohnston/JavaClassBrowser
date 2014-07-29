@@ -31,20 +31,23 @@ public class VariableModel extends BaseModel{
     }
     
     public VariableModel(String name, ClassType instanceOrStatic){
+        this(name);
         this.staticOrInstance = instanceOrStatic;
-        this.name = name;
+    }
+    
+    public VariableModel(ClassModel type, String name){
+        this(name);
+        this.type = type;
     }
     
     public VariableModel(ScopeType scope, ClassModel type, String name){
+        this(type, name);
         this.scope = scope;
-        this.type = type;
-        this.name = name;
     }
     
     public VariableModel(ClassType staticOrInstance, ClassModel objectType, String name){
+        this(objectType, name);
         this.staticOrInstance = staticOrInstance;
-        this.type = objectType;
-        this.name = name;
     }
     
     /**

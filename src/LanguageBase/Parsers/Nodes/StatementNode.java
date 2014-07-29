@@ -6,9 +6,13 @@
 
 package LanguageBase.Parsers.Nodes;
 
+import Exceptions.DoesNotExistException;
 import LanguageBase.Parsers.Parser;
+import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,7 +20,7 @@ import Types.ScopeType;
  */
 public class StatementNode extends BaseNode{
     private final int start;
-    private int end, openParenPtr, closeParenPtr;
+    private int end, openParenPtr, closeParenPtr, parsePtr;
     private final BlockNode parentBlock;
     private BlockNode childBlock;
     private ScopeType scope;
@@ -99,7 +103,7 @@ public class StatementNode extends BaseNode{
     }
     
     public void parseStatement(){
-        for(String s : this.getSource().split("\\s+")) { //split at white spaces
+        for(String s : this.getSource().split("\\s+")){ //split at white spaces
             switch(s){
                 case "class":
                     this.type = StatementType.ClassDecl;
@@ -123,9 +127,30 @@ public class StatementNode extends BaseNode{
         }
     }
     
-    private void findReference(String source){
+    private void parse(final int parsePtr){
         if(this.getTree().hasModel())
-            
+            try {
+                this.getTree()
+                        .addReference(this.getTree()
+                                .getProject()
+                                .findClass(this.parseSegment(parsePtr)));
+        } catch (DoesNotExistException ex) {
+        }
+    }
+    
+    private String parseSegment(final int parsePtr){
+        int start = this.parsePtr;
+        this.parsePtr = parsePtr;
+        return this.source().substring(start, this.parsePtr).trim();
+    }
+    
+    private void findReference(String source){
+        if(this.getTree().hasModel()){
+            try {
+                this.getTree().addReference(this.getProject().findClass(source));
+            } catch (DoesNotExistException ex) {
+            }   
+        }
     }
     
     private String argumentSegment(){
@@ -134,6 +159,10 @@ public class StatementNode extends BaseNode{
     
     public boolean isMethodDeclaration(){
         return this.type == StatementType.MethodDecl;
+    }
+    
+    private ProjectModel getProject(){
+        return this.getTree().getProject();
     }
     
     

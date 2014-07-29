@@ -18,7 +18,8 @@ import java.util.LinkedList;
 public abstract class Parser extends BaseParseTree{
     protected BaseModel baseModel;
     protected LinkedList<String> errors;
-    protected LinkedList<ModelReference> references;
+    //protected LinkedList<ModelReference> references;
+    protected LinkedList<BaseModel> references;
     protected BracketStack stack;
     protected int lineCount;
     
@@ -121,10 +122,16 @@ public abstract class Parser extends BaseParseTree{
         return lineCount;
     }
     
-    public LinkedList<ModelReference> getReferences(){
+    public LinkedList<BaseModel> getReferences(){
         if(references == null)
             return new LinkedList();
         return references;
+    }
+    
+    public void addReference(BaseModel aModel){
+        if(aModel == null)
+            return;
+        references.add(model);
     }
     
     public boolean hasModel(){

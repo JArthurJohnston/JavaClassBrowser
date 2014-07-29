@@ -130,7 +130,7 @@ public class StatementNodeTest extends BaseTest{
     }
     
     @Test
-    public void testParseGetsReferences() throws Exception{
+    public void testParse() throws Exception{
         this.setUpTestProject();
         
     }
