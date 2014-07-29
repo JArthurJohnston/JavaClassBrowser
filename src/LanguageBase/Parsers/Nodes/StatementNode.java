@@ -15,7 +15,8 @@ import Types.ScopeType;
  * @author arthur
  */
 public class StatementNode extends BaseNode{
-    private int start, end;
+    private final int start;
+    private int end, openParenPtr, closeParenPtr;
     private final BlockNode parentBlock;
     private BlockNode childBlock;
     private ScopeType scope;
@@ -23,12 +24,12 @@ public class StatementNode extends BaseNode{
     private StatementType type; 
     
     
-    public StatementNode(BlockNode parent, int start){
+    public StatementNode(final BlockNode parent, final int start){
         this.parentBlock = parent;
         this.start = start;
     }
     
-    public StatementNode(BlockNode parent, int start, int end){
+    public StatementNode(final BlockNode parent, final int start, final int end){
         this(parent, start);
         this.end = end;
     }
@@ -53,7 +54,7 @@ public class StatementNode extends BaseNode{
         return this.source().substring(start, end).trim();
     }
     
-    public void close(int end){
+    public void close(final int end){
         this.end = end;
     }
     
@@ -81,16 +82,24 @@ public class StatementNode extends BaseNode{
         return side;
     }
     
-    private String[] sourceTokens(){
-        return this.source().split(" ");
+    public int openParenPointer(){
+        return this.openParenPtr;
+    }
+    
+    public void setOpenParen(final int index){
+        this.openParenPtr = index;
+    }
+    
+    public int closeParenPointer(){
+        return this.closeParenPtr;
+    }
+    
+    public void setCloseParen(final int index){
+        this.closeParenPtr = index;
     }
     
     public void parseStatement(){
         for(String s : this.getSource().split("\\s+")) { //split at white spaces
-            if(s.split(".").length > 1){
-                //parseObjects(s.split(".")
-            }
-            
             switch(s){
                 case "class":
                     this.type = StatementType.ClassDecl;
@@ -108,9 +117,19 @@ public class StatementNode extends BaseNode{
                     this.scope = ScopeType.PROTECTED;
                     break;
                 default:
+                    this.findReference(s);
                     break;
             }
         }
+    }
+    
+    private void findReference(String source){
+        if(this.getTree().hasModel())
+            
+    }
+    
+    private String argumentSegment(){
+        return new String(source().substring(this.openParenPtr, this.closeParenPtr)).trim();
     }
     
     public boolean isMethodDeclaration(){

@@ -9,6 +9,7 @@ package LanguageBase.Parsers;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.BaseModel;
+import Models.ProjectModel;
 import java.util.LinkedList;
 
 /**
@@ -67,10 +68,12 @@ public class BlockParser extends Parser{
 
     @Override
     protected void parseOpenParen(int index) {
+        currentStatement.setOpenParen(index);
     }
 
     @Override
     protected void parseCloseParen(int index) {
+        currentStatement.setCloseParen(index);
         for(char c : new char[]{';', '{', '.'})
             if(this.nextNonWhiteCharFrom(index+1) == c)
                 return;

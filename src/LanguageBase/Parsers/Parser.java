@@ -8,6 +8,7 @@ package LanguageBase.Parsers;
 
 import LanguageBase.Parsers.Stacks.BracketStack;
 import Models.BaseModel;
+import Models.ProjectModel;
 import java.util.LinkedList;
 
 /**
@@ -124,6 +125,16 @@ public abstract class Parser extends BaseParseTree{
         if(references == null)
             return new LinkedList();
         return references;
+    }
+    
+    public boolean hasModel(){
+        return this.baseModel != null;
+    }
+    
+    public ProjectModel getProject(){
+        if(this.hasModel())
+            return this.baseModel.getProject();
+        return null;
     }
     
     protected abstract void parseOpenCurlyBracket(int index);

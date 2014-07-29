@@ -535,6 +535,8 @@ public class BlockParserTest extends BaseParserTest{
         this.compareStrings("void methodOne(){\n\n}", aMethod.toSourceString());
         
         parser = new BlockParser(aMethod);
+        assertTrue(parser.hasModel());
+        assertSame(parentProject, parser.getProject());
         assertSame(aMethod, parser.getModel());
         assertTrue(parser.getReferences().isEmpty());
         String source = "do{"
@@ -543,6 +545,19 @@ public class BlockParserTest extends BaseParserTest{
         
         parser.parseSource(source);
         assertEquals(3, parser.getReferences().size());
+    }
+    
+    @Test
+    public void testSetStatementParenPointers() throws Exception{
+        parser = new BlockParser("");
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals(0, statement.openParenPointer());
+        assertEquals(0, statement.closeParenPointer());
+        
+        parser = new BlockParser("test()");
+        statement = parser.getRootBlock().getStatements().getFirst();
+        assertEquals(4, statement.openParenPointer());
+        assertEquals(5, statement.closeParenPointer());
     }
     
     /**

@@ -53,7 +53,7 @@ public class StatementNodeTest extends BaseTest{
     }
 
     
-    protected void setUpParserAndProject()throws Exception{
+    protected void setUpTestProject()throws Exception{
         main = new MainApplication();
         super.setUpProjectAndPackage();
         ClassModel aClass = parentProject.addClass(new ClassModel("OneClass"));
@@ -111,6 +111,11 @@ public class StatementNodeTest extends BaseTest{
         statement = parent.getStatement("private static void someMethod()");
         statement.parseStatement();
         assertSame(ClassType.STATIC, statement.getClassType());
+        
+        statement = parent.getStatement("private  static  void  someMethod()");
+        statement.parseStatement();
+        assertSame(ClassType.STATIC, statement.getClassType());
+        assertSame(ScopeType.PRIVATE, statement.getScope());
     }
     
     @Test
@@ -125,8 +130,9 @@ public class StatementNodeTest extends BaseTest{
     }
     
     @Test
-    public void testParseGetsReferences()throws Exception{
+    public void testParseGetsReferences() throws Exception{
         this.setUpTestProject();
+        
     }
     
 }
