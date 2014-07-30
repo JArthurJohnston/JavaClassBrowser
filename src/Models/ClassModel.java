@@ -25,10 +25,13 @@ public class ClassModel extends PackageModel{
     protected boolean isFinal;
     private ClassModel generic;
     protected PackageModel parentPackage;
-    public LinkedList<MethodModel> methods;
-    public HashMap<String, VariableModel> variables;
+    private LinkedList<MethodModel> methods;
+    protected HashMap<String, VariableModel> variables;
+    private LinkedList<VariableModel> staticVars;
+    private LinkedList<VariableModel> instVars;
     //at this level, the classList variable is used to hold onto subclasses
     private static String hasSubClassesError = "Class has subclasses.";
+    private LinkedList<BaseModel> references;
     
     private static HashMap <String, ClassModel> PRIMITIVE_TYPES;
     private static ClassModel OBJECT_CLASS;
@@ -37,6 +40,7 @@ public class ClassModel extends PackageModel{
         this.methods = new LinkedList();
         this.variables = new HashMap();
         this.isAbstract = false;
+        this.references = new LinkedList();
     }
     
     public ClassModel(String name, ScopeType scope){
@@ -154,11 +158,22 @@ public class ClassModel extends PackageModel{
         if(this.okToAddVariable(newVar.name())){
             variables.put(newVar.name(), newVar);
             newVar.setParent(this);
+            if(!newVar.getObjectType().isPrimitive())
+                newVar.getObjectType().addReference(newVar);
             fireAdded(this, newVar);
             return newVar;
         }else {
             throw new AlreadyExistsException(this, newVar);
         }
+    }
+    
+    public void addReference(BaseModel aModel){
+        this.references.add(aModel);
+    }
+    
+    public void removeReference(BaseModel aModel) throws DoesNotExistException{
+        if(!this.references.remove(aModel))
+            throw new DoesNotExistException(this, aModel);
     }
     
     /**
@@ -228,10 +243,11 @@ public class ClassModel extends PackageModel{
     }
     
     public VariableModel removeVariable(VariableModel aVar) throws DoesNotExistException{
-        if(!variables.contains(aVar))
+        if(!this.variables.remove(aVar.name(), aVar))
             throw new DoesNotExistException(this, aVar);
-        else
-            variables.remove(aVar);
+        if(!aVar.getObjectType().isPrimitive())
+            aVar.getObjectType().removeReference(aVar);
+        fireRemoved(this, aVar);
         return aVar;
     }
     
@@ -271,15 +287,31 @@ public class ClassModel extends PackageModel{
         return aList;
     }
     
-    public LinkedList getVariables(){
+    public HashMap<String, VariableModel> getVariables(){
         return variables;
     }
+    
     public LinkedList<VariableModel> getStaticVars(){
-        return this.getModelsOfType(variables, ClassType.STATIC);
+        return this.fillListOfType(staticVars, ClassType.STATIC);
     }
     
     public LinkedList<VariableModel> getInstanceVars(){
-        return this.getModelsOfType(variables, ClassType.INSTANCE);
+        return this.fillListOfType(instVars, ClassType.INSTANCE);
+    }
+    
+    private LinkedList fillListOfType(LinkedList<VariableModel> varList, ClassType type){
+        if(varList == null)
+            varList = this.getListOfType(type);
+        return varList;
+    }
+    
+    private LinkedList<VariableModel> getListOfType(ClassType type){
+        LinkedList<VariableModel> vars = new LinkedList();
+        for (VariableModel variableModel : this.variables.values()) {
+            if(variableModel.getType() == type)
+                vars.add(variableModel);
+        }
+        return vars;
     }
     
     public ScopeType getScope(){
@@ -403,8 +435,14 @@ public class ClassModel extends PackageModel{
                 + this.interfacesString();
     }
     
-    public VariableModel findVariable(String variableName){
-        
+    public VariableModel findVariable(String variableName) throws DoesNotExistException{
+        if(!this.variables.containsKey(variableName))
+            throw new DoesNotExistException((this), variableName);
+        return this.variables.get(variableName);
+    }
+    
+    public LinkedList<BaseModel> getReferences(){
+        return this.references;
     }
     
 }

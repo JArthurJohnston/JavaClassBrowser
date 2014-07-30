@@ -6,10 +6,13 @@
 
 package LanguageBase.Parsers.MockParsers;
 
+import LanguageBase.Parsers.BlockParser;
+import LanguageBase.Parsers.Parser;
+
 /**
  *
  * @author arthur
  */
-public class MockBlockParser {
+public class MockBlockParser extends BlockParser{
     
 }

@@ -6,8 +6,10 @@
 
 package LanguageBase.Parsers.MockParsers;
 
+import LanguageBase.Parsers.BlockParser;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
+import LanguageBase.Parsers.Parser;
 
 /**
  *
@@ -27,6 +29,10 @@ public class MockBlockNode extends BlockNode {
     public StatementNode getStatement(String source){
         this.source = source;
         return new StatementNode(this, 0, source.length());
+    }
+    
+    public Parser getTree() {
+        return new MockBlockParser();
     }
     
 }

@@ -16,6 +16,7 @@ import MainBase.MainApplication;
 import MainBase.SortedList;
 import Types.ClassType;
 import Types.ScopeType;
+import java.util.HashMap;
 import java.util.LinkedList;
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -68,6 +69,7 @@ public class ClassModelTest extends BaseModelTest{
         assertEquals(parentPackage, testClass.getParentPackage());
         assertEquals(ClassModel.class, testClass.getClass());
         assertEquals(LinkedList.class, testClass.getClassList().getClass());
+        assertTrue(testClass.getReferences().isEmpty());
     }
 
     /**
@@ -233,7 +235,7 @@ public class ClassModelTest extends BaseModelTest{
     @Test
     public void testAddVariable(){
         VariableModel var = new VariableModel(ScopeType.PUBLIC, testClass, "aVar");
-        LinkedList varList = (LinkedList)this.getVariableFromClass(testClass, "variables");
+        HashMap varList = (HashMap)this.getVariableFromClass(testClass, "variables");
         try {
             testClass.addVariable(var);
         } catch (AlreadyExistsException ex) {
@@ -258,7 +260,7 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertEquals(2, testClass.getVariables().size());
         try {
-            testClass.removeVariable((VariableModel)testClass.getVariables().get(0));
+            testClass.removeVariable(testClass.getVariables().get("aVar"));
         } catch (DoesNotExistException ex) {
             fail(ex.getMessage());
         }
@@ -362,7 +364,7 @@ public class ClassModelTest extends BaseModelTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertTrue(testClass.getVariables().contains(aVar));
+        assertTrue(testClass.getVariables().containsKey(aVar.name()));
         assertTrue(testClass.getStaticVars().contains(aVar));
         try {
             aVar = testClass
@@ -583,8 +585,50 @@ public class ClassModelTest extends BaseModelTest{
     }
     
     @Test
-    public void testAddVariableAddsReference(){
-        fail();
+    public void testAddVariableAddsReference() throws Exception{
+        ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
+        VariableModel aVar = testClass.addVariable(new VariableModel(aClass, "testVar"));
+        
+        assertEquals(1, aClass.getReferences().size());
+        assertSame(aVar, aClass.getReferences().getFirst());
+    }
+    
+    @Test
+    public void testRemoveVariableRemovesReference() throws Exception{
+        this.testAddVariableAddsReference();
+        ClassModel aClass = parentProject.findClass("SomeClass");
+        VariableModel aVar = testClass.findVariable("testVar");
+        testClass.removeVariable(aVar);
+        
+        assertTrue(aClass.getReferences().isEmpty());
+        
+    }
+    
+    @Test
+    public void testAddVariableFiresEvent() throws Exception{
+        EventTester listener = this.getTestListener();
+        VariableModel aVar = 
+                testClass.addVariable(
+                        new VariableModel(
+                                ClassModel.getPrimitive("int"), "aVar"));
+        
+        assertTrue(listener.getEvent().isAdd());
+        assertSame(aVar, listener.getEvent().getModel());
+        assertSame(testClass, listener.getEvent().getSource());
+    }
+    
+    @Test
+    public void testRemoveVariableFiresEvent() throws Exception{
+        EventTester listener = this.getTestListener();
+        VariableModel aVar = 
+                testClass.addVariable(
+                        new VariableModel(
+                                ClassModel.getPrimitive("int"), "aVar"));
+        testClass.removeVariable(aVar);
+        
+        assertTrue(listener.getEvent().isRemove());
+        assertSame(aVar, listener.getEvent().getModel());
+        assertSame(testClass, listener.getEvent().getSource());
     }
     
     @Test

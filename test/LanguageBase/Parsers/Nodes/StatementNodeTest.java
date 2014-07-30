@@ -52,7 +52,6 @@ public class StatementNodeTest extends BaseTest{
         statement = null;
     }
 
-    
     protected void setUpTestProject()throws Exception{
         main = new MainApplication();
         super.setUpProjectAndPackage();
@@ -61,6 +60,7 @@ public class StatementNodeTest extends BaseTest{
         MethodModel aMethod = aClass.addMethod(new MethodModel("testMethod"));
         parentProject.addClass(new ClassModel("TwoClass"));
     }
+    
     @Test
     public void testIsClassDeclaration(){
         statement = parent.getStatement("");
