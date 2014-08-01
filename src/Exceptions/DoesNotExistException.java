@@ -10,6 +10,6 @@ package Exceptions;
  */
 public class DoesNotExistException extends BaseException{
     public DoesNotExistException(Object sender, Object target){
-        super(DoesNotExistException.constructMessage(sender, target));
+        super(target.toString() + " does not exist in "+ sender.toString());
     }
 }

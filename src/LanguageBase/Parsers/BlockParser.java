@@ -9,7 +9,6 @@ package LanguageBase.Parsers;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.BaseModel;
-import Models.ProjectModel;
 import java.util.LinkedList;
 
 /**
@@ -68,11 +67,13 @@ public class BlockParser extends Parser{
 
     @Override
     protected void parseOpenParen(int index) {
+        this.parseForReference(index);
         currentStatement.setOpenParen(index);
     }
 
     @Override
     protected void parseCloseParen(int index) {
+        this.parseForReference(index);
         currentStatement.setCloseParen(index);
         for(char c : new char[]{';', '{', '.'})
             if(this.nextNonWhiteCharFrom(index+1) == c)
@@ -96,11 +97,12 @@ public class BlockParser extends Parser{
     }
 
     @Override
-    protected void parsePeriod(int index) {
+    protected void parsePeriod(final int index) {
+        this.parseForReference(index);
     }
 
     @Override
-    protected void parseSemicolon(int index) {
+    protected void parseSemicolon(final int index) {
         if(stack.isOpenParen())
             return;
         currentStatement.close(index+1);
@@ -149,6 +151,8 @@ public class BlockParser extends Parser{
         currentStatement = currentBlock.addStatement(end+1);
         lineCount++;
         //parseFrom(end)? and be sure to break from the main loop?
+        //or, this method(and others like it could return an int
+        //which would then be set to the index var
         this.parseFrom(end + 1);
     }
     
@@ -157,16 +161,21 @@ public class BlockParser extends Parser{
         return this.baseModel;
     }
     
+    @Override
+    protected void parseComma(final int index){
+        this.parseForReference(index);
+    }
+    
     private void parseElseStatement(int index){
         if(this.nextNonWhiteCharFrom(index + 4) != 'i') //if the next thing isnt an 'if'
             this.basicParseReservedSymbol(index, "else");
     }
     
-    private void parseDoStatement(int index){
+    private void parseDoStatement(final int index){
         this.basicParseReservedSymbol(index, "do");
     }
     
-    private void basicParseReservedSymbol(int index, String symbol){
+    private void basicParseReservedSymbol(final int index, String symbol){
         int symbolLen = symbol.length();
         if(this.nextNonWhiteCharFrom(index+symbolLen) == '{')
             return;
@@ -174,6 +183,15 @@ public class BlockParser extends Parser{
         currentBlock = currentStatement.getChildBlock();
         currentBlock.singleStatement(true);
         currentStatement = currentBlock.addStatement(index+symbolLen);
+    }
+    
+    private void parseForReference(final int index){
+        this.addReference(currentStatement.parseSegment(index));
+    }
+    
+    private void addReference(final SourceReference ref){
+        if(ref != null)
+            this.references.add(ref);
     }
     
 }

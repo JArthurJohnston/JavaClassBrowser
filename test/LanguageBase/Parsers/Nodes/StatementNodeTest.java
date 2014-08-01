@@ -55,7 +55,7 @@ public class StatementNodeTest extends BaseTest{
     protected void setUpTestProject()throws Exception{
         main = new MainApplication();
         super.setUpProjectAndPackage();
-        ClassModel aClass = parentProject.addClass(new ClassModel("OneClass"));
+        ClassModel aClass = parentPackage.addClass(new ClassModel("OneClass"));
         aClass.addMethod(new MethodModel("someMethod"));
         MethodModel aMethod = aClass.addMethod(new MethodModel("testMethod"));
         parentProject.addClass(new ClassModel("TwoClass"));
@@ -132,7 +132,22 @@ public class StatementNodeTest extends BaseTest{
     @Test
     public void testParse() throws Exception{
         this.setUpTestProject();
-        
+        fail();
     }
     
+    @Test
+    public void testFindReference(){
+        fail();
+    }
+    
+    @Test
+    public void testParseArgurmentsFromText(){
+        statement = parent.getStatement("someObject.aMethod(some, argument)");
+        statement.setOpenParen(18);
+        statement.setCloseParen(33);
+        
+        assertEquals(2, statement.getArguments().length);
+        assertEquals("some", statement.getArgumentAt(0));
+        assertEquals("argument", statement.getArgumentAt(1));
+    }
 }

@@ -6,6 +6,7 @@
 
 package LanguageBase.Parsers;
 
+import Exceptions.DoesNotExistException;
 import LanguageBase.Parsers.Stacks.BracketStack;
 import Models.BaseModel;
 import Models.ProjectModel;
@@ -18,13 +19,13 @@ import java.util.LinkedList;
 public abstract class Parser extends BaseParseTree{
     protected BaseModel baseModel;
     protected LinkedList<String> errors;
-    //protected LinkedList<ModelReference> references;
-    protected LinkedList<BaseModel> references;
+    protected LinkedList<SourceReference> references;
     protected BracketStack stack;
     protected int lineCount;
     
     protected Parser(){
         errors = new LinkedList();
+        references = new LinkedList();
         stack = new BracketStack();
         lineCount = 1;
     }
@@ -51,27 +52,27 @@ public abstract class Parser extends BaseParseTree{
         while(!this.indexOutOfRange(index)){
             switch(this.source.charAt(index)){
                 case '{':
-                    this.stackIt("{", index);
+                    this.stackIt("{");
                     this.parseOpenCurlyBracket(index);
                     break;
                 case '}':
-                    this.stackIt("}", index);
+                    this.stackIt("}" );
                     this.parseCloseCurlyBracket(index);
                     break;
                 case '[':
-                    this.stackIt("[", index);
+                    this.stackIt("[" );
                     this.parseOpenBracket(index);
                     break;
                 case ']':
-                    this.stackIt("]", index);
+                    this.stackIt("]" );
                     this.parseCloseBracket(index);
                     break;
                 case '(':
-                    this.stackIt("(", index);
+                    this.stackIt("(" );
                     this.parseOpenParen(index);
                     break;
                 case ')':
-                    this.stackIt(")", index);
+                    this.stackIt(")" );
                     this.parseCloseParen(index);
                     break;
                 case ';':
@@ -85,6 +86,9 @@ public abstract class Parser extends BaseParseTree{
                     break;
                 case '"':
                     this.parseStringLiteral(index);
+                    break;
+                case ',':
+                    this.parseComma(index);
                     break;
                 case '/':
                     if(this.isCurrentSymbol(index+1, '*')){
@@ -110,7 +114,7 @@ public abstract class Parser extends BaseParseTree{
         }
     }
 
-    private void stackIt(String symbol, int index) throws ParseException {
+    private void stackIt(final String symbol) throws ParseException {
         try {
             stack.processSymbol(symbol);
         } catch (BracketStack.StackException ex) {
@@ -122,16 +126,10 @@ public abstract class Parser extends BaseParseTree{
         return lineCount;
     }
     
-    public LinkedList<BaseModel> getReferences(){
+    public LinkedList<SourceReference> getReferences(){
         if(references == null)
             return new LinkedList();
         return references;
-    }
-    
-    public void addReference(BaseModel aModel){
-        if(aModel == null)
-            return;
-        references.add(model);
     }
     
     public boolean hasModel(){
@@ -144,26 +142,24 @@ public abstract class Parser extends BaseParseTree{
         return null;
     }
     
-    protected abstract void parseOpenCurlyBracket(int index);
-    protected abstract void parseCloseCurlyBracket(int index);
-    protected abstract void parseOpenParen(int index);
-    protected abstract void parseCloseParen(int index);
-    protected abstract void parseOpenBracket(int index);
-    protected abstract void parseCloseBracket(int index);
-    protected abstract void parsePeriod(int index);
-    protected abstract void parseSemicolon(int index);
-    protected abstract void parseReservedWord(int index);
-    protected abstract void parseStringLiteral(int index);
-    protected abstract void parseMultiLineComment(int index) throws ParseException;
-    protected abstract void parseSingleLineComment(int index) throws ParseException;
-    protected abstract BaseModel modelFromSource(String source);
-    
-    
-    /**
-     * 
-     */
-    public class ModelReference {
-        
+    public BaseModel getModelFromSource(final String source) throws DoesNotExistException{
+        if(!this.hasModel())
+            return null;
+        return this.getProject().findClass(source);
     }
     
+    protected abstract void parseOpenCurlyBracket(final int index);
+    protected abstract void parseCloseCurlyBracket(final int index);
+    protected abstract void parseOpenParen(final int index);
+    protected abstract void parseCloseParen(final int index);
+    protected abstract void parseOpenBracket(final int index);
+    protected abstract void parseCloseBracket(final int index);
+    protected abstract void parsePeriod(final int index);
+    protected abstract void parseSemicolon(final int index);
+    protected abstract void parseReservedWord(final int index);
+    protected abstract void parseStringLiteral(final int index);
+    protected abstract void parseComma(final int index);
+    protected abstract void parseMultiLineComment(final int index) throws ParseException;
+    protected abstract void parseSingleLineComment(final int index) throws ParseException;
+    protected abstract BaseModel modelFromSource(final String source);
 }
