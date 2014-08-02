@@ -59,7 +59,7 @@ public class ProjectModel extends BaseModel {
             for(String s : new String[]{"return", "enum", "final", "synchronized", 
                 "extends", "implements", "static", "default", "interface", "", 
                 "try", "catch", "break", "for", "if", "else", "new", "static", 
-                "public", "private", "protected"}) {
+                "public", "private", "protected", "do"}) {
                     RESERVED_WORDS.put(s, s);
             }
             for(String s : ClassModel.getPrimitiveTypes())

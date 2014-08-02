@@ -618,6 +618,12 @@ public class BlockParserTest extends BaseParserTest{
         
     }
     
+    private StatementNode setUpParserAndStatementWithSource(String source) throws Exception{
+        parser = new BlockParser(source);
+        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
+        return statement;
+    }
+    
     @Test
     public void testStatementISOpenParen() throws Exception{
         String source = "someObject.someVar;";
@@ -650,6 +656,13 @@ public class BlockParserTest extends BaseParserTest{
         
         assertSame(parser.getReferences().get(2), 
                 statement.getArguments().getFirst());
+    }
+    
+    @Test
+    public void testDoesntAddReferenceForReservedWord() throws Exception{
+        this.setUpParserAndStatementWithSource("do{}while();");
+        assertTrue(parser.getReferences().isEmpty());
+        
     }
     
     /**

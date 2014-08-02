@@ -9,6 +9,7 @@ package LanguageBase.Parsers;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.BaseModel;
+import Models.ProjectModel;
 import java.util.LinkedList;
 
 /**
@@ -50,6 +51,7 @@ public class BlockParser extends Parser{
 
     @Override
     protected void parseOpenCurlyBracket(int index) {
+        this.parseForReference(index);
         currentStatement.close(index);
         this.currentBlock = this.currentStatement.getChildBlock();
         currentStatement = currentBlock.addStatement(index+1);
@@ -57,6 +59,7 @@ public class BlockParser extends Parser{
 
     @Override
     protected void parseCloseCurlyBracket(int index) {
+        this.parseForReference(index);
         this.currentBlock = this.currentBlock.getParentBlock();
         currentStatement = this.currentBlock.addStatement(index+1);
         while(currentBlock.isSingleStatement()){
@@ -103,6 +106,7 @@ public class BlockParser extends Parser{
 
     @Override
     protected void parseSemicolon(final int index) {
+        this.parseForReference(index);
         if(stack.isOpenParen())
             return;
         currentStatement.close(index+1);
@@ -190,8 +194,9 @@ public class BlockParser extends Parser{
     }
     
     private void addReference(final SourceReference ref){
-        if(ref != null)
-            this.references.add(ref);
+        if(ref == null)
+            return;
+        this.references.add(ref);
     }
     
 }

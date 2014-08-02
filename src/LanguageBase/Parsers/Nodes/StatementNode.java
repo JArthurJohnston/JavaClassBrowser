@@ -129,9 +129,9 @@ public class StatementNode extends BaseNode{
         }
     }
     
-    public SourceReference parseSegment(final int parsePtr){
+    public SourceReference parseSegment(final int currentPtr){
         int temp = this.parsePtr;
-        this.parsePtr = parsePtr+1;
+        this.parsePtr = currentPtr+1;
         if(!this.isValidSegment(temp, parsePtr))
             return null;
         if(this.isOpenParen){
@@ -146,7 +146,12 @@ public class StatementNode extends BaseNode{
             return false;
         if(endIndex == 0)
             return false;
-        return !this.source().substring(startIndex, endIndex).isEmpty();
+        String source = this.source().substring(startIndex, endIndex);
+        if(source.isEmpty())
+            return false;
+        if(ProjectModel.getReservedWords().containsKey(source))
+            return false;
+        return true;
     }
     
     public LinkedList<SourceReference> getArguments(){
