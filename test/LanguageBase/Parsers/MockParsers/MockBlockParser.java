@@ -7,12 +7,15 @@
 package LanguageBase.Parsers.MockParsers;
 
 import LanguageBase.Parsers.BlockParser;
-import LanguageBase.Parsers.Parser;
 
 /**
  *
  * @author arthur
  */
 public class MockBlockParser extends BlockParser{
+    
+    public MockBlockParser(String source){
+        this.source = source;
+    }
     
 }

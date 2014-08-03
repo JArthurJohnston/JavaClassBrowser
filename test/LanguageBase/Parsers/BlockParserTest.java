@@ -11,6 +11,7 @@ import LanguageBase.Parsers.Nodes.StatementNode;
 import MainBase.MainApplication;
 import Models.ClassModel;
 import Models.MethodModel;
+import Models.VariableModel;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -528,96 +529,6 @@ public class BlockParserTest extends BaseParserTest{
         aClass.addMethod(new MethodModel("methodThree"));
     }
     
-    @Test
-    public void testParseFromModel() throws Exception{
-        this.setUpTestProject();
-        MethodModel aMethod = parentProject.findClass("ClassOne").getMethods().getFirst();
-        this.compareStrings("void methodOne(){\n\n}", aMethod.toSourceString());
-        
-        parser = new BlockParser(aMethod);
-        assertTrue(parser.hasModel());
-        assertSame(parentProject, parser.getProject());
-        assertSame(aMethod, parser.getModel());
-        assertTrue(parser.getReferences().isEmpty());
-        String source = "do{"
-                            + "ClassOne.methodOne();"
-                            + "this.methodTwo(); /*someComment*/" 
-                        + "}while(ClassTwo.methodThree());";
-        
-        parser.parseSource(source);
-        assertEquals(7, parser.getReferences().size());
-        assertFalse(parser.getReferences().getFirst().getModel() == null);
-    }
-    
-    @Test
-    public void testParseGetsReferencesWithoutModel() throws Exception{
-        parser = new BlockParser("someObject.someMethod(with, some, arguments);");
-        
-        assertEquals(5, parser.getReferences().size());
-        SourceReference ref = parser.getReferences().get(0);
-        assertEquals(parser, ref.getTree());
-        assertNull(ref.getModel());
-        assertEquals("someObject", ref.getSource());
-        ref = parser.getReferences().get(1);
-        assertEquals(parser, ref.getTree());
-        assertNull(ref.getModel());
-        assertEquals("someMethod", ref.getSource());
-        ref = parser.getReferences().get(2);
-        assertEquals(parser, ref.getTree());
-        assertNull(ref.getModel());
-        assertEquals("with", ref.getSource());
-        ref = parser.getReferences().get(3);
-        assertEquals(parser, ref.getTree());
-        assertNull(ref.getModel());
-        assertEquals("some", ref.getSource());
-        ref = parser.getReferences().get(4);
-        assertEquals(parser, ref.getTree());
-        assertNull(ref.getModel());
-        assertEquals("arguments", ref.getSource());
-    }
-    
-    @Test
-    public void testSetStatementParenPointers() throws Exception{
-        parser = new BlockParser("");
-        StatementNode statement = parser.getRootBlock().getStatements().getFirst();
-        assertEquals(0, statement.openParenPointer());
-        assertEquals(0, statement.closeParenPointer());
-        
-        parser = new BlockParser("test()");
-        statement = parser.getRootBlock().getStatements().getFirst();
-        assertEquals(4, statement.openParenPointer());
-        assertEquals(5, statement.closeParenPointer());
-    }
-    
-    @Override
-    protected void setUpProjectAndPackage() {
-        this.main = new MainApplication();
-        super.setUpProjectAndPackage();
-    }
-    
-    @Test
-    public void testGetModelFromSource() throws Exception{
-        String source = "do{"
-                            + "someStatement();//this comment\n"
-                        + "}while(someBoolean());";
-        parser = new BlockParser(source);
-        assertFalse(parser.hasModel());
-        
-        assertNull(parser.getModelFromSource("someStatement()"));
-        
-        this.setUpProjectAndPackage();
-        MethodModel aMethod = parentPackage
-                .addClass(new ClassModel("SomeClass"))
-                    .addMethod(new MethodModel("someMethod"));
-        parser = new BlockParser(aMethod);
-        parser.parseSource("SomeClass.someMethod();");
-        
-        assertEquals(2, parser.getReferences().size());
-        assertSame(parentProject.findClass("SomeClass"), 
-                parser.getReferences().getFirst().getModel());
-        
-    }
-    
     private StatementNode setUpParserAndStatementWithSource(String source) throws Exception{
         parser = new BlockParser(source);
         StatementNode statement = parser.getRootBlock().getStatements().getFirst();
@@ -662,7 +573,69 @@ public class BlockParserTest extends BaseParserTest{
     public void testDoesntAddReferenceForReservedWord() throws Exception{
         this.setUpParserAndStatementWithSource("do{}while();");
         assertTrue(parser.getReferences().isEmpty());
+    }
+    
+    @Override
+    protected void setUpProjectAndPackage() throws Exception{
+        this.main = new MainApplication();
+        super.setUpProjectAndPackage();
+        parentPackage.addClass(new ClassModel("ClassOne")).addMethod(new MethodModel("methodOne"));
+        parentPackage.addClass(new ClassModel("ClassTwo")).addMethod(new MethodModel("methodOne"));
+        ClassModel aClass = parentPackage.addClass(new ClassModel("ClassThree"));
+        aClass.addMethod(new MethodModel("methodOne")).setSource("return new ClassOne();");
+        aClass.addVariable(new VariableModel(parentProject.findClass("ClassOne"), "varOne"));
+        MethodModel aMethod = aClass.addMethod(new MethodModel("methodTwo"));
+        aMethod.setSource("varOne.methodOne();"
+                + "methodOne();"
+                + "int temp = 5;");
+    }
+    
+    @Test
+    public void testGetReferences() throws Exception{
+        this.setUpProjectAndPackage();
         
+        parser = new BlockParser("someMethod();");
+        assertTrue(parser.getReferences().isEmpty());
+        
+        MethodModel aMethod = 
+                parentProject.findClass("ClassThree").getMethods().getFirst();
+        parser = new BlockParser(aMethod);
+        
+        assertEquals(1, parser.getReferences().size());
+    }
+    
+    @Test
+    public void testParseMethodModel() throws Exception{
+        this.setUpProjectAndPackage();
+        MethodModel aMethod = 
+                parentProject.findClass("ClassThree").getMethods().getLast();
+        parser = new BlockParser(aMethod);
+        
+        assertEquals(aMethod, parser.getModel());
+        assertEquals(parentProject, parser.getProject());
+        
+        StatementNode methodDeclaration = 
+                parser.getRootBlock().getStatements().getFirst();
+        this.compareStrings("void methodTwo()", methodDeclaration.getSource());
+        
+        BlockNode block = methodDeclaration.getChildBlock();
+        this.verifyBlockStatements(block, 3);
+        
+        ClassModel classOne = parentProject.findClass("ClassOne");
+        assertTrue(parser.getReferences().contains(classOne));
+    }
+    
+    @Test
+    public void testFillReferences() throws Exception{
+        parser = new BlockParser("");
+        parser.fillReferences();
+        assertTrue(parser.getReferences().isEmpty());
+        
+        this.setUpProjectAndPackage();
+        MethodModel aMethod = 
+                parentProject.findClass("ClassThree").getMethods().getLast();
+        parser = new BlockParser(aMethod);
+        assertEquals(3, parser.getReferences().size());
     }
     
     /**

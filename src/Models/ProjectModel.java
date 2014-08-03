@@ -12,6 +12,7 @@ import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import MainBase.SortedList;
 import Models.MethodModel.MethodSignature;
+import Types.SyntaxCharacters;
 import UIModels.Buffer.BaseModelBuffer;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class ProjectModel extends BaseModel {
     private HashMap <String, LinkedList<MethodSignature>> methodNames;
     private HashMap <String, PackageModel> packages;
     private static HashMap <String, String> RESERVED_WORDS;
+    private static HashMap <Character, SyntaxCharacters> SYNTAX_CHARACTERS;
     protected LinkedList<PackageModel> packageList;
     private String userName;
     
@@ -52,6 +54,15 @@ public class ProjectModel extends BaseModel {
         this.name = name;
     }
     
+    public static HashMap<Character, SyntaxCharacters>getLanguageSymbols(){
+        if(SYNTAX_CHARACTERS == null){
+                SYNTAX_CHARACTERS = new HashMap();
+            for (SyntaxCharacters key : SyntaxCharacters.values()) {
+                SYNTAX_CHARACTERS.put(key.getSyntaxCharacter(), key);
+            }     
+        }
+        return SYNTAX_CHARACTERS;
+    }
     
     public static HashMap<String, String> getReservedWords(){
         if(RESERVED_WORDS == null){
@@ -59,7 +70,7 @@ public class ProjectModel extends BaseModel {
             for(String s : new String[]{"return", "enum", "final", "synchronized", 
                 "extends", "implements", "static", "default", "interface", "", 
                 "try", "catch", "break", "for", "if", "else", "new", "static", 
-                "public", "private", "protected", "do"}) {
+                "public", "private", "protected", "do", "class", "while", "switch"}) {
                     RESERVED_WORDS.put(s, s);
             }
             for(String s : ClassModel.getPrimitiveTypes())

@@ -243,7 +243,7 @@ public class ClassModel extends PackageModel{
     }
     
     public VariableModel removeVariable(VariableModel aVar) throws DoesNotExistException{
-        if(!this.variables.remove(aVar.name(), aVar))
+        if(this.variables.remove(aVar.name()) == null)
             throw new DoesNotExistException(this, aVar);
         if(!aVar.getObjectType().isPrimitive())
             aVar.getObjectType().removeReference(aVar);

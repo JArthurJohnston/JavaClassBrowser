@@ -6,10 +6,10 @@
 
 package LanguageBase.Parsers;
 
+import Exceptions.DoesNotExistException;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import Models.BaseModel;
-import Models.ProjectModel;
 import java.util.LinkedList;
 
 /**
@@ -36,9 +36,11 @@ public class BlockParser extends Parser{
         this.parseFrom(0);
     }
     
-    public BlockParser(BaseModel aModel){
+    public BlockParser(BaseModel aModel) throws ParseException{
         this();
         this.baseModel = aModel;
+        this.source = aModel.toSourceString();
+        this.parseFrom(0);
     }
     
     public LinkedList<BlockNode> getBlocks(){
@@ -71,13 +73,11 @@ public class BlockParser extends Parser{
     @Override
     protected void parseOpenParen(int index) {
         this.parseForReference(index);
-        currentStatement.setOpenParen(index);
     }
 
     @Override
     protected void parseCloseParen(int index) {
         this.parseForReference(index);
-        currentStatement.setCloseParen(index);
         for(char c : new char[]{';', '{', '.'})
             if(this.nextNonWhiteCharFrom(index+1) == c)
                 return;
@@ -132,11 +132,11 @@ public class BlockParser extends Parser{
     }
     
     @Override
-    protected void parseStringLiteral(int index){
+    protected void parseStringLiteral(final int index){
     }
     
     @Override
-    protected void parseMultiLineComment(int index) throws ParseException{
+    protected void parseMultiLineComment(final int index) throws ParseException{
         int end = index;
         while(source.charAt(end)!= '*' && source.charAt(++end) != '/')
             if(source.charAt(end) == '\n')
@@ -147,7 +147,12 @@ public class BlockParser extends Parser{
     }
     
     @Override
-    protected void parseSingleLineComment(int index) throws ParseException{
+    protected void parseEmptySpace(final int index){
+        this.parseForReference(index);
+    }
+    
+    @Override
+    protected void parseSingleLineComment(final int index) throws ParseException{
         int end = index;
         if(currentStatement.isOpen())
             while(source.charAt(++end) != '\n');
@@ -170,6 +175,20 @@ public class BlockParser extends Parser{
         this.parseForReference(index);
     }
     
+    @Override
+    protected void fillReferences(){
+        this.references = new LinkedList();
+        if(!this.hasModel())
+            return;
+        for(String s : this.root.getReferences()){
+            try {
+                references.add(this.getProject().findClass(s));
+            } catch (DoesNotExistException ex) {
+                //maybe add not-found objects here(?)
+            }
+        }
+    }
+    
     private void parseElseStatement(int index){
         if(this.nextNonWhiteCharFrom(index + 4) != 'i') //if the next thing isnt an 'if'
             this.basicParseReservedSymbol(index, "else");
@@ -190,13 +209,18 @@ public class BlockParser extends Parser{
     }
     
     private void parseForReference(final int index){
-        this.addReference(currentStatement.parseSegment(index));
+        currentStatement.parseSegment(index);
     }
     
-    private void addReference(final SourceReference ref){
-        if(ref == null)
+    @Override
+    public void addReference(String source){
+        if(!this.hasModel())
             return;
-        this.references.add(ref);
+        try {
+            this.references.add(this.getProject().findClass(source));
+        } catch (DoesNotExistException ex) {
+            //add not found stuff here.
+        }
     }
     
 }

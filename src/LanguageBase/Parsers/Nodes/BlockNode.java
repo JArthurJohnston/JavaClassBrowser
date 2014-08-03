@@ -82,4 +82,15 @@ public class BlockNode extends BaseNode{
         return tree.source();
     }
     
+    public LinkedList<String> getReferences(){
+        LinkedList<String> references =  new LinkedList();
+        for(StatementNode statement : this.statements)
+            references.addAll(statement.getReferences());
+        return references;
+    }
+    
+    public void addReference(String source){
+        this.getTree().addReference(source);
+    }
+    
 }

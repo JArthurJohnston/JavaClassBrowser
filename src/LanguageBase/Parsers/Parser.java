@@ -19,13 +19,12 @@ import java.util.LinkedList;
 public abstract class Parser extends BaseParseTree{
     protected BaseModel baseModel;
     protected LinkedList<String> errors;
-    protected LinkedList<SourceReference> references;
+    protected LinkedList<BaseModel> references;
     protected BracketStack stack;
     protected int lineCount;
     
     protected Parser(){
         errors = new LinkedList();
-        references = new LinkedList();
         stack = new BracketStack();
         lineCount = 1;
     }
@@ -109,6 +108,9 @@ public abstract class Parser extends BaseParseTree{
                 case 'd':
                     this.parseReservedWord(index);
                     break;
+                case ' ':
+                    this.parseEmptySpace(index);
+                    break;
             }
             index++;
         }
@@ -126,10 +128,14 @@ public abstract class Parser extends BaseParseTree{
         return lineCount;
     }
     
-    public LinkedList<SourceReference> getReferences(){
-        if(references == null)
-            return new LinkedList();
+    public LinkedList<BaseModel> getReferences(){
+        if(this.references == null)
+            this.fillReferences();
         return references;
+    }
+    
+    protected void fillReferences(){
+        references = new LinkedList();
     }
     
     public boolean hasModel(){
@@ -159,7 +165,9 @@ public abstract class Parser extends BaseParseTree{
     protected abstract void parseReservedWord(final int index);
     protected abstract void parseStringLiteral(final int index);
     protected abstract void parseComma(final int index);
+    protected abstract void parseEmptySpace(final int index);
     protected abstract void parseMultiLineComment(final int index) throws ParseException;
     protected abstract void parseSingleLineComment(final int index) throws ParseException;
     protected abstract BaseModel modelFromSource(final String source);
+    public abstract void addReference(String source);
 }

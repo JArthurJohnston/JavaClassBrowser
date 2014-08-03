@@ -14,6 +14,7 @@ import MainBase.MainApplication;
 import MainBase.SortedList;
 import Models.MethodModel.MethodSignature;
 import Models.ProjectModel.AllPackage;
+import Types.SyntaxCharacters;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -413,7 +414,7 @@ public class ProjectModelTest extends BaseTest{
     
     @Test
     public void testReservedWords(){
-        assertEquals(27, ProjectModel.getReservedWords().size());
+        assertEquals(32, ProjectModel.getReservedWords().size());
         LinkedList<String> copy = new LinkedList();
         for(String s : ProjectModel.getReservedWords().keySet())
             copy.add(s);
@@ -422,6 +423,14 @@ public class ProjectModelTest extends BaseTest{
                 fail();
         //^asserts that there are no duplicates in getReservedWords()
         assertTrue(copy.isEmpty());
+    }
+    
+    @Test
+    public void testLanguageSymbols(){
+        assertSame(HashMap.class, ProjectModel.getLanguageSymbols().getClass());
+        assertTrue(ProjectModel.getLanguageSymbols().containsKey('{'));
+        assertEquals(SyntaxCharacters.CLOSE_BRACKET, ProjectModel.getLanguageSymbols().get(']'));
+        assertEquals(10, ProjectModel.getLanguageSymbols().size());
     }
     
     @Test

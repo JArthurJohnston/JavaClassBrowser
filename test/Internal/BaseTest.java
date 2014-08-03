@@ -42,17 +42,17 @@ public class BaseTest {
     
     public void setUp(){
         main = new MainApplication();
-        setUpProjectAndPackage();
+        try {
+            setUpProjectAndPackage();
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
     }
 
-    protected void setUpProjectAndPackage() {
-        try {
+    protected void setUpProjectAndPackage() throws Exception{
             parentProject  = main.addProject(new ProjectModel("parent project"));
             main.setSelectedProejct(parentProject);
             parentPackage = parentProject.addPackage(new PackageModel("Parent Package"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
     }
     
     public void tearDown(){

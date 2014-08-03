@@ -10,6 +10,7 @@ import LanguageBase.Parsers.BlockParser;
 import LanguageBase.Parsers.Nodes.BlockNode;
 import LanguageBase.Parsers.Nodes.StatementNode;
 import LanguageBase.Parsers.Parser;
+import Models.BaseModel;
 
 /**
  *
@@ -17,6 +18,7 @@ import LanguageBase.Parsers.Parser;
  */
 public class MockBlockNode extends BlockNode {
     String source;
+    BaseModel model;
     
     public MockBlockNode(){
     }
@@ -31,8 +33,13 @@ public class MockBlockNode extends BlockNode {
         return new StatementNode(this, 0, source.length());
     }
     
+    @Override
     public Parser getTree() {
         return new MockBlockParser();
+    }
+    
+    public boolean hasModel(){
+        return !(model == null);
     }
     
 }

@@ -8,10 +8,7 @@ package LanguageBase.Parsers.Nodes;
 
 import Internal.BaseTest;
 import LanguageBase.Parsers.MockParsers.MockBlockNode;
-import LanguageBase.Parsers.Nodes.StatementNode;
-import MainBase.MainApplication;
 import Models.ClassModel;
-import Models.MethodModel;
 import Types.ClassType;
 import Types.ScopeType;
 import org.junit.After;
@@ -51,103 +48,152 @@ public class StatementNodeTest extends BaseTest{
     public void tearDown() {
         statement = null;
     }
-
-    protected void setUpTestProject()throws Exception{
-        main = new MainApplication();
-        super.setUpProjectAndPackage();
-        ClassModel aClass = parentPackage.addClass(new ClassModel("OneClass"));
-        aClass.addMethod(new MethodModel("someMethod"));
-        MethodModel aMethod = aClass.addMethod(new MethodModel("testMethod"));
-        parentProject.addClass(new ClassModel("TwoClass"));
+    
+    @Test
+    public void testConstructorAndGetters(){
+        statement = new StatementNode(parent, 5);
+        assertSame(parent, statement.getParentBlock());
+        statement = new StatementNode(parent, 5, 6);
+        assertSame(parent, statement.getParentBlock());
     }
     
     @Test
-    public void testIsClassDeclaration(){
-        statement = parent.getStatement("");
-        statement.parseStatement();
-        assertFalse(statement.isClassDeclaration());
+    public void testParseSegmentAddsReferences() throws Exception{
+        statement = parent.getStatement("private void aMethod()");
         
-        statement = parent.getStatement("class SomeClass");
-        statement.parseStatement();
-        assertTrue(statement.isClassDeclaration());
+        statement.parseSegment(7);
+        assertTrue(statement.getReferences().isEmpty());
+        
+        statement.parseSegment(12);
+        assertTrue(statement.getReferences().isEmpty());
+        
+        statement.parseSegment(20);
+        assertEquals(1, statement.getReferences().size());
+        assertEquals("aMethod", statement.getReferences().get(0));
     }
     
     @Test
-    public void testStatementScope(){
+    public void testParseSegmentSetsScopeModifier(){
         statement = parent.getStatement("");
-        statement.parseStatement();
+        statement.parseSegment(0);
         assertSame(ScopeType.NONE, statement.getScope());
-        
-        statement = parent.getStatement("private void someMethod()");
-        statement.parseStatement();
-        assertSame(ScopeType.PRIVATE, statement.getScope());
-        
-        statement = parent.getStatement("public void someMethod()");
-        statement.parseStatement();
-        assertSame(ScopeType.PUBLIC, statement.getScope());
-        
-        statement = parent.getStatement("protected void someMethod()");
-        statement.parseStatement();
-        assertSame(ScopeType.PROTECTED, statement.getScope());
-        
-        statement = parent.getStatement("void someMethod()");
-        statement.parseStatement();
-        assertSame(ScopeType.NONE, statement.getScope());
-    }
-    
-    @Test
-    public void testStatementClassSide(){
-        statement = parent.getStatement("");
-        assertEquals(ClassType.INSTANCE, statement.getClassType());
-        
-        statement = parent.getStatement("");
-        statement.parseStatement();
-        assertEquals(ClassType.INSTANCE, statement.getClassType());
-        
-        statement = parent.getStatement("private void someMethod()");
-        statement.parseStatement();
-        assertSame(ClassType.INSTANCE, statement.getClassType());
-        
-        statement = parent.getStatement("private static void someMethod()");
-        statement.parseStatement();
-        assertSame(ClassType.STATIC, statement.getClassType());
-        
-        statement = parent.getStatement("private  static  void  someMethod()");
-        statement.parseStatement();
-        assertSame(ClassType.STATIC, statement.getClassType());
-        assertSame(ScopeType.PRIVATE, statement.getScope());
-    }
-    
-    @Test
-    public void testIsMethodDeclaration(){
-        statement = parent.getStatement("");
-        statement.parseStatement();
-        assertFalse(statement.isMethodDeclaration());
         
         statement = parent.getStatement("private void aMethod()");
-        statement.parseStatement();
-        assertTrue(statement.isMethodDeclaration());
-    }
-    
-    @Test
-    public void testParse() throws Exception{
-        this.setUpTestProject();
-        fail();
-    }
-    
-    @Test
-    public void testFindReference(){
-        fail();
-    }
-    
-    @Test
-    public void testParseArgurmentsFromText(){
-        statement = parent.getStatement("someObject.aMethod(some, argument)");
-        statement.setOpenParen(18);
-        statement.setCloseParen(33);
+        statement.parseSegment(7);
+        assertSame(ScopeType.PRIVATE, statement.getScope());
         
-        assertEquals(2, statement.getArguments().length);
-        assertEquals("some", statement.getArgumentAt(0));
-        assertEquals("argument", statement.getArgumentAt(1));
+        statement = parent.getStatement("public void aMethod()");
+        statement.parseSegment(6);
+        assertSame(ScopeType.PUBLIC, statement.getScope());
+        
+        statement = parent.getStatement("protected void aMethod()");
+        statement.parseSegment(9);
+        assertSame(ScopeType.PROTECTED, statement.getScope());
+    }
+    
+    @Test
+    public void testParseSegmentSetsStaticOrInstanceModifier(){
+        statement = parent.getStatement("");
+        statement.parseSegment(0);
+        assertSame(ClassType.INSTANCE, statement.getClassType());
+        
+        statement = parent.getStatement("private void aMethod()");
+        statement.parseSegment(7);
+        assertSame(ClassType.INSTANCE, statement.getClassType());
+        
+        statement = parent.getStatement("private static void aMethod()");
+        statement.parseSegment(7);
+        statement.parseSegment(14);
+        assertSame(ClassType.STATIC, statement.getClassType());
+    }
+    
+    @Test
+    public void testParseSegmentSetsObjectType(){
+        String source = "";
+        statement = parent.getStatement(source);
+        statement.parseSegment(0);
+        assertNull(statement.getObjectType());
+        
+        source = "void";
+        statement = parent.getStatement(source);
+        statement.parseSegment(source.length()-1);
+        assertSame(ClassModel.getPrimitive(source), statement.getObjectType());
+    }
+    
+    @Test
+    public void testIsOpenParen(){
+        statement = parent.getStatement("");
+        assertFalse(statement.isOpenParen());
+        statement = parent.getStatement("(");
+        statement.parseSegment(0);
+        assertFalse(statement.isOpenParen());
+        statement = parent.getStatement(")");
+        statement.parseSegment(0);
+        assertFalse(statement.isOpenParen());
+    }
+    
+    @Test
+    public void testParseEmptyArgurments(){
+        statement = parent.getStatement("");
+        statement.parseSegment(0);
+        assertTrue(statement.getArguments().isEmpty());
+        
+        statement = parent.getStatement("something()");
+        statement.parseSegment(9);
+        assertTrue(statement.getArguments().isEmpty());
+        
+        statement.parseSegment(9);
+        statement.parseSegment(10);
+        assertTrue(statement.getArguments().isEmpty());
+        
+        statement.parseSegment(10);
+        statement.parseSegment(10);
+        assertTrue(statement.getArguments().isEmpty());
+    }
+    
+    @Test
+    public void testParseActualArguments(){
+        statement = parent.getStatement("(some)");
+        statement.parseSegment(5);
+        assertEquals(1, statement.getArguments().size());
+        
+        statement = parent.getStatement("(some, thing)");
+        statement.parseSegment(0);
+        statement.parseSegment(12);
+        assertEquals(2, statement.getArguments().size());
+        this.compareStrings("some", statement.getArguments().get(0));
+        this.compareStrings("thing", statement.getArguments().get(1));
+    }
+    
+    @Test
+    public void testParseAddsReference(){
+        statement = parent.getStatement("something()");
+        statement.parseSegment(9);
+        assertEquals(1, statement.getReferences().size());
+        
+    }
+    
+    @Test
+    public void testReferencesAndArgumentsDontOverlap(){
+        statement = parent.getStatement("someObject.someMethod(some, args)");
+        statement.parseSegment(10);
+        statement.parseSegment(21);
+        statement.parseSegment(32);
+        assertEquals(2, statement.getReferences().size());
+        this.compareStrings("someObject", statement.getReferences().get(0));
+        this.compareStrings("someMethod", statement.getReferences().get(1));
+        assertEquals(2, statement.getArguments().size());
+        this.compareStrings("some", statement.getArguments().get(0));
+        this.compareStrings("args", statement.getArguments().get(1));
+    }
+    
+    @Test
+    public void testNestedStatements(){
+        statement = parent.getStatement("someObject.someMethod(this.someOtherMethod(), args)");
+        fail();
+        /*
+        my current logic wont cover this case. Id have to parse the method being
+        called inside the outer method... damn. 
+        */
     }
 }
