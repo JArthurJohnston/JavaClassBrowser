@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<language>
+    <name>java</name>
+    <primitives>
+        <entry>
+            <key>int</key>
+            <value>
+                <description>Project Name: int
+Author: null
+Date Created: Tue Aug 05 22:25:47 EDT 2014
+Number of Packages: 0
+Number of Classes: 0</description>
+                <path></path>
+                <abstract>false</abstract>
+                <final>false</final>
+                <scope>NONE</scope>
+            </value>
+        </entry>
+    </primitives>
+    <type>static</type>
+</language>

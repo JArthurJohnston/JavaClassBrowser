@@ -6,10 +6,15 @@
 
 package LanguageBase;
 
+import Models.ClassModel;
+import Models.PrimitiveTypeModel;
+import java.io.File;
+import java.util.HashMap;
+import javax.xml.bind.JAXBException;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -30,40 +35,37 @@ public class LanguageTest {
     }
     
     @Test
-    public void testWritesLanguageClassToXML(){
+    public void testWritesLanguageClassToXML() throws Exception{
+        HashMap<String, ClassModel> primitives = new HashMap();
+        primitives.put("int", new PrimitiveTypeModel("int"));
+        
         Language java = new Language();
         java.setName("java");
         java.setType("static");
+        java.setPrimitives(primitives);
         
         
+        LanguageJAXBHelper.writeToFile(java);
+        
+        File test = LanguageJAXBHelper.file;
+        assertTrue(test.exists());
+        
+        test.delete();
+        assertFalse(test.exists());
     }
-
-    /**
-     * Test of getType method, of class Language.
-     */
+    
     @Test
-    public void testGetType() {
-    }
-
-    /**
-     * Test of setType method, of class Language.
-     */
-    @Test
-    public void testSetType() {
-    }
-
-    /**
-     * Test of getName method, of class Language.
-     */
-    @Test
-    public void testGetName() {
-    }
-
-    /**
-     * Test of setName method, of class Language.
-     */
-    @Test
-    public void testSetName() {
+    public void testCreatesClassFromXML() throws Exception{
+        File input = new File(LanguageJAXBHelper.filePath+"Java_Lang.xml");
+        
+        Language java = LanguageJAXBHelper.objectFromFile(input);
+        
+        assertEquals("java", java.getName());
+        assertEquals("static", java.getType());
+        assertSame(HashMap.class, java.getPrimitives().getClass());
+        assertEquals(1, java.getPrimitives().size());
+        ClassModel aClass = java.getPrimitives().get("int");
+        assertEquals("int", aClass.name());
     }
     
 }

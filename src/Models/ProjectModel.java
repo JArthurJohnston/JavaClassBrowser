@@ -49,9 +49,14 @@ public class ProjectModel extends BaseModel {
     
     
     public ProjectModel(){
+        dateCreated = new Date();
+        classes = new HashMap();
+        packages = new HashMap();
+        packageList = new LinkedList();
     }
     
     public ProjectModel(String name){
+        this();
         this.initialize();
         this.name = name;
     }
@@ -83,10 +88,6 @@ public class ProjectModel extends BaseModel {
     
     private void initialize(){
         this.name = defaultName;
-        dateCreated = new Date();
-        classes = new HashMap();
-        packages = new HashMap();
-        packageList = new LinkedList();
         PackageModel defaultPackage = new PackageModel(this);
         packages.put(defaultPackage.name(), defaultPackage);
         packageList.add(defaultPackage);
@@ -136,6 +137,8 @@ public class ProjectModel extends BaseModel {
     }
     
     public Date getDateCreated(){
+        if(dateCreated == null)
+            dateCreated = new Date();
         return dateCreated;
     }
     

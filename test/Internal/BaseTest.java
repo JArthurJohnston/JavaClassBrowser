@@ -40,13 +40,9 @@ public class BaseTest {
     public PackageModel parentPackage;
     
     
-    public void setUp(){
+    public void setUp() throws Exception{
         main = new MainApplication();
-        try {
             setUpProjectAndPackage();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
     }
 
     protected void setUpProjectAndPackage() throws Exception{

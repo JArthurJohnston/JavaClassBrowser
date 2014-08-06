@@ -47,7 +47,7 @@ public class ProjectModelTest extends BaseTest{
     
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         project = parentProject;
     }
