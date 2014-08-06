@@ -127,9 +127,9 @@ public class MethodModelTest extends BaseTest{
         LinkedList vars = new LinkedList();
         vars.add(intVar);
         vars.add(charVar);
-        otherMethod.arguments(vars);
+        otherMethod.setArguments(vars);
         assertFalse(method.hasSignatureOf(otherMethod));
-        method.arguments(vars);
+        method.setArguments(vars);
         assertTrue(method.hasSignatureOf(otherMethod));
     }
     

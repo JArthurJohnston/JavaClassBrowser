@@ -11,7 +11,7 @@ import Exceptions.PackageDoesNotExistException;
 import Exceptions.VeryVeryBadException;
 import MainBase.MainApplication;
 import MainBase.SortedList;
-import Models.MethodModel.MethodSignature;
+import Models.MethodSignature;
 import Types.SyntaxCharacters;
 import UIModels.Buffer.BaseModelBuffer;
 import java.util.Date;
@@ -31,10 +31,12 @@ public class ProjectModel extends BaseModel {
     private HashMap <MethodSignature, LinkedList<MethodModel>> methodDefinitions;
     private HashMap <String, LinkedList<MethodSignature>> methodNames;
     private HashMap <String, PackageModel> packages;
+    private String userName;
+    
+    protected LinkedList<PackageModel> packageList;
+    
     private static HashMap <String, String> RESERVED_WORDS;
     private static HashMap <Character, SyntaxCharacters> SYNTAX_CHARACTERS;
-    protected LinkedList<PackageModel> packageList;
-    private String userName;
     
     private AllPackage all;
     
@@ -281,23 +283,23 @@ public class ProjectModel extends BaseModel {
      * @throws Exceptions.AlreadyExistsException
      */
     public MethodModel addMethod(MethodModel newMethod) throws AlreadyExistsException{
-        MethodSignature sig = newMethod.signature();
+        MethodSignature sig = newMethod.getSignature();
         if(methodNames.containsKey(newMethod.name())){
             for(MethodSignature ms: methodNames.get(newMethod.name())){
                 if(ms.equals(sig)){
                     methodDefinitions.get(ms).add(newMethod);
-                    newMethod.signature(ms);
+                    newMethod.setSignature(ms);
                     return newMethod;
                 }
             }
             methodDefinitions.put(sig, new SortedList().addElm(newMethod));
             methodNames.get(newMethod.name()).add(sig);
-            newMethod.signature(sig);//could just lazy init this on the method.... maybe...
+            newMethod.setSignature(sig);//could just lazy init this on the method.... maybe...
             return newMethod;
         }
         methodNames.put(newMethod.name(), new SortedList().addElm(sig));
         methodDefinitions.put(sig, new SortedList().addElm(newMethod));
-        newMethod.signature(sig);
+        newMethod.setSignature(sig);
         return newMethod;
     }
     
@@ -323,20 +325,20 @@ public class ProjectModel extends BaseModel {
      * @return a LinkedList of MethodModels
      */
     public LinkedList getMethodDefinitions(MethodModel aMethod){
-        return methodDefinitions.get(aMethod.signature());
+        return methodDefinitions.get(aMethod.getSignature());
     }
     
     public MethodModel removeMethod(MethodModel aMethod) throws DoesNotExistException{
-        if(!methodDefinitions.containsKey(aMethod.signature()))
+        if(!methodDefinitions.containsKey(aMethod.getSignature()))
             throw new DoesNotExistException(this, aMethod);
-        if(!methodDefinitions.get(aMethod.signature()).remove(aMethod))
+        if(!methodDefinitions.get(aMethod.getSignature()).remove(aMethod))
             throw new DoesNotExistException(this, aMethod);
-        if(methodDefinitions.get(aMethod.signature()).isEmpty())
-            methodDefinitions.remove(aMethod.signature());
+        if(methodDefinitions.get(aMethod.getSignature()).isEmpty())
+            methodDefinitions.remove(aMethod.getSignature());
         
         if(!methodNames.containsKey(aMethod.name()))
             throw new DoesNotExistException(this, aMethod);
-        if(!methodNames.get(aMethod.name()).remove(aMethod.signature()))
+        if(!methodNames.get(aMethod.name()).remove(aMethod.getSignature()))
             throw new DoesNotExistException(this, aMethod);
         if(methodNames.get(aMethod.name()).isEmpty())
             methodNames.remove(aMethod.name());
@@ -360,6 +362,14 @@ public class ProjectModel extends BaseModel {
         if(classes.get(aClassName) == null)
             throw new DoesNotExistException(this, aClassName);
         return classes.get(aClassName);
+    }
+    
+    public LinkedList<BaseModel> findObjectFromSource(final String source){
+        BaseModel reference = null;
+        reference = this.classes.get(source);
+        if(reference == null)
+             this.methodNames.get(source);
+        return SortedList.with(reference);
     }
     
     public InterfaceModel findInterface(String name) throws DoesNotExistException{

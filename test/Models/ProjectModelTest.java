@@ -12,7 +12,7 @@ import Internal.BaseTest;
 import MainBase.EventTester;
 import MainBase.MainApplication;
 import MainBase.SortedList;
-import Models.MethodModel.MethodSignature;
+import Models.MethodSignature;
 import Models.ProjectModel.AllPackage;
 import Types.SyntaxCharacters;
 import java.util.Date;
@@ -161,11 +161,11 @@ public class ProjectModelTest extends BaseTest{
             fail(ex.getMessage());
         }
         assertEquals(1, methods.size());
-        assertTrue(methods.containsKey(aMethod.signature()));
+        assertTrue(methods.containsKey(aMethod.getSignature()));
         assertEquals(1, methodNames.size());
         assertTrue(methodNames.containsKey(aMethod.name()));
-        assertEquals(aMethod, methods.get(aMethod.signature()).getFirst());
-        assertEquals(aMethod.signature(), methodNames.get(aMethod.name()).getFirst());
+        assertEquals(aMethod, methods.get(aMethod.getSignature()).getFirst());
+        assertEquals(aMethod.getSignature(), methodNames.get(aMethod.name()).getFirst());
     }
     
     @Test
@@ -183,10 +183,10 @@ public class ProjectModelTest extends BaseTest{
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        assertEquals(aMethod1.signature(), aMethod2.signature());
-        assertEquals(2, projectMethods.get(aMethod1.signature()).size());
-        assertTrue( projectMethods.get(aMethod1.signature()).contains(aMethod1));
-        assertTrue( projectMethods.get(aMethod1.signature()).contains(aMethod2));
+        assertEquals(aMethod1.getSignature(), aMethod2.getSignature());
+        assertEquals(2, projectMethods.get(aMethod1.getSignature()).size());
+        assertTrue( projectMethods.get(aMethod1.getSignature()).contains(aMethod1));
+        assertTrue( projectMethods.get(aMethod1.getSignature()).contains(aMethod2));
     }
     
     @Test
@@ -198,7 +198,7 @@ public class ProjectModelTest extends BaseTest{
         
         MethodModel method1 = new MethodModel("testMethod");
         MethodModel method2 = new MethodModel("testMethod");
-        method2.arguments(new SortedList()
+        method2.setArguments(new SortedList()
                 .addElm(new VariableModel("X", ClassModel.getPrimitive("int")))
                 .addElm(new VariableModel("Y", ClassModel.getPrimitive("char"))));
         try {
@@ -209,18 +209,18 @@ public class ProjectModelTest extends BaseTest{
         }
         assertEquals(1, methodNames.size());
         assertEquals(2, methodNames.get("testMethod").size());
-        assertTrue(methodNames.get("testMethod").contains(method1.signature()));
-        assertTrue(methodNames.get("testMethod").contains(method2.signature()));
+        assertTrue(methodNames.get("testMethod").contains(method1.getSignature()));
+        assertTrue(methodNames.get("testMethod").contains(method2.getSignature()));
         
         assertEquals(2, methodDefs.size());
         
-        assertEquals(1, methodDefs.get(method1.signature()).size());
-        assertTrue(methodDefs.get(method1.signature()).contains(method1));
-        assertFalse(methodDefs.get(method1.signature()).contains(method2));
+        assertEquals(1, methodDefs.get(method1.getSignature()).size());
+        assertTrue(methodDefs.get(method1.getSignature()).contains(method1));
+        assertFalse(methodDefs.get(method1.getSignature()).contains(method2));
         
-        assertEquals(1, methodDefs.get(method2.signature()).size());
-        assertTrue(methodDefs.get(method2.signature()).contains(method2));
-        assertFalse(methodDefs.get(method2.signature()).contains(method1));
+        assertEquals(1, methodDefs.get(method2.getSignature()).size());
+        assertTrue(methodDefs.get(method2.getSignature()).contains(method2));
+        assertFalse(methodDefs.get(method2.getSignature()).contains(method1));
         
         try {
             assertEquals(2, project.findMethods("testMethod").size());
@@ -250,7 +250,7 @@ public class ProjectModelTest extends BaseTest{
             fail("exception not thrown");
         } catch (DoesNotExistException ex) {
         }
-        assertFalse(methods.containsKey(aMethod.signature()));
+        assertFalse(methods.containsKey(aMethod.getSignature()));
         assertFalse(methodNames.containsKey(aMethod.name()));
     }
     
@@ -430,7 +430,21 @@ public class ProjectModelTest extends BaseTest{
         assertSame(HashMap.class, ProjectModel.getLanguageSymbols().getClass());
         assertTrue(ProjectModel.getLanguageSymbols().containsKey('{'));
         assertEquals(SyntaxCharacters.CLOSE_BRACKET, ProjectModel.getLanguageSymbols().get(']'));
-        assertEquals(10, ProjectModel.getLanguageSymbols().size());
+        assertEquals(16, ProjectModel.getLanguageSymbols().size());
+    }
+    
+    @Test
+    public void testFindObjectFromSource() throws Exception{
+        ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
+        project.findObjectFromSource("SomeClass");
+        assertEquals(1, project.findObjectFromSource("SomeClass").size());
+        assertSame(aClass, project.findObjectFromSource("SomeClass").getFirst());
+        
+        MethodModel aMethod = aClass.addMethod(new MethodModel("someMethod"));
+        assertEquals(1, project.findObjectFromSource("someMethod").size());
+        assertSame(aClass, project.findObjectFromSource("someMethod").getFirst());
+        
+        
     }
     
     @Test

@@ -49,7 +49,7 @@ public class MethodModel extends ClassModel{
      * @param source 
      */
     public MethodModel(ScopeType scope, ClassType instanceOrStatic, 
-            ClassModel returnType, String name, LinkedList params, String source){
+            ClassModel returnType, String name, LinkedList<VariableModel> params, String source){
         this.type = instanceOrStatic;
         this.scope = scope;
         this.source = source;
@@ -65,7 +65,7 @@ public class MethodModel extends ClassModel{
      * @param params
      * @param source 
      */
-    public MethodModel(ClassModel parent, ScopeType scope, LinkedList params, String source){
+    public MethodModel(ClassModel parent, ScopeType scope, LinkedList<VariableModel> params, String source){
         this.parent = parent;
         this.name = parent.name();
         this.returnType = parent;
@@ -74,7 +74,7 @@ public class MethodModel extends ClassModel{
     }
     
     public boolean hasSignatureOf(MethodModel anotherMethod){
-        return this.signature().equals(anotherMethod.signature());
+        return this.getSignature().equals(anotherMethod.getSignature());
     }
     
     @Override
@@ -102,13 +102,13 @@ public class MethodModel extends ClassModel{
      * 
      * @return 
      */
-    public MethodSignature signature(){
+    public MethodSignature getSignature(){
         if(signature == null)
             return new MethodSignature(this);
         return signature;
     }
     
-    public void signature(MethodSignature signature) {
+    public void setSignature(MethodSignature signature) {
         this.signature = signature;
     }
     
@@ -129,7 +129,7 @@ public class MethodModel extends ClassModel{
         fireChanged(this);
     }
     
-    public void arguments(LinkedList params){
+    public void setArguments(LinkedList params){
         this.arguments = params;
         fireChanged(this);
     }
@@ -232,44 +232,5 @@ public class MethodModel extends ClassModel{
     
     public ClassModel getParentClass(){
         return (ClassModel)this.parent;
-    }
-    
-    /**
-     * A class for comparing method signatures.
-     */
-    public class MethodSignature{
-        private final String name;
-        private ArrayList<ClassModel> arguments;
-        
-        private MethodSignature(MethodModel aMethod){
-            this.name = aMethod.name();
-            this.initArgs(aMethod);
-        }
-        
-        private void initArgs(MethodModel aMethod){
-            arguments = new ArrayList(aMethod.arguments().size());
-            for(VariableModel var : aMethod.arguments())
-                arguments.add(var.getObjectType());
-        }
-        
-        public String name(){
-            return this.name;
-        }
-        
-        public ArrayList<ClassModel> arguments(){
-            return arguments;
-        }
-        
-        public boolean equals(MethodSignature anotherMethod){
-            if(this.name.compareTo(anotherMethod.name()) != 0)
-                return false;
-            if(this.arguments.size() != anotherMethod.arguments().size())
-                return false;
-            for(int i=0;i< arguments.size();i++){
-                if(arguments.get(i) != anotherMethod.arguments().get(i))
-                    return false;
-            }
-            return true;
-        }
     }
 }

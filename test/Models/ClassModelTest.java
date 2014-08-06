@@ -151,7 +151,7 @@ public class ClassModelTest extends BaseModelTest{
     @Test
     public void testOverloadedMethodDefinitions() throws Exception{
         MethodModel methodOne = new MethodModel("someMethod");
-        methodOne.arguments(new SortedList<VariableModel>()
+        methodOne.setArguments(new SortedList<VariableModel>()
                 .addElm(new VariableModel("intX", ClassModel.getPrimitive("int")))
                 .addElm(new VariableModel("charY", ClassModel.getPrimitive("char"))));
         testClass.addMethod(methodOne);
