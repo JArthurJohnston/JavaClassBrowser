@@ -6,7 +6,6 @@ package UIPanels;
 
 import Exceptions.BaseException;
 import Internal.BaseTest;
-import MainBase.MainApplication;
 import Models.*;
 import Types.ClassType;
 import UIModels.BrowserUIController;
@@ -39,20 +38,15 @@ public class SelectedClassPanelTest extends BaseTest {
     }
     
     @Before
-    public void setUp() {
-        main = new MainApplication();
-        try {
-            ProjectModel aProject = main.addProject(new ProjectModel("a project"));
-            main.setSelectedProejct(aProject);
+    public void setUp() throws Exception{
+        super.setUp();
             ClassModel aClass = 
-                    aProject.getDefaultPackage().addClass(new ClassModel("AClass"));
+                    parentPackage.addClass(new ClassModel("AClass"));
             aClass.addMethod(new MethodModel("anInstanceMethod", ClassType.INSTANCE));
             aClass.addMethod(new MethodModel("aStaticMethod", ClassType.STATIC));
             aClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel("Object"), "aClassVar"));
             aClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel("Object"), "anInstVar"));
-        } catch (BaseException ex) {
-            fail(ex.getMessage());
-        }
+        
         controller = new BrowserUIController(main);
         panel = new SelectedClassPanel();
         panel = (SelectedClassPanel)this.getVariableFromClass(controller.getShell(), "classBrowserPanel");

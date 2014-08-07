@@ -83,7 +83,8 @@ public class VariableListPanel extends BaseListPanel {
         if(super.checkModel(aModel)) 
             if(aModel.isVariable())
                 if(((VariableModel)aModel).getType() == this.type)
-                    if(((VariableModel)aModel).getParent() == controller.getSelectedClass())
+                    if(((VariableModel)aModel).getParentClass() 
+                            == controller.getSelectedClass())
                         return true;
         return false;
     }

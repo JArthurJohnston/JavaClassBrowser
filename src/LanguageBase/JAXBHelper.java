@@ -16,15 +16,13 @@ import javax.xml.bind.Unmarshaller;
  *
  * @author arthur
  */
-public class LanguageJAXBHelper {
+public class JAXBHelper {
     public static final String filePath = 
-            "/home/arthur/NetBeans8Projects/JavaClassBrowser/Resources/";
+            "/home/arthur/NetBeansProjects/JavaClassBrowser/Resources/";
     
     public static File file;
     
-    public static void writeToFile(Object objectToBeWritten) throws JAXBException{
-        file = new File(filePath + fileNameForObject(objectToBeWritten.getClass()));
-        
+    public static void writeToFile(Object objectToBeWritten, File file) throws JAXBException{
         JAXBContext context = JAXBContext.newInstance(objectToBeWritten.getClass()); 
         
         Marshaller m = context.createMarshaller();
@@ -35,10 +33,15 @@ public class LanguageJAXBHelper {
         m.marshal(objectToBeWritten, file);
     }
     
-    public static Language objectFromFile(File input) throws JAXBException{
+    public static void writeToFile(Object objectToBeWritten) throws JAXBException{
+        file = new File(filePath + fileNameForObject(objectToBeWritten.getClass()));
+        writeToFile(objectToBeWritten, file);
+    }
+    
+    public static Object objectFromFile(File input) throws JAXBException{
         JAXBContext context = JAXBContext.newInstance(Language.class);
         Unmarshaller um = context.createUnmarshaller();
-        return (Language)um.unmarshal(input);
+        return um.unmarshal(input);
     }
     
     static private String fileNameForObject(Class objectClass){

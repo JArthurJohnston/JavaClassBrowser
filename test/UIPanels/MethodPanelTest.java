@@ -38,7 +38,8 @@ public class MethodPanelTest extends BaseTest{
     }
     
     @Before
-    public void setUp() {
+    @Override
+    public void setUp() throws Exception {
         super.setUp();
         MockClassModel aClass = new MockClassModel("AClass");
             aClass.addMethod(new MethodModel("aMethod"));

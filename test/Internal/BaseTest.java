@@ -42,6 +42,7 @@ public class BaseTest {
     
     public void setUp() throws Exception{
         main = new MainApplication();
+        main.setIsTesting(true);
             setUpProjectAndPackage();
     }
 

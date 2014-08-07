@@ -27,7 +27,7 @@ public class BasePanelTest extends BaseTest{
     public VariableModel testVar;
     
     @Override
-    public void setUp(){
+    public void setUp() throws Exception{
         super.setUp();
         controller = new BrowserUIController(main);
         try {

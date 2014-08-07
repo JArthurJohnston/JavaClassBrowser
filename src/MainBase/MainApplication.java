@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class MainApplication {
     private final ArrayList<ProjectModel> projects;
+    private boolean isTesting;
     private String userName;
     private ProjectModel selectedProject;
     
@@ -25,6 +26,14 @@ public class MainApplication {
     
     public ArrayList<ProjectModel> getProjects(){
         return projects;
+    }
+    
+    public boolean isTesting(){
+        return this.isTesting;
+    }
+    
+    public void setIsTesting(boolean isTesting){
+        this.isTesting = isTesting;
     }
     
     public boolean okToAdd(String newProjectName){

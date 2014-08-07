@@ -40,7 +40,7 @@ public class MethodlListPanelTest extends BaseTest{
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         panel = new MethodlListPanel();
     }

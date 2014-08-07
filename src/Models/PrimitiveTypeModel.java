@@ -6,6 +6,8 @@
 
 package Models;
 
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * Made to make JaxB happy.
  * Will be deleted after some re-factoring
@@ -28,5 +30,10 @@ public class PrimitiveTypeModel extends ClassModel{
     
     public ProjectModel getProject(){
         return new ProjectModel();
+    }
+    
+    @XmlElement
+    public String name(){
+        return this.name;
     }
 }

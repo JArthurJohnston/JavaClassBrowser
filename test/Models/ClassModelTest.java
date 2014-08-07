@@ -27,31 +27,28 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class ClassModelTest extends BaseModelTest{
+public class ClassModelTest extends BaseModelTest {
+
     private ClassModel testClass;
-    
+
     public ClassModelTest() {
     }
-    
+
     @Before
     @Override
-    public void setUp(){
+    public void setUp() throws Exception {
         super.setUp();
-        try {
-            testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        testClass = parentPackage.addClass(new ClassModel("InstanceClass"));
     }
-    
+
     @After
     @Override
     public void tearDown() {
         super.tearDown();
         testClass = null;
     }
-    
-    private void setUpSubClasses(){
+
+    private void setUpSubClasses() {
         try {
             testClass.addClass(new ClassModel("ASubClasss1"));
             ClassModel subClass = testClass.addClass(new ClassModel("ASubClasss2"));
@@ -61,9 +58,9 @@ public class ClassModelTest extends BaseModelTest{
             fail(ex.getMessage());
         }
     }
-    
+
     @Test
-    public void testInitialize(){
+    public void testInitialize() {
         assertEquals("InstanceClass", testClass.name());
         assertEquals(parentProject, testClass.getProject());
         assertEquals(parentPackage, testClass.getParentPackage());
@@ -94,7 +91,7 @@ public class ClassModelTest extends BaseModelTest{
         assertTrue(testClass.getClassList().contains(newSubClass));
         assertTrue(parentProject.getClassList().contains(newSubClass));
         assertTrue(parentPackage.getClassList().contains(newSubClass));
-        
+
         assertEquals(2, parentProject.getClassList().size());
         assertEquals(2, testClass.getClassList().size());
         assertEquals(newSubClass, testClass.getClassList().getLast());
@@ -105,9 +102,9 @@ public class ClassModelTest extends BaseModelTest{
             assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
-    
+
     @Test
-    public void testRemoveClass(){
+    public void testRemoveClass() {
         ClassModel classToBeRemoved = null;
         try {
             classToBeRemoved = parentPackage.addClass(new ClassModel("ClassToBeRemoved"));
@@ -133,34 +130,34 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertTrue(testClass.getClassList().contains(classToBeRemoved));
     }
-    
+
     @Test
-    public void testMethodDefinitions() throws Exception{
+    public void testMethodDefinitions() throws Exception {
         MethodModel methodOne = testClass.addMethod(new MethodModel("methodOne"));
         assertEquals(1, parentProject.getMethodDefinitions(methodOne).size());
         assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodOne));
-        
+
         ClassModel classTwo = parentPackage.addClass(new ClassModel("ClassTwo"));
         MethodModel methodTwo = classTwo.addMethod(new MethodModel("methodOne"));
-        
+
         assertEquals(2, parentProject.getMethodDefinitions(methodTwo).size());
         assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodOne));
         assertTrue(parentProject.getMethodDefinitions(methodOne).contains(methodTwo));
     }
-    
+
     @Test
-    public void testOverloadedMethodDefinitions() throws Exception{
+    public void testOverloadedMethodDefinitions() throws Exception {
         MethodModel methodOne = new MethodModel("someMethod");
         methodOne.setArguments(new SortedList<VariableModel>()
                 .addElm(new VariableModel("intX", ClassModel.getPrimitive("int")))
                 .addElm(new VariableModel("charY", ClassModel.getPrimitive("char"))));
         testClass.addMethod(methodOne);
-        
+
         assertEquals(1, parentProject.getMethodDefinitions(methodOne).size());
     }
-    
+
     @Test
-    public void testAddMethod(){
+    public void testAddMethod() {
         MethodModel newMethod = null;
         try {
             newMethod = testClass.addMethod(new MethodModel("newMethod"));
@@ -182,18 +179,17 @@ public class ClassModelTest extends BaseModelTest{
             assertEquals(AlreadyExistsException.class, ex.getClass());
         }
     }
-    
+
     /*
-    Project will hold onto ...
-    Hashmap<String LinkedList<MethodModel>> methodDefinitions;
-    Hashmap<String LinkedList<ClassModel>> classDefinitions;
-    
-    findClass or findMethod will return a list of the corresponding model...
-        or just one model if the list has only one element.
-    */
-    
+     Project will hold onto ...
+     Hashmap<String LinkedList<MethodModel>> methodDefinitions;
+     Hashmap<String LinkedList<ClassModel>> classDefinitions;
+
+     findClass or findMethod will return a list of the corresponding model...
+     or just one model if the list has only one element.
+     */
     @Test
-    public void testRemoveMethod(){
+    public void testRemoveMethod() {
         this.testAddMethod();
         MethodModel newMethod = null;
         try {
@@ -209,9 +205,9 @@ public class ClassModelTest extends BaseModelTest{
         } catch (DoesNotExistException ex) {
         }
     }
-    
+
     @Test
-    public void testMoveToPackage(){
+    public void testMoveToPackage() {
         PackageModel anotherPackage = new PackageModel("AnotherPackage");
         try {
             testClass.moveToPackage(anotherPackage);
@@ -231,11 +227,11 @@ public class ClassModelTest extends BaseModelTest{
         assertTrue(anotherPackage.getClassList().contains(subClass));
         assertFalse(parentPackage.getClassList().contains(subClass));
     }
-    
+
     @Test
-    public void testAddVariable(){
+    public void testAddVariable() {
         VariableModel var = new VariableModel(ScopeType.PUBLIC, testClass, "aVar");
-        HashMap varList = (HashMap)this.getVariableFromClass(testClass, "variables");
+        HashMap varList = (HashMap) this.getVariableFromClass(testClass, "variables");
         try {
             testClass.addVariable(var);
         } catch (AlreadyExistsException ex) {
@@ -245,12 +241,13 @@ public class ClassModelTest extends BaseModelTest{
         try {
             testClass.addVariable(var);
             fail("exception not thrown");
-        } catch (AlreadyExistsException ex) {}
+        } catch (AlreadyExistsException ex) {
+        }
         assertEquals(testClass, var.getParentClass());
     }
-    
+
     @Test
-    public void testGetVariables(){
+    public void testGetVariables() {
         assertEquals(0, testClass.getVariables().size());
         try {
             testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
@@ -268,11 +265,12 @@ public class ClassModelTest extends BaseModelTest{
         try {
             testClass.removeVariable(new VariableModel(ScopeType.NONE, testClass, "nonExistentVar"));
             fail("Exception not thrown");
-        } catch (DoesNotExistException ex) {}
+        } catch (DoesNotExistException ex) {
+        }
     }
-    
+
     @Test
-    public void testRemoveVariable(){
+    public void testRemoveVariable() {
         VariableModel aVar = null;
         try {
             aVar = testClass.addVariable(new VariableModel(ScopeType.PRIVATE, testClass, "aVar"));
@@ -288,11 +286,12 @@ public class ClassModelTest extends BaseModelTest{
         try {
             testClass.removeVariable(aVar);
             fail("exception not thrown");
-        } catch (DoesNotExistException ex) { }
+        } catch (DoesNotExistException ex) {
+        }
     }
-    
+
     @Test
-    public void testGetClassList(){
+    public void testGetClassList() {
         assertEquals(1, testClass.getClassList().size());
         assertEquals(testClass, testClass.getClassList().getFirst());
         ClassModel newClass = null;
@@ -313,9 +312,9 @@ public class ClassModelTest extends BaseModelTest{
         assertEquals(testClass, testClass.getClassList().getLast());
         assertEquals(testClass.getClassList().getFirst(), testClass.getClassList().getLast());
     }
-    
+
     @Test
-    public void testGetStaticMethods(){
+    public void testGetStaticMethods() {
         MethodModel aMethod = null;
         assertTrue(testClass.getStaticMethods().isEmpty());
         try {
@@ -333,9 +332,9 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertFalse(testClass.getStaticMethods().contains(aMethod));
     }
-    
+
     @Test
-    public void testGetInstanceMethods(){
+    public void testGetInstanceMethods() {
         MethodModel aMethod = null;
         assertTrue(testClass.getInstanceMethods().isEmpty());
         try {
@@ -351,57 +350,43 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertFalse(testClass.getInstanceMethods().contains(aMethod));
     }
-    
+
     @Test
-    public void testGetStaticVars(){
+    public void testGetStaticVars() throws Exception {
         VariableModel aVar = null;
         assertTrue(testClass.getStaticVars().isEmpty());
-        try {
-            aVar = testClass
-                    .addVariable(
-                            new VariableModel(ClassType.STATIC, 
-                                    new ClassModel(), "aVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        aVar = testClass
+                .addVariable(
+                        new VariableModel(ClassType.STATIC,
+                                ClassModel.getObjectClass(), "aVar"));
         assertTrue(testClass.getVariables().containsKey(aVar.name()));
         assertTrue(testClass.getStaticVars().contains(aVar));
-        try {
-            aVar = testClass
-                    .addVariable(
-                            new VariableModel(ClassType.INSTANCE,
-                                    new ClassModel(), "anotherVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        aVar = testClass
+                .addVariable(
+                        new VariableModel(ClassType.INSTANCE,
+                                ClassModel.getPrimitive("char"), "anotherVar"));
         assertFalse(testClass.getStaticVars().contains(aVar));
     }
-    
+
     @Test
-    public void testGetInstanceVars(){
+    public void testGetInstanceVars() throws Exception {
         VariableModel aVar = null;
         assertTrue(testClass.getStaticVars().isEmpty());
-        try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.INSTANCE, new ClassModel(), "aVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        aVar = testClass.addVariable(new VariableModel(
+                ClassType.INSTANCE, ClassModel.getObjectClass(), "aVar"));
         assertTrue(testClass.getInstanceVars().contains(aVar));
-        try {
-            aVar = testClass.addVariable(new VariableModel(ClassType.STATIC, new ClassModel(), "anotherVar"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+        aVar = testClass.addVariable(new VariableModel(
+                ClassType.STATIC, ClassModel.getObjectClass(), "anotherVar"));
         assertFalse(testClass.getInstanceVars().contains(aVar));
     }
-    
+
     @Test
-    public void testGetReturnTyppe(){
-        assertEquals(testClass,testClass.getReturnType());
+    public void testGetReturnTyppe() {
+        assertEquals(testClass, testClass.getReturnType());
     }
-    
+
     @Test
-    public void testGetMain(){
+    public void testGetMain() {
         MainApplication main = new MainApplication();
         try {
             ProjectModel aProject = main.addProject(new ProjectModel("aProject"));
@@ -412,24 +397,24 @@ public class ClassModelTest extends BaseModelTest{
         }
         assertEquals(main, testClass.getMain());
     }
-    
+
     @Test
-    public void testIsPrimitive(){
+    public void testIsPrimitive() {
         assertFalse(testClass.isPrimitive());
         testClass.setName("int");
         assertTrue(testClass.isPrimitive());
     }
-    
+
     @Test
-    public void testGetPrimitiveType(){
+    public void testGetPrimitiveType() {
         ClassModel intModel = ClassModel.getPrimitive("int");
         assertTrue(intModel.isPrimitive());
         ClassModel anotherInt = ClassModel.getPrimitive("int");
         assertEquals(anotherInt, intModel);
     }
-    
+
     @Test
-    public void testGetParentPackage(){
+    public void testGetParentPackage() {
         try {
             assertEquals(parentPackage, testClass.getParentPackage());
             ClassModel subClass = testClass.addClass(new ClassModel("ASubClass"));
@@ -438,17 +423,17 @@ public class ClassModelTest extends BaseModelTest{
             fail(ex.getMessage());
         }
     }
-    
+
     @Test
-    public void testRemove() throws Exception{
+    public void testRemove() throws Exception {
         fail();
     }
-    
+
     @Test
-    public void testNameChange(){
+    public void testNameChange() {
         /*
-        needs to be wrapped up into re-factoring logic. 
-        */
+         needs to be wrapped up into re-factoring logic.
+         */
         try {
             parentPackage.addClass(new ClassModel("OneName"));
         } catch (AlreadyExistsException ex) {
@@ -457,14 +442,14 @@ public class ClassModelTest extends BaseModelTest{
         try {
             testClass.rename("OneName");
             fail("exception Not Thrown");
-        } catch (AlreadyExistsException ex) {}
+        } catch (AlreadyExistsException ex) {
+        }
         assertEquals("InstanceClass", testClass.name());
         //assert other instances of the class have been renamed
     }
-    
-    
+
     @Test
-    public void testAddClassTriggersEvent(){
+    public void testAddClassTriggersEvent() {
         EventTester listener = this.getTestListener();
         try {
             ClassModel newClass = testClass.addClass(new ClassModel("SomeNewClass"));
@@ -477,9 +462,9 @@ public class ClassModelTest extends BaseModelTest{
             fail(ex.getMessage());
         }
     }
-    
+
     @Test
-    public void testRemoveClassTriggersEvent(){
+    public void testRemoveClassTriggersEvent() {
         EventTester listener = this.getTestListener();
         this.setUpSubClasses();
         ClassModel subClass = testClass.getSubClasses().getLast();
@@ -494,9 +479,9 @@ public class ClassModelTest extends BaseModelTest{
         assertEquals(testClass, e.getSource());
         assertEquals(subClass, e.getModel());
     }
-    
+
     @Test
-    public void testClassNameChangedTriggersEvent(){
+    public void testClassNameChangedTriggersEvent() {
         EventTester listener = this.getTestListener();
         testClass.setName("NewClassName");
         assertTrue(listener.eventTriggered());
@@ -504,60 +489,60 @@ public class ClassModelTest extends BaseModelTest{
         assertTrue(e.isChange());
         assertEquals(testClass, e.getSource());
     }
-    
+
     @Test
-    public void testAddDuplicateClassDoenstFireEvent(){
+    public void testAddDuplicateClassDoenstFireEvent() {
         //cant remember why I wrote this...
         fail();
     }
-    
+
     @Test
-    public void testClassDeclaration(){
-        String expected =  "class InstanceClass";
+    public void testClassDeclaration() {
+        String expected = "class InstanceClass";
         this.compareStrings(expected, testClass.getDeclaration());
         testClass.setScope(ScopeType.PUBLIC);
-        expected =  "public class InstanceClass";
+        expected = "public class InstanceClass";
         this.compareStrings(expected, testClass.getDeclaration());
         testClass.setParent(new ClassModel("ParentClass"));
-        expected =  "public class InstanceClass extends ParentClass";
+        expected = "public class InstanceClass extends ParentClass";
         this.compareStrings(expected, testClass.getDeclaration());
         try {
             testClass.addInterface(new InterfaceModel("SomeInterface"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        expected =  "public class InstanceClass extends ParentClass implements SomeInterface";
+        expected = "public class InstanceClass extends ParentClass implements SomeInterface";
         this.compareStrings(expected, testClass.getDeclaration());
         try {
             testClass.addInterface(new InterfaceModel("SomeOtherInterface"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
-        expected =  "public class InstanceClass extends ParentClass implements SomeInterface implements SomeOtherInterface";
+        expected = "public class InstanceClass extends ParentClass implements SomeInterface implements SomeOtherInterface";
         this.compareStrings(expected, testClass.getDeclaration());
     }
-    
+
     @Test
-    public void testClassDeclarationFinal(){
+    public void testClassDeclarationFinal() {
         testClass.setFinal(true);
         this.compareStrings("public final InstanceClass", testClass.getDeclaration());
     }
-    
+
     @Test
-    public void testClasImplementsInterface(){
+    public void testClasImplementsInterface() {
         InterfaceModel anInterface = new InterfaceModel("SomeInterface");
         anInterface = testClass.implementsInterface(anInterface);
         assertTrue(testClass.getInterfaces().contains(anInterface));
         assertTrue(anInterface.getClassList().contains(testClass));
         /*
-        an interface should have reference to all the classes that implement it
-        so that it can tell them to update when a new abstract method is added
-        or removed from the interface.
-        */
+         an interface should have reference to all the classes that implement it
+         so that it can tell them to update when a new abstract method is added
+         or removed from the interface.
+         */
     }
-    
+
     @Test
-    public void testMoveClass(){
+    public void testMoveClass() {
         ClassModel p1 = null;
         ClassModel p2 = null;
         ClassModel child = null;
@@ -573,71 +558,71 @@ public class ClassModelTest extends BaseModelTest{
         assertFalse(p1.getSubClasses().contains(child));
         assertTrue(p2.getSubClasses().contains(child));
     }
-    
+
     @Test
-    public void testFindVariable() throws Exception{
-        VariableModel aVar = 
-                testClass.addVariable(
+    public void testFindVariable() throws Exception {
+        VariableModel aVar
+                = testClass.addVariable(
                         new VariableModel(
                                 ClassModel.getPrimitive("char"), "aCharVar"));
         assertSame(aVar, testClass.findVariable("aCharVar"));
-        
+
     }
-    
+
     @Test
-    public void testAddVariableAddsReference() throws Exception{
+    public void testAddVariableAddsReference() throws Exception {
         ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
         VariableModel aVar = testClass.addVariable(new VariableModel(aClass, "testVar"));
-        
+
         assertEquals(1, aClass.getReferences().size());
         assertSame(aVar, aClass.getReferences().getFirst());
     }
-    
+
     @Test
-    public void testRemoveVariableRemovesReference() throws Exception{
+    public void testRemoveVariableRemovesReference() throws Exception {
         this.testAddVariableAddsReference();
         ClassModel aClass = parentProject.findClass("SomeClass");
         VariableModel aVar = testClass.findVariable("testVar");
         testClass.removeVariable(aVar);
-        
+
         assertTrue(aClass.getReferences().isEmpty());
-        
+
     }
-    
+
     @Test
-    public void testAddVariableFiresEvent() throws Exception{
+    public void testAddVariableFiresEvent() throws Exception {
         EventTester listener = this.getTestListener();
-        VariableModel aVar = 
-                testClass.addVariable(
+        VariableModel aVar
+                = testClass.addVariable(
                         new VariableModel(
                                 ClassModel.getPrimitive("int"), "aVar"));
-        
+
         assertTrue(listener.getEvent().isAdd());
         assertSame(aVar, listener.getEvent().getModel());
         assertSame(testClass, listener.getEvent().getSource());
     }
-    
+
     @Test
-    public void testRemoveVariableFiresEvent() throws Exception{
+    public void testRemoveVariableFiresEvent() throws Exception {
         EventTester listener = this.getTestListener();
-        VariableModel aVar = 
-                testClass.addVariable(
+        VariableModel aVar
+                = testClass.addVariable(
                         new VariableModel(
                                 ClassModel.getPrimitive("int"), "aVar"));
         testClass.removeVariable(aVar);
-        
+
         assertTrue(listener.getEvent().isRemove());
         assertSame(aVar, listener.getEvent().getModel());
         assertSame(testClass, listener.getEvent().getSource());
     }
-    
+
     @Test
-    public void testToSourceString(){
+    public void testToSourceString() {
         fail();
     }
-    
+
     @Test
-    public void testGeneric(){
+    public void testGeneric() {
         fail();
     }
 }

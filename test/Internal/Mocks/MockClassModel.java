@@ -16,6 +16,8 @@ import java.util.LinkedList;
  * @author arthur
  */
 public class MockClassModel extends ClassModel{
+    private final LinkedList methods;
+    private final LinkedList variables;
     
     public MockClassModel(String name){
         super(name);

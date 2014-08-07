@@ -45,9 +45,9 @@ public class LanguageTest {
         java.setPrimitives(primitives);
         
         
-        LanguageJAXBHelper.writeToFile(java);
+        JAXBHelper.writeToFile(java);
         
-        File test = LanguageJAXBHelper.file;
+        File test = JAXBHelper.file;
         assertTrue(test.exists());
         
         test.delete();
@@ -56,9 +56,9 @@ public class LanguageTest {
     
     @Test
     public void testCreatesClassFromXML() throws Exception{
-        File input = new File(LanguageJAXBHelper.filePath+"Java_Lang.xml");
+        File input = new File(JAXBHelper.filePath+"Java_Lang.xml");
         
-        Language java = LanguageJAXBHelper.objectFromFile(input);
+        Language java = JAXBHelper.objectFromFile(input);
         
         assertEquals("java", java.getName());
         assertEquals("static", java.getType());
