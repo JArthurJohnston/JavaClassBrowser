@@ -25,48 +25,51 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class MethodlListPanelTest extends BaseTest{
+public class MethodlListPanelTest extends BaseTest {
+
     MethodlListPanel panel;
-    
+
     public MethodlListPanelTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         panel = new MethodlListPanel();
     }
-    
+
     @After
+    @Override
     public void tearDown() {
         main = null;
         panel = null;
     }
-    
-    private JTable table(){
-        return (JTable)this.getVariableFromClass(panel, "modelTable");
+
+    private JTable table() {
+        return (JTable) this.getVariableFromClass(panel, "modelTable");
     }
-    
-    private DefaultTableModel tableModel(){
-        return (DefaultTableModel)this.table().getModel();
+
+    private DefaultTableModel tableModel() {
+        return (DefaultTableModel) this.table().getModel();
     }
-    
-    private void setListSelection(int selectionIndex){
+
+    private void setListSelection(int selectionIndex) {
         this.table().setRowSelectionInterval(selectionIndex, selectionIndex);
         this.table().setColumnSelectionInterval(1, 1);
         assertEquals(selectionIndex, this.table().getSelectedRow());
         assertEquals(1, this.table().getSelectedColumn());
     }
-    
-    private void setUpTableMethods(){
+
+    private void setUpTableMethods() {
         MethodModel aMethod = new MethodModel("aMethod");
         aMethod.setScope(ScopeType.PRIVATE);
         aMethod.setReturnType(ClassModel.getPrimitive("void"));
@@ -80,51 +83,51 @@ public class MethodlListPanelTest extends BaseTest{
         aMethod.setReturnType(ClassModel.getPrimitive("char"));
         panel.addMethodToList(aMethod);
     }
-    
-    private MockClassModel classWithMethods(){
-        MockClassModel aClass = new MockClassModel("AClass");
-            aClass.addMethod(new MethodModel("oneMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel("twoMethod", ClassType.INSTANCE));
-            aClass.addMethod(new MethodModel("threeMethod", ClassType.STATIC));
-            aClass.addMethod(new MethodModel("fourMethod", ClassType.STATIC));
-            aClass.addMethod(new MethodModel("fiveMethod", ClassType.STATIC));
+
+    private ClassModel classWithMethods() throws Exception {
+        ClassModel aClass = parentPackage.addClass(new ClassModel("AClass"));
+        aClass.addMethod(new MethodModel("oneMethod", ClassType.INSTANCE));
+        aClass.addMethod(new MethodModel("twoMethod", ClassType.INSTANCE));
+        aClass.addMethod(new MethodModel("threeMethod", ClassType.STATIC));
+        aClass.addMethod(new MethodModel("fourMethod", ClassType.STATIC));
+        aClass.addMethod(new MethodModel("fiveMethod", ClassType.STATIC));
         return aClass;
     }
-    
+
     @Test
-    public void testInit(){
-        assertEquals(DefaultTableModel.class, 
-                ((JTable)this.getVariableFromClass(panel, "modelTable"))
-                        .getModel().getClass());
+    public void testInit() {
+        assertEquals(DefaultTableModel.class,
+                ((JTable) this.getVariableFromClass(panel, "modelTable"))
+                .getModel().getClass());
         assertEquals(3, this.tableModel().getColumnCount());
         assertEquals(0, this.tableModel().getRowCount());
         assertTrue(panel.isEmpty());
         //assertEquals(-1, panel.getSelected());
-            //throws an error if you call getSelected when there are no elements in the table.
+        //throws an error if you call getSelected when there are no elements in the table.
         assertFalse(panel.contains(new MethodModel("someRandomMethod")));
     }
-    
+
     @Test
-    public void testAddMethodToTable(){
+    public void testAddMethodToTable() {
         this.setUpTableMethods();
         assertEquals(3, this.tableModel().getRowCount());
     }
-    
+
     @Test
-    public void testRowSelection(){
+    public void testRowSelection() {
         this.setUpTableMethods();
         panel.setModel(new MockBrowserController());
         this.setListSelection(1);
         assertTrue(panel.getSelected().isMethod());
     }
-    
-    @Test 
-    public void testClassSelectionChanged() {
+
+    @Test
+    public void testClassSelectionChanged() throws Exception {
         panel.setSelectionType(ClassType.STATIC);
         panel.selectionChanged(this.classWithMethods());
         assertEquals(3, panel.getTableSize());
         //test selection changed to another class
-            //clear the list, then re-populate it
+        //clear the list, then re-populate it
         MockClassModel aClass = new MockClassModel("AnotherClass");
         this.addMethodToClass(aClass, new MethodModel("aMethod", ClassType.STATIC));
         this.addMethodToClass(aClass, new MethodModel("anotherMethod", ClassType.STATIC));
@@ -132,53 +135,52 @@ public class MethodlListPanelTest extends BaseTest{
         panel.selectionChanged(aClass);
         assertEquals(2, panel.getTableSize());
     }
-    
+
     @Test
-    public void testMethodAdded(){
+    public void testMethodAdded() throws Exception {
         MockBrowserController controller = new MockBrowserController();
-        MockClassModel aClass = this.classWithMethods();
+        ClassModel aClass = this.classWithMethods();
         controller.setSelected(aClass);
-        
+
         panel.setSelectionType(ClassType.INSTANCE);
         panel.setModel(controller);
         assertEquals(2, panel.getTableSize());
-        
+
         MethodModel aMethod = new MethodModel("aMethod");
         aMethod.setType(ClassType.INSTANCE);
         aMethod.setParent(aClass);
-        
+
         panel.modelAdded(aMethod);
         assertEquals(3, panel.getTableSize());
         assertEquals(aMethod, panel.getValueAt(2));
         assertEquals(2, panel.indexOf(aMethod));
         assertTrue(panel.contains(aMethod));
-        
+
     }
-    
+
     @Test
-    public void testSetModelWithNullClass(){
+    public void testSetModelWithNullClass() throws Exception {
         MockBrowserController controller = new MockBrowserController();
         panel.setSelectionType(ClassType.STATIC);
         panel.setModel(controller);
         assertTrue(panel.isEmpty());
         controller.setSelected(this.classWithMethods());
-        
+
         panel.setModel(controller);
         assertEquals(3, panel.getTableSize());
-        
+
         panel.setSelectionType(ClassType.INSTANCE);
         panel.setModel(controller);
         assertEquals(2, panel.getTableSize());
     }
-    
+
     @Test
-    public void testIndexOfEmpty(){
+    public void testIndexOfEmpty() {
         assertEquals(-1, panel.indexOf(new MethodModel()));
     }
-    
-    
+
     @Test
-    public void testMethodRemoved(){
+    public void testMethodRemoved() throws Exception {
         assertTrue(panel.isEmpty());
         ClassModel aClass = this.classWithMethods();
         MethodModel methodToBeRemoved = aClass.getStaticMethods().getFirst();
@@ -186,26 +188,27 @@ public class MethodlListPanelTest extends BaseTest{
         panel.selectionChanged(aClass);
         assertEquals(3, panel.getTableSize());
         assertTrue(panel.contains(methodToBeRemoved));
+
         panel.modelRemoved(methodToBeRemoved);
         assertEquals(2, panel.getTableSize());
         assertFalse(panel.contains(methodToBeRemoved));
     }
-    
+
     /*
-    these procedures will probably need buffers...
-    */
+     these procedures will probably need buffers...
+     */
     @Test
-    public void testMethodNameChange(){
+    public void testMethodNameChange() {
         fail();
     }
-    
+
     @Test
-    public void testMethodScopeChange(){
+    public void testMethodScopeChange() {
         fail();
     }
-    
+
     @Test
-    public void testMethodReturnTypeChange(){
+    public void testMethodReturnTypeChange() {
         fail();
     }
 }

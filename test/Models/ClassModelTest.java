@@ -525,13 +525,15 @@ public class ClassModelTest extends BaseModelTest {
     @Test
     public void testClassDeclarationFinal() {
         testClass.setFinal(true);
-        this.compareStrings("public final InstanceClass", testClass.getDeclaration());
+        this.compareStrings("final class InstanceClass", testClass.getDeclaration());
     }
 
     @Test
-    public void testClasImplementsInterface() {
-        InterfaceModel anInterface = new InterfaceModel("SomeInterface");
+    public void testClasImplementsInterface() throws Exception {
+        InterfaceModel anInterface
+                = parentPackage.addInterface(new InterfaceModel("SomeInterface"));
         anInterface = testClass.implementsInterface(anInterface);
+        assertFalse(anInterface == testClass.getParent());
         assertTrue(testClass.getInterfaces().contains(anInterface));
         assertTrue(anInterface.getClassList().contains(testClass));
         /*
@@ -539,6 +541,11 @@ public class ClassModelTest extends BaseModelTest {
          so that it can tell them to update when a new abstract method is added
          or removed from the interface.
          */
+    }
+
+    @Test
+    public void testClassImplementsInterfaceAddsMethods() {
+        fail();
     }
 
     @Test
@@ -617,12 +624,23 @@ public class ClassModelTest extends BaseModelTest {
     }
 
     @Test
-    public void testToSourceString() {
-        fail();
+    public void testToSourceString() throws Exception {
+        testClass.addVariable(new VariableModel(ClassModel.getPrimitive("int"), "aVar"));
+        testClass.addMethod(new MethodModel("someMethod")).setSource("5+5;");
+        String source = "class InstanceClass {\n"
+                + "int aVar;\n"
+                + "void someMethod(){\n"
+                + "5+5;\n"
+                + "}\n"
+                + "}\n";
+        this.compareStrings(source, testClass.toSourceString());
     }
 
     @Test
     public void testGeneric() {
-        fail();
+        this.compareStrings("class InstanceClass", testClass.getDeclaration());
+        testClass.setGenericType(ClassModel.getObjectClass());
+        assertSame(ClassModel.getObjectClass(), testClass.getGenericType());
+        this.compareStrings("class InstanceClass<Object>", testClass.getDeclaration());
     }
 }

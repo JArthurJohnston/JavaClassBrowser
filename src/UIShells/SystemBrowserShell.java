@@ -15,68 +15,73 @@ import UIPanels.BasePanel;
  * @author Arthur
  */
 public class SystemBrowserShell extends BaseUIShell {
+
     /**
      * Creates new form SystemBrowserShell
      */
     public SystemBrowserShell() {
         initComponents();
     }
-    
-    public SystemBrowserShell(BrowserUIController model){
+
+    public SystemBrowserShell(BrowserUIController model) {
         this();
         this.setModel(model);
-        this.setVisible(true);
+        if (!this.controller.getMain().isTesting())
+            this.setVisible(true);
     }
-    
+
     @Override
-    protected BrowserUIController controller(){
+    protected BrowserUIController controller() {
         return (BrowserUIController) controller;
     }
-    
-    private void setModel(BrowserUIController aController){
+
+    private void setModel(BrowserUIController aController) {
         controller = aController;
-        for(BasePanel bp : this.myPanels())
+        for (BasePanel bp : this.myPanels())
             bp.setModel(aController);
     }
-    
+
     @Override
-    protected SortedList<BasePanel> myPanels(){
+    protected SortedList<BasePanel> myPanels() {
         return super.myPanels()
                 .addElm(packageTree)
                 .addElm(classBrowserPanel)
                 .addElm(modelEditPanel);
     }
-    
-    private boolean checkModelProject(BaseModel aModel){
+
+    private boolean checkModelProject(BaseModel aModel) {
         return aModel.getProject() == this.controller().getSelectedProject();
     }
-    
+
     @Override
-    public void modelAdded(BaseModel newModel){
-        if(!this.checkModelProject(newModel))
+    public void modelAdded(BaseModel newModel) {
+        if (!this.checkModelProject(newModel))
             return;
         super.modelAdded(newModel);
     }
+
     @Override
-    public void modelRemoved(BaseModel aModel){
-        if(!this.checkModelProject(aModel))
+    public void modelRemoved(BaseModel aModel) {
+        if (!this.checkModelProject(aModel))
             return;
         super.modelRemoved(aModel);
     }
+
     @Override
-    public void modelChanged(BaseModel aModel){
-        if(!this.checkModelProject(aModel))
+    public void modelChanged(BaseModel aModel) {
+        if (!this.checkModelProject(aModel))
             return;
         super.modelChanged(aModel);
     }
 
-    public ClassType getSelectedVarType(){
+    public ClassType getSelectedVarType() {
         return this.classBrowserPanel.getSelectedVarType();
     }
-    public ClassType getSelectedMethodType(){
+
+    public ClassType getSelectedMethodType() {
         return this.classBrowserPanel.getSelectedMethodType();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,15 +138,14 @@ public class SystemBrowserShell extends BaseUIShell {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
-            }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(SystemBrowserShell.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -160,7 +164,7 @@ public class SystemBrowserShell extends BaseUIShell {
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addPackageMenuItem;
     private UIPanels.SelectedClassPanel classBrowserPanel;

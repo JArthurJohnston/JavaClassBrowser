@@ -290,17 +290,11 @@ public class ClassModel extends PackageModel {
     }
 
     public LinkedList<VariableModel> getStaticVars() {
-        return this.fillListOfType(variables.values(), ClassType.STATIC);
+        return this.getListOfType(ClassType.STATIC);
     }
 
     public LinkedList<VariableModel> getInstanceVars() {
-        return this.fillListOfType(variables.values(), ClassType.INSTANCE);
-    }
-
-    private LinkedList fillListOfType(Collection<VariableModel> varList, ClassType type) {
-        if (varList == null)
-            varList = this.getListOfType(type);
-        return new LinkedList(varList);
+        return this.getListOfType(ClassType.INSTANCE);
     }
 
     private LinkedList<VariableModel> getListOfType(ClassType type) {
@@ -369,10 +363,15 @@ public class ClassModel extends PackageModel {
         return classList;
     }
 
-    public InterfaceModel implementsInterface(InterfaceModel anInterface) {
+    public InterfaceModel implementsInterface(InterfaceModel anInterface) throws AlreadyExistsException {
+        anInterface.addClass(this);
         interfaceList.add(anInterface);
         this.implementAbstractMethods();
         return anInterface;
+        /*
+         this is kninda confusing, either add a class to an interface
+         or add an interface to a class. dont do both
+         */
     }
 
     private void implementAbstractMethods() {
@@ -426,10 +425,25 @@ public class ClassModel extends PackageModel {
 
     public String getDeclaration() {
         return this.getScopeString()
+                + this.finalString()
                 + "class "
                 + this.name()
+                + this.genericString()
                 + this.inheritenceString()
                 + this.interfacesString();
+    }
+
+    private String genericString() {
+        if (this.generic == null)
+            return "";
+        return "<" + generic.name() + ">";
+    }
+
+    private String finalString() {
+        if (this.isFinal)
+            return "final ";
+        else
+            return "";
     }
 
     public VariableModel findVariable(String variableName) throws DoesNotExistException {

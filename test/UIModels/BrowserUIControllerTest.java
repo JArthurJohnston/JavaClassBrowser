@@ -19,27 +19,28 @@ import org.junit.Test;
  *
  * @author Arthur
  */
-public class BrowserUIControllerTest extends BaseTest{
+public class BrowserUIControllerTest extends BaseTest {
+
     private BrowserUIController controller;
-    
+
     public BrowserUIControllerTest() {
     }
-    
+
     @Before
     @Override
-    public void setUp() {
+    public void setUp() throws Exception {
         super.setUp();
         controller = new BrowserUIController(parentProject);
     }
-    
+
     @After
     @Override
     public void tearDown() {
         controller = null;
         super.tearDown();
     }
-    
-    private ProjectModel getProject(){
+
+    private ProjectModel getProject() {
         ProjectModel aProject = new ProjectModel("a project");
         aProject.setMain(main);
         try {
@@ -55,42 +56,35 @@ public class BrowserUIControllerTest extends BaseTest{
         }
         return aProject;
     }
-    
+
     @Test
-    public void testOpenFromMain(){
-        controller = new BrowserUIController(new MainApplication());
+    public void testOpenFromMain() throws Exception {
+        main = new MainApplication();
+        main.addProject(new ProjectModel("some project"));
+        controller = new BrowserUIController(main);
         assertEquals(BrowserUIController.class, controller.getClass());
     }
-    
+
     @Test
-    public void testInit(){
-        assertEquals(main, controller.main);
-        assertEquals(main.getSelectedProject(), 
-                (ProjectModel)this.getVariableFromClass(controller, "selectedProject"));
+    public void testInit() {
+        assertSame(main, controller.main);
+        assertSame(main.getSelectedProject(),
+                this.getVariableFromClass(controller, "selectedProject"));
     }
-    
+
     @Test
-    public void testSelectedProject(){
-        assertEquals("parent project", ((ProjectModel)this.getVariableFromClass(controller, "selectedProject")).name());
-    }
-    
-    @Test
-    public void testPackageList(){
+    public void testPackageList() {
         assertEquals(2, controller.getPackages().size());
     }
-    
+
     @Test
-    public void testAddPackage(){
-        try {
-            controller.addPackage(new PackageModel("a package"));
-        } catch (AlreadyExistsException ex) {
-            fail(ex.getMessage());
-        }
+    public void testAddPackage() throws Exception {
+        controller.addPackage(new PackageModel("a package"));
         assertEquals(3, controller.getPackages().size());
     }
-    
+
     @Test
-    public void testAddClass(){
+    public void testAddClass() {
         try {
             controller.addClass(new ClassModel("AClass"));
             fail("exception not thrown");
@@ -98,24 +92,24 @@ public class BrowserUIControllerTest extends BaseTest{
             this.compareStrings("", ex.getMessage());
         }
     }
-    
+
     @Test
-    public void testSelectedClass(){
+    public void testSelectedClass() {
         ClassModel aClass = null;
         assertEquals(null, controller.getSelectedClass());
         try {
-            PackageModel aPackage = 
-                    main.getSelectedProject().addPackage(
-                    new PackageModel("a package"));
+            PackageModel aPackage
+                    = main.getSelectedProject().addPackage(
+                            new PackageModel("a package"));
             aClass = aPackage.addClass(new ClassModel("AClass"));
         } catch (AlreadyExistsException ex) {
             fail(ex.getMessage());
         }
         assertEquals(aClass, controller.getSelectedClass());
     }
-    
+
     @Test
-    public void testOpenAddVariable(){
+    public void testOpenAddVariable() {
         controller.getShell();
         //AddVariableDialogue dialogue = controller.openAddVariable();
         //assertEquals(AddVariableDialogue.class, dialogue.getClass());
@@ -124,21 +118,21 @@ public class BrowserUIControllerTest extends BaseTest{
         controller.close();
         fail();
     }
-    
+
     @Test
-    public void testGetSelectedPackage(){
+    public void testGetSelectedPackage() {
         assertEquals(controller.getSelectedPackage(), main.getSelectedProject().getDefaultPackage());
-                
+
     }
-    
+
     @Test
-    public void testDefaultModelSelection(){
+    public void testDefaultModelSelection() {
         assertEquals(parentProject, controller.getSelectedProject());
         assertEquals(parentProject.getAllPackage(), controller.getSelectedPackage());
     }
-    
+
     @Test
-    public void testGetAllClasses(){
+    public void testGetAllClasses() {
         fail("need to decide how Ill handle caching the big class tree");
     }
 }
