@@ -11,11 +11,8 @@ import Exceptions.VeryVeryBadException;
 import Types.ClassType;
 import Types.ScopeType;
 import UIModels.Buffer.ClassModelBuffer;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  *
@@ -267,6 +264,10 @@ public class ClassModel extends PackageModel {
 
     public LinkedList<MethodModel> getMethods() {
         return methods;
+    }
+
+    public LinkedList<MethodModel> getMethodsOfType(ClassType aType) {
+        return this.getModelsOfType(methods, aType);
     }
 
     public LinkedList<MethodModel> getStaticMethods() {
