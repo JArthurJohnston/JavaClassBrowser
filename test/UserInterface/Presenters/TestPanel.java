@@ -12,8 +12,10 @@ import Models.MethodModel;
 import Models.PackageModel;
 import Models.ProjectModel;
 import Types.ClassType;
+import Types.ScopeType;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
 import java.awt.BorderLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -23,18 +25,22 @@ import javax.swing.WindowConstants;
  */
 public class TestPanel {
 
-    private static MockPresenter parent = new MockPresenter();
-
     public static void main(String[] args) {
-        parent.setSelectedClass(getTestClass());
-        BasePresenter comp = new MethodListPresenter(parent,
-                ClassType.INSTANCE);
         JFrame aFrame = new JFrame();
-        aFrame.setSize(200, 400);
+        aFrame.setSize(300, 200);
         aFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         aFrame.setLayout(new BorderLayout());
-        aFrame.getContentPane().add(comp.getView(), BorderLayout.CENTER);
+        aFrame.getContentPane().add(getComponent(), BorderLayout.CENTER);
         aFrame.setVisible(true);
+    }
+
+    private static JComponent getComponent() {
+        MockPresenter parent = new MockPresenter();
+        parent.setSelectedClass(getTestClass());
+        MethodListPresenter presenter = new MethodListPresenter(parent,
+                ClassType.INSTANCE);
+        System.out.println("Rows: " + presenter.model.getRowCount());
+        return presenter.getView();
     }
 
     private static ClassModel getTestClass() {
@@ -47,15 +53,31 @@ public class TestPanel {
             MethodModel aMethod = aClass.addMethod(new MethodModel("SomeMethod"));
             aMethod.setReturnType(ClassModel.getPrimitive("int"));
             aMethod.setType(ClassType.INSTANCE);
+            aMethod.setScope(ScopeType.PRIVATE);
             aMethod = aClass.addMethod(new MethodModel("oneMethod"));
             aMethod.setReturnType(ClassModel.getPrimitive("int"));
             aMethod.setType(ClassType.STATIC);
+            aMethod.setScope(ScopeType.PUBLIC);
             aMethod = aClass.addMethod(new MethodModel("twoMethod"));
             aMethod.setReturnType(ClassModel.getPrimitive("int"));
             aMethod.setType(ClassType.INSTANCE);
+            aMethod.setScope(ScopeType.PUBLIC);
             aMethod = aClass.addMethod(new MethodModel("threeMethod"));
             aMethod.setReturnType(ClassModel.getPrimitive("int"));
             aMethod.setType(ClassType.STATIC);
+            aMethod.setScope(ScopeType.PRIVATE);
+            aMethod = aClass.addMethod(new MethodModel("aMethod"));
+            aMethod.setReturnType(ClassModel.getPrimitive("int"));
+            aMethod.setType(ClassType.INSTANCE);
+            aMethod.setScope(ScopeType.PUBLIC);
+            aMethod = aClass.addMethod(new MethodModel("anotherMethod"));
+            aMethod.setReturnType(ClassModel.getPrimitive("int"));
+            aMethod.setType(ClassType.INSTANCE);
+            aMethod.setScope(ScopeType.PUBLIC);
+            aMethod = aClass.addMethod(new MethodModel("yetAnotherMethod"));
+            aMethod.setReturnType(ClassModel.getPrimitive("int"));
+            aMethod.setType(ClassType.INSTANCE);
+            aMethod.setScope(ScopeType.PUBLIC);
         } catch (AlreadyExistsException ex) {
             ex.printStackTrace();
         }

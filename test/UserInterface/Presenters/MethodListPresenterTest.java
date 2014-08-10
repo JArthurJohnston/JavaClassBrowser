@@ -10,19 +10,18 @@ import Internal.BaseTest;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
+import UserInterface.BaseUserInterfaceTest;
 import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
 import UserInterface.Views.ListView;
 import java.awt.Component;
 import java.awt.Container;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ import org.junit.Test;
  *
  * @author arthur
  */
-public class MethodListPresenterTest extends BaseTest {
+public class MethodListPresenterTest extends BaseUserInterfaceTest {
 
     private MethodListPresenter presenter;
     private MockPresenter parentPresenter;
@@ -64,6 +63,13 @@ public class MethodListPresenterTest extends BaseTest {
         aMethod = aClass.addMethod(new MethodModel("yetAnotherMethod"));
         aMethod.setType(ClassType.INSTANCE);
         return aClass;
+    }
+
+    @Test
+    public void testGetViewIsSingleton() throws Exception {
+        ListView view = presenter.getView();
+        assertSame(ListView.class, view.getClass());
+        assertSame(view, presenter.getView());
     }
 
     @Test
@@ -146,22 +152,27 @@ public class MethodListPresenterTest extends BaseTest {
     public void testMethodSelection() throws Exception {
         ClassModel aClass = parentPresenter.getSelectedClass();
         MethodModel aMethod = aClass.getMethods().getFirst();
-        DefaultTableModel model = presenter.getTableModel();
         ListView view = presenter.getView();
 
-        view.getTable().setRowSelectionInterval(0, 0);
+        JTable table = this.getTableFromView(view);
 
+        table.setRowSelectionInterval(0, 0);
+        assertSame(aMethod, presenter.getSelected());
+
+        table.setRowSelectionInterval(1, 1);
+        aMethod = aClass.getMethods().get(1);
         assertSame(aMethod, presenter.getSelected());
     }
 
-    public Component getComponentByName(Container view, String componentName) {
-        for (Component comp : view.getComponents())
-            if (comp != null)
-                if (comp.getName() != null && comp.getName().equals(componentName))
-                    return comp;
-                else if (comp instanceof Container)
-                    return getComponentByName((Container) comp, componentName);
-        fail("component not found");
-        return null;
+    @Test
+    public void testGetParentFrame() throws Exception {
+        JFrame parentFrame = new JFrame();
+        parentPresenter.setParentFrame(parentFrame);
+        assertSame(parentFrame, presenter.getParentFrame());
+
+    }
+
+    private JTable getTableFromView(JComponent view) {
+        return (JTable) this.getComponentByName(view, "methodList");
     }
 }

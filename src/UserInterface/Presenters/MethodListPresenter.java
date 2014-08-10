@@ -10,6 +10,8 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import UserInterface.Dialogs.OpenDialog;
+import UserInterface.Views.ListView;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -19,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class MethodListPresenter extends ListPresenter {
 
     private final ClassType type;
+    private ListView view;
 
     protected MethodListPresenter(BasePresenter parentPresenter, ClassType aType) {
         super(parentPresenter);
@@ -40,11 +43,18 @@ public class MethodListPresenter extends ListPresenter {
         }
     }
 
+    @Override
+    public ListView getView() {
+        if (view == null)
+            view = new ListView(this);
+        return view;
+    }
+
     private void addMethodToList(MethodModel aMethod) {
         this.getTableModel().addRow(
                 new CellModel[]{new CellModel(aMethod.scopeString(), aMethod),
-                    new CellModel(aMethod.getReturnType().name(), aMethod),
-                    new CellModel(aMethod.getType().toString().toLowerCase(), aMethod)});
+                    new CellModel(aMethod.name(), aMethod),
+                    new CellModel(aMethod.getReturnType().name(), aMethod)});
     }
 
     @Override
@@ -68,6 +78,7 @@ public class MethodListPresenter extends ListPresenter {
         parentPresenter.openDialog(OpenDialog.NEW_METHOD);
     }
 
+    @Override
     public String getTableName() {
         return "methodList";
     }

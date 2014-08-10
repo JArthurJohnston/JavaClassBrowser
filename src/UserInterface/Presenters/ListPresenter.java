@@ -9,6 +9,9 @@ import Models.BaseModel;
 import Models.ClassModel;
 import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Views.ListView;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -25,12 +28,16 @@ public class ListPresenter extends BasePresenter {
         super(parentPresenter);
     }
 
-    public ListSelectionListener getListSelectionListener() {
+    public ListSelectionListener getListSelectionListener(final JTable table) {
         return new ListSelectionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
+            public void valueChanged(final ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting())
-                    selectionChanged(null);
+                    selectionChanged(this.getValueAt(table.getSelectedRow()));
+            }
+
+            private BaseModel getValueAt(final int index) {
+                return ((CellModel) model.getValueAt(index, 0)).getBase();
             }
         };
     }
@@ -72,6 +79,21 @@ public class ListPresenter extends BasePresenter {
     @Override
     public void openDialog(OpenDialog dialog) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Action[] rightClickMenuActions() {
+        return new Action[]{};
+    }
+
+    @Override
+    public Action[] leftClickMenuActions() {
+        return new Action[]{};
+    }
+
+    @Override
+    public JFrame getParentFrame() {
+        return parentPresenter.getParentFrame();
     }
 
     /**

@@ -3,17 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/BasePanelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/MethodlListPanelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/ListPanels/VariableListPanel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/Models/ClassModelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/VariableListPanelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/Models/ClassModel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/MethodPanelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UIPanels/SelectedClassPanelTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/Models/VariableModel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/LanguageBase/JAXBHelper.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/Models/PrimitiveTypeModel.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MethodListPresenterTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/ListPresenter.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MockPresenters/MockPresenter.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Views/ListView.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/ListPanels/MethodlListPanel.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/TestPanel.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/ListPanels/BaseListPanel.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/MethodListPresenter.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/BasePresenter.java</file>
         </group>
     </open-files>
 </project-private>

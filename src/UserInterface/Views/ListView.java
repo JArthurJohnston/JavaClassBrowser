@@ -6,7 +6,6 @@
 package UserInterface.Views;
 
 import UserInterface.Presenters.ListPresenter;
-import javax.swing.JTable;
 
 /**
  *
@@ -14,16 +13,9 @@ import javax.swing.JTable;
  */
 public class ListView extends BaseView {
 
-    private final JTable table;
-
     public ListView(ListPresenter presenter) {
-        setLayout(new java.awt.BorderLayout());
-        table = new MyTable(presenter);
-        add(new MyScrollPane(table),
+        super(presenter);
+        add(new MyScrollPane(new MyTable(presenter)),
                 java.awt.BorderLayout.PAGE_START);
-    }
-
-    public JTable getTable() {
-        return this.table;
     }
 }

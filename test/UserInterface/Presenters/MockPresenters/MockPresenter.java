@@ -10,6 +10,10 @@ import Models.ClassModel;
 import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Presenters.BasePresenter;
 import UserInterface.Views.BaseView;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
 
 /**
  *
@@ -20,6 +24,7 @@ public class MockPresenter extends BasePresenter {
     BaseModel selected;
     ClassModel selectedClass;
     OpenDialog dialog;
+    JFrame parentFrame;
 
     public MockPresenter() {
         super(null);
@@ -50,6 +55,44 @@ public class MockPresenter extends BasePresenter {
     @Override
     public void openDialog(OpenDialog dialog) {
         this.dialog = dialog;
+    }
+
+    @Override
+    public Action[] rightClickMenuActions() {
+        return new Action[]{
+            new TestAction(),
+            new TestAction(),
+            new TestAction()};
+    }
+
+    @Override
+    public Action[] leftClickMenuActions() {
+        return new Action[]{};
+    }
+
+    public void setActions(Action[] action) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void setParentFrame(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
+    }
+
+    @Override
+    public JFrame getParentFrame() {
+        return this.parentFrame;
+    }
+
+    public class TestAction extends AbstractAction {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        }
+    }
+
+    @Override
+    public boolean isTesting() {
+        return true;
     }
 
 }
