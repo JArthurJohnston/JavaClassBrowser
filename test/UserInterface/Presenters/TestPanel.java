@@ -14,7 +14,10 @@ import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
+import UserInterface.Views.Panels.CancelOKPanel;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -31,7 +34,19 @@ public class TestPanel {
         aFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         aFrame.setLayout(new BorderLayout());
         aFrame.getContentPane().add(getComponent(), BorderLayout.CENTER);
+        aFrame.getContentPane().add(new CancelOKPanel(printAction("ok"),
+                printAction("cancel")), BorderLayout.SOUTH);
         aFrame.setVisible(true);
+    }
+
+    private static AbstractAction printAction(final String message) {
+        return new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(message);
+            }
+        };
     }
 
     private static JComponent getComponent() {
