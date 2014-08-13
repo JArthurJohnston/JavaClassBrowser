@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MethodListPresenterTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/VariableListPresenter.java</file>
             <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/ListPresenter.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MockPresenters/MockPresenter.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Views/ListView.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/ListPanels/MethodlListPanel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/TestPanel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UIPanels/ListPanels/BaseListPanel.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/MethodListPresenter.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/BasePresenter.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MethodListPresenterTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/VariableListPresenterTest.java</file>
         </group>
     </open-files>
 </project-private>

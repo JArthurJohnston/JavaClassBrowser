@@ -7,7 +7,6 @@ package UserInterface.Presenters;
 
 import Models.BaseModel;
 import Models.ClassModel;
-import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Views.BaseView;
 import javax.swing.Action;
 import javax.swing.JFrame;
@@ -43,11 +42,7 @@ public abstract class BasePresenter {
 
     public abstract ClassModel getSelectedClass();
 
-    public abstract void openDialog(OpenDialog dialog);
-
-    public abstract Action[] rightClickMenuActions();
-
-    public abstract Action[] leftClickMenuActions();
+    public abstract Action[] getRightClickMenuActions();
 
     public abstract JFrame getParentFrame();
 

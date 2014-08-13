@@ -7,6 +7,7 @@ package UserInterface.Views;
 
 import UserInterface.Presenters.BasePresenter;
 import UserInterface.Presenters.ListPresenter;
+import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.Action;
@@ -22,9 +23,13 @@ import javax.swing.JTable;
  */
 public class BaseView extends JComponent {
 
+    public BaseView() {
+
+    }
+
     public BaseView(final BasePresenter presenter) {
         super();
-        setLayout(new java.awt.BorderLayout());
+        setLayout(new BorderLayout());
     }
     /*
      These inner classes exist solely to avoid having to use assignment
@@ -52,7 +57,7 @@ public class BaseView extends JComponent {
             this.setName(presenter.getTableName());
 
             this.addMouseListener(
-                    new MyPopupMenu(presenter.rightClickMenuActions(), "rightClickMenu")
+                    new MyPopupMenu(presenter.getRightClickMenuActions(), "rightClickMenu")
                     .getPopupListener());
         }
 
@@ -62,7 +67,7 @@ public class BaseView extends JComponent {
         }
     }
 
-    protected class MyPopupMenu extends JPopupMenu {
+    public class MyPopupMenu extends JPopupMenu {
 
         public MyPopupMenu(final Action[] actions, final String name) {
             super();

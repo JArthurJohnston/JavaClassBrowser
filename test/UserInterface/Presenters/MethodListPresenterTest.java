@@ -6,16 +6,15 @@
 package UserInterface.Presenters;
 
 import Exceptions.AlreadyExistsException;
-import Internal.BaseTest;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import UserInterface.BaseUserInterfaceTest;
 import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
-import UserInterface.Views.ListView;
-import java.awt.Component;
-import java.awt.Container;
+import UserInterface.Views.NetbeansViews.ListPanelView;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -67,8 +66,8 @@ public class MethodListPresenterTest extends BaseUserInterfaceTest {
 
     @Test
     public void testGetViewIsSingleton() throws Exception {
-        ListView view = presenter.getView();
-        assertSame(ListView.class, view.getClass());
+        ListPanelView view = presenter.getView();
+        assertSame(ListPanelView.class, view.getClass());
         assertSame(view, presenter.getView());
     }
 
@@ -152,7 +151,7 @@ public class MethodListPresenterTest extends BaseUserInterfaceTest {
     public void testMethodSelection() throws Exception {
         ClassModel aClass = parentPresenter.getSelectedClass();
         MethodModel aMethod = aClass.getMethods().getFirst();
-        ListView view = presenter.getView();
+        ListPanelView view = presenter.getView();
 
         JTable table = this.getTableFromView(view);
 
@@ -169,7 +168,14 @@ public class MethodListPresenterTest extends BaseUserInterfaceTest {
         JFrame parentFrame = new JFrame();
         parentPresenter.setParentFrame(parentFrame);
         assertSame(parentFrame, presenter.getParentFrame());
+    }
 
+    @Test
+    public void testRightClickActions() throws Exception {
+        final Action[] actions = presenter.getRightClickMenuActions();
+        assertEquals(1, actions.length);
+        Action act = actions[0];
+        assertTrue(act.isEnabled());
     }
 
     private JTable getTableFromView(JComponent view) {

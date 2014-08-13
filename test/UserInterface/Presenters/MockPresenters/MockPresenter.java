@@ -7,7 +7,6 @@ package UserInterface.Presenters.MockPresenters;
 
 import Models.BaseModel;
 import Models.ClassModel;
-import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Presenters.BasePresenter;
 import UserInterface.Views.BaseView;
 import java.awt.event.ActionEvent;
@@ -23,11 +22,11 @@ public class MockPresenter extends BasePresenter {
 
     BaseModel selected;
     ClassModel selectedClass;
-    OpenDialog dialog;
-    JFrame parentFrame;
+    private final JFrame parentFrame;
 
     public MockPresenter() {
         super(null);
+        parentFrame = new JFrame();
     }
 
     public void setSelectedClass(ClassModel aClass) {
@@ -44,38 +43,17 @@ public class MockPresenter extends BasePresenter {
         this.selected = aModel;
     }
 
+    @Override
     public ClassModel getSelectedClass() {
         return selectedClass;
     }
 
-    public OpenDialog getLastDialog() {
-        return this.dialog;
-    }
-
     @Override
-    public void openDialog(OpenDialog dialog) {
-        this.dialog = dialog;
-    }
-
-    @Override
-    public Action[] rightClickMenuActions() {
+    public Action[] getRightClickMenuActions() {
         return new Action[]{
             new TestAction(),
             new TestAction(),
             new TestAction()};
-    }
-
-    @Override
-    public Action[] leftClickMenuActions() {
-        return new Action[]{};
-    }
-
-    public void setActions(Action[] action) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void setParentFrame(JFrame parentFrame) {
-        this.parentFrame = parentFrame;
     }
 
     @Override

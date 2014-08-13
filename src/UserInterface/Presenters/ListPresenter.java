@@ -7,8 +7,8 @@ package UserInterface.Presenters;
 
 import Models.BaseModel;
 import Models.ClassModel;
-import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Views.ListView;
+import UserInterface.Views.NetbeansViews.ListPanelView;
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
  * @author arthur
  */
 public class ListPresenter extends BasePresenter {
+
+    protected ListPanelView view;
 
     protected DefaultTableModel model;
 
@@ -58,8 +60,10 @@ public class ListPresenter extends BasePresenter {
     }
 
     @Override
-    public ListView getView() {
-        return new ListView(this);
+    public ListPanelView getView() {
+        if (view == null)
+            view = new ListPanelView(this);
+        return view;
     }
 
     protected void clear() {
@@ -77,17 +81,7 @@ public class ListPresenter extends BasePresenter {
     }
 
     @Override
-    public void openDialog(OpenDialog dialog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Action[] rightClickMenuActions() {
-        return new Action[]{};
-    }
-
-    @Override
-    public Action[] leftClickMenuActions() {
+    public Action[] getRightClickMenuActions() {
         return new Action[]{};
     }
 

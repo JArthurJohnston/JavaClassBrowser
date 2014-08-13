@@ -291,19 +291,15 @@ public class ClassModel extends PackageModel {
     }
 
     public LinkedList<VariableModel> getStaticVars() {
-        return this.getListOfType(ClassType.STATIC);
+        return this.getVariablesOfType(ClassType.STATIC);
     }
 
     public LinkedList<VariableModel> getInstanceVars() {
-        return this.getListOfType(ClassType.INSTANCE);
+        return this.getVariablesOfType(ClassType.INSTANCE);
     }
 
-    private LinkedList<VariableModel> getListOfType(ClassType type) {
-        LinkedList<VariableModel> vars = new LinkedList();
-        for (VariableModel variableModel : this.variables.values())
-            if (variableModel.getType() == type)
-                vars.add(variableModel);
-        return vars;
+    public LinkedList<VariableModel> getVariablesOfType(ClassType type) {
+        return this.getModelsOfType(new LinkedList(this.variables.values()), type);
     }
 
     public ScopeType getScope() {

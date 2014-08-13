@@ -9,8 +9,11 @@ import Models.BaseModel;
 import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
-import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Views.ListView;
+import UserInterface.Views.NetbeansViews.ListPanelView;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,7 +24,6 @@ import javax.swing.table.DefaultTableModel;
 public class MethodListPresenter extends ListPresenter {
 
     private final ClassType type;
-    private ListView view;
 
     protected MethodListPresenter(BasePresenter parentPresenter, ClassType aType) {
         super(parentPresenter);
@@ -44,9 +46,9 @@ public class MethodListPresenter extends ListPresenter {
     }
 
     @Override
-    public ListView getView() {
+    public ListPanelView getView() {
         if (view == null)
-            view = new ListView(this);
+            view = new ListPanelView(this);
         return view;
     }
 
@@ -74,8 +76,16 @@ public class MethodListPresenter extends ListPresenter {
         return ((MethodModel) selected).getParentClass();
     }
 
-    public void addMethod() {
-        parentPresenter.openDialog(OpenDialog.NEW_METHOD);
+    @Override
+    public Action[] getRightClickMenuActions() {
+        return new Action[]{
+            new AbstractAction("Add Method") {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                }
+            }
+        };
     }
 
     @Override
