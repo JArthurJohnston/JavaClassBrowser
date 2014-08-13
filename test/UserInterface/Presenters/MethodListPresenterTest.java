@@ -10,10 +10,8 @@ import Models.ClassModel;
 import Models.MethodModel;
 import Types.ClassType;
 import UserInterface.BaseUserInterfaceTest;
-import UserInterface.Dialogs.OpenDialog;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
 import UserInterface.Views.NetbeansViews.ListPanelView;
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -139,12 +137,6 @@ public class MethodListPresenterTest extends BaseUserInterfaceTest {
         presenter.selectionChanged(aClass);
         assertNotSame(aClass, presenter.getSelected());
         assertSame(aClass.getMethods().getFirst(), presenter.getSelected());
-    }
-
-    @Test
-    public void testAddMethod() throws Exception {
-        presenter.addMethod();
-        assertSame(OpenDialog.NEW_METHOD, parentPresenter.getLastDialog());
     }
 
     @Test

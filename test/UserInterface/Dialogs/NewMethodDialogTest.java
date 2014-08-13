@@ -9,9 +9,6 @@ import Models.ClassModel;
 import Models.MethodModel;
 import UserInterface.BaseUserInterfaceTest;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
-import java.awt.BorderLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JTextField;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -25,7 +22,7 @@ import org.junit.Test;
  */
 public class NewMethodDialogTest extends BaseUserInterfaceTest {
 
-    private NewMethodDialog dialog;
+    private MockupNewMethodDialog dialog;
     private MockPresenter parentPresenter;
 
     public NewMethodDialogTest() {
@@ -40,7 +37,7 @@ public class NewMethodDialogTest extends BaseUserInterfaceTest {
     public void setUp() throws Exception {
         super.setUp();
         parentPresenter = new MockPresenter();
-        dialog = new NewMethodDialog(parentPresenter);
+        dialog = new MockupNewMethodDialog(parentPresenter);
     }
 
     @After
@@ -55,7 +52,7 @@ public class NewMethodDialogTest extends BaseUserInterfaceTest {
     public void testConstructor() throws Exception {
         ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
         parentPresenter.setSelectedClass(aClass);
-        dialog = new NewMethodDialog(parentPresenter);
+        dialog = new MockupNewMethodDialog(parentPresenter);
 
         assertSame(aClass, this.getVariableFromClass(dialog, "baseClass"));
         assertEquals("New Method", dialog.getTitle());
@@ -71,7 +68,7 @@ public class NewMethodDialogTest extends BaseUserInterfaceTest {
     public void testComponents() throws Exception {
         ClassModel aClass = parentPackage.addClass(new ClassModel("SomeClass"));
         parentPresenter.setSelectedClass(aClass);
-        dialog = new NewMethodDialog(parentPresenter);
+        dialog = new MockupNewMethodDialog(parentPresenter);
 
         JTextField field = (JTextField) this.getVariableFromClass(dialog, "newMethodName");
         assertEquals("newMethod", field.getText());

@@ -23,8 +23,8 @@ import javax.swing.table.DefaultTableModel;
 public class ListPresenter extends BasePresenter {
 
     protected ListPanelView view;
-
     protected DefaultTableModel model;
+    protected String[] modelLabels;
 
     public ListPresenter(BasePresenter parentPresenter) {
         super(parentPresenter);
@@ -51,6 +51,9 @@ public class ListPresenter extends BasePresenter {
     }
 
     protected DefaultTableModel setUpTableModel() {
+        if (this.modelLabels != null)
+            return new DefaultTableModel(new BaseModel[][]{},
+                    this.modelLabels);
         return new DefaultTableModel();
     }
 
@@ -88,6 +91,10 @@ public class ListPresenter extends BasePresenter {
     @Override
     public JFrame getParentFrame() {
         return parentPresenter.getParentFrame();
+    }
+
+    void setModelLabels(String[] labels) {
+        this.modelLabels = labels;
     }
 
     /**

@@ -6,7 +6,6 @@
 package UserInterface.Presenters;
 
 import Models.ClassModel;
-import Models.MethodModel;
 import Models.VariableModel;
 import Types.ClassType;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +18,11 @@ public class VariableListPresenter extends ListPresenter {
 
     private final ClassType type;
 
+    public VariableListPresenter(BasePresenter parentPresenter) {
+        super(parentPresenter);
+        type = null;
+    }
+
     public VariableListPresenter(BasePresenter parentPresenter, ClassType type) {
         super(parentPresenter);
         this.type = type;
@@ -28,7 +32,7 @@ public class VariableListPresenter extends ListPresenter {
 
     @Override
     public DefaultTableModel setUpTableModel() {
-        return new DefaultTableModel(new Object[][]{},
+        return new DefaultTableModel(new VariableModel[][]{},
                 new String[]{"Name", "Type"});
     }
 

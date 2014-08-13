@@ -22,7 +22,7 @@ public class MockPresenter extends BasePresenter {
 
     BaseModel selected;
     ClassModel selectedClass;
-    private final JFrame parentFrame;
+    private JFrame parentFrame;
 
     public MockPresenter() {
         super(null);
@@ -59,6 +59,10 @@ public class MockPresenter extends BasePresenter {
     @Override
     public JFrame getParentFrame() {
         return this.parentFrame;
+    }
+
+    public void setParentFrame(JFrame parentFrame) {
+        this.parentFrame = parentFrame;
     }
 
     public class TestAction extends AbstractAction {

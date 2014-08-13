@@ -24,12 +24,12 @@ import javax.swing.JTable;
 public class BaseView extends JComponent {
 
     public BaseView() {
-
+        super();
+        setLayout(new BorderLayout());
     }
 
     public BaseView(final BasePresenter presenter) {
-        super();
-        setLayout(new BorderLayout());
+        this();
     }
     /*
      These inner classes exist solely to avoid having to use assignment
