@@ -16,12 +16,12 @@ import static org.junit.Assert.fail;
  */
 public class BaseUserInterfaceTest extends BaseTest {
 
-    protected Component getComponentByName(Container view, String componentName) {
+    protected Component assertComponentExistsAndGet(Container view, String componentName) {
         for (Component comp : view.getComponents())
             if (comp.getName() != null && comp.getName().equals(componentName))
                 return comp;
             else if (comp instanceof Container)
-                return getComponentByName((Container) comp, componentName);
+                return assertComponentExistsAndGet((Container) comp, componentName);
         fail("component not found");
         return null;
     }

@@ -171,6 +171,6 @@ public class MethodListPresenterTest extends BaseUserInterfaceTest {
     }
 
     private JTable getTableFromView(JComponent view) {
-        return (JTable) this.getComponentByName(view, "methodList");
+        return (JTable) this.assertComponentExistsAndGet(view, "methodList");
     }
 }

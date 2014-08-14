@@ -44,13 +44,13 @@ public class ListViewTest extends BaseUserInterfaceTest {
     public void testConstructorGetter() {
         assertTrue(JComponent.class.isAssignableFrom(view.getClass()));
         assertTrue(BaseView.class.isAssignableFrom(view.getClass()));
-        assertSame(MyPopupMenu.class, this.getComponentByName(view, "rightClickMenu"));
+        assertSame(MyPopupMenu.class, this.assertComponentExistsAndGet(view, "rightClickMenu"));
     }
 
     @Test
     public void testRightClickMenu() throws Exception {
         MockPresenter parentPresenter = new MockPresenter();
-        JPopupMenu menu = (JPopupMenu) this.getComponentByName(view, "rightClickMenu");
+        JPopupMenu menu = (JPopupMenu) this.assertComponentExistsAndGet(view, "rightClickMenu");
         assertEquals(1, menu.getSubElements().length);
     }
 

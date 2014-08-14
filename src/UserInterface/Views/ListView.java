@@ -6,6 +6,7 @@
 package UserInterface.Views;
 
 import UserInterface.Presenters.ListPresenter;
+import java.awt.BorderLayout;
 
 /**
  *
@@ -15,6 +16,7 @@ public class ListView extends BaseView {
 
     public ListView(ListPresenter presenter) {
         super(presenter);
+        setLayout(new BorderLayout());//might get rid of this
         add(new MyScrollPane(new MyTable(presenter)),
                 java.awt.BorderLayout.PAGE_START);
     }

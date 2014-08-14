@@ -25,7 +25,6 @@ public class BaseView extends JComponent {
 
     public BaseView() {
         super();
-        setLayout(new BorderLayout());
     }
 
     public BaseView(final BasePresenter presenter) {

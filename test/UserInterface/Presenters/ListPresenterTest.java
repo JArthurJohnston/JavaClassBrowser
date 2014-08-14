@@ -6,24 +6,12 @@
 package UserInterface.Presenters;
 
 import UserInterface.Presenters.MockPresenters.MockPresenter;
-import UserInterface.Views.ListView;
 import UserInterface.Views.NetbeansViews.ListPanelView;
-import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
