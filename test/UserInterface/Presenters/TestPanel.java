@@ -14,7 +14,8 @@ import Models.ProjectModel;
 import Types.ClassType;
 import Types.ScopeType;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
-import UserInterface.Views.Panels.CancelOKPanel;
+import UserInterface.Views.CancelOkView;
+import UserInterface.Views.MockCancelOkPresenter;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -28,14 +29,15 @@ import javax.swing.WindowConstants;
  */
 public class TestPanel {
 
+    private static MockCancelOkPresenter parent;
+
     public static void main(String[] args) {
         JFrame aFrame = new JFrame();
         aFrame.setSize(300, 200);
         aFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         aFrame.setLayout(new BorderLayout());
         aFrame.getContentPane().add(getComponent(), BorderLayout.CENTER);
-        aFrame.getContentPane().add(new CancelOKPanel(printAction("ok"),
-                printAction("cancel")), BorderLayout.SOUTH);
+        aFrame.getContentPane().add(new CancelOkView(parent), BorderLayout.SOUTH);
         aFrame.setVisible(true);
     }
 
@@ -50,7 +52,7 @@ public class TestPanel {
     }
 
     private static JComponent getComponent() {
-        MockPresenter parent = new MockPresenter();
+        parent = new MockCancelOkPresenter();
         parent.setSelectedClass(getTestClass());
         MethodListPresenter presenter = new MethodListPresenter(parent,
                 ClassType.INSTANCE);

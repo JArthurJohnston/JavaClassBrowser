@@ -5,9 +5,12 @@
  */
 package UserInterface.Views;
 
-import UserInterface.Presenters.CancelOkInterface;
+import UserInterface.Presenters.Interfaces.CancelOkInterface;
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 /**
@@ -21,9 +24,22 @@ public class CancelOkView extends BaseView {
         this.setLayout(new BorderLayout());
         JPanel panel = new JPanel();
         panel.setName("background");
-        panel.setLayout(new GridBagLayout());
+
+        GridBagLayout layout = new GridBagLayout();
+
+        panel.setLayout(layout);
         this.add(panel);
 
+        JButton okButton = new JButton();
+        okButton.setName("okButton");
+
+        layout.setConstraints(okButton,
+                new GridBagConstraints(0, 0, 30, 30, 0, 0,
+                        GridBagConstraints.NORTHWEST,
+                        0,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
+        panel.add(okButton);
     }
 
 }

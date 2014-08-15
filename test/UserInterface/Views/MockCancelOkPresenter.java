@@ -5,13 +5,14 @@
  */
 package UserInterface.Views;
 
-import UserInterface.Presenters.CancelOkInterface;
+import UserInterface.Presenters.Interfaces.CancelOkInterface;
+import UserInterface.Presenters.MockPresenters.MockPresenter;
 
 /**
  *
  * @author arthur
  */
-public class MockCancelOkPresenter implements CancelOkInterface {
+public class MockCancelOkPresenter extends MockPresenter implements CancelOkInterface {
 
     @Override
     public void cancel() {

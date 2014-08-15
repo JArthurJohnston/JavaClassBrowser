@@ -6,9 +6,11 @@
 package UserInterface.Views;
 
 import UserInterface.BaseUserInterfaceTest;
-import UserInterface.Presenters.CancelOkInterface;
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -52,6 +54,20 @@ public class CancelOkViewTest extends BaseUserInterfaceTest {
         JPanel panel = (JPanel) this.assertComponentExistsAndGet(view, "background");
         assertSame(GridBagLayout.class, panel.getLayout().getClass());
 
-    }
+        GridBagLayout layout = (GridBagLayout) panel.getLayout();
 
+        JButton okButton = (JButton) this.assertComponentExistsAndGet(panel, "okButton");
+
+        GridBagConstraints constraints = layout.getConstraints(okButton);
+        assertEquals(0, constraints.gridx);
+        assertEquals(0, constraints.gridy);
+        assertEquals(0, constraints.gridheight);
+        assertEquals(0, constraints.gridwidth);
+
+        Insets insets = constraints.insets;
+        assertEquals(0, insets.bottom);
+        assertEquals(0, insets.left);
+        assertEquals(0, insets.right);
+        assertEquals(0, insets.top);
+    }
 }
