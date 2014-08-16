@@ -16,6 +16,7 @@ import Types.ScopeType;
 import UserInterface.Presenters.MockPresenters.MockPresenter;
 import UserInterface.Views.CancelOkView;
 import UserInterface.Views.MockCancelOkPresenter;
+import UserInterface.Views.NetbeansViews.ListPanelView;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -57,7 +58,9 @@ public class TestPanel {
         MethodListPresenter presenter = new MethodListPresenter(parent,
                 ClassType.INSTANCE);
         System.out.println("Rows: " + presenter.model.getRowCount());
-        return presenter.getView();
+        ListPanelView view = presenter.getView();
+        view.setSize(300, 150);
+        return view;
     }
 
     private static ClassModel getTestClass() {

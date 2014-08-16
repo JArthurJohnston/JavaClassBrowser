@@ -14,14 +14,18 @@ import UserInterface.Presenters.MockPresenters.MockPresenter;
  */
 public class MockCancelOkPresenter extends MockPresenter implements CancelOkInterface {
 
+    public MockCancelOkPresenter() {
+        super();
+    }
+
     @Override
     public void cancel() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("cancel has been pressed");
     }
 
     @Override
     public void ok() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("ok has been pressed");
     }
 
 }

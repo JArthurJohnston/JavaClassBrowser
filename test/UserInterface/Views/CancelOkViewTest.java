@@ -7,9 +7,11 @@ package UserInterface.Views;
 
 import UserInterface.BaseUserInterfaceTest;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.junit.After;
@@ -35,8 +37,10 @@ public class CancelOkViewTest extends BaseUserInterfaceTest {
 
     @Before
     public void setUp() {
-        view = new CancelOkView(new MockCancelOkPresenter());
+        presenter = new MockCancelOkPresenter();
+        view = new CancelOkView(presenter);
     }
+    private MockCancelOkPresenter presenter;
 
     @After
     public void tearDown() {
@@ -47,6 +51,7 @@ public class CancelOkViewTest extends BaseUserInterfaceTest {
     public void testConstructor() throws Exception {
         assertTrue(BaseView.class.isAssignableFrom(CancelOkView.class));
         assertSame(BorderLayout.class, view.getLayout().getClass());
+        assertSame(presenter, view.getPresenter());
     }
 
     @Test
@@ -69,5 +74,13 @@ public class CancelOkViewTest extends BaseUserInterfaceTest {
         assertEquals(0, insets.left);
         assertEquals(0, insets.right);
         assertEquals(0, insets.top);
+
+        assertEquals(new Dimension(50, 50), okButton.getSize());
+    }
+
+    @Test
+    public void testButtonActions() throws Exception {
+        JButton okButton = (JButton) this.assertComponentExistsAndGet(view, "okButton");
+        assertSame(Action.class, okButton.getAction().getClass());
     }
 }

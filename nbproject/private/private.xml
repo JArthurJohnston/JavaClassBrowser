@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/VariableListPresenter.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Presenters/ListPresenter.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/MethodListPresenterTest.java</file>
-            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/VariableListPresenterTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Views/CancelOkViewTest.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/src/UserInterface/Views/CancelOkView.java</file>
+            <file>file:/home/arthur/NetBeansProjects/JavaClassBrowser/test/UserInterface/Presenters/TestPanel.java</file>
         </group>
     </open-files>
 </project-private>
